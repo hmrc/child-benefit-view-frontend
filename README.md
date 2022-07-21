@@ -1,5 +1,5 @@
 
-# child-benefit-view-frontend
+# child-benefit-entitlement-frontend
 
 This is a placeholder README.md for a new repository
 
