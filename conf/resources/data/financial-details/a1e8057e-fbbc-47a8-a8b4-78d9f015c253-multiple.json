@@ -1,0 +1,12 @@
+{
+  "failures": [
+    {
+      "code": "INVALID_IDENTIFIER",
+      "reason": "Submission has not passed validation. Invalid parameter idNumber."
+    },
+    {
+      "code": "INVALID_CORRELATIONID",
+      "reason": "Submission has not passed validation. Invalid header CorrelationId."
+    }
+  ]
+}
