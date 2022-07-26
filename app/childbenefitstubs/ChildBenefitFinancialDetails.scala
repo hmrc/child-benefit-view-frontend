@@ -19,88 +19,32 @@ import play.api.libs.json.Json.toJson
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 @Singleton()
 class ChildBenefitFinancialDetails @Inject() (mcc: MessagesControllerComponents) extends FrontendController(mcc) {
-  def validate(paymentReference: Option[String]): Action[AnyContent] = Action { implicit request =>
-    if (!request.headers.hasHeader("Authorization")) Unauthorized("No auth header was sent...")
-    else paymentReference match {
-      case Some("CDSI191234567890") => Ok(validResponse(isPaymentReferenceActive = true)).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      case Some("XCDSU201234567")   => Ok(validResponse(isPaymentReferenceActive = true)).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      case Some("CDSI190987654321") => Ok(validResponse(isPaymentReferenceActive = false)).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      case Some("XCDSU207654321")   => Ok(validResponse(isPaymentReferenceActive = false)).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      case None                     => BadRequest(noReference).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      case _                        => NotFound(notFoundResponse).withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
+
+  val validFinancialDetails: String =
+    """
+      {
+        "debtIndicator": 1,
+        "awardInformation": [
+         {
+            "awardValue": 0.00,
+           "startDate": "2010-12-31",
+           "endDate": "2028-12-30"
+     } ],
+        "rateInformation": {
+          "higherRateValue": 99999999999.99,
+         "standardRateValue": 0.0,
+          "guardianAllowanceRateValue": 123456.78
+      } }
+      """
+
+  def paymentDetails(identifier: String): Action[AnyContent] = Action { implicit request =>
+
+    identifier match {
+      case "AB654321" => Ok(validFinancialDetails).withHeaders("CorrelationId" -> "a1e8057e-fbbc-47a8-a8b4-78d9f015c253", "Content-Type" -> "application/json")
     }
-  }
 
-  private def noReference: JsValue =
-    toJson[cashDepositPayUpErrorResponse](
-      new cashDepositPayUpErrorResponse(
-        status  = 400, error = "Bad Request", message = "Invalid request, payment reference or declaration id is mandatory"))
-
-  private def validResponse(isPaymentReferenceActive: Boolean) =
-    toJson[ResponseCds](new ResponseCds(
-      GetCashDepositSubscriptionDetailsResponse(
-        ResponseCommon(),
-        ResponseDetail(
-          paymentReference           = "1234567890",
-          declarationID              = "0987654321",
-          paymentReferenceDate       = now().format(ISO_DATE),
-          paymentReferenceCancelDate = now().format(ISO_DATE),
-          isPaymentReferenceActive   = isPaymentReferenceActive))))
-
-  private def notFoundResponse: JsValue =
-    toJson[cashDepositPayUpErrorResponse](
-      new cashDepositPayUpErrorResponse(
-        error   = "Not Found", message = "No subscription is found for a given payment reference and/or declaration Id", status = 404))
-
-  val confirm: Action[CDSRequestPost] = Action(parse.json[CDSRequestPost]) { implicit request =>
-    if (!request.headers.hasHeader("Authorization")) Unauthorized("No auth header was sent...")
-    else {
-      val cdsReference = request.body.notifyImmediatePaymentRequest.requestDetail.paymentReference
-      cdsReference match {
-        case "CDSI191234567890"               => Ok.withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-        case "XCDSU201234567"                 => Ok.withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-        case ref if ref.contains("queuetest") => retrySimulator(ref)
-        case _                                => BadRequest.withHeaders("x-correlation-id" -> "TEST_CORRELATION_ID")
-      }
-    }
-  }
-
-  private val cdsNotification = mutable.Map[String, Int]()
-
-  private def retrySimulator(reference: String): Result = {
-    val mostRight = reference.takeRight(1)
-    if (mostRight.matches("[-+]?\\d+(\\.\\d+)?") && (1 to 9).contains(mostRight.toInt)) {
-
-      val counterOption: Option[Int] = cdsNotification.get(reference)
-      val newCount: Int = counterOption match {
-        case Some(counter) => counter + 1
-        case None          => 1
-      }
-      if (newCount <= mostRight.toInt) {
-        if (reference.contains("404")) {
-          Logger(this.getClass).debug(s"oh no, cds notification response: [ not found ] $newCount")
-          NotFound(s"oh no, cds notification response: [ not found ] $newCount")
-        } else if (reference.contains("400")) {
-          Logger(this.getClass).debug(s"oh no, cds notification response: [ bad request ] $newCount")
-          BadRequest(s"oh no, cds notification response: [ bad request ] $newCount")
-        } else {
-          Logger(this.getClass).debug(s"oh no, cds notification response: [ server error ] $newCount")
-          cdsNotification(reference) = newCount
-          InternalServerError(s"oh no, cds notification response: [ server error ] $newCount")
-        }
-      } else {
-        cdsNotification.remove(reference)
-        Ok(s"Finished retrying, count $newCount")
-      }
-    } else {
-      Ok("Did not retry")
-    }
-  }
-
-  val resetCdsNotifications: Action[AnyContent] = Action {
-    cdsNotification.clear()
-    Ok("CDS notifications reset")
   }
 }

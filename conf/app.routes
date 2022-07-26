@@ -1,30 +1,9 @@
 
 ->            /govuk-frontend                                      govuk.Routes
 
-GET           /payments-stubs/assets/*file                         controllers.Assets.versioned(path = "/public", file: Asset)
-
-# microservice specific routes
 
 
-# CDS
-POST          /accounts/notifyimmediatepayment/v1                  paymentsstubs.cdsstub.controllers.ValidCDS.confirm
-GET           /accounts/getcashdepositsubscriptiondetails/v1       paymentsstubs.cdsstub.controllers.ValidCDS.validate(paymentReference:Option[String])
-GET           /cds-stub/notification/reset                         paymentsstubs.cdsstub.controllers.ValidCDS.resetCdsNotifications
 
-GET           /vat/customer/vrn/:vrn/information                   paymentsstubs.desvrt.DesController.customerInformation(vrn : String)
-GET           /enterprise/financial-data/VRN/:vrn/VATC             paymentsstubs.desvrt.DesController.financialInformation(vrn : String)
-GET           /cross-regime/direct-debits/vatc/vrn/:vrn            paymentsstubs.desvrt.DesController.ddData(vrn : String)
-GET           /cross-regime/repayment/VATC/VRN/:vrn                paymentsstubs.desvrt.DesController.repaymentData(vrn : String)
-POST          /cross-regime/payments/card/notification             paymentsstubs.desvrt.ChargeRefController.cardNotification
-POST          /cross-regime/payments/card/notification/reset       paymentsstubs.desvrt.ChargeRefController.reset
+# child benefit payment details
 
-# CT
-GET           /ct/:ctUtr/live-periods                              paymentsstubs.ct.CtController.response(ctUtr: String)
-
-#Email
-POST          /hmrc/email                                          paymentsstubs.email.EmailController.sendEmail()
-
-
-#Mods/Mib
-POST          /declare-commercial-goods/payment-callback           paymentsstubs.mods.ModsController.paymentCallback
-GET           /declare-commercial-goods/payment-callback/:modsRef  paymentsstubs.mods.ModsController.receiveModsCallback(modsRef: String)
+GET           /child-benefit/financial-details/:identifier  childbenefitstubs.ChildBenefitFinancialDetails.paymentDetails(identifier:String)
