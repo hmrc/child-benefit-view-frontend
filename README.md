@@ -1,3 +1,15 @@
-# payments-stubs
+# child-benefit-data-stubs
 
-One stub to rule'em all... unless it needs to be in [payments-stubs-protected](https://github.com/hmrc/payments-stubs-protected)...
+Data stubs repository for child benefit service
+
+
+# DES API's for Child benefit
+ 
+Des API list implementaitons
+##financical details
+'http://localhost:10651/child-benefit/financial-details/AB654321'
+ financical details 
+
+
+http://localhost:10651/child-benefit/financial-details/YY123499D
+
