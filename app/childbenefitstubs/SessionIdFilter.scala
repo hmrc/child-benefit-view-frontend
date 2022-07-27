@@ -3,7 +3,7 @@
  *
  */
 
-package paymentsstubs.filters
+package childbenefitstubs
 
 /*
  * Copyright 2021 HM Revenue & Customs
@@ -46,6 +46,6 @@ class SessionIdFilter @Inject() (implicit val mat: Materializer, ex: ExecutionCo
 object SessionIdFilter {
   def requiresSession(rh: RequestHeader): Boolean = {
     val hasSessionId = rh.session.get(SessionKeys.sessionId).isDefined
-    !hasSessionId && rh.path.startsWith("/payments-stubs/open-banking")
+    !hasSessionId && rh.path.startsWith("/child-benefit-data-stubs")
   }
 }
