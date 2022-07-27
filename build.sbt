@@ -1,27 +1,56 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import sbt.Keys.{retrieveManaged, scalacOptions}
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, integrationTestSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import wartremover.WartRemover.autoImport.{Wart, wartremoverErrors}
 
 val appName = "child-benefit-data-stubs"
 
-val silencerVersion = "1.7.7"
+val scalaV = "2.12.13"
+scalaVersion := scalaV
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(
-    majorVersion                     := 0,
-    scalaVersion                     := "2.12.15",
+    resolvers                        ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo),
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
-    // ***************
-    // Use the silencer plugin to suppress warnings
-    scalacOptions += "-P:silencer:pathFilters=routes",
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
-    // ***************
+    retrieveManaged                  :=  true,
+    routesGenerator                  :=  InjectedRoutesGenerator,
+    evictionWarningOptions in update :=  EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    //For some reason SBT was adding the stray string "utf8" to the compiler arguments and it was causing the 'doc' task to fail
+    //This removes it again but it's not an ideal solution as I can't work out why this is being added in the first place.
+    scalacOptions in Compile -= "utf8",
   )
+  .settings(majorVersion := 1)
+  .settings(ScalariformSettings())
+  .settings(ScoverageSettings())
+  .settings(WartRemoverSettings.wartRemoverError)
+  .settings(WartRemoverSettings.wartRemoverWarning)
+  .settings(wartremoverErrors in(Test, compile) --= Seq(Wart.Any, Wart.Equals, Wart.Null, Wart.NonUnitStatements, Wart.PublicInference))
+  .settings(wartremoverExcluded ++=
+    routes.in(Compile).value ++
+      (baseDirectory.value / "test").get ++
+      Seq(sourceManaged.value / "main" / "sbt-buildinfo" / "BuildInfo.scala"))
   .settings(publishingSettings: _*)
+  .settings(PlayKeys.playDefaultPort := 10651)
+  .settings(scalaSettings: _*)
+  .settings(defaultSettings(): _*)
+  .settings(integrationTestSettings())
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
-  .settings(CodeCoverageSettings.settings: _*)
+  .settings(
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings",
+      "-Xlint:-missing-interpolator,_",
+      "-Yno-adapted-args",
+      "-Ywarn-value-discard",
+      "-Ywarn-dead-code",
+      "-deprecation",
+      "-feature",
+      "-unchecked",
+      "-language:implicitConversions",
+      "-language:reflectiveCalls",
+      "-Ypartial-unification", //required by cats
+      "-Ywarn-unused:-imports,-patvars,-privates,-locals,-explicits,-implicits,_"
+    )
+  )

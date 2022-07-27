@@ -1,3 +1,9 @@
-# microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.childbenefitdatastubs.controllers.MicroserviceHelloWorldController.hello
+->            /govuk-frontend                                      govuk.Routes
+
+
+
+
+# child benefit payment details
+
+GET           /child-benefit/financial-details/:identifier  childbenefitstubs.ChildBenefitFinancialDetails.paymentDetails(identifier:String)
