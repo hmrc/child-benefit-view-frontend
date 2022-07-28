@@ -16,24 +16,24 @@
 
 package controllers
 
-
 import controllers.actions.IdentifierAction
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendBaseController, FrontendController}
 import views.html.{Home, IndexView}
 
-class HomeController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                              //   identify: IdentifierAction,
-                                 view: Home
-                               ) extends FrontendBaseController with I18nSupport {
+import scala.concurrent.Future
 
 
-  def home: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+@Singleton
+class HomeController @Inject()(mcc: MessagesControllerComponents,
+                               homePage: Home)
+  extends FrontendController(mcc) {
+
+  val home: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(homePage()))
   }
 
 }
