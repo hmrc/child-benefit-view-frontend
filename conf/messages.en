@@ -1,5 +1,6 @@
 service.name = child-benefit-view-frontend
 
+
 site.back = Back
 site.remove = Remove
 site.change = Change
@@ -34,6 +35,7 @@ error.non_numeric = Give a value using only numbers
 error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
+
 
 index.title = child-benefit-view-frontend
 index.heading = child-benefit-view-frontend
