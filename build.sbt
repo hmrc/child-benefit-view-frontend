@@ -3,11 +3,10 @@ import sbt.Def
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
-<<<<<<< HEAD
-lazy val appName: String = "child-benefit-entitlement-frontend"
-=======
+
+
 lazy val appName: String = "child-benefit-view-frontend"
->>>>>>> 5e36a4bdcad0625d3adb8c720b5ecf6458e5c9ba
+
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
