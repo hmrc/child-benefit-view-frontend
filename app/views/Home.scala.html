@@ -1,0 +1,110 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(
+        layout: templates.Layout
+)
+@()(implicit request: Request[_], messages: Messages)
+@layout(pageTitle = "sca-apply-chb-frontend") {
+ <style>
+         .govuk-template {
+          background-color: #f3f2f1;
+          -webkit-text-size-adjust: 100%;
+          -moz-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+         }
+
+         .govuk-body-m, .govuk-body, p {
+          color: #0b0c0c;
+          font-family: "GDS Transport", arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 1.25;
+          margin-top: 0;
+          margin-bottom: 15px;
+         }
+
+         @@media (min-width: 40.0625em){
+         .govuk-body-m, .govuk-body, p {
+          margin-bottom: 20px;
+         }
+         .govuk-body-m, .govuk-body, p {
+          font-size: 1.1875rem!important;
+          line-height: 1.31579;
+         }
+         }
+
+
+ </style>
+
+ <form action="task_two/nationality" method="POST" id="messageForm2" novalidate="novalidate" autocomplete="off">
+  <h1 class="govuk-heading-xl">
+  @messages("homepage.text1")
+  </h1>
+  <p>@messages("homepage.text2")</p>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>@messages("homepage.text3")</li>
+   <li>@messages("homepage.text4")</li>
+   <li>@messages("homepage.text5")</li>
+  </ul>
+  <p>@messages("homepage.text6")</p>
+  <p>@messages("homepage.text7")</p>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>@messages("homepage.text8")</li>
+   <li>@messages("homepage.text9")<a href="" data-heading="Apply for Child Benefit" data-text="approved education or training" data-component="link">
+   @messages("homepage.text10")</a></li>
+  </ul>
+  <h3 class="govuk-heading-s govuk-!-margin-top-5">@messages("homepage.text11")</h3>
+  <ul class="govuk-list govuk-list--bullet">
+   <li>@messages("homepage.text12")</li>
+   <li>@messages("homepage.text13")</li>
+   <li>@messages("homepage.text14")</li>
+  </ul>
+  <details class="govuk-details" data-module="govuk-details" data-state="closed">
+   <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text" data-heading="Apply for Child Benefit" data-component="details" data-text="What do we mean by 'partner'?">
+    @messages("homepage.text15")
+    </span>
+   </summary>
+   <div class="govuk-details__text">
+   @messages("homepage.text16")
+   </div>
+  </details>
+  <div class="govuk-warning-text">
+   <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+   <strong class="govuk-warning-text__text">
+    <span class="govuk-warning-text__assistive">Warning</span>
+    Only one person can get Child Benefit for a child.
+   </strong>
+  </div>
+  <button class="govuk-button govuk-!-margin-top-2 govuk-!-margin-bottom-3" data-heading = "Apply for Child Benefit" data-text="Continue"	data-component="button"	style="font-size: 19px">
+   Continue</button>
+ </form>
+  <script>
+   let details = document.getElementsByClassName('govuk-details');
+  if (details && details[0]) {
+    details[0].addEventListener("toggle", (event) => {
+     event.target.setAttribute('data-state', event.target.open ? 'open' : 'closed');
+   });
+  }
+  </script>
+ @{
+  //$COVERAGE-OFF$
+ }
+}
