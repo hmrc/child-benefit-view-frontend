@@ -14,6 +14,23 @@
  * limitations under the License.
  */
 
+/*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 package config
 
 import com.google.inject.{Inject, Singleton}
@@ -29,7 +46,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val appName: String = configuration.get[String]("appName")
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
+<<<<<<< HEAD
   private val contactFormServiceIdentifier = "child-benefit-entitlement-frontend"
+=======
+  private val contactFormServiceIdentifier = "child-benefit-view-frontend"
+>>>>>>> 5e36a4bdcad0625d3adb8c720b5ecf6458e5c9ba
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
@@ -39,7 +60,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val signOutUrl: String       = configuration.get[String]("urls.signOut")
 
   private val exitSurveyBaseUrl: String = configuration.get[Service]("microservice.services.feedback-frontend").baseUrl
+<<<<<<< HEAD
   val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/child-benefit-entitlement-frontend"
+=======
+  val exitSurveyUrl: String             = s"$exitSurveyBaseUrl/feedback/child-benefit-view-frontend"
+>>>>>>> 5e36a4bdcad0625d3adb8c720b5ecf6458e5c9ba
 
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")

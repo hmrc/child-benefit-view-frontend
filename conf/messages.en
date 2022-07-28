@@ -1,4 +1,5 @@
-service.name = child-benefit-entitlement-frontend
+service.name = child-benefit-view-frontend
+
 
 site.back = Back
 site.remove = Remove
@@ -35,8 +36,9 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-index.title = child-benefit-entitlement-frontend
-index.heading = child-benefit-entitlement-frontend
+
+index.title = child-benefit-view-frontend
+index.heading = child-benefit-view-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
 checkYourAnswers.title = Check Your Answers
