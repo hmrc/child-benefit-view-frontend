@@ -20,4 +20,6 @@ GET         /account/signed-out                          controllers.auth.Signed
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
-GET         /                                            controllers.HomeController.home
+GET         /                                            controllers.HomeController.view
+
+GET         /task_two/nationality                        controllers.NationalityQuestionController.view

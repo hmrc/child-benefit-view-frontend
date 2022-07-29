@@ -22,18 +22,18 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendBaseController, FrontendController}
-import views.html.{Home}
+import views.html.{NationalityQuestionView}
 
 import scala.concurrent.Future
 
 
 @Singleton
-class HomeController @Inject()(mcc: MessagesControllerComponents,
-                               homePage: Home)
+class NationalityQuestionController @Inject()(mcc: MessagesControllerComponents,
+                                              nationalityQuestion: NationalityQuestionView)
   extends FrontendController(mcc) {
 
   val view: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(homePage()))
+    Future.successful(Ok(nationalityQuestion()))
   }
 
 }
