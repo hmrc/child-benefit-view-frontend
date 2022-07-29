@@ -1,0 +1,15 @@
+{
+  "debtIndicator": 1,
+  "awardInformation": [
+    {
+      "awardValue": 0.00,
+      "startDate": "2010-12-31",
+      "endDate": "2028-12-30"
+    }
+  ],
+  "rateInformation": {
+    "higherRateValue": 99999999999.99,
+    "standardRateValue": 0.0,
+    "guardianAllowanceRateValue": 123456.78
+  }
+}

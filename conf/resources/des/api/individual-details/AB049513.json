@@ -1,0 +1,103 @@
+{
+  "nino": "AB049513",
+  "ninoSuffix": "B",
+  "accountStatusType": 0,
+  "sex": "M",
+  "dateOfEntry": "1978-12-17",
+  "dateOfBirth": "1975-02-10",
+  "dateOfBirthStatus": 1,
+  "dateOfDeath": "2018-08-09",
+  "dateOfDeathStatus": 2,
+  "dateOfRegistration": "1976-01-01",
+  "registrationType": 8,
+  "adultRegSerialNumber": "25673ASN",
+  "cesaAgentIdentifier": "SDGH/4",
+  "cesaAgentClientReference": "DIGBY JONES",
+  "permanentTSuffixCaseIndicator": 0,
+  "currOptimisticLock": 94,
+  "liveCapacitorInd": 0,
+  "liveAgentInd": 0,
+  "ntTaxCodeInd": 0,
+  "mergeStatus": 0,
+  "marriageStatusType": 4,
+  "crnIndicator": 0,
+  "nameList": {
+    "name": [
+      {
+        "nameSequenceNumber": 1,
+        "nameType": 1,
+        "titleType": 1,
+        "requestedName": "Mister Thirty Five Characters Exact",
+        "nameStartDate": "1996-12-28",
+        "nameEndDate": "2017-03-31","otherTitle": "MR S F BRAINS",
+        "honours": "BSc, MA, NUMPTY",
+        "firstForename": "BBTESTFIRSTNAME",
+        "secondForename": "CCTESTSECONDNAME",
+        "surname": "AATESTSURNAME"
+      }
+    ]
+  },
+  "addressList": {
+    "address": [
+      {
+        "addressSequenceNumber": 2,
+        "addressSource": 4,
+        "countryCode": 1,
+        "addressType": 1,
+        "addressStatus": 0,
+        "addressStartDate": "2003-04-30",
+        "addressEndDate": "2009-12-31",
+        "addressLastConfirmedDate": "2003-04-30",
+        "vpaMail": 254,
+        "deliveryInfo": "THROUGH THE LETTERBOX",
+        "pafReference": "NO IDEA",
+        "addressLine1": "88 TESTING ROAD",
+        "addressLine2": "TESTTOWN",
+        "addressLine3": "TESTREGION",
+        "addressLine4": "TESTAREA",
+        "addressLine5": "TESTSHIRE",
+        "addressPostcode": "XX77 6YY"
+      }
+    ]
+  },
+  "indicators": {
+    "manualCodingInd": 0,
+    "manualCodingReason": 10,
+    "manualCodingOther": "JUST BECAUSE",
+    "manualCorrInd": 0,    "manualCorrReason": "A MANUAL CODING REASON ... OR TWO",
+    "additionalNotes": "SOME ADDITIONAL NOTES",
+    "deceasedInd": 1,
+    "s128Ind": 0,
+    "noAllowInd": 0,
+    "eeaCmnwthInd": 0,
+    "noRepaymentInd": 0,
+    "saLinkInd": 0,
+    "noATSInd": 0,
+    "taxEqualBenInd": 0,
+    "p2ToAgentInd": 0,
+    "digitallyExcludedInd": 0,
+    "bankruptcyInd": 0,
+    "bankruptcyFiledDate": "2018-04-05",
+    "utr": "9384/38TEN",
+    "audioOutputInd": 0,
+    "welshOutputInd": 0,
+    "largePrintOutputInd": 0,
+    "brailleOutputInd": 0,
+    "specialistBusinessArea": 16,
+    "saStartYear": "1992/93",
+    "saFinalYear": "2017",
+    "digitalP2Ind": 1
+  },
+  "residencyList": {
+    "residency": [
+      {
+        "residencySequenceNumber": 12345,
+        "dateLeavingUK": "2018-07-22",
+        "dateReturningUK": "2052-04-05",
+        "residencyStatusFlag": 0
+      }
+    ]
+  }
+}
+
+

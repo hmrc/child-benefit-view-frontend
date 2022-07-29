@@ -2,8 +2,19 @@
 ->            /govuk-frontend                                      govuk.Routes
 
 
-
-
 # child benefit payment details
+#  api 1453   /child-benefit/financial-details/{identifier}
+GET           /child-benefit/financial-details/:identifier  childbenefitstubs.DESDataStubController.paymentDetails(identifier:String)
 
-GET           /child-benefit/financial-details/:identifier  childbenefitstubs.ChildBenefitFinancialDetails.paymentDetails(identifier:String)
+
+# API#1437 Get Relationship Details
+# /individuals/relationship/{idNumber}
+GET           /individuals/relationship/:idNumber  childbenefitstubs.DESDataStubController.relationship(idNumber:String)
+
+#API#1439 Get Individual Details
+# /individuals/details/{idNumber}/{resolveMerge}
+
+#GET https://hostname:port/individuals/details/AB654321B/Y
+#where resolve merge can be Y or N
+
+GET           /individuals/details/:idNumber/:resolveMerge  childbenefitstubs.DESDataStubController.individualsDetails(idNumber:String)

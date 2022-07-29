@@ -1,0 +1,16 @@
+{
+  "relationships": {
+    "relationship": [
+      {
+        "nino": "AA000013",
+        "associatedNino": "AB000014",
+        "relationshipType": "ADULT-CHILD",
+        "relationshipStartDate": "2018-01-01",
+        "relationshipEndDate": "2019-01-01",
+        "relationshipSource": "CHB",
+        "relationshipSeqNo": 1,
+        "optimisticLock": 1
+      }
+    ]
+  }
+}

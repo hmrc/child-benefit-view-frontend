@@ -1,0 +1,46 @@
+{
+  "relationships": {
+    "relationship": [
+      {
+        "nino": "12Z34567",
+        "associatedNino": "98A76543",
+        "relationshipType": "ADULT-CHILD",
+        "relationshipStartDate": "2018-01-01",
+        "relationshipEndDate": "2019-01-01",
+        "relationshipSource": "CHB",
+        "relationshipSeqNo": 1,
+        "optimisticLock": 1
+      },
+      {
+        "nino": "AA000013",
+        "associatedNino": "KC368456",
+        "relationshipType": "ADULT-DERIVED",
+        "relationshipStartDate": "2018-01-01",
+        "relationshipEndDate": "2019-01-01",
+        "relationshipSource": "CHB",
+        "relationshipSeqNo": 2,
+        "optimisticLock": 1
+      },
+      {
+        "nino": "AA000013",
+        "associatedNino": "YY123456",
+        "relationshipType": "ADULT-ADULT",
+        "relationshipStartDate": "2018-01-01",
+        "relationshipEndDate": "2019-01-01",
+        "relationshipSource": "CHB",
+        "relationshipSeqNo": 3,
+        "optimisticLock": 1
+      },
+      {
+        "nino": "AA000013",
+        "associatedNino": "GG987654",
+        "relationshipType": "ADULT-APPOINTEE",
+        "relationshipStartDate": "2018-01-01",
+        "relationshipEndDate": "2019-01-01",
+        "relationshipSource": "CHB",
+        "relationshipSeqNo": 4,
+        "optimisticLock": 1
+      }
+    ]
+  }
+}
