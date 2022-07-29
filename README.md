@@ -7,11 +7,11 @@ Data stubs repository for child benefit service
  
 Des API list implementaitons
 ##financical details
-'http://localhost:10651/child-benefit/financial-details/AB654321'
+'http://localhost:10652/child-benefit/financial-details/AB654321'
  financical details 
 
 
-http://localhost:10651/child-benefit/financial-details/YY123499D
+http://localhost:10652/child-benefit/financial-details/YY123499D
 
 # DES API's test data within this stub
 
@@ -30,23 +30,23 @@ and try to access following urls
 
 /child-benefit/financial-details/:identifier
 '
-http://localhost:10651/child-benefit/financial-details/AB654321
-http://localhost:10651/child-benefit/financial-details/YY123499D
+http://localhost:10652/child-benefit/financial-details/AB654321
+http://localhost:10652/child-benefit/financial-details/YY123499D
 '
 
 /individuals/relationship/:idNumber
 '
-http://localhost:10651/individuals/relationship/96a2292e-5085-4bd7-b445-0c5f87353b71
-http://localhost:10651/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c252
-http://localhost:10651/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c253
-http://localhost:10651/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c255
+http://localhost:10652/individuals/relationship/96a2292e-5085-4bd7-b445-0c5f87353b71
+http://localhost:10652/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c252
+http://localhost:10652/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c253
+http://localhost:10652/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c255
 http://localhost:10651/individuals/relationship/a1e8057e-fbbc-47a8-a8b4-78d9f015c254
 '
 
 /individuals/details/:idNumber/:resolveMerge
 '
-http://localhost:10651/individuals/details/AB049513/Y
-http://localhost:10651/individuals/details/AB654321B/Y
+http://localhost:10652/individuals/details/AB049513/Y
+http://localhost:10652/individuals/details/AB654321B/Y
 '
 
 
