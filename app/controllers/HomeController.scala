@@ -16,20 +16,17 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
-
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendController}
-import views.html.{Home}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.html.Home
 
 import scala.concurrent.Future
-
 
 @Singleton
 class HomeController @Inject()(mcc: MessagesControllerComponents,
                                homePage: Home)
-  extends FrontendController(mcc) {
+    extends FrontendController(mcc) {
 
   val view: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(homePage()))
