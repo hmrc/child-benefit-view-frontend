@@ -17,4 +17,4 @@ GET           /individuals/relationship/:idNumber  childbenefitstubs.DESDataStub
 #GET https://hostname:port/individuals/details/AB654321B/Y
 #where resolve merge can be Y or N
 
-GET           /individuals/details/:idNumber/:resolveMerge  childbenefitstubs.DESDataStubController.individualsDetails(idNumber:String)
+GET           /individuals/details/:idNumber/:resolveMerge  childbenefitstubs.DESDataStubController.individualsDetails(idNumber:String,resolveMerge:String)

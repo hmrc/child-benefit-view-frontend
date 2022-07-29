@@ -39,11 +39,22 @@ class DESDataStubController @Inject() (mcc: MessagesControllerComponents) extend
 
   }
 
-  def individualsDetails(idNumber: String): Action[AnyContent] = Action { implicit request =>
+  def individualsDetails(idNumber: String, resolveMerge: String): Action[AnyContent] = Action { implicit request =>
 
-    val content = FileUtils.readContent("des/api/individuals-details", idNumber)
+    //todo try to use  resolveMerge if needed to provide defferent calls
 
-    Ok(content).withHeaders("CorrelationId" -> "a1e8057e-fbbc-47a8-a8b4-78d9f015c253", "Content-Type" -> "application/json")
+    resolveMerge match {
+      case "N" | "n" => {
+        val content = FileUtils.readContent(s"des/api/individual-details/N", idNumber)
+
+        Ok(content).withHeaders("CorrelationId" -> "a1e8057e-fbbc-47a8-a8b4-78d9f015c253", "Content-Type" -> "application/json")
+      }
+      case "Y" | "y" => {
+        val content = FileUtils.readContent(s"des/api/individual-details/Y", idNumber)
+        Ok(content).withHeaders("CorrelationId" -> "a1e8057e-fbbc-47a8-a8b4-78d9f015c253", "Content-Type" -> "application/json")
+      }
+
+    }
 
   }
 
