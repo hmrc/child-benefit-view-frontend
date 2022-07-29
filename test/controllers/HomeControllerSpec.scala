@@ -34,7 +34,7 @@ class HomeControllerSpec
 
   "render home" should {
     "return HTML and 200 status" in {
-      val result = controller.home()(fakeRequest)
+      val result = controller.view()(fakeRequest)
       status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
