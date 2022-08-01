@@ -32,6 +32,7 @@ lazy val microservice = Project(appName, file("."))
       (baseDirectory.value / "test").get ++
       Seq(sourceManaged.value / "main" / "sbt-buildinfo" / "BuildInfo.scala"))
   .settings(publishingSettings: _*)
+  .settings(PlayKeys.playDefaultPort := 10651)
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(integrationTestSettings())
