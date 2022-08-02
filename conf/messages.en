@@ -55,7 +55,7 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-service.name = Child Benefit Service
+service.name = Claim Child Benefit
 service.text = This is your new service
 
 sca-apply-chb-frontend=Apply CHB Frontend
