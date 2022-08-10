@@ -34,3 +34,4 @@ bin
 /.classpath
 *.iws
 /.vscode/settings.json
+.bsp
