@@ -23,3 +23,5 @@ GET         /unauthorised                                controllers.Unauthorise
 GET         /                                            controllers.HomeController.view
 
 GET         /task_two/nationality                        controllers.NationalityQuestionController.view
+
+GET         /child-benefit-view-proof                        controllers.ProofOfEntitlementController.view
