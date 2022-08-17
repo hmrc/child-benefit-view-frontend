@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package pages
 
 import queries.{Gettable, Settable}

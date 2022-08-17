@@ -24,9 +24,9 @@ import views.html.NationalityQuestionView
 import scala.concurrent.Future
 
 @Singleton
-class NationalityQuestionController @Inject()(
-  mcc: MessagesControllerComponents,
-  nationalityQuestion: NationalityQuestionView
+class NationalityQuestionController @Inject() (
+    mcc:                 MessagesControllerComponents,
+    nationalityQuestion: NationalityQuestionView
 ) extends FrontendController(mcc) {
 
   val view: Action[AnyContent] = Action.async { implicit request =>

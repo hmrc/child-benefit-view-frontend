@@ -27,7 +27,13 @@ import org.scalatest.matchers.must.Matchers
 import pages.QuestionPage
 import play.api.libs.json._
 
-trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with OptionValues with TryValues {
+trait PageBehaviours
+    extends AnyFreeSpec
+    with Matchers
+    with ScalaCheckPropertyChecks
+    with Generators
+    with OptionValues
+    with TryValues {
 
   class BeRetrievable[A] {
     def apply[P <: QuestionPage[A]](genP: Gen[P])(implicit ev1: Arbitrary[A], ev2: Format[A]): Unit = {
@@ -45,7 +51,6 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
             forAll(gen) {
               case (page, userAnswers) =>
-
                 userAnswers.get(page) must be(empty)
             }
           }
@@ -63,7 +68,6 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
             forAll(gen) {
               case (page, savedValue, userAnswers) =>
-
                 userAnswers.get(page).value mustEqual savedValue
             }
           }
@@ -85,7 +89,6 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
         forAll(gen) {
           case (page, newValue, userAnswers) =>
-
             val updatedAnswers = userAnswers.set(page, newValue).success.value
             updatedAnswers.get(page).value mustEqual newValue
         }
@@ -106,7 +109,6 @@ trait PageBehaviours extends AnyFreeSpec with Matchers with ScalaCheckPropertyCh
 
         forAll(gen) {
           case (page, userAnswers) =>
-
             val updatedAnswers = userAnswers.remove(page).success.value
             updatedAnswers.get(page) must be(empty)
         }

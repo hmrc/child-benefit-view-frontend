@@ -23,14 +23,10 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 
-class HomeControllerSpec
-    extends AnyWordSpec
-    with Matchers
-    with GuiceOneAppPerSuite
-    with Injecting {
+class HomeControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with Injecting {
 
   private val fakeRequest = FakeRequest("GET", "/")
-  private val controller = inject[HomeController]
+  private val controller  = inject[HomeController]
 
   "render home" should {
     "return HTML and 200 status" in {

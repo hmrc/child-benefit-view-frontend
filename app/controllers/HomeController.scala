@@ -24,9 +24,7 @@ import views.html.Home
 import scala.concurrent.Future
 
 @Singleton
-class HomeController @Inject()(mcc: MessagesControllerComponents,
-                               homePage: Home)
-    extends FrontendController(mcc) {
+class HomeController @Inject() (mcc: MessagesControllerComponents, homePage: Home) extends FrontendController(mcc) {
 
   val view: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(homePage()))
