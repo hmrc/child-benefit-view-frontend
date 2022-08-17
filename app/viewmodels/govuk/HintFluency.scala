@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package viewmodels.govuk
 
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content

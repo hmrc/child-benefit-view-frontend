@@ -38,7 +38,7 @@ class SessionActionSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = None).build()
 
-        running(application){
+        running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
 
           val sessionAction = new SessionIdentifierAction(bodyParsers)
