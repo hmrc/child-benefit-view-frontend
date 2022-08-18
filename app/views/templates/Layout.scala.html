@@ -52,21 +52,35 @@
 
 @(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
+@stylesheet = {
+<link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />
+}
+
 @head = {
     @hmrcHead(
         nonce     = CSPNonce.get,
-        headBlock = if(timeout) { Some(
-            hmrcTimeoutDialog(TimeoutDialog(
-                timeout             = Some(appConfig.timeout),
-                countdown           = Some(appConfig.countdown),
-                keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
-                keepAliveButtonText = Some(messages("timeout.keepAlive")),
-                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut.url),
-                signOutButtonText   = Some(messages("timeout.signOut")),
-                title               = Some(messages("timeout.title")),
-                message             = Some(messages("timeout.message"))
-            )))
-        } else None
+        headBlock = Some(
+            HtmlFormat.fill(
+                stylesheet ::
+                (if(timeout) {
+                    List(
+                        hmrcTimeoutDialog(
+                            TimeoutDialog(
+                                timeout = Some(appConfig.timeout),
+                                countdown = Some(appConfig.countdown),
+                                keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
+                                keepAliveButtonText = Some(messages("timeout.keepAlive")),
+                                signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
+                                signOutButtonText = Some(messages("timeout.signOut")),
+                                title = Some(messages("timeout.title")),
+                                message = Some(messages("timeout.message"))
+                            )
+                        )
+                    )
+                } else Nil)
+            )
+          )
+        )
     )
 }
 
@@ -75,17 +89,23 @@
 }
 
 @beforeContent = {
+  <div class="govuk-grid-row">
+    @if(showBackLink) {
+        <div class="govuk-grid-column-one-third">
+            @govukBackLink(BackLinkViewModel(href = "javascript:history.back();"))
+        </div>
+    }
+
     @if(appConfig.languageTranslationEnabled) {
+      <div class="govuk-grid-column-two-thirds">
         @hmrcLanguageSelect(LanguageSelect(
             if (messages.lang.code == "cy") Cy else En,
             (En, routes.LanguageSwitchController.switchToLanguage("en").url),
             (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
         ))
+      </div>
     }
-
-    @if(showBackLink) {
-        @govukBackLink(BackLinkViewModel(href = "#"))
-    }
+  </div>
 }
 
 @content = {

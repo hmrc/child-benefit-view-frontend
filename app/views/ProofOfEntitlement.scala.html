@@ -19,260 +19,248 @@
 )
 @()(implicit request: Request[_], messages: Messages)
 @layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
-</style>
+<form action="complete" method="get" class="form">
+    <span class="govuk-caption-xl">Liz Jones</span>
 
-    <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <h1 class="govuk-heading-xl">
+    @messages("proofOfEntitlement.text1")
+    </h1>
 
+    <p> @messages("proofOfEntitlement.text2")</p>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <form action="complete" method="get" class="form">
-                    <span class="govuk-caption-xl">Liz Jones</span>
-
-                    <h1 class="govuk-heading-xl">
-                    @messages("proofOfEntitlement.text1")
-                    </h1>
-
-                    <p> @messages("proofOfEntitlement.text2")</p>
-
-                        <!-- <p><img src="/public/images/pdf64.png" width="30" align="middle"> <a href="/public/images/Test84TS.pdf">View your entitlement letter from HMRC</a></p> -->
+        <!-- <p><img src="/public/images/pdf64.png" width="30" align="middle"> <a href="/public/images/Test84TS.pdf">View your entitlement letter from HMRC</a></p> -->
 
 
-                    <p class="govuk-body">@messages("proofOfEntitlement.text3")</p>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>@messages("proofOfEntitlement.text4")</li>
-                        <li>@messages("proofOfEntitlement.text5")</li>
-                    </ul>
+    <p class="govuk-body">@messages("proofOfEntitlement.text3")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("proofOfEntitlement.text4")</li>
+        <li>@messages("proofOfEntitlement.text5")</li>
+    </ul>
 
 
-                    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text6")</h2>
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text6")</h2>
 
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text7")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                Liz Jones
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text7")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Liz Jones
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text8")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                Flat 3 <br>
-                                75 Norten Grove <br>
-                                Manchester <br>
-                                M20 2JL
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text8")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Flat 3 <br>
+                75 Norten Grove <br>
+                Manchester <br>
+                M20 2JL
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text9")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                £50.70 per week
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text9")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                £50.70 per week
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text10")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                On or before 22 February 2021
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text10")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                On or before 22 February 2021
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text11")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                5 September 2038
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text11")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                5 September 2038
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-                    </dl>
-                    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text12")  Ben William Jones</h2>
+            </dd>
+        </div>
+    </dl>
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text12")  Ben William Jones</h2>
 
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text13")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                4 February 2003
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text13")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                4 February 2003
+            </dd>
+            <dd class="govuk-summary-list__actions">
 
-                            </dd>
-                        </div>
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text14")
-                            </dt><dd class="govuk-summary-list__value">
-                            On or before 22 February 2021
-                        </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @messages("proofOfEntitlement.text15")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                31 August 2020
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                    </dl>
-
-
-                    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16") Billy Jones</h2>
-
-
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text13")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                12 May 2021
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text10")
-                            </dt><dd class="govuk-summary-list__value">
-                            14 June 2021
-                        </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text11")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                31 August 2037
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                    </dl>
-
-                    <h2 class="govuk-heading-m">Child Benefit award details for Jenny Jones</h2>
-
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text13")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                12 May 2021
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text10")
-                            </dt><dd class="govuk-summary-list__value">
-                            14 June 2021
-                        </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text11")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                31 August 2037
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                    </dl>
-
-                    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16") Jane Jones-Smith</h2>
-
-                    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text13")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                16 May 2022
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text14")
-                            </dt><dd class="govuk-summary-list__value">
-                            16 May 2022
-                        </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                            @messages("proofOfEntitlement.text11")
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                5 September 2038
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-
-                            </dd>
-                        </div>
-                    </dl>
-
-                    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text17")</h2>
-                    <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.text18")</a> @messages("proofOfEntitlement.text19")</p>
-
-
-                </form>
-            </div>
+            </dd>
         </div>
 
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text14")
+            </dt><dd class="govuk-summary-list__value">
+            On or before 22 February 2021
+        </dd>
+            <dd class="govuk-summary-list__actions">
 
-    </main>
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                @messages("proofOfEntitlement.text15")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                31 August 2020
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+    </dl>
+
+
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16") Billy Jones</h2>
+
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text13")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                12 May 2021
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text10")
+            </dt><dd class="govuk-summary-list__value">
+            14 June 2021
+        </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text11")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                31 August 2037
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+    </dl>
+
+    <h2 class="govuk-heading-m">Child Benefit award details for Jenny Jones</h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text13")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                12 May 2021
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text10")
+            </dt><dd class="govuk-summary-list__value">
+            14 June 2021
+        </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text11")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                31 August 2037
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+    </dl>
+
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16") Jane Jones-Smith</h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text13")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                16 May 2022
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text14")
+            </dt><dd class="govuk-summary-list__value">
+            16 May 2022
+        </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            @messages("proofOfEntitlement.text11")
+            </dt>
+            <dd class="govuk-summary-list__value">
+                5 September 2038
+            </dd>
+            <dd class="govuk-summary-list__actions">
+
+            </dd>
+        </div>
+    </dl>
+
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text17")</h2>
+    <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.text18")</a> @messages("proofOfEntitlement.text19")</p>
+
+
+</form>
 }
