@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.entitlement
 
-import play.api.mvc.JavascriptLiteral
+import play.api.libs.json.{Format, Json}
 
-sealed trait Mode
+import java.time.LocalDate
 
-case object CheckMode extends Mode
-case object NormalMode extends Mode
-
-object Mode {
-
-  implicit val jsLiteral: JavascriptLiteral[Mode] = new JavascriptLiteral[Mode] {
-    override def to(value: Mode): String = value match {
-      case NormalMode => "NormalMode"
-      case CheckMode => "CheckMode"
-    }
-  }
+case class ChildBenefitEntitlement(claimant: Claimant,
+                                   entitlementDate: LocalDate,
+                                   paidAmountForEldestOrOnlyChild: Double,
+                                   paidAmountForEachAdditionalChild: Double,
+                                   children: List[Child])
+object ChildBenefitEntitlement {
+  implicit val format: Format[ChildBenefitEntitlement] =
+    Json.format[ChildBenefitEntitlement]
 }

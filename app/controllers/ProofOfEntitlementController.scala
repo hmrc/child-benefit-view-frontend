@@ -16,21 +16,52 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import models.entitlement.ChildBenefitEntitlement
+import play.api.i18n.Messages
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import util.FileUtils
 import views.html.ProofOfEntitlement
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
 class ProofOfEntitlementController @Inject()(
-                                               mcc: MessagesControllerComponents,
-                                               proofOfEntitlement : ProofOfEntitlement
-                                             ) extends FrontendController(mcc) {
+  mcc: MessagesControllerComponents,
+  proofOfEntitlement: ProofOfEntitlement
+) extends FrontendController(mcc) {
+  val view: Action[AnyContent] =
+    Action.async { implicit request =>
+      getEntitlement.map { entitlement =>
+        Ok(proofOfEntitlement(entitlement))
+      }
+    }
 
-  val view: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(proofOfEntitlement()))
-  }
+  def getEntitlement: Future[ChildBenefitEntitlement] =
+    for {
+      content <- Future(FileUtils.readContent("entitlement", "LizJones"))
+      json <- Future(Json.parse(content))
+      entitlement <- Future(json.as[ChildBenefitEntitlement])
+    } yield {
+      entitlement
+    }
+}
 
+object ProofOfEntitlementController {
+  def formatDate(date: LocalDate)(implicit messages: Messages): String =
+    date.format(
+      DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
+    )
+
+  def formatMoney(amount: Double, currency: String = "£"): String =
+    f"$currency$amount%.2f"
+
+  def multiLineTextAsHtml(text: String): Html =
+    Html(text.replaceAll("\\n", "<br>"))
 }
