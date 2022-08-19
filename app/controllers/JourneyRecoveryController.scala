@@ -32,40 +32,47 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
-import play.api.Logging
+import config.FrontendAppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 import uk.gov.hmrc.play.bootstrap.binders._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class JourneyRecoveryController @Inject() (
-    val controllerComponents: MessagesControllerComponents,
-    identify:                 IdentifierAction,
-    continueView:             JourneyRecoveryContinueView,
-    startAgainView:           JourneyRecoveryStartAgainView
-) extends FrontendBaseController
-    with I18nSupport
-    with Logging {
+    continueView:   JourneyRecoveryContinueView,
+    startAgainView: JourneyRecoveryStartAgainView,
+    authConnector:  AuthConnector
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] =
-    identify { implicit request =>
-      val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
-        unsafeUrl.getEither(OnlyRelative) match {
-          case Right(safeUrl) =>
-            Some(safeUrl.url)
-          case Left(message) =>
-            logger.info(message)
-            None
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { _ =>
+        val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
+          unsafeUrl.getEither(OnlyRelative) match {
+            case Right(safeUrl) =>
+              Some(safeUrl.url)
+            case Left(message) =>
+              logger.info(message)
+              None
+          }
         }
-      }
 
-      safeUrl
-        .map(url => Ok(continueView(url)))
-        .getOrElse(Ok(startAgainView()))
+        safeUrl
+          .map(url => Future successful Ok(continueView(url)))
+          .getOrElse(Future successful Ok(startAgainView()))
+      }(routes.JourneyRecoveryController.onPageLoad(continueUrl).absoluteURL())
     }
 }

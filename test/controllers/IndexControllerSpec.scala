@@ -16,30 +16,29 @@
 
 package controllers
 
-import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.BaseISpec
+import utils.TestData.NinoUser
 import views.html.IndexView
 
-class IndexControllerSpec extends SpecBase {
+class IndexControllerSpec extends BaseISpec {
 
   "Index Controller" - {
 
+    lazy val indexController = app.injector.instanceOf[IndexController]
+    lazy val view            = app.injector.instanceOf[IndexView]
+
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
-      val application = applicationBuilder(userAnswers = None).build()
+      val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
+        .withSession(("authToken", "Bearer 123"))
+      val result = indexController.onPageLoad(request)
 
-      running(application) {
-        val request = FakeRequest(GET, routes.IndexController.onPageLoad.url)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[IndexView]
-
-        status(result) mustEqual OK
-
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
-      }
+      status(result) mustEqual 200
+      contentAsString(result) mustEqual view()(request, messages(app)).toString
     }
   }
 }

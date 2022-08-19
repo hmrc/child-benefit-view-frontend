@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package utils
 
-import controllers.auth.AuthContext
-import models.UserAnswers
-import models.requests.OptionalDataRequest
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-import scala.concurrent.{ExecutionContext, Future}
+class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
-
-  override protected def transform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.internalId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(
+      "microservice.services.auth.port" -> wiremockPort
+    )
+    .build()
 }

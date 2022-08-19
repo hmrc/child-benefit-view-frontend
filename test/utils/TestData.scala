@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package utils
 
-import controllers.auth.AuthContext
-import models.UserAnswers
-import models.requests.OptionalDataRequest
+object TestData {
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
-
-  override protected def transform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.internalId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  val NinoUser =
+    """
+      |{
+      |	"nino": "QQ123456A",
+      |	"credentialRole": "User",
+      |	"internalId": "Int-8612ba91-5581-411d-9d32-fb2de937a565"
+      |}
+      |""".stripMargin
 }
