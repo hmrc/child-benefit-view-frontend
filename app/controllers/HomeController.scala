@@ -16,18 +16,30 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import config.FrontendAppConfig
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.Home
 
-import scala.concurrent.Future
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class HomeController @Inject() (mcc: MessagesControllerComponents, homePage: Home) extends FrontendController(mcc) {
+class HomeController @Inject() (homePage: Home, authConnector: AuthConnector)(implicit
+    config:                               Configuration,
+    env:                                  Environment,
+    ec:                                   ExecutionContext,
+    cc:                                   MessagesControllerComponents,
+    frontendAppConfig:                    FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
 
   val view: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(homePage()))
+    authorisedAsChildBenefitUser { _ =>
+      Future.successful(Ok(homePage()))
+    }(routes.HomeController.view.absoluteURL())
   }
 
 }

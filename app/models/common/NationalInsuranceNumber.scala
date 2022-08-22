@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package models.common
 
-import controllers.auth.AuthContext
-import models.UserAnswers
-import models.requests.OptionalDataRequest
+import play.api.libs.json.{Format, Json}
 
-import scala.concurrent.{ExecutionContext, Future}
+final case class NationalInsuranceNumber(nino: String) extends AnyVal
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction {
-
-  override protected def transform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.internalId, dataToReturn))
-
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+object NationalInsuranceNumber {
+  implicit val format: Format[NationalInsuranceNumber] = Json.valueFormat[NationalInsuranceNumber]
 }
