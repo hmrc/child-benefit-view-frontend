@@ -18,7 +18,8 @@ package controllers.auth
 
 import config.FrontendAppConfig
 import models.common.NationalInsuranceNumber
-import play.api.Logging
+import play.api.Mode.Dev
+import play.api.{Environment, Logging}
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
@@ -47,14 +48,21 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
   private val ChildBenefitRetrievals = nino and credentialRole and internalId
 
   def authorisedAsChildBenefitUser(body: ChildBenefitAction[Any])(
-      loginContinueUrl:                  String
-  )(implicit ec:                         ExecutionContext, hc: HeaderCarrier, request: Request[_], config: FrontendAppConfig): Future[Result] =
+      loginContinueUrl:                  Call
+  )(implicit
+      ec:      ExecutionContext,
+      hc:      HeaderCarrier,
+      request: Request[_],
+      config:  FrontendAppConfig,
+      env:     Environment
+  ): Future[Result] =
     authorisedUser(loginContinueUrl, body)
 
   def authorisedAsChildBenefitUser(implicit
       ec:               ExecutionContext,
       config:           FrontendAppConfig,
       cc:               ControllerComponents,
+      env:              Environment,
       loginContinueUrl: Call
   ): ActionBuilder[AuthContext, AnyContent] =
     new ActionBuilder[AuthContext, AnyContent] {
@@ -65,14 +73,20 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
         implicit val req = request
         implicit val hc  = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-        authorisedUser(loginContinueUrl.absoluteURL(), block)
+        authorisedUser(loginContinueUrl, block)
       }
     }
 
   private def authorisedUser[A](
-      loginContinueUrl: String,
+      loginContinueUrl: Call,
       block:            ChildBenefitAction[A]
-  )(implicit ec:        ExecutionContext, hc: HeaderCarrier, config: FrontendAppConfig, request: Request[A]) = {
+  )(implicit
+      ec:      ExecutionContext,
+      hc:      HeaderCarrier,
+      config:  FrontendAppConfig,
+      env:     Environment,
+      request: Request[A]
+  ) = {
     authorised(AuthPredicate)
       .retrieve(ChildBenefitRetrievals) {
         case Some(nino) ~ Some(User) ~ Some(internalId) =>
@@ -80,7 +94,7 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
         case _ => Future successful Redirect(controllers.routes.UnauthorisedController.onPageLoad)
       }
       .recover {
-        handleFailure(loginContinueUrl)
+        handleFailure(toContinueUrl(loginContinueUrl))
       }
   }
 
@@ -96,6 +110,13 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
     case ex: AuthorisationException ⇒
       logger.warn(s"could not authenticate user due to: $ex")
       InternalServerError
+  }
+
+  private def toContinueUrl(call: Call)(implicit rh: RequestHeader, env: Environment): String = {
+    env.mode match {
+      case Dev => call.absoluteURL()
+      case _   => call.url
+    }
   }
 
 }

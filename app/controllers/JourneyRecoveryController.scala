@@ -73,6 +73,6 @@ class JourneyRecoveryController @Inject() (
         safeUrl
           .map(url => Future successful Ok(continueView(url)))
           .getOrElse(Future successful Ok(startAgainView()))
-      }(routes.JourneyRecoveryController.onPageLoad(continueUrl).absoluteURL())
+      }(routes.JourneyRecoveryController.onPageLoad(continueUrl))
     }
 }

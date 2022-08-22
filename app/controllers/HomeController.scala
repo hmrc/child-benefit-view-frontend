@@ -39,7 +39,7 @@ class HomeController @Inject() (homePage: Home, authConnector: AuthConnector)(im
   val view: Action[AnyContent] = Action.async { implicit request =>
     authorisedAsChildBenefitUser { _ =>
       Future.successful(Ok(homePage()))
-    }(routes.HomeController.view.absoluteURL())
+    }(routes.HomeController.view)
   }
 
 }
