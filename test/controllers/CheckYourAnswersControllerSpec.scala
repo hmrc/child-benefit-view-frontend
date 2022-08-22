@@ -16,22 +16,30 @@
 
 package controllers
 
-import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.BaseISpec
+import utils.TestData.NinoUser
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
+class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {
 
   "Check Your Answers Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .configure(
+          "microservice.services.auth.port" -> wiremockPort
+        )
+        .build()
 
       running(application) {
         val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+          .withSession(("authToken", "Bearer 123"))
 
         val result = route(application, request).value
 
@@ -44,13 +52,15 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+          .withSession(("authToken", "Bearer 123"))
 
-        val result = route(application, request).value
+        val result = route(app, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

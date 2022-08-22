@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package generators
+package utils
 
-import org.scalacheck.Arbitrary
-import pages._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-trait PageGenerators {
+class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
+
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(
+      "microservice.services.auth.port" -> wiremockPort
+    )
+    .build()
 }

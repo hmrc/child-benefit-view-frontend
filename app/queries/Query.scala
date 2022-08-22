@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package queries
 
 import models.UserAnswers
@@ -47,6 +46,6 @@ trait Gettable[A] extends Query
 
 trait Settable[A] extends Query {
 
-  def cleanup(value: Option[A], userAnswers: UserAnswers): Try[UserAnswers] =
+  def cleanup(userAnswers: UserAnswers): Try[UserAnswers] =
     Success(userAnswers)
 }

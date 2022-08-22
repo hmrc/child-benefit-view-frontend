@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
-package controllers.actions
+package services
 
-import javax.inject.Inject
-import models.requests.IdentifierRequest
-import play.api.mvc._
+import models.entitlement.ChildBenefitEntitlement
+import play.api.libs.json.Json
+import util.FileUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class ProofOfEntitlementService {
 
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id"))
+  def getEntitlement() (implicit ec : ExecutionContext): Future[ChildBenefitEntitlement] =
 
-  override def parser: BodyParser[AnyContent] =
-    bodyParsers.default
 
-  override protected def executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+    for {
+      content <- Future(FileUtils.readContent("entitlement"))
+      json <- Future(Json.parse(content))
+      entitlement <- Future(json.as[ChildBenefitEntitlement])
+    } yield {
+      entitlement
+    }
+
+
+  //val connector = new ChildBenefitEntitlementConnector(httpClient, appConfig)
+
 }

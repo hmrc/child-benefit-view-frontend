@@ -16,40 +16,31 @@
 
 package controllers
 
-import models.entitlement.ChildBenefitEntitlement
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
+import services.ProofOfEntitlementService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import util.FileUtils
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 @Singleton
 class ProofOfEntitlementController @Inject()(
   mcc: MessagesControllerComponents,
-  proofOfEntitlement: ProofOfEntitlement
+  proofOfEntitlement: ProofOfEntitlement,
+  proofOfEntitlementService : ProofOfEntitlementService
 ) extends FrontendController(mcc) {
+
+
   val view: Action[AnyContent] =
     Action.async { implicit request =>
-      getEntitlement.map { entitlement =>
+      proofOfEntitlementService.getEntitlement().map { entitlement =>
         Ok(proofOfEntitlement(entitlement))
       }
-    }
-
-  def getEntitlement: Future[ChildBenefitEntitlement] =
-    for {
-      content <- Future(FileUtils.readContent("entitlement", "LizJones"))
-      json <- Future(Json.parse(content))
-      entitlement <- Future(json.as[ChildBenefitEntitlement])
-    } yield {
-      entitlement
     }
 }
 

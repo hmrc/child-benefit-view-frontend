@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package viewmodels.govuk
 
 import play.twirl.api.Html

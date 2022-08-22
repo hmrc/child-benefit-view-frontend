@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package generators
+package models
 
-import models._
-import org.scalacheck.Arbitrary
-import org.scalacheck.Arbitrary.arbitrary
-import pages._
-import play.api.libs.json.{JsValue, Json}
+import cats.data.EitherT
+import cats.implicits.catsSyntaxEitherId
+import models.errors.CBError
 
-trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+import scala.concurrent.Future
+object CBEnvelope {
+  type CBEnvelope[T] = EitherT[Future, CBError, T]
+
+  def apply[T](value: T): CBEnvelope[T] =
+    EitherT[Future, CBError, T](Future.successful(value.asRight[CBError]))
 }

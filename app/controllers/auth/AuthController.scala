@@ -30,44 +30,50 @@
  * limitations under the License.
  */
 
-
 package controllers.auth
 
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
+import controllers.ChildBenefitBaseController
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.{Configuration, Environment}
 import repositories.SessionRepository
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
+class AuthController @Inject() (
+    sessionRepository: SessionRepository,
+    authConnector:     AuthConnector
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
 
-class AuthController @Inject()(
-                                val controllerComponents: MessagesControllerComponents,
-                                config: FrontendAppConfig,
-                                sessionRepository: SessionRepository,
-                                identify: IdentifierAction
-                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+  def signOut(): Action[AnyContent] =
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { authContext =>
+        sessionRepository
+          .clear(authContext.internalId)
+          .map { _ =>
+            Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(frontendAppConfig.exitSurveyUrl)))
+          }
+      }(routes.AuthController.signOut.absoluteURL())
+    }
 
-  def signOut(): Action[AnyContent] = identify.async {
-    implicit request =>
-      sessionRepository
-        .clear(request.userId)
-        .map {
-          _ =>
-            Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
-      }
-  }
-
-  def signOutNoSurvey(): Action[AnyContent] = identify.async {
-    implicit request =>
-    sessionRepository
-      .clear(request.userId)
-      .map {
-        _ =>
-        Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
-      }
-  }
+  def signOutNoSurvey(): Action[AnyContent] =
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { authContext =>
+        sessionRepository
+          .clear(authContext.internalId)
+          .map { _ =>
+            Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
+          }
+      }(routes.AuthController.signOutNoSurvey.absoluteURL())
+    }
 }

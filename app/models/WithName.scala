@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package models
 
 class WithName(string: String) {

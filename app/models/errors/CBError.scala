@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package generators
+package models.errors
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+sealed trait CBError
 
-trait ModelGenerators {
-}
+final case class ConnectorError(statusCode: Int, message: String) extends CBError

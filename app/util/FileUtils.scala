@@ -20,7 +20,8 @@ import scala.io.Source
 
 object FileUtils {
 
-  def readContent(apiSource: String, fileName: String): String = {
+  def readContent(apiSource: String): String = {
+    val fileName: String = "LizJones"
     val filePath = s"./conf/resources/$apiSource/$fileName.json"
     val fileContents = Source.fromFile(filePath).getLines.mkString
     fileContents

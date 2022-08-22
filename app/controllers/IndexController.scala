@@ -30,23 +30,34 @@
  * limitations under the License.
  */
 
-
 package controllers
 
-import controllers.actions.IdentifierAction
-import javax.inject.Inject
+import config.FrontendAppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.IndexView
 
-class IndexController @Inject()(
-                                 val controllerComponents: MessagesControllerComponents,
-                                 identify: IdentifierAction,
-                                 view: IndexView
-                               ) extends FrontendBaseController with I18nSupport {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Ok(view())
-  }
+class IndexController @Inject() (
+    view:          IndexView,
+    authConnector: AuthConnector
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] =
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { _ =>
+        Future successful Ok(view())
+      }(routes.IndexController.onPageLoad.absoluteURL())
+    }
 }

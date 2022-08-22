@@ -30,7 +30,6 @@
  * limitations under the License.
  */
 
-
 package viewmodels
 
 import play.api.i18n.Messages

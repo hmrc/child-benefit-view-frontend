@@ -16,29 +16,27 @@
 
 package controllers
 
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.{FakeRequest, Injecting}
+import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.BaseISpec
+import utils.TestData.NinoUser
 
-class HomeControllerSpec
-    extends AnyWordSpec
-    with Matchers
-    with GuiceOneAppPerSuite
-    with Injecting {
+class HomeControllerSpec extends BaseISpec {
 
-  private val fakeRequest = FakeRequest("GET", "/")
-  private val controller = inject[HomeController]
+  private val fakeRequest = FakeRequest("GET", "/").withSession(("authToken", "Bearer 123"))
+  private val controller  = app.injector.instanceOf[HomeController]
 
-  "render home" should {
+  "render home" - {
     "return HTML and 200 status" in {
+      userLoggedInChildBenefitUser(NinoUser)
+
       val result = controller.view()(fakeRequest)
-      status(result) shouldBe Status.OK
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
-      contentAsString(result) should include("Apply for Child Benefit")
+      status(result) mustEqual Status.OK
+      contentType(result) mustEqual Some("text/html")
+      charset(result) mustEqual Some("utf-8")
+      contentAsString(result) must include("Apply for Child Benefit")
     }
   }
 
