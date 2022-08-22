@@ -16,16 +16,19 @@
 
 package controllers
 
-import base.SpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.BaseISpec
+import utils.TestData.NinoUser
 import views.html.UnauthorisedView
 
-class UnauthorisedControllerSpec extends SpecBase {
+class UnauthorisedControllerSpec extends BaseISpec {
 
   "Unauthorised Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

@@ -30,13 +30,12 @@
  * limitations under the License.
  */
 
-
 package viewmodels
 
 package object govuk {
 
   object all
-    extends ImplicitConversions
+      extends ImplicitConversions
       with BackLinkFluency
       with ButtonFluency
       with CheckboxFluency

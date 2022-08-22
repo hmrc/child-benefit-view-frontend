@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package generators
+package utils
 
-import models._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.{Arbitrary, Gen}
+object TestData {
 
-trait ModelGenerators {
+  val NinoUser =
+    """
+      |{
+      |	"nino": "QQ123456A",
+      |	"credentialRole": "User",
+      |	"internalId": "Int-8612ba91-5581-411d-9d32-fb2de937a565"
+      |}
+      |""".stripMargin
 }

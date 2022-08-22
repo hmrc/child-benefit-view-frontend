@@ -30,33 +30,43 @@
  * limitations under the License.
  */
 
-
 package controllers
 
 import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import config.FrontendAppConfig
+import controllers.actions.{DataRequiredAction, DataRetrievalAction}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import viewmodels.govuk.summarylist._
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            identify: IdentifierAction,
-                                            getData: DataRetrievalAction,
-                                            requireData: DataRequiredAction,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: CheckYourAnswersView
-                                          ) extends FrontendBaseController with I18nSupport {
+import scala.concurrent.ExecutionContext
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+class CheckYourAnswersController @Inject() (
+    override val messagesApi: MessagesApi,
+    getData:                  DataRetrievalAction,
+    requireData:              DataRequiredAction,
+    view:                     CheckYourAnswersView,
+    authConnector:            AuthConnector
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
 
+  def onPageLoad(): Action[AnyContent] = {
+    implicit val loginContinueUrl: Call = routes.CheckYourAnswersController.onPageLoad
+
+    (authorisedAsChildBenefitUser andThen getData andThen requireData) { implicit request =>
       val list = SummaryListViewModel(
         rows = Seq.empty
       )
-
       Ok(view(list))
+    }
   }
 }
