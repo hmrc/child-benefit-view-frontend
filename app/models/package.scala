@@ -30,9 +30,14 @@
  * limitations under the License.
  */
 
+import cats.data.EitherT
+import models.errors.CBError
 import play.api.libs.json._
 
+import scala.concurrent.Future
+
 package object models {
+  type CBEnvelope[T] = EitherT[Future, CBError, T]
 
   implicit class RichJsObject(jsObject: JsObject) {
 

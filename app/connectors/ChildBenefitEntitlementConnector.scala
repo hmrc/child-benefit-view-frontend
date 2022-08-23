@@ -21,52 +21,68 @@ import cats.implicits.catsSyntaxEitherId
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import models.CBEnvelope
-import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.ConnectorError
 import models.failure.Failures
+import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 import util.FileUtils
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
-
-@ImplementedBy(classOf[MockRelationshipDetailsConnector])
+// TODO: Replace with DefaultChildBenefitEntitlementConnector
+@ImplementedBy(classOf[MockChildBenefitEntitlementConnector])
 trait ChildBenefitEntitlementConnector {
-  def getChildBenefitEntitlementUrl()(implicit
-                              ec: ExecutionContext,
-                              hc: HeaderCarrier
-                            ): CBEnvelope[ChildBenefitEntitlement]
+  def getChildBenefitEntitlement(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[ChildBenefitEntitlement]
 }
 
 @Singleton
-class MockRelationshipDetailsConnector @Inject() ()  extends ChildBenefitEntitlementConnector {
-  override def getChildBenefitEntitlementUrl()(implicit ec: ExecutionContext, hc: HeaderCarrier): CBEnvelope[ChildBenefitEntitlement] = {
+class MockChildBenefitEntitlementConnector extends ChildBenefitEntitlementConnector {
+  override def getChildBenefitEntitlement(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[ChildBenefitEntitlement] =
+    EitherT(
+      Future(
+        for {
+          content <-
+            Try(FileUtils.readContent("entitlement", "LizJones")).toEither.left
+              .map(e => s"Cannot read entitlement file: $e")
 
-      val content  = FileUtils.readContent("entitlement")
-      val json = Json.parse(content)
-      val childBenefitEntitlement : ChildBenefitEntitlement =json.as[ChildBenefitEntitlement]
-      CBEnvelope(childBenefitEntitlement)
-  }
+          json <-
+            Try(Json.parse(content)).toEither.left
+              .map(e => s"Cannot parse entitlement json: $e")
+
+          entitlement <-
+            Try(json.as[ChildBenefitEntitlement]).toEither.left
+              .map(e => s"Invalid entitlement json: $e")
+        } yield {
+          entitlement
+        }
+      )
+    ).leftMap { error =>
+      ConnectorError(Status.INTERNAL_SERVER_ERROR, error)
+    }
 }
 
 @Singleton
-class DefaultRelationshipDetailsConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
-  extends ChildBenefitEntitlementConnector
+class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+    extends ChildBenefitEntitlementConnector
     with HttpReadsWrapper[ChildBenefitEntitlement, Failures] {
-  def getChildBenefitEntitlementUrl()(implicit
-                              ec: ExecutionContext,
-                              hc: HeaderCarrier
-                            ): CBEnvelope[ChildBenefitEntitlement] = {
-    val url =
-      s"${appConfig.childBenefitEntitlementUrl}${}"
-
+  def getChildBenefitEntitlement(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[ChildBenefitEntitlement] =
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(url)(httpReads, hc, ec)
+          .GET(appConfig.childBenefitEntitlementUrl)(httpReads, hc, ec)
           .recover {
             case e: HttpException => ConnectorError(e.responseCode, e.getMessage).asLeft[ChildBenefitEntitlement]
             case e: UpstreamErrorResponse =>
@@ -74,7 +90,6 @@ class DefaultRelationshipDetailsConnector @Inject() (httpClient: HttpClient, app
           }
       )
     }
-  }
 
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: Failures): ConnectorError =
     ConnectorError(status, upstreamError.failures.map(f => s"code: ${f.code}. reason: ${f.reason}").mkString(";"))

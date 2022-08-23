@@ -16,31 +16,44 @@
 
 package controllers
 
+import connectors.ChildBenefitEntitlementConnector
+import models.errors.ConnectorError
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.twirl.api.Html
-import services.ProofOfEntitlementService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.ProofOfEntitlement
+import views.html.{ErrorTemplate, ProofOfEntitlement}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
-class ProofOfEntitlementController @Inject()(
-  mcc: MessagesControllerComponents,
-  proofOfEntitlement: ProofOfEntitlement,
-  proofOfEntitlementService : ProofOfEntitlementService
+class ProofOfEntitlementController @Inject() (
+    mcc:                              MessagesControllerComponents,
+    errorTemplate:                    ErrorTemplate,
+    proofOfEntitlement:               ProofOfEntitlement,
+    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector
 ) extends FrontendController(mcc) {
-
-
   val view: Action[AnyContent] =
     Action.async { implicit request =>
-      proofOfEntitlementService.getEntitlement().map { entitlement =>
-        Ok(proofOfEntitlement(entitlement))
-      }
+      childBenefitEntitlementConnector.getChildBenefitEntitlement.foldF[Result](
+        {
+          case ConnectorError(statusCode, message) =>
+            Future.successful(
+              Status(statusCode)(
+                errorTemplate(
+                  Messages("global.error.InternalServerError500.title"),
+                  Messages("global.error.InternalServerError500.heading"),
+                  message
+                )
+              )
+            )
+        },
+        entitlement => Future.successful(Ok(proofOfEntitlement(entitlement)))
+      )
     }
 }
 

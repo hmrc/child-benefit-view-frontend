@@ -16,16 +16,18 @@
 
 package util
 
-import scala.io.Source
+import scala.io.{BufferedSource, Source}
 
 object FileUtils {
-
-  def readContent(apiSource: String): String = {
-    val fileName: String = "LizJones"
+  def readContent(apiSource: String, fileName: String): String = {
     val filePath = s"./conf/resources/$apiSource/$fileName.json"
-    val fileContents = Source.fromFile(filePath).getLines.mkString
-    fileContents
-
+    var source: BufferedSource = null
+    try {
+      source = Source.fromFile(filePath)
+      val fileContents = source.getLines.mkString
+      fileContents
+    } finally {
+      if (source != null) source.close()
+    }
   }
-
 }

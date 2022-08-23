@@ -16,11 +16,10 @@
 
 package connectors
 
-
 import cats.Show
 import cats.syntax.all._
 import connectors.HttpReadsWrapper._
-import models.CBEnvelope.CBEnvelope
+import models.CBEnvelope
 import models.errors.{CBError, ConnectorError}
 import play.api.http.Status
 import play.api.libs.json.{JsPath, JsonValidationError, Reads}
@@ -28,21 +27,19 @@ import uk.gov.hmrc.http.HttpReads
 
 import scala.util.{Failure, Success, Try}
 
-
 trait HttpReadsWrapper[T, E] {
-
   def withHttpReads(
-                     block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
-                   )(implicit
-                     readsSuccess: Reads[T],
-                     readsError:   Reads[E]
-                   ): CBEnvelope[T] =
+      block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
+  )(implicit
+      readsSuccess: Reads[T],
+      readsError:   Reads[E]
+  ): CBEnvelope[T] =
     block(getHttpReads(readsSuccess, readsError))
 
   private def getHttpReads(implicit
-                           readsSuccess: Reads[T],
-                           readsError:   Reads[E]
-                          ): HttpReads[Either[CBError, T]] =
+      readsSuccess: Reads[T],
+      readsError:   Reads[E]
+  ): HttpReads[Either[CBError, T]] =
     (_, _, response) => {
       response.status match {
         case Status.OK | Status.CREATED =>
@@ -54,7 +51,7 @@ trait HttpReadsWrapper[T, E] {
                   error =>
                     ConnectorError(
                       Status.SERVICE_UNAVAILABLE,
-                      s"Couldn't parse body from upstream:  error=${error.show}"
+                      s"Couldn't parse body from upstream: error=${error.show}"
                     ).asLeft[T],
                   Right(_)
                 )
@@ -63,7 +60,6 @@ trait HttpReadsWrapper[T, E] {
                 Status.INTERNAL_SERVER_ERROR,
                 s"Couldn't parse error body from upstream, error=${e.getMessage}"
               ).asLeft[T]
-
           }
 
         case status =>
@@ -83,7 +79,6 @@ trait HttpReadsWrapper[T, E] {
             case Failure(e) =>
               ConnectorError(status, s"Couldn't parse error body from upstream, error=${e.getMessage}").asLeft[T]
           }
-
       }
     }
 
@@ -101,4 +96,3 @@ object HttpReadsWrapper {
       .mkString(", ")
   }
 }
-

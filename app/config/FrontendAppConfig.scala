@@ -46,7 +46,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   val loginUrl:         String = configuration.get[String]("urls.login")
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   val signOutUrl:       String = configuration.get[String]("urls.signOut")
-  def childBenefitEntitlementUrl:   String = configuration.get[String]("services.child-benefit-entitlement.url")
+  def childBenefitEntitlementUrl: String =
+    configuration.get[String]("microservice.services.child-benefit-entitlement.url")
 
   private val exitSurveyBaseUrl: String = configuration
     .get[Service]("microservice.services.feedback-frontend")
