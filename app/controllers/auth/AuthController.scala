@@ -63,7 +63,7 @@ class AuthController @Inject() (
           .map { _ =>
             Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(frontendAppConfig.exitSurveyUrl)))
           }
-      }(routes.AuthController.signOut.absoluteURL())
+      }(routes.AuthController.signOut)
     }
 
   def signOutNoSurvey(): Action[AnyContent] =
@@ -74,6 +74,6 @@ class AuthController @Inject() (
           .map { _ =>
             Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
           }
-      }(routes.AuthController.signOutNoSurvey.absoluteURL())
+      }(routes.AuthController.signOutNoSurvey)
     }
 }

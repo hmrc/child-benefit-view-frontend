@@ -58,6 +58,6 @@ class IndexController @Inject() (
     Action.async { implicit request =>
       authorisedAsChildBenefitUser { _ =>
         Future successful Ok(view())
-      }(routes.IndexController.onPageLoad.absoluteURL())
+      }(routes.IndexController.onPageLoad)
     }
 }
