@@ -25,8 +25,7 @@
     @messages("proofOfEntitlement.text1")
     </h1>
 
-    <p> @messages("proofOfEntitlement.text2", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
-
+    <p class="govuk-body"> @messages("proofOfEntitlement.text2", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
     <p class="govuk-body">@messages("proofOfEntitlement.text3")</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("proofOfEntitlement.text4", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
