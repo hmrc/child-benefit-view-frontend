@@ -1,7 +1,12 @@
 {
   "claimant": {
     "name": "Liz Jones",
-    "address": "Flat 3\n75 Norten Grove\nManchester\nM20 2JL",
+    "addressLines":[
+      "Flat 3",
+      "75 Norten Grove",
+      "Manchester",
+      "M20 2JL"
+    ],
     "amount": 50.70,
     "startDate": "2021-02-22",
     "endDate": "2038-09-05"

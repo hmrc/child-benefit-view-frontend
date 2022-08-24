@@ -20,7 +20,6 @@ import connectors.ChildBenefitEntitlementConnector
 import models.errors.ConnectorError
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.{ErrorTemplate, ProofOfEntitlement}
 
@@ -65,7 +64,4 @@ object ProofOfEntitlementController {
 
   def formatMoney(amount: Double, currency: String = "£"): String =
     f"$currency$amount%.2f"
-
-  def multiLineTextAsHtml(text: String): Html =
-    Html(text.replaceAll("\\n", "<br>"))
 }

@@ -32,9 +32,7 @@
         <li>@messages("proofOfEntitlement.text5", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
     </ul>
 
-
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text6")</h2>
-
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
@@ -52,7 +50,11 @@
                 @messages("proofOfEntitlement.text8")
             </dt>
             <dd class="govuk-summary-list__value">
-                @{multiLineTextAsHtml(entitlement.claimant.address)}
+
+            @for(addressLine <- entitlement.claimant.addressLines) {
+                @messages(addressLine)<br>
+            }
+
             </dd>
             <dd class="govuk-summary-list__actions">
 
@@ -88,7 +90,6 @@
                 @formatDate(entitlement.claimant.endDate)
             </dd>
             <dd class="govuk-summary-list__actions">
-
             </dd>
         </div>
     </dl>
@@ -137,7 +138,6 @@
         </div>
     </dl>
     }
-
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16")</h2>
     <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.text17")</a> @messages("proofOfEntitlement.text18")</p>
 }

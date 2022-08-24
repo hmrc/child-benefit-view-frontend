@@ -21,7 +21,7 @@ import play.api.libs.json.{Format, Json}
 import java.time.LocalDate
 
 case class Claimant(name: String,
-                    address: String,
+                    addressLines: List[String],
                     amount: Double,
                     startDate: LocalDate,
                     endDate: LocalDate)
