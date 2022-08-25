@@ -22,74 +22,47 @@
 @layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
     <span class="govuk-caption-xl">@{entitlement.claimant.name}</span>
     <h1 class="govuk-heading-xl">
-    @messages("proofOfEntitlement.text1")
+    @messages("proofOfEntitlement.title")
     </h1>
 
-    <p class="govuk-body"> @messages("proofOfEntitlement.text2", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
-    <p class="govuk-body">@messages("proofOfEntitlement.text3")</p>
+    <p class="govuk-body"> @messages("proofOfEntitlement.confirmation", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
+    <p class="govuk-body">@messages("proofOfEntitlement.paidDetail")</p>
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("proofOfEntitlement.text4", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
-        <li>@messages("proofOfEntitlement.text5", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
+        <li>@messages("proofOfEntitlement.firstChild", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
+        <li>@messages("proofOfEntitlement.additionalchild", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
     </ul>
 
-    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text6")</h2>
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.entitlementdetail")</h2>
 
 
     @summaryList(SummaryList(
         rows = Seq(
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text7"))), value = Value(HtmlContent(entitlement.claimant.name))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text8"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>")))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text9"))), value = Value(HtmlContent(messages("proofOfEntitlement.text10", formatMoney(entitlement.claimant.amount))))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text11"))), value = Value(HtmlContent(messages("proofOfEntitlement.text12", formatDate(entitlement.claimant.startDate))))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text13"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate)))))
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>")))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.amount))))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(messages("proofOfEntitlement.onorbefore", formatDate(entitlement.claimant.startDate))))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate)))))
         )
     )
 
-
     @for((child, index) <- entitlement.children.zipWithIndex) {
-    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text14", child.name)</h2>
+
+        <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name)</h2>
+
+        @summaryList(SummaryList(
+            rows = Seq(
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(messages("proofOfEntitlement.onorbefore", formatDate(child.startDate))))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.endDate)))))
+        )
+        )
+
+
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-            @messages("proofOfEntitlement.text15")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @{formatDate(child.dateOfBirth)}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
-
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-            @messages("proofOfEntitlement.text11")
-            </dt><dd class="govuk-summary-list__value">
-            @if(index == 0) {
-            @messages("proofOfEntitlement.text12", formatDate(child.startDate))
-            } else {
-            @formatDate(child.startDate)
-            }
-        </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-            @messages("proofOfEntitlement.text13")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @{formatDate(child.endDate)}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
     </dl>
     }
-    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text16")</h2>
-    <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.text17")</a> @messages("proofOfEntitlement.text18")</p>
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.viewpayments")</h2>
+    <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments")</a> @messages("proofOfEntitlement.personaltaxaccount")</p>
 }
