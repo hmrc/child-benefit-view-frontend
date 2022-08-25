@@ -20,11 +20,13 @@ import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
 
-case class ChildBenefitEntitlement(claimant: Claimant,
-                                   entitlementDate: LocalDate,
-                                   paidAmountForEldestOrOnlyChild: Double,
-                                   paidAmountForEachAdditionalChild: Double,
-                                   children: List[Child])
+case class ChildBenefitEntitlement(
+    claimant:                         Claimant,
+    entitlementDate:                  LocalDate,
+    paidAmountForEldestOrOnlyChild:   Double,
+    paidAmountForEachAdditionalChild: Double,
+    children:                         List[Child]
+)
 object ChildBenefitEntitlement {
   implicit val format: Format[ChildBenefitEntitlement] =
     Json.format[ChildBenefitEntitlement]

@@ -20,11 +20,7 @@ import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
 
-case class Claimant(name: String,
-                    addressLines: List[String],
-                    amount: Double,
-                    startDate: LocalDate,
-                    endDate: LocalDate)
+case class Claimant(name: String, addressLines: List[String], amount: Double, startDate: LocalDate, endDate: LocalDate)
 
 object Claimant {
   implicit val format: Format[Claimant] = Json.format[Claimant]
