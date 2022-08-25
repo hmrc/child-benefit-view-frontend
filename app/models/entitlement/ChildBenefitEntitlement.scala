@@ -29,6 +29,3 @@ object ChildBenefitEntitlement {
   implicit val format: Format[ChildBenefitEntitlement] =
     Json.format[ChildBenefitEntitlement]
 }
-
-final case class Nino(value: String) extends AnyVal
-
