@@ -17,7 +17,7 @@
 @import controllers.ProofOfEntitlementController._
 @import models.entitlement.ChildBenefitEntitlement
 
-@this(layout: templates.Layout)
+@this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
 @layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
     <span class="govuk-caption-xl">@{entitlement.claimant.name}</span>
@@ -33,66 +33,18 @@
     </ul>
 
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text6")</h2>
-    <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("proofOfEntitlement.text7")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @{entitlement.claimant.name}
-            </dd>
-            <dd class="govuk-summary-list__actions">
 
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("proofOfEntitlement.text8")
-            </dt>
-            <dd class="govuk-summary-list__value">
 
-            @for(addressLine <- entitlement.claimant.addressLines) {
-                @addressLine<br>
-            }
+    @summaryList(SummaryList(
+        rows = Seq(
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text7"))), value = Value(HtmlContent(entitlement.claimant.name))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text8"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>")))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text9"))), value = Value(HtmlContent(messages("proofOfEntitlement.text10", formatMoney(entitlement.claimant.amount))))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text11"))), value = Value(HtmlContent(messages("proofOfEntitlement.text12", formatDate(entitlement.claimant.startDate))))),
+            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.text13"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate)))))
+        )
+    )
 
-            </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("proofOfEntitlement.text9")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @messages("proofOfEntitlement.text10", formatMoney(entitlement.claimant.amount))
-            </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("proofOfEntitlement.text11")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @messages("proofOfEntitlement.text12", formatDate(entitlement.claimant.startDate))
-            </dd>
-            <dd class="govuk-summary-list__actions">
-
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                @messages("proofOfEntitlement.text13")
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @formatDate(entitlement.claimant.endDate)
-            </dd>
-            <dd class="govuk-summary-list__actions">
-            </dd>
-        </div>
-    </dl>
 
     @for((child, index) <- entitlement.children.zipWithIndex) {
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.text14", child.name)</h2>
