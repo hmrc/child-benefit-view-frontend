@@ -33,8 +33,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-// TODO: Replace with DefaultChildBenefitEntitlementConnector
-@ImplementedBy(classOf[MockChildBenefitEntitlementConnector])
+@ImplementedBy(classOf[DefaultChildBenefitEntitlementConnector])
 trait ChildBenefitEntitlementConnector {
   def getChildBenefitEntitlement(implicit
       ec: ExecutionContext,

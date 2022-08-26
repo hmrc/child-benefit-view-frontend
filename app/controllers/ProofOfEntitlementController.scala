@@ -16,43 +16,52 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import models.errors.ConnectorError
+import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.{ErrorTemplate, ProofOfEntitlement}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ProofOfEntitlementController @Inject() (
-    mcc:                              MessagesControllerComponents,
+    authConnector:                    AuthConnector,
+    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorTemplate:                    ErrorTemplate,
-    proofOfEntitlement:               ProofOfEntitlement,
-    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector
-) extends FrontendController(mcc) {
+    proofOfEntitlement:               ProofOfEntitlement
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
-      childBenefitEntitlementConnector.getChildBenefitEntitlement.foldF[Result](
-        {
-          case ConnectorError(statusCode, message) =>
-            Future.successful(
-              Status(statusCode)(
-                errorTemplate(
-                  Messages("global.error.InternalServerError500.title"),
-                  Messages("global.error.InternalServerError500.heading"),
-                  message
+      authorisedAsChildBenefitUser { _ =>
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.foldF[Result](
+          {
+            case ConnectorError(statusCode, message) =>
+              Future.successful(
+                Status(statusCode)(
+                  errorTemplate(
+                    request.messages("global.error.InternalServerError500.title"),
+                    request.messages("global.error.InternalServerError500.heading"),
+                    message
+                  )
                 )
               )
-            )
-        },
-        entitlement => Future.successful(Ok(proofOfEntitlement(entitlement)))
-      )
+          },
+          entitlement => Future.successful(Ok(proofOfEntitlement(entitlement)))
+        )
+      }(routes.ProofOfEntitlementController.view.absoluteURL())
     }
 }
 
