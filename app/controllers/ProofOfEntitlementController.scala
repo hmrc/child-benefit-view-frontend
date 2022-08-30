@@ -66,10 +66,28 @@ class ProofOfEntitlementController @Inject() (
 }
 
 object ProofOfEntitlementController {
-  def formatDate(date: LocalDate)(implicit messages: Messages): String =
-    date.format(
+  private val specialAwardStartDates: Set[LocalDate] =
+    Set(
+      LocalDate.of(2021, 2, 22),
+      LocalDate.of(2021, 3, 1),
+      LocalDate.of(2021, 3, 8),
+      LocalDate.of(2021, 3, 15)
+    )
+
+  def formatDate(
+      date:                          LocalDate,
+      checkForSpecialAwardStartDate: Boolean = false
+  )(implicit messages:               Messages): String = {
+    val formattedDate = date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )
+
+    if (checkForSpecialAwardStartDate && specialAwardStartDates.contains(date)) {
+      messages("proofOfEntitlement.onorbefore", formattedDate)
+    } else {
+      formattedDate
+    }
+  }
 
   def formatMoney(amount: Double, currency: String = "£"): String =
     f"$currency$amount%.2f"

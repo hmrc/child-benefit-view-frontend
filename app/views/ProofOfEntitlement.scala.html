@@ -32,32 +32,36 @@
         <li>@messages("proofOfEntitlement.additionalchild", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
     </ul>
 
-    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.entitlementdetail")</h2>
-
-
-    @summaryList(SummaryList(
-        rows = Seq(
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>")))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.amount))))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(messages("proofOfEntitlement.onorbefore", formatDate(entitlement.claimant.startDate))))),
-            SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate)))))
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.entitlementdetail.title")</h2>
+    <p>@messages("proofOfEntitlement.entitlementdetail.part1") <a href="">@messages("proofOfEntitlement.entitlementdetail.part2")</a> @messages("proofOfEntitlement.entitlementdetail.part3") <a href="">@messages("proofOfEntitlement.entitlementdetail.part4")</a> @messages("proofOfEntitlement.entitlementdetail.part5")</p>
+    @summaryList(
+        SummaryList(
+            rows = Seq(
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name)), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>"))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.amount)))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.startDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate))), actions = Some(Actions(items = Seq(ActionItem())))),
+            ),
+            classes = "govuk-!-margin-bottom-9"
         )
     )
 
     @for((child, index) <- entitlement.children.zipWithIndex) {
-
+      @if(child.startDate.isBefore(child.endDate)) {
         <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name)</h2>
-
-        @summaryList(SummaryList(
-            rows = Seq(
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(messages("proofOfEntitlement.onorbefore", formatDate(child.startDate))))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.endDate)))))
+        @summaryList(
+            SummaryList(
+                rows = Seq(
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(child.startDate, checkForSpecialAwardStartDate = true)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.endDate))))
+                ),
+                classes = "govuk-!-margin-bottom-9"
+            )
         )
-        )
-
+      }
     }
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.viewpayments")</h2>
-    <p>You can <a href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments")</a> @messages("proofOfEntitlement.personaltaxaccount")</p>
+    <p>@messages("proofOfEntitlement.viewrecentpayments.part1") <a href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
 }
