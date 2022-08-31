@@ -24,4 +24,4 @@ GET         /unauthorised                                controllers.Unauthorise
 
 GET         /task_two/nationality                        controllers.NationalityQuestionController.view
 
-GET         /child-benefit-view-proof                        controllers.ProofOfEntitlementController.view
+GET         /view-proof-entitlement                      controllers.ProofOfEntitlementController.view
