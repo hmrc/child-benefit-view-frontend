@@ -47,7 +47,7 @@
         )
     )
 
-    @for((child, index) <- entitlement.children.zipWithIndex) {
+    @for(child <- entitlement.children) {
       @if(child.startDate.isBefore(child.endDate)) {
         <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name)</h2>
         @summaryList(
@@ -63,5 +63,5 @@
       }
     }
     <h2 class="govuk-heading-m">@messages("proofOfEntitlement.viewpayments")</h2>
-    <p class="govuk-body">@messages("proofOfEntitlement.viewrecentpayments.part1") <a href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
+    <p class="govuk-body">@messages("proofOfEntitlement.viewrecentpayments.part1") <a class = "govuk-link" href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
 }
