@@ -1,0 +1,67 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import controllers.ProofOfEntitlementController._
+@import models.entitlement.ChildBenefitEntitlement
+
+@this(layout: templates.Layout, summaryList: GovukSummaryList)
+@(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
+@layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
+    <span class="govuk-caption-xl">@{entitlement.claimant.name}</span>
+    <h1 class="govuk-heading-xl">
+    @messages("proofOfEntitlement.title")
+    </h1>
+
+    <p class="govuk-body"> @messages("proofOfEntitlement.confirmation", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
+    <p class="govuk-body">@messages("proofOfEntitlement.paidDetail")</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("proofOfEntitlement.firstChild", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
+        <li>@messages("proofOfEntitlement.additionalchild", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.entitlementdetail.title")</h2>
+    <p class="govuk-body">@messages("proofOfEntitlement.entitlementdetail.part1") <a href="">@messages("proofOfEntitlement.entitlementdetail.part2")</a> @messages("proofOfEntitlement.entitlementdetail.part3") <a href="">@messages("proofOfEntitlement.entitlementdetail.part4")</a> @messages("proofOfEntitlement.entitlementdetail.part5")</p>
+    @summaryList(
+        SummaryList(
+            rows = Seq(
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name)), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>"))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.amount)))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.startDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate))), actions = Some(Actions(items = Seq(ActionItem())))),
+            ),
+            classes = "govuk-!-margin-bottom-9"
+        )
+    )
+
+    @for(child <- entitlement.children) {
+      @if(child.startDate.isBefore(child.endDate)) {
+        <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name)</h2>
+        @summaryList(
+            SummaryList(
+                rows = Seq(
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(child.startDate, checkForSpecialAwardStartDate = true)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.endDate))))
+                ),
+                classes = "govuk-!-margin-bottom-9"
+            )
+        )
+      }
+    }
+    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.viewpayments")</h2>
+    <p class="govuk-body">@messages("proofOfEntitlement.viewrecentpayments.part1") <a class = "govuk-link" href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
+}

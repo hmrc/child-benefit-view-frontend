@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package base
+package models.failure
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+import play.api.libs.json.{Format, Json}
 
-trait SpecBase
-    extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
+final case class Failures(failures: List[Failure])
+
+object Failures {
+  implicit val format: Format[Failures] = Json.format[Failures]
+}

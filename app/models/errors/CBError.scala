@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package base
+package models.errors
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+sealed trait CBError
 
-trait SpecBase
-    extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
+final case class ConnectorError(statusCode: Int, message: String) extends CBError

@@ -23,3 +23,5 @@ GET         /account/signed-out                          controllers.auth.Signed
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET         /task_two/nationality                        controllers.NationalityQuestionController.view
+
+GET         /child-benefit-view-proof                        controllers.ProofOfEntitlementController.view

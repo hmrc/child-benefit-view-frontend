@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package base
+package util
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+import scala.io.{BufferedSource, Source}
 
-trait SpecBase
-    extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
+object FileUtils {
+  def readContent(apiSource: String, fileName: String): String = {
+    val filePath = s"./conf/resources/$apiSource/$fileName.json"
+    var source: BufferedSource = null
+    try {
+      source = Source.fromFile(filePath)
+      val fileContents = source.getLines.mkString
+      fileContents
+    } finally {
+      if (source != null) source.close()
+    }
+  }
+}

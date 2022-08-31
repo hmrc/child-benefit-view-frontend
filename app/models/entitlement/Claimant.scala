@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package base
+package models.entitlement
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
+import play.api.libs.json.{Format, Json}
 
-trait SpecBase
-    extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
+import java.time.LocalDate
+
+case class Claimant(name: String, addressLines: List[String], amount: Double, startDate: LocalDate, endDate: LocalDate)
+
+object Claimant {
+  implicit val format: Format[Claimant] = Json.format[Claimant]
+}

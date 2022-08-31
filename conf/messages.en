@@ -55,7 +55,7 @@ signedOut.guidance = We did not save your answers.
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
-service.name = Claim Child Benefit
+service.name = Child Benefit service
 service.text = This is your new service
 
 sca-apply-chb-frontend=Apply CHB Frontend
@@ -79,3 +79,30 @@ homepage.text13=the birth certificate of any child or children you’re applying
 homepage.text14=your bank or building society details
 homepage.text15=What do we mean by ’partner’?
 homepage.text16=’Partner’ means someone you’re married to and not permanently separated from, a civil partner, or someone you’re living with as if they were your civil partner.
+
+proofOfEntitlement.title=Proof of entitlement to Child Benefit
+proofOfEntitlement.confirmation=This is confirmation from HMRC of the Child Benefit entitlement for {0} on {1}.
+proofOfEntitlement.paidDetail=Child Benefit is paid at:
+proofOfEntitlement.firstChild={0} for the eldest or only child
+proofOfEntitlement.additionalchild={0} for each additional child
+proofOfEntitlement.entitlementdetail.title=Claimant’s entitlement details
+proofOfEntitlement.entitlementdetail.part1=If your address or any names are incorrect, you can
+proofOfEntitlement.entitlementdetail.part2=tell us about changes to your circumstances
+proofOfEntitlement.entitlementdetail.part3=or about
+proofOfEntitlement.entitlementdetail.part4=your child’s or children’s circumstances
+proofOfEntitlement.entitlementdetail.part5=and we’ll update them for you.
+proofOfEntitlement.claimantname=Name
+proofOfEntitlement.address=Address
+proofOfEntitlement.amount=Amount
+proofOfEntitlement.perweek={0} per week
+proofOfEntitlement.startdate=Start date
+proofOfEntitlement.onorbefore=On or before {0}
+proofOfEntitlement.enddate=End date
+proofOfEntitlement.awardDetail=Child Benefit award details for {0}
+proofOfEntitlement.dateOfBirth=Date of birth
+proofOfEntitlement.viewpayments=View your Child Benefit payments
+proofOfEntitlement.viewrecentpayments.part1=You can
+proofOfEntitlement.viewrecentpayments.part2=view your recent Child Benefit payments
+proofOfEntitlement.viewrecentpayments.part3=and see your last 5 payment dates and how much you were paid.
+
+

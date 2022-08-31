@@ -16,15 +16,45 @@
 
 package utils
 
+import connectors.{ChildBenefitEntitlementConnector, MockChildBenefitEntitlementConnector}
+import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction}
+import models.UserAnswers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.inject.{Binding, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.RequestHeader
+import play.api.test.FakeRequest
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
+  override implicit lazy val app: Application = applicationBuilder().build()
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(
-      "microservice.services.auth.port" -> wiremockPort
-    )
-    .build()
+  val userAnswersId: String = "id"
+
+  def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+
+  def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+
+  def messages(app: Application, request: RequestHeader): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(request)
+
+  protected implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
+    HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
+
+  protected def applicationBuilder(
+      config:      Map[String, Any] = Map("microservice.services.auth.port" -> wiremockPort),
+      userAnswers: Option[UserAnswers] = None,
+      entitlementConnector: Binding[ChildBenefitEntitlementConnector] =
+        bind[ChildBenefitEntitlementConnector].to[MockChildBenefitEntitlementConnector]
+  ): GuiceApplicationBuilder =
+    new GuiceApplicationBuilder()
+      .configure(config)
+      .overrides(
+        bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        entitlementConnector
+      )
 }
