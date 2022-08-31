@@ -61,7 +61,7 @@ class ProofOfEntitlementController @Inject() (
           },
           entitlement => Future.successful(Ok(proofOfEntitlement(entitlement)))
         )
-      }(routes.ProofOfEntitlementController.view.absoluteURL())
+      }(routes.ProofOfEntitlementController.view)
     }
 }
 
