@@ -33,6 +33,9 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
+phase.beta = BETA
+phase.text = This is a new service
+
 
 index.title = child-benefit-view-frontend
 index.heading = child-benefit-view-frontend

@@ -20,7 +20,8 @@
 @this(
         appConfig: FrontendAppConfig,
         hmrcLayout: HmrcLayout,
-        hmrcTimeoutDialog: HmrcTimeoutDialog
+        hmrcTimeoutDialog: HmrcTimeoutDialog,
+        govukPhaseBanner: GovukPhaseBanner,
 )
 @(pageTitle: String,
         showBackLink: Boolean = true,
@@ -46,3 +47,11 @@
         )
     )) else None
 )(contentBlock)
+
+@govukPhaseBanner(
+    PhaseBanner(
+        classes = "no-print",
+        tag = Option(Tag(Text(messages("phase.beta")))),
+        content = HtmlContent(messages("phase.text"))
+    )
+)
