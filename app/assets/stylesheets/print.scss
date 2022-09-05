@@ -1,0 +1,24 @@
+
+@media print {
+  .hmrc-language-select {
+    display: none !important;
+  }
+  .govuk-back-link {
+    display: none !important;
+  }
+  .hmrc-sign-out-nav {
+    display: none !important;
+  }
+
+  .govuk-phase-banner {
+    display: none !important;
+  }
+  .govuk-grid-column-two-thirds {
+    width: 100%;
+  }
+
+  footer {
+    display: none !important;
+  }
+
+}
