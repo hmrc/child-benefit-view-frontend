@@ -29,6 +29,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
+import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import views.html.{ErrorTemplate, ProofOfEntitlement}
 
@@ -101,7 +102,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         val entitlement      = maybeEntitlement.value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(entitlement)(request, messages(application, request)).toString
+        removeNonce(contentAsString(result)) mustEqual removeNonce(view(entitlement)(request, messages(application, request)).toString)
       }
     }
   }

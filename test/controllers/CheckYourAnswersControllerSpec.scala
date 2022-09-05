@@ -20,6 +20,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
+import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
@@ -47,7 +48,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {
         val list = SummaryListViewModel(Seq.empty)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list)(request, messages(application)).toString
+        removeNonce(contentAsString(result)) mustEqual removeNonce(view(list)(request, messages(application)).toString)
       }
     }
 

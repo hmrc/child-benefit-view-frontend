@@ -20,6 +20,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
+import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import views.html.auth.SignedOutView
 
@@ -40,7 +41,7 @@ class SignedOutControllerSpec extends BaseISpec {
         val view = application.injector.instanceOf[SignedOutView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        removeNonce(contentAsString(result)) mustEqual removeNonce(view()(request, messages(application)).toString)
       }
     }
   }
