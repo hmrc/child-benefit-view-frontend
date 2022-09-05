@@ -50,9 +50,7 @@ class MockChildBenefitEntitlementConnector extends ChildBenefitEntitlementConnec
     EitherT(
       Future(
         for {
-          content <-
-            Try(FileUtils.readContent("entitlement", "LizJones")).toEither.left
-              .map(e => s"Cannot read entitlement file: $e")
+          content <- FileUtils.readContent("entitlement", "LizJones").left.map(e => s"Cannot read entitlement file: $e")
 
           json <-
             Try(Json.parse(content)).toEither.left
