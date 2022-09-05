@@ -16,18 +16,28 @@
 
 package util
 
+import play.api.Logging
+
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
 import scala.io.{BufferedSource, Source}
 
-object FileUtils {
-  def readContent(apiSource: String, fileName: String): String = {
-    val filePath = s"./conf/resources/$apiSource/$fileName.json"
-    var source: BufferedSource = null
+object FileUtils extends Logging {
+  def readContent(apiSource: String, fileName: String): Either[String, String] = {
+    val filePath = s"resources/$apiSource/$fileName.json"
+    var stream   = Option.empty[InputStream]
+    var source   = Option.empty[BufferedSource]
     try {
-      source = Source.fromFile(filePath)
-      val fileContents = source.getLines.mkString
-      fileContents
+      stream = Some(getClass.getClassLoader.getResourceAsStream(filePath))
+      source = stream.map(is => Source.fromInputStream(is, StandardCharsets.UTF_8.name()))
+      Right(source.map(_.getLines.mkString).getOrElse(""))
+    } catch {
+      case error: Throwable =>
+        logger.error(s"Cannot read file $filePath", error)
+        Left(error.getMessage)
     } finally {
-      if (source != null) source.close()
+      stream.foreach(_.close())
+      source.foreach(_.close())
     }
   }
 }
