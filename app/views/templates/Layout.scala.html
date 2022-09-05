@@ -25,10 +25,29 @@
         govukPhaseBanner: GovukPhaseBanner,
         standardBetaBanner: StandardBetaBanner
 )
+
 @(pageTitle: String,
         showBackLink: Boolean = true,
         showSignOut: Boolean = true,
         timeout: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+
+@customAdditionalHeadBlock = {
+  @if(timeout) {
+      @hmrcTimeoutDialog(
+      TimeoutDialog(
+      timeout = Some(appConfig.timeout),
+      countdown = Some(appConfig.countdown),
+      keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
+      keepAliveButtonText = Some(messages("timeout.keepAlive")),
+      signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
+      signOutButtonText = Some(messages("timeout.signOut")),
+      title = Some(messages("timeout.title")),
+      message = Some(messages("timeout.message"))
+      ))
+  }
+  <link href='@controllers.routes.Assets.versioned("stylesheets/print.css")' media="all" rel="stylesheet" type="text/css" />
+}
+
 
 @hmrcLayout(
     pageTitle = Option(pageTitle),
@@ -37,16 +56,5 @@
     backLinkUrl = if(showBackLink) Some("javascript:history.back();") else None,
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOutNoSurvey.url) else None,
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
-    additionalHeadBlock = if(timeout) Some(hmrcTimeoutDialog(
-        TimeoutDialog(
-            timeout = Some(appConfig.timeout),
-            countdown = Some(appConfig.countdown),
-            keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
-            keepAliveButtonText = Some(messages("timeout.keepAlive")),
-            signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
-            signOutButtonText = Some(messages("timeout.signOut")),
-            title = Some(messages("timeout.title")),
-            message = Some(messages("timeout.message"))
-        )
-    )) else None
+    additionalHeadBlock = Some(customAdditionalHeadBlock)
 )(contentBlock)
