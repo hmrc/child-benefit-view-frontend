@@ -102,7 +102,9 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         val entitlement      = maybeEntitlement.value
 
         status(result) mustEqual OK
-        removeNonce(contentAsString(result)) mustEqual removeNonce(view(entitlement)(request, messages(application, request)).toString)
+        removeNonce(contentAsString(result)) mustEqual removeNonce(
+          view(entitlement)(request, messages(application, request)).toString
+        )
       }
     }
   }

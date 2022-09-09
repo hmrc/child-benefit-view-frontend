@@ -92,7 +92,9 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
           val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          removeNonce(contentAsString(result)) mustEqual removeNonce(startAgainView()(request, messages(application)).toString)
+          removeNonce(contentAsString(result)) mustEqual removeNonce(
+            startAgainView()(request, messages(application)).toString
+          )
         }
       }
     }

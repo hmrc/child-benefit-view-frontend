@@ -20,7 +20,7 @@ object NonceUtils {
 
   val pattern: String = """nonce="[^"]+""""
 
-  def removeNonce(html : String ): String ={
+  def removeNonce(html: String): String = {
     html.replaceAll(pattern, "")
   }
 
