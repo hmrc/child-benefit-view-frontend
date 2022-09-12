@@ -19,6 +19,9 @@ package utils
 import connectors.{ChildBenefitEntitlementConnector, MockChildBenefitEntitlementConnector}
 import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction}
 import models.UserAnswers
+import org.jsoup.Jsoup
+import org.scalactic.source.Position
+import org.scalatest.Assertion
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
@@ -57,4 +60,12 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         entitlementConnector
       )
+
+  protected def assertSameHtmlAfter(
+      transformation: String => String
+  )(left:             String, right: String)(implicit position: Position): Assertion = {
+    val leftHtml  = Jsoup.parse(transformation(left))
+    val rightHtml = Jsoup.parse(transformation(right))
+    leftHtml.html() mustBe rightHtml.html()
+  }
 }

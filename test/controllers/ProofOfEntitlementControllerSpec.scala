@@ -29,6 +29,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
+import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import views.html.{ErrorTemplate, ProofOfEntitlement}
 
@@ -73,11 +74,14 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         maybeEntitlement.isLeft mustBe true
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        contentAsString(result) mustEqual view(
-          messagesApi("global.error.InternalServerError500.title"),
-          messagesApi("global.error.InternalServerError500.heading"),
-          "test-failure"
-        )(request, messagesApi).toString
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view(
+            messagesApi("global.error.InternalServerError500.title"),
+            messagesApi("global.error.InternalServerError500.heading"),
+            "test-failure"
+          )(request, messagesApi).toString
+        )
       }
     }
 
@@ -101,7 +105,10 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         val entitlement      = maybeEntitlement.value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(entitlement)(request, messages(application, request)).toString
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view(entitlement)(request, messages(application, request)).toString
+        )
       }
     }
   }

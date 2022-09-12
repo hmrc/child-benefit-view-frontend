@@ -21,6 +21,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
+import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
@@ -45,10 +46,13 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
           val continueView = app.injector.instanceOf[JourneyRecoveryContinueView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(
-            request,
-            messages(application)
-          ).toString
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            continueView(continueUrl.unsafeValue)(
+              request,
+              messages(application)
+            ).toString
+          )
         }
       }
     }
@@ -70,7 +74,10 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
           val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            startAgainView()(request, messages(application)).toString
+          )
         }
       }
     }
@@ -91,7 +98,10 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
           val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          contentAsString(result) mustEqual startAgainView()(request, messages(application)).toString
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            startAgainView()(request, messages(application)).toString
+          )
         }
       }
     }
