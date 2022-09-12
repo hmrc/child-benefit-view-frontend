@@ -48,7 +48,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {
         val list = SummaryListViewModel(Seq.empty)
 
         status(result) mustEqual OK
-        removeNonce(contentAsString(result)) mustEqual removeNonce(view(list)(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
       }
     }
 

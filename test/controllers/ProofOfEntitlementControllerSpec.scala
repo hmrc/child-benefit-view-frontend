@@ -74,11 +74,14 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         maybeEntitlement.isLeft mustBe true
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        contentAsString(result) mustEqual view(
-          messagesApi("global.error.InternalServerError500.title"),
-          messagesApi("global.error.InternalServerError500.heading"),
-          "test-failure"
-        )(request, messagesApi).toString
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view(
+            messagesApi("global.error.InternalServerError500.title"),
+            messagesApi("global.error.InternalServerError500.heading"),
+            "test-failure"
+          )(request, messagesApi).toString
+        )
       }
     }
 
@@ -102,7 +105,8 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         val entitlement      = maybeEntitlement.value
 
         status(result) mustEqual OK
-        removeNonce(contentAsString(result)) mustEqual removeNonce(
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
           view(entitlement)(request, messages(application, request)).toString
         )
       }

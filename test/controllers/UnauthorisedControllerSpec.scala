@@ -41,7 +41,7 @@ class UnauthorisedControllerSpec extends BaseISpec {
         val view = application.injector.instanceOf[UnauthorisedView]
 
         status(result) mustEqual OK
-        removeNonce(contentAsString(result)) mustEqual removeNonce(view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
       }
     }
   }
