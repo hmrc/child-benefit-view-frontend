@@ -105,4 +105,5 @@ proofOfEntitlement.viewrecentpayments.part1=You can
 proofOfEntitlement.viewrecentpayments.part2=view your recent Child Benefit payments
 proofOfEntitlement.viewrecentpayments.part3=and see your last 5 payment dates and how much you were paid.
 
-
+service-unavailable-error-template.heading = Sorry, there is a problem with service
+service-unavailable-error-template.paragraph.1 = Try again later.
