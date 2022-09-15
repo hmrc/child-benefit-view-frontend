@@ -115,7 +115,7 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
   private def toContinueUrl(call: Call)(implicit rh: RequestHeader, env: Environment): String = {
     env.mode match {
       case Dev => call.absoluteURL()
-      case _   => call.absoluteURL()
+      case _   => call.url
     }
   }
 
