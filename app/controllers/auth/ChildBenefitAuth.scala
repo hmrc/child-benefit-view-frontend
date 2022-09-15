@@ -18,8 +18,7 @@ package controllers.auth
 
 import config.FrontendAppConfig
 import models.common.NationalInsuranceNumber
-import play.api.Mode.Dev
-import play.api.{Environment, Logging}
+import play.api.Logging
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
@@ -53,8 +52,7 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       ec:      ExecutionContext,
       hc:      HeaderCarrier,
       request: Request[_],
-      config:  FrontendAppConfig,
-      env:     Environment
+      config:  FrontendAppConfig
   ): Future[Result] =
     authorisedUser(loginContinueUrl, body)
 
@@ -62,7 +60,6 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       ec:               ExecutionContext,
       config:           FrontendAppConfig,
       cc:               ControllerComponents,
-      env:              Environment,
       loginContinueUrl: Call
   ): ActionBuilder[AuthContext, AnyContent] =
     new ActionBuilder[AuthContext, AnyContent] {
@@ -84,7 +81,6 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       ec:      ExecutionContext,
       hc:      HeaderCarrier,
       config:  FrontendAppConfig,
-      env:     Environment,
       request: Request[A]
   ) = {
     authorised(AuthPredicate)
@@ -112,10 +108,11 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       InternalServerError
   }
 
-  private def toContinueUrl(call: Call)(implicit rh: RequestHeader, env: Environment): String = {
-    env.mode match {
-      case Dev => call.absoluteURL()
-      case _   => call.url
+  private def toContinueUrl(call: Call)(implicit rh: RequestHeader): String = {
+    if (call.absoluteURL.contains("://localhost")) {
+      call.absoluteURL()
+    } else {
+      call.url
     }
   }
 
