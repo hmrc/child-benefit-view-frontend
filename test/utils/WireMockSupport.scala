@@ -20,7 +20,7 @@ import base.SpecBase
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import org.scalatest.{Assertion, BeforeAndAfterAll, BeforeAndAfterEach}
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.FiniteDuration
@@ -35,6 +35,11 @@ trait WireMockSupport extends SpecBase with BeforeAndAfterEach with BeforeAndAft
 
   protected val wiremockBaseUrl: String = s"http://localhost:$wiremockPort"
   private val wireMockServer = new WireMockServer(wireMockConfig().port(wiremockPort))
+
+  def afterReset(block: => Assertion): Assertion = {
+    WireMock.reset()
+    block
+  }
 
   override protected def beforeAll() = {
     super.beforeAll()
