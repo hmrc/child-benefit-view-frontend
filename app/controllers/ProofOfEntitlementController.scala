@@ -18,23 +18,24 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
+import handlers.ErrorHandler
 import models.errors.ConnectorError
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
-import views.html.{ErrorTemplate, ProofOfEntitlement}
+import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ProofOfEntitlementController @Inject() (
     authConnector:                    AuthConnector,
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-    errorTemplate:                    ErrorTemplate,
+    errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement
 )(implicit
     config:            Configuration,
@@ -46,20 +47,11 @@ class ProofOfEntitlementController @Inject() (
   val view: Action[AnyContent] =
     Action.async { implicit request =>
       authorisedAsChildBenefitUser { _ =>
-        childBenefitEntitlementConnector.getChildBenefitEntitlement.foldF[Result](
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold[Result](
           {
-            case ConnectorError(statusCode, message) =>
-              Future.successful(
-                Status(statusCode)(
-                  errorTemplate(
-                    request.messages("global.error.InternalServerError500.title"),
-                    request.messages("global.error.InternalServerError500.heading"),
-                    message
-                  )
-                )
-              )
+            case ConnectorError(statusCode, message) => errorHandler.handleError(statusCode, message)
           },
-          entitlement => Future.successful(Ok(proofOfEntitlement(entitlement)))
+          entitlement => Ok(proofOfEntitlement(entitlement))
         )
       }(routes.ProofOfEntitlementController.view)
     }
