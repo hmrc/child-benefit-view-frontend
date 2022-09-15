@@ -18,32 +18,38 @@ package handlers
 
 import play.api.http.Status.SERVICE_UNAVAILABLE
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Results.ServiceUnavailable
+import play.api.mvc.Results.{InternalServerError, Redirect}
 import play.api.mvc.{Request, Result}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.ErrorTemplate
-import views.html.templates.ServiceUnavailableTemplate
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ErrorHandler @Inject() (
-                               val messagesApi:            MessagesApi,
-                               serviceUnavailableTemplate: ServiceUnavailableTemplate,
-                               view:                       ErrorTemplate
-                             )() extends FrontendErrorHandler
-  with I18nSupport {
+    val messagesApi: MessagesApi,
+    error:           ErrorTemplate
+)() extends FrontendErrorHandler
+    with I18nSupport {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
-                                                                                          rh:                                       Request[_]
+      rh:                                       Request[_]
   ): Html =
-    view(pageTitle, heading, message)
+    error(pageTitle, heading, message)
 
-  def handleError(status: Int)(implicit request: Request[_]): Result = {
+  def handleError(status: Int, message: String)(implicit request: Request[_]): Result =
     status match {
-      case SERVICE_UNAVAILABLE => ServiceUnavailable(serviceUnavailableTemplate(""))
-    }
-  }
+      case SERVICE_UNAVAILABLE =>
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
 
+      case _ =>
+        InternalServerError(
+          standardErrorTemplate(
+            "global.error.InternalServerError500.title",
+            "global.error.InternalServerError500.heading",
+            message
+          )
+        )
+    }
 }

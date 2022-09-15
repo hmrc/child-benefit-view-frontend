@@ -18,6 +18,7 @@ package controllers
 
 import cats.data.EitherT
 import connectors.ChildBenefitEntitlementConnector
+import handlers.ErrorHandler
 import models.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBError, ConnectorError}
@@ -31,7 +32,7 @@ import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
 import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
-import views.html.{ErrorTemplate, ProofOfEntitlement}
+import views.html.ProofOfEntitlement
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
@@ -65,9 +66,8 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
 
         val result = route(application, request).value
 
-        val view        = application.injector.instanceOf[ErrorTemplate]
-        val connector   = application.injector.instanceOf[ChildBenefitEntitlementConnector]
-        val messagesApi = messages(application, request)
+        val errorHandler = application.injector.instanceOf[ErrorHandler]
+        val connector    = application.injector.instanceOf[ChildBenefitEntitlementConnector]
 
         val maybeEntitlement = Await.result(connector.getChildBenefitEntitlement.value, 1.second)
 
@@ -76,11 +76,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         status(result) mustEqual INTERNAL_SERVER_ERROR
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(
-            messagesApi("global.error.InternalServerError500.title"),
-            messagesApi("global.error.InternalServerError500.heading"),
-            "test-failure"
-          )(request, messagesApi).toString
+          contentAsString(Future.successful(errorHandler.handleError(INTERNAL_SERVER_ERROR, "test-failure")))
         )
       }
     }
