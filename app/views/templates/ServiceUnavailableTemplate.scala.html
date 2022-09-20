@@ -1,0 +1,41 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this(layout: templates.Layout, insetText: GovukInsetText)
+
+@()(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("service-unavailable-error-template.heading"))) {
+    <h1 class="govuk-heading-xl">@messages("service-unavailable-error-template.heading")</h1>
+
+    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.1")</p>
+    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.2")</p>
+    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.3")</p>
+
+    @insetText(
+        InsetText(content = HtmlContent(
+            List(
+                messages("service-unavailable-error-template.info.title"),
+                messages("service-unavailable-error-template.info.telephone"),
+                messages("service-unavailable-error-template.info.welshTelephone"),
+                messages("service-unavailable-error-template.info.textPhone"),
+                messages("service-unavailable-error-template.info.outsideUKTelephone"),
+                messages("service-unavailable-error-template.info.availability"),
+                s"""<a href="#">${messages("service-unavailable-error-template.info.charges")}</a>"""
+            ).mkString("<br>")
+        ))
+    )
+}
