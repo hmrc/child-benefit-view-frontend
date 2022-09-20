@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import org.scalatest.EitherValues
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
