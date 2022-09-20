@@ -16,32 +16,20 @@
 
 package controllers
 
-import config.FrontendAppConfig
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.templates.ServiceUnavailableTemplate
 
-import java.time.{DayOfWeek, LocalTime}
-import java.time.format.{DateTimeFormatter, TextStyle}
 import javax.inject.Inject
 
-class ServiceUnavailableController @Inject() (
-    val controllerComponents: MessagesControllerComponents,
-    view:                     ServiceUnavailableTemplate,
-    config:                   FrontendAppConfig
-) extends FrontendBaseController
-    with I18nSupport {
+class ServiceUnavailableController @Inject()(
+                                              val controllerComponents: MessagesControllerComponents,
+                                              view: ServiceUnavailableTemplate,
+                                            ) extends FrontendBaseController
+  with I18nSupport {
   def onPageLoad: Action[AnyContent] =
     Action { implicit request =>
-      Ok(view(config.helpline))
+      Ok(view())
     }
-}
-
-object ServiceUnavailableController {
-  def formatDayOfWeek(day: DayOfWeek)(implicit messages: Messages): String =
-    day.getDisplayName(TextStyle.FULL, messages.lang.locale)
-
-  def formatTime(time: LocalTime)(implicit messages: Messages): String =
-    time.format(DateTimeFormatter.ofPattern("ha", messages.lang.locale))
 }

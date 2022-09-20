@@ -37,12 +37,11 @@ class ServiceUnavailableControllerSpec extends BaseISpec with EitherValues {
         val result = route(application, request).value
 
         val view   = application.injector.instanceOf[ServiceUnavailableTemplate]
-        val config = application.injector.instanceOf[FrontendAppConfig]
 
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(config.helpline)(request, messages(application, request)).toString
+          view()(request, messages(application, request)).toString
         )
       }
     }

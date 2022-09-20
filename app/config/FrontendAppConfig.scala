@@ -72,5 +72,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 
-  val helpline: Helpline = configuration.get[Helpline]("helpline")
 }
