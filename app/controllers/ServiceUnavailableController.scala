@@ -23,11 +23,11 @@ import views.html.templates.ServiceUnavailableTemplate
 
 import javax.inject.Inject
 
-class ServiceUnavailableController @Inject()(
-                                              val controllerComponents: MessagesControllerComponents,
-                                              view: ServiceUnavailableTemplate,
-                                            ) extends FrontendBaseController
-  with I18nSupport {
+class ServiceUnavailableController @Inject() (
+    val controllerComponents: MessagesControllerComponents,
+    view:                     ServiceUnavailableTemplate
+) extends FrontendBaseController
+    with I18nSupport {
   def onPageLoad: Action[AnyContent] =
     Action { implicit request =>
       Ok(view())
