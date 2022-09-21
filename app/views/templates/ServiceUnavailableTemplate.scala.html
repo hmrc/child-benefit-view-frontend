@@ -14,14 +14,15 @@
  * limitations under the License.
  *@
 
+@import viewmodels.govuk.DataLayer
+
 @this(layout: templates.Layout, insetText: GovukInsetText)
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("service-unavailable-error-template.heading")),
-    dataLayerEvent = Some("service-unavailable"),
-    dataLayerNavigate = Some("/")
+    dataLayer = Some(DataLayer(event = "service-unavailable", navigate = "service-unavailable"))
 ) {
     <h1 class="govuk-heading-xl">@messages("service-unavailable-error-template.heading")</h1>
 

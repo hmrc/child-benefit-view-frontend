@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import views.html.helper.CSPNonce
+package viewmodels.govuk
 
-@this()
-
-@(event: String, navigate: String)(implicit request: Request[_])
-
-<script id="gtmDataLayer" event="@event" navigate="@navigate" src='@controllers.routes.Assets.versioned("javascripts/dataLayer.js")' @CSPNonce.attr></script>
+final case class DataLayer(event: String, navigate: String)

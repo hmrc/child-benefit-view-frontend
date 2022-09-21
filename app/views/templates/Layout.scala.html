@@ -16,7 +16,8 @@
 
 @import config.FrontendAppConfig
 @import views.html.helper.CSPNonce
-@import views.html.templates.DataLayer
+@import views.html.templates.DataLayerTemplate
+@import viewmodels.govuk.DataLayer
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 
 @this(
@@ -25,15 +26,14 @@
         hmrcTimeoutDialog: HmrcTimeoutDialog,
         govukPhaseBanner: GovukPhaseBanner,
         standardBetaBanner: StandardBetaBanner,
-        dataLayer: DataLayer
+        dataLayerTemplate: DataLayerTemplate
 )
 
 @(pageTitle: String,
         showBackLink: Boolean = true,
         showSignOut: Boolean = true,
         timeout: Boolean = true,
-        dataLayerEvent: Option[String] = None,
-        dataLayerNavigate: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+        dataLayer: Option[DataLayer] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @customAdditionalHeadBlock = {
   @if(timeout) {
@@ -60,5 +60,5 @@
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOutNoSurvey.url) else None,
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
-    additionalScriptsBlock = dataLayerEvent.flatMap(event => dataLayerNavigate.map(navigate => dataLayer(event, navigate)))
+    additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
 )(contentBlock)
