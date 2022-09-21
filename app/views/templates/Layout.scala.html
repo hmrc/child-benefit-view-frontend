@@ -16,6 +16,7 @@
 
 @import config.FrontendAppConfig
 @import views.html.helper.CSPNonce
+@import views.html.templates.DataLayer
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 
 @this(
@@ -23,13 +24,16 @@
         hmrcLayout: HmrcLayout,
         hmrcTimeoutDialog: HmrcTimeoutDialog,
         govukPhaseBanner: GovukPhaseBanner,
-        standardBetaBanner: StandardBetaBanner
+        standardBetaBanner: StandardBetaBanner,
+        dataLayer: DataLayer
 )
 
 @(pageTitle: String,
         showBackLink: Boolean = true,
         showSignOut: Boolean = true,
-        timeout: Boolean = true)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+        timeout: Boolean = true,
+        dataLayerEvent: Option[String] = None,
+        dataLayerNavigate: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @customAdditionalHeadBlock = {
   @if(timeout) {
@@ -48,7 +52,6 @@
   <link href='@controllers.routes.Assets.versioned("stylesheets/print.css")' media="all" rel="stylesheet" type="text/css" />
 }
 
-
 @hmrcLayout(
     pageTitle = Option(pageTitle),
     nonce = CSPNonce.get,
@@ -56,5 +59,6 @@
     backLinkUrl = if(showBackLink) Some("javascript:history.back();") else None,
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOutNoSurvey.url) else None,
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
-    additionalHeadBlock = Some(customAdditionalHeadBlock)
+    additionalHeadBlock = Some(customAdditionalHeadBlock),
+    additionalScriptsBlock = dataLayerEvent.flatMap(event => dataLayerNavigate.map(navigate => dataLayer(event, navigate)))
 )(contentBlock)
