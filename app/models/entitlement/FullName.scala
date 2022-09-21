@@ -16,21 +16,10 @@
 
 package models.entitlement
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Json
 
-import java.time.LocalDate
+final case class FullName(value: String) extends AnyVal
 
-final case class Claimant(
-    name:              FullName,
-    awardValue:        BigDecimal,
-    awardStartDate:    LocalDate,
-    awardEndDate:      LocalDate,
-    higherRateValue:   BigDecimal,
-    standardRateValue: BigDecimal,
-    lastPaymentsInfo:  Seq[LastPaymentFinancialInfo],
-    fullAddress:       FullAddress
-)
-
-object Claimant {
-  implicit val format: Format[Claimant] = Json.format[Claimant]
+object FullName {
+  implicit val format = Json.valueFormat[FullName]
 }

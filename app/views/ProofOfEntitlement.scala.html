@@ -20,12 +20,12 @@
 @this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
 @layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
-    <span class="govuk-caption-xl">@{entitlement.claimant.name}</span>
+    <span class="govuk-caption-xl">@{entitlement.claimant.name.value}</span>
     <h1 class="govuk-heading-xl">
     @messages("proofOfEntitlement.title")
     </h1>
 
-    <p class="govuk-body"> @messages("proofOfEntitlement.confirmation", entitlement.claimant.name, formatDate(entitlement.entitlementDate))</p>
+    <p class="govuk-body"> @messages("proofOfEntitlement.confirmation", entitlement.claimant.name.value, formatDate(entitlement.entitlementDate))</p>
     <p class="govuk-body">@messages("proofOfEntitlement.paidDetail")</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("proofOfEntitlement.firstChild", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
@@ -37,25 +37,31 @@
     @summaryList(
         SummaryList(
             rows = Seq(
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name)), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.addressLines.mkString("<br>"))), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.amount)))), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.startDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.endDate))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name.value)), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(
+                    s"${entitlement.claimant.fullAddress.addressLine1.value}</br> " +
+                            s"${entitlement.claimant.fullAddress.addressLine2.value}</br> " +
+                            s"${entitlement.claimant.fullAddress.addressLine3.map(a => s"${a.value} </br>").getOrElse("")}" +
+                            s"${entitlement.claimant.fullAddress.addressLine4.map(a => s"${a.value} </br>").getOrElse("")}" +
+                            s"${entitlement.claimant.fullAddress.addressLine5.map(a => s"${a.value} </br>").getOrElse("")}" +
+                            s"${entitlement.claimant.fullAddress.addressPostcode.value}")), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.awardValue)))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.awardStartDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.awardEndDate))), actions = Some(Actions(items = Seq(ActionItem())))),
             ),
             classes = "govuk-!-margin-bottom-9"
         )
     )
 
     @for(child <- entitlement.children) {
-      @if(child.startDate.isBefore(child.endDate)) {
-        <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name)</h2>
+      @if(child.relationshipStartDate.isBefore(child.relationshipEndDate.get)) {
+        <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name.value)</h2>
         @summaryList(
             SummaryList(
                 rows = Seq(
                     SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
-                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(child.startDate, checkForSpecialAwardStartDate = true)))),
-                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.endDate))))
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(child.relationshipStartDate, checkForSpecialAwardStartDate = true)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.relationshipEndDate.get))))
                 ),
                 classes = "govuk-!-margin-bottom-9"
             )

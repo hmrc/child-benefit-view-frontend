@@ -20,7 +20,12 @@ import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
 
-case class Child(name: String, dateOfBirth: LocalDate, startDate: LocalDate, endDate: LocalDate)
+final case class Child(
+    name:                  FullName,
+    dateOfBirth:           LocalDate,
+    relationshipStartDate: LocalDate,
+    relationshipEndDate:   Option[LocalDate]
+)
 
 object Child {
   implicit val format: Format[Child] = Json.format[Child]

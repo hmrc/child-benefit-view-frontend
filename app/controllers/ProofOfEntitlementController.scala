@@ -81,6 +81,6 @@ object ProofOfEntitlementController {
     }
   }
 
-  def formatMoney(amount: Double, currency: String = "£"): String =
-    f"$currency$amount%.2f"
+  def formatMoney(amount: BigDecimal, currency: String = "£"): String =
+    f"$currency${amount.setScale(2)}"
 }

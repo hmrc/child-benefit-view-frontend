@@ -50,8 +50,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   private val childBenefitEntitlementBaseUrl: String = configuration
     .get[Service]("microservice.services.child-benefit-entitlement")
     .baseUrl
+
   val childBenefitEntitlementUrl: String =
-    s"$childBenefitEntitlementBaseUrl/child-benefit-entitlement"
+    s"$childBenefitEntitlementBaseUrl/child-benefit-service/view-entitlements-and-payments"
 
   private val exitSurveyBaseUrl: String = configuration
     .get[Service]("microservice.services.feedback-frontend")

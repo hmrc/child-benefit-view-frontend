@@ -16,7 +16,7 @@
 
 package utils
 
-import connectors.{ChildBenefitEntitlementConnector, MockChildBenefitEntitlementConnector}
+import connectors.{ChildBenefitEntitlementConnector, DefaultChildBenefitEntitlementConnector}
 import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction}
 import models.UserAnswers
 import org.jsoup.Jsoup
@@ -25,8 +25,8 @@ import org.scalatest.Assertion
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.{Binding, bind}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Binding, bind}
 import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -48,13 +48,13 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
     HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
 
   protected def applicationBuilder(
-      config:      Map[String, Any] = Map("microservice.services.auth.port" -> wiremockPort),
+      config:      Map[String, Any] = Map(),
       userAnswers: Option[UserAnswers] = None,
       entitlementConnector: Binding[ChildBenefitEntitlementConnector] =
-        bind[ChildBenefitEntitlementConnector].to[MockChildBenefitEntitlementConnector]
+        bind[ChildBenefitEntitlementConnector].to[DefaultChildBenefitEntitlementConnector]
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .configure(config)
+      .configure(config ++ Map("microservice.services.auth.port" -> wiremockPort))
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
