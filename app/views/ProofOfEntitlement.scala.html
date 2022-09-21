@@ -19,7 +19,10 @@
 
 @this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
-@layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
+@layout(pageTitle = "sca-apply-chb-frontend",
+    showBackLink = true,
+    dataLayerEvent = Some("view proof of entitlement"),
+    dataLayerNavigate = Some("proofOfEntitlement")) {
     <span class="govuk-caption-xl">@{entitlement.claimant.name}</span>
     <h1 class="govuk-heading-xl">
     @messages("proofOfEntitlement.title")
