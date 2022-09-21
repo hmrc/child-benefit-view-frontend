@@ -1,3 +1,5 @@
+label.back.link=Yn ôl
+
 noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
 noAccountFound.explanation=Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
 noAccountFound.reason=Gall hyn fod oherwydd:
@@ -13,3 +15,29 @@ noAccountFound.info3=Gwasanaeth Saesneg: 0300 200 3100
 noAccountFound.info4=FfÃ´n testun: 0300 200 3103
 noAccountFound.info5=Oâ€™r tu allan iâ€™r DU: +44 300 200 1900
 noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:00 - 18:00
+
+service-unavailable-error-template.heading = Mae?n ddrwg gennym ? mae problem gyda?r gwasanaeth
+service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes ymlaen.
+service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun yngl?n â?ch dyfarniad Budd-dal Plant.	
+service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
+service-unavailable-error-template.info.title = Gwasanaeth Cwsmeriaid Cymraeg CThEM
+service-unavailable-error-template.info.telephone = Ffôn: 0300 200 1900
+service-unavailable-error-template.info.welshTelephone = Gwasanaeth Saesneg: 0300 200 3100
+service-unavailable-error-template.info.textPhone = Ffôn testun: 0300 200 3103	
+service-unavailable-error-template.info.outsideUKTelephone = O?r tu allan i?r DU: +44 300 200 1900
+service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:00 - 18:00
+service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
