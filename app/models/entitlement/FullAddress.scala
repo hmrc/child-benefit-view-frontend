@@ -16,21 +16,19 @@
 
 package models.entitlement
 
-import play.api.libs.json.{Format, Json}
+import models.common.{AddressLine, AddressPostcode}
+import play.api.libs.json.Json
 
-import java.time.LocalDate
-
-final case class Claimant(
-    name:              FullName,
-    awardValue:        BigDecimal,
-    awardStartDate:    LocalDate,
-    awardEndDate:      LocalDate,
-    higherRateValue:   BigDecimal,
-    standardRateValue: BigDecimal,
-    lastPaymentsInfo:  Seq[LastPaymentFinancialInfo],
-    fullAddress:       FullAddress
+final case class FullAddress(
+    addressLine1:    AddressLine,
+    addressLine2:    AddressLine,
+    addressLine3:    Option[AddressLine],
+    addressLine4:    Option[AddressLine],
+    addressLine5:    Option[AddressLine],
+    addressPostcode: AddressPostcode
 )
 
-object Claimant {
-  implicit val format: Format[Claimant] = Json.format[Claimant]
+object FullAddress {
+  implicit val format = Json.format[FullAddress]
+
 }

@@ -24,48 +24,17 @@ import models.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.ConnectorError
 import models.failure.Failures
-import play.api.http.Status
-import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
-import util.FileUtils
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.concurrent.ExecutionContext
 
-@ImplementedBy(classOf[MockChildBenefitEntitlementConnector])
+@ImplementedBy(classOf[DefaultChildBenefitEntitlementConnector])
 trait ChildBenefitEntitlementConnector {
   def getChildBenefitEntitlement(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
   ): CBEnvelope[ChildBenefitEntitlement]
-}
-
-@Singleton
-class MockChildBenefitEntitlementConnector extends ChildBenefitEntitlementConnector {
-  override def getChildBenefitEntitlement(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier
-  ): CBEnvelope[ChildBenefitEntitlement] =
-    EitherT(
-      Future(
-        for {
-          content <- FileUtils.readContent("entitlement", "LizJones").left.map(e => s"Cannot read entitlement file: $e")
-
-          json <-
-            Try(Json.parse(content)).toEither.left
-              .map(e => s"Cannot parse entitlement json: $e")
-
-          entitlement <-
-            Try(json.as[ChildBenefitEntitlement]).toEither.left
-              .map(e => s"Invalid entitlement json: $e")
-        } yield {
-          entitlement
-        }
-      )
-    ).leftMap { error =>
-      ConnectorError(Status.INTERNAL_SERVER_ERROR, error)
-    }
 }
 
 @Singleton
