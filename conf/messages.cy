@@ -27,17 +27,3 @@ service-unavailable-error-template.info.textPhone = Ffôn testun: 0300 200 3103
 service-unavailable-error-template.info.outsideUKTelephone = O’r tu allan i’r DU: +44 300 200 1900
 service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:00 - 18:00
 service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau
-
-
-
-
-
-
-
-
-
-
-
-
-
-
