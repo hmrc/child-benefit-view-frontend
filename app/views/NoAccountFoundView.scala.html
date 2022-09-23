@@ -22,7 +22,8 @@ layout: templates.Layout
 
 @layout(
 pageTitle    = titleNoForm(messages("index.title")),
-showBackLink = false
+showBackLink = false,
+    dataLayer = Some(DataLayer(event = "journey_step", navigate = "no match"))
 ) {
 
 <h1 class="govuk-heading-l">@messages("noAccountFound.header")</h1>
