@@ -16,10 +16,13 @@
 
 @import controllers.ProofOfEntitlementController._
 @import models.entitlement.ChildBenefitEntitlement
+@import viewmodels.govuk.DataLayer
 
 @this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
-@layout(pageTitle = "sca-apply-chb-frontend", showBackLink = true) {
+@layout(pageTitle = "sca-apply-chb-frontend",
+    dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
+    showBackLink = true) {
     <span class="govuk-caption-xl">@{entitlement.claimant.name.value}</span>
     <h1 class="govuk-heading-xl">
     @messages("proofOfEntitlement.title")
