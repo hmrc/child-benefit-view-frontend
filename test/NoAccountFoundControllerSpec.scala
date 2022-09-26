@@ -38,7 +38,10 @@ class NoAccountFoundControllerSpec extends BaseISpec {
         val view = application.injector.instanceOf[NoAccountFoundView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view()(request, messages(application)).toString
+        )
 
       }
     }

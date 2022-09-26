@@ -55,3 +55,5 @@ service-unavailable-error-template.info.outsideUKTelephone = O’r tu allan i’
 service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:00 - 18:00
 service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau
 
+noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
+noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau
