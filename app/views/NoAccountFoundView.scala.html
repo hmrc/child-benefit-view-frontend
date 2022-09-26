@@ -15,12 +15,13 @@
  *@
 
 @import viewmodels.govuk.DataLayer
+@import config.FrontendAppConfig
 
 @this(
 layout: templates.Layout
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: Request[_], messages: Messages, config: FrontendAppConfig)
 
 @layout(
 pageTitle    = titleNoForm(messages("index.title")),
@@ -49,6 +50,7 @@ showBackLink = false,
    <li>@messages("noAccountFound.info4")</li>
    <li>@messages("noAccountFound.info5")</li>
    <li>@messages("noAccountFound.info6")</li>
+   <li><a href="@config.callChargesUrl">@messages("noAccountFound.linkMessage")</a></li>
  </ul>
 </div>
 }
