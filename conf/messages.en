@@ -134,3 +134,4 @@ noAccountFound.info5=Outside UK: +44 161 210 3086
 noAccountFound.info6=Monday to Friday, 8am to 6pm
 
 noAccountFound.linkMessage=Find out about call charges
+noAccountFound.callChargesUrl=https://www.gov.uk/call-charges

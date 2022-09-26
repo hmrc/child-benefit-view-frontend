@@ -56,3 +56,4 @@ service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 
 service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau
 
 noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
+noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau

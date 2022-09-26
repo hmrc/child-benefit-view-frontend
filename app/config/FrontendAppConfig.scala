@@ -61,10 +61,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
     s"$exitSurveyBaseUrl/feedback/child-benefit-view-frontend"
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
-  val timeout:        Int    = configuration.get[Int]("timeout-dialog.timeout")
-  val countdown:      Int    = configuration.get[Int]("timeout-dialog.countdown")
-  val cacheTtl:       Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-  val callChargesUrl: String = configuration.get[String]("external-url.call-charges")
+  val timeout:   Int = configuration.get[Int]("timeout-dialog.timeout")
+  val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
+  val cacheTtl:  Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
   private val contactHost                  = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "child-benefit-view-frontend"
 
