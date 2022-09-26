@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import config.FrontendAppConfig
 import controllers.routes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -36,9 +37,10 @@ class NoAccountFoundControllerSpec extends BaseISpec {
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[NoAccountFoundView]
+        val configuration = application.injector.instanceOf[FrontendAppConfig]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application), configuration).toString)
 
       }
     }
