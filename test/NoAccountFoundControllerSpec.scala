@@ -36,11 +36,14 @@ class NoAccountFoundControllerSpec extends BaseISpec {
           .withSession(("authToken", "Bearer 123"))
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[NoAccountFoundView]
+        val view          = application.injector.instanceOf[NoAccountFoundView]
         val configuration = application.injector.instanceOf[FrontendAppConfig]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application), configuration).toString)
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view()(request, messages(application), configuration).toString
+        )
 
       }
     }
