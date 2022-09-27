@@ -23,7 +23,7 @@ layout: templates.Layout
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-pageTitle    = titleNoForm(messages("index.title")),
+pageTitle    = titleNoForm(messages("noAccountFound.header")),
 showBackLink = true,
     dataLayer = Some(DataLayer(event = "journey_step", navigate = "no match"))
 ) {
@@ -49,7 +49,7 @@ showBackLink = true,
    <li>@messages("noAccountFound.info4")</li>
    <li>@messages("noAccountFound.info5")</li>
    <li>@messages("noAccountFound.info6")</li>
-   <li><a href=@messages("noAccountFound.callChargesUrl")>@messages("noAccountFound.linkMessage")</a></li>
+   <li><a class="govuk-link" href=@messages("noAccountFound.callChargesUrl")>@messages("noAccountFound.linkMessage")</a></li>
  </ul>
 </div>
 }
