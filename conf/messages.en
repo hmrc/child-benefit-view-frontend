@@ -135,3 +135,6 @@ noAccountFound.info6=Monday to Friday, 8am to 6pm
 
 noAccountFound.linkMessage=Find out about call charges
 noAccountFound.callChargesUrl=https://www.gov.uk/call-charges
+
+dummyFlag.title=Dummy Flag
+dummyFlag.heading=This page will be removed
