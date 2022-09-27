@@ -39,8 +39,10 @@
                 messages("service-unavailable-error-template.info.textPhone"),
                 messages("service-unavailable-error-template.info.outsideUKTelephone"),
                 messages("service-unavailable-error-template.info.availability"),
-                s"""<a href="#">${messages("service-unavailable-error-template.info.charges")}</a>"""
-            ).mkString("<br>")
+                s"""<a class="govuk-link" href=${messages("service-unavailable-error-template.info.callChargesUrl")}>
+                   |${messages("service-unavailable-error-template.info.charges")}
+                   |</a>""".stripMargin
+            ).mkString("<br />")
         ))
     )
 }
