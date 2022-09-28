@@ -49,8 +49,8 @@
                             s"${entitlement.claimant.fullAddress.addressLine5.map(a => s"${a.value} </br>").getOrElse("")}" +
                             s"${entitlement.claimant.fullAddress.addressPostcode.value}")), actions = Some(Actions(items = Seq(ActionItem())))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.awardValue)))), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.awardStartDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(entitlement.claimant.awardEndDate))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatEntitlementDate(entitlement.claimant.awardStartDate, checkForSpecialAwardStartDate = true))), actions = Some(Actions(items = Seq(ActionItem())))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatEntitlementDate(entitlement.claimant.awardEndDate))), actions = Some(Actions(items = Seq(ActionItem())))),
             ),
             classes = "govuk-!-margin-bottom-9"
         )
@@ -62,9 +62,9 @@
         @summaryList(
             SummaryList(
                 rows = Seq(
-                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatDate(child.dateOfBirth)))),
-                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatDate(child.relationshipStartDate, checkForSpecialAwardStartDate = true)))),
-                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatDate(child.relationshipEndDate.get))))
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipStartDate, checkForSpecialAwardStartDate = true)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipEndDate.get))))
                 ),
                 classes = "govuk-!-margin-bottom-9"
             )
@@ -72,5 +72,5 @@
       }
     }
     <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("proofOfEntitlement.viewpayments")</h2>
-    <p class="govuk-body govuk-!-display-none-print">@messages("proofOfEntitlement.viewrecentpayments.part1") <a class = "govuk-link" href="view-your-payments"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
+    <p class="govuk-body govuk-!-display-none-print">@messages("proofOfEntitlement.viewrecentpayments.part1") <a class ="govuk-link" target="_self" href="@routes.PaymentHistoryController.view.url"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
 }

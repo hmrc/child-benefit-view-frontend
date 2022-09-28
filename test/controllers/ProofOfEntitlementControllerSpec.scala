@@ -20,8 +20,7 @@ import cats.data.EitherT
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
-import models.CBEnvelope
-import models.common.{AddressLine, AddressPostcode}
+import models.CBEnvelope.CBEnvelope
 import models.entitlement._
 import models.errors.{CBError, ConnectorError}
 import org.scalatest.EitherValues
@@ -31,54 +30,16 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.AuthStub.userLoggedInChildBenefitUser
 import utils.BaseISpec
 import utils.NonceUtils.removeNonce
-import utils.TestData.NinoUser
+import utils.Stubs.userLoggedInChildBenefitUser
+import utils.TestData.{NinoUser, entitlementResult}
 import views.html.ProofOfEntitlement
 
-import java.time.LocalDate
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
 class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
-
-  val entitlementResult = ChildBenefitEntitlement(
-    Claimant(
-      FullName("John Doe"),
-      500.00,
-      LocalDate.now(),
-      LocalDate.now.plusYears(3),
-      1000.00,
-      50.00,
-      List(
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(2), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(3), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(4), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(5), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(6), 50.00)
-      ),
-      FullAddress(
-        AddressLine("AddressLine1"),
-        AddressLine("AddressLine2"),
-        Some(AddressLine("AddressLine3")),
-        Some(AddressLine("AddressLine4")),
-        Some(AddressLine("AddressLine5")),
-        AddressPostcode("SS1 7JJ")
-      )
-    ),
-    entitlementDate = LocalDate.now(),
-    paidAmountForEldestOrOnlyChild = 25.10,
-    paidAmountForEachAdditionalChild = 14.95,
-    children = List(
-      Child(
-        FullName("Full Name"),
-        dateOfBirth = LocalDate.of(2012, 1, 1),
-        relationshipStartDate = LocalDate.of(2013, 1, 1),
-        relationshipEndDate = Some(LocalDate.of(2016, 1, 1))
-      )
-    )
-  )
 
   "Proof of entitlement controller" - {
     "must return INTERNAL_SERVER_ERROR and render the error view for a GET when getting entitlement fails" in {

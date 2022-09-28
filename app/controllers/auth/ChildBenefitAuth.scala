@@ -87,7 +87,10 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       .retrieve(ChildBenefitRetrievals) {
         case Some(nino) ~ Some(User) ~ Some(internalId) =>
           block(AuthContext(NationalInsuranceNumber(nino), isUser = true, internalId, request))
-        case _ => Future successful Redirect(controllers.routes.UnauthorisedController.onPageLoad)
+        case _ =>
+          Future successful Redirect(
+            controllers.routes.UnauthorisedController.onPageLoad
+          ) // should redirect to the routes.NoAccountFoundController.onPageLoad - will be addressed in another ticket
       }
       .recover {
         handleFailure(toContinueUrl(loginContinueUrl))

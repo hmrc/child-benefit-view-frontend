@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.errors
+package models.entitlement
 
-sealed trait CBError {
-  val statusCode: Int
-  val message:    String
+import play.api.libs.json.Json
+
+final case class AdjustmentReasonCode(value: String) extends AnyVal
+
+object AdjustmentReasonCode {
+  implicit val format = Json.valueFormat[AdjustmentReasonCode]
 }
-
-final case class ConnectorError(statusCode: Int, message: String) extends CBError
-final case class PaymentHistoryValidationError(statusCode: Int, message: String) extends CBError

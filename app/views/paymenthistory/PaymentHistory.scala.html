@@ -1,0 +1,64 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.entitlement.ChildBenefitEntitlement
+@import viewmodels.govuk.DataLayer
+@import services.PaymentHistoryPageVariant
+@import views.ViewUtils._
+@import services.PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears
+@import services.PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears
+@import services.PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears
+
+@this(layout: templates.Layout, table: GovukTable)
+@(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
+@layout(pageTitle = "sca-apply-chb-frontend",
+    dataLayer = Some(DataLayer(event = "journey_step", navigate = "view payment history")),
+    showBackLink = true) {
+    <span class="govuk-caption-xl">@{
+        entitlement.claimant.name.value
+    }</span>
+    <h1 class="govuk-heading-xl">
+    @messages("paymentHistory.title")
+    </h1>
+
+    @if(pageVariant == HICBCWithPaymentsInLastTwoYears) {
+        <p class="govuk-body">@messages("paymentHistory.v3.p1")</p>
+        <p class="govuk-body">@messages("paymentHistory.v3.p2")</p>
+    }
+    @if(pageVariant == EntitlementEndedButReceivedPaymentsInLastTwoYears) {
+        <p class="govuk-body">@messages("paymentHistory.v3.p1")</p>
+        <p class="govuk-body">@messages("paymentHistory.v3.p2")</p>
+    }
+
+    <h2 class="govuk-heading-m">@messages("paymentHistory.recentCBPayments.header")</h2>
+    <p class="govuk-body">@messages("paymentHistory.recentCBPayments.p1")</p>
+
+    @table(Table(
+    head = Some(Seq(HeadCell(messages("paymentHistory.table.date")), HeadCell(messages("paymentHistory.table.amount")))),
+      rows = entitlement.claimant.lastPaymentsInfo.map(payment => Seq(TableRow(HtmlContent(formatDate(payment.creditDate))), TableRow(HtmlContent(formatMoney(payment.creditAmount))))),
+      firstCellIsHeader = true
+  ))
+
+    @if(pageVariant == InPaymentWithPaymentsInLastTwoYears) {
+        <h2 class="govuk-heading-m">@messages("paymentHistory.v1.header")</h2>
+        <p class="govuk-body">@messages("paymentHistory.v1.p1")</p>
+        <p class="govuk-body">@Html(Messages("paymentHistory.v1.p2"))</p>
+        <p class="govuk-body">@messages("paymentHistory.v1.p3")</p>
+    }
+
+    <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("paymentHistory.viewEntitlementProof")</h2>
+    <p class="govuk-body govuk-!-display-none-print">@Html(Messages("paymentHistory.viewEntitlementProof.p1", routes.ProofOfEntitlementController.view.url))</p>
+}

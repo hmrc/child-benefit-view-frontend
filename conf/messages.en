@@ -79,6 +79,7 @@ homepage.text14=your bank or building society details
 homepage.text15=What do we mean by ’partner’?
 homepage.text16=’Partner’ means someone you’re married to and not permanently separated from, a civil partner, or someone you’re living with as if they were your civil partner.
 
+# ---------------------------- Proof Of Entitlement ----------------------------
 proofOfEntitlement.title=Proof of entitlement to Child Benefit
 proofOfEntitlement.confirmation=This is confirmation from HMRC of the Child Benefit entitlement for {0} on {1}.
 proofOfEntitlement.paidDetail=Child Benefit is paid at:
@@ -103,6 +104,45 @@ proofOfEntitlement.viewpayments=View your Child Benefit payments
 proofOfEntitlement.viewrecentpayments.part1=You can
 proofOfEntitlement.viewrecentpayments.part2=view your recent Child Benefit payments
 proofOfEntitlement.viewrecentpayments.part3=and see your last 5 payment dates and how much you were paid.
+# ------------------------------------------------------------------------------------
+
+
+# ---------------------------- View Payment History ----------------------------
+paymentHistory.title=Child Benefit payment history
+paymentHistory.viewEntitlementProof=View your proof of entitlement to Child Benefit
+paymentHistory.viewEntitlementProof.p1=You can <a class="govuk-link" target="_self" href="{0}"> view proof of your entitlement to Child Benefit</a>, print the page and use it to show that you qualify.
+paymentHistory.recentCBPayments.header=Your most recent Child Benefit payments
+paymentHistory.recentCBPayments.p1=The 5 most recent payments made within the last 2 years.
+paymentHistory.table.date=Date
+paymentHistory.table.amount=Amount
+
+# --------- No Payment History ---------
+# ---- Variant 2 - In payment without payments in last 2 years
+paymentHistory.v2.noReceivedPayments=You have not received any payments in the last 2 years.
+
+# ---- Variant 4 - HICBC without payments in last 2 years
+paymentHistory.v4.p1=You have told us you do not want payments because you do not want to pay the High Income Child Benefit Charge.
+paymentHistory.v4.p2=Our records show that you have not received any payments in the last 2 years.
+
+# ---- Variant 6 - Entitlement ended and no payments in last 2 years
+paymentHistory.v6.p1=You are no longer entitled to receive Child Benefit.
+paymentHistory.v6.p2=Our records show that you have not received any payments in the last 2 years.
+
+# --------- Some Payment History ---------
+# ---- Variant 1 - In payment with payments in last 2 years
+paymentHistory.v1.header=Find out when you’ll be paid next
+paymentHistory.v1.p1=If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
+paymentHistory.v1.p2 = You’ll be paid earlier if <a class="govuk-link" target="_blank" href="https://www.gov.uk/child-benefit-payment-dates/bank-holidays">the payment’s due on a bank holiday.</a>
+paymentHistory.v1.p3 = Child Benefit is paid weekly or every 4 weeks. It is not paid by calendar month.
+
+# ---- Variant 3 - HICBC with payments in last 2 years
+paymentHistory.v3.p1=You have told us you do not want payments because you do not want to pay the High Income Child Benefit Charge.
+paymentHistory.v3.p2=Our records show that you have received a payment or payments in the last 2 years.
+
+# ---- Variant 5 - Entitlement ended but received payments in last 2 year
+paymentHistory.v5.p1=You are no longer entitled to receive Child Benefit.
+paymentHistory.v5.p2=Our records show that you have received a payment or payments in the last 2 years.
+# ------------------------------------------------------------------------------------
 
 service-unavailable-error-template.heading = Sorry, there is a problem with service
 service-unavailable-error-template.paragraph.1 = Try again later.

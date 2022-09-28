@@ -1,0 +1,51 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.entitlement.ChildBenefitEntitlement
+@import viewmodels.govuk.DataLayer
+@import services.PaymentHistoryPageVariant
+@import services.PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears
+@import services.PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears
+@import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears
+
+@this(layout: templates.Layout, summaryList: GovukSummaryList)
+@(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
+@layout(pageTitle = "sca-apply-chb-frontend",
+    showBackLink = true) {
+    <span class="govuk-caption-xl">@{
+        entitlement.claimant.name.value
+    }</span>
+    <h1 class="govuk-heading-xl">
+    @messages("paymentHistory.title")
+    </h1>
+
+  @{
+      if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears) {
+              <p class="govuk-body">{messages("paymentHistory.v2.noReceivedPayments")}</p>
+      } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
+              <p class="govuk-body">{messages("paymentHistory.v4.p1")}</p>
+              <p class="govuk-body">{messages("paymentHistory.v4.p2")}</p>
+
+      } else if(pageVariant == EntitlementEndedButNoPaymentsInLastTwoYears) {
+              <p class="govuk-body">{messages("paymentHistory.v6.p1")}</p>
+              <p class="govuk-body">{messages("paymentHistory.v6.p2")}</p>
+      }
+
+  }
+    <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("paymentHistory.viewEntitlementProof")</h2>
+    <p class="govuk-body govuk-!-display-none-print">@Html(Messages("paymentHistory.viewEntitlementProof.p1", routes.ProofOfEntitlementController.view.url))</p>
+
+}

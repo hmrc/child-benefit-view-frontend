@@ -20,7 +20,7 @@ import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import models.CBEnvelope
+import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.ConnectorError
 import models.failure.Failures
