@@ -17,20 +17,24 @@
 package controllers.actions
 
 import features.{FeatureFlag, FeatureFlagService}
-import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import play.api.mvc.Results.NotFound
+import play.api.mvc._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.higherKinds
 
-trait FeatureFlagSupport { _: FrontendBaseController =>
+trait FeatureFlagSupport {
   val featureFlags: FeatureFlagService
 
-  def whenEnabled(featureFlag: FeatureFlag)(action: Request[AnyContent] => Future[Result]): Action[AnyContent] =
-    Action.async { request =>
-      if (featureFlags.isEnabled(featureFlag)) {
-        action(request)
-      } else {
-        Future.successful(NotFound)
-      }
+  def whenEnabled[F[_]](featureFlag: FeatureFlag)(implicit ec: ExecutionContext): ActionFilter[F] =
+    new ActionFilter[F] {
+      override protected def filter[A](request: F[A]): Future[Option[Result]] =
+        if (featureFlags.isEnabled(featureFlag)) {
+          Future.successful(None)
+        } else {
+          Future.successful(Some(NotFound))
+        }
+
+      override protected def executionContext: ExecutionContext = ec
     }
 }

@@ -27,4 +27,4 @@ GET         /task_two/nationality                        controllers.Nationality
 
 GET         /view-proof-entitlement                      controllers.ProofOfEntitlementController.view
 
-GET         /dummy-flag                                  controllers.DummyFlagController.view
+GET         /dummy-flag                                  controllers.DummyFlagController.onPageLoad
