@@ -46,7 +46,7 @@ proofOfEntitlement.viewpayments=Bwrw golwg dros eich taliadau Budd-dal Plant
 proofOfEntitlement.viewrecentpayments.part1=Gallwch
 proofOfEntitlement.viewrecentpayments.part2=fwrw golwg dros eich taliadau Budd-dal Plant diweddar
 proofOfEntitlement.viewrecentpayments.part3=a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
-
+proofOfEntitlement.printMessage=Argraffu’r dudalen hon
 
 
 # ---------------------------- View Payment History ----------------------------
