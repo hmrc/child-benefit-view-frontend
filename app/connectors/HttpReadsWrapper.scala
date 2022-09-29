@@ -19,7 +19,7 @@ package connectors
 import cats.Show
 import cats.syntax.all._
 import connectors.HttpReadsWrapper._
-import models.CBEnvelope
+import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, ConnectorError}
 import play.api.http.Status
 import play.api.libs.json.{JsPath, JsonValidationError, Reads}

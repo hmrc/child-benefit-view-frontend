@@ -19,7 +19,6 @@ package controllers
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
-import models.errors.ConnectorError
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Configuration, Environment}
@@ -48,9 +47,7 @@ class ProofOfEntitlementController @Inject() (
     Action.async { implicit request =>
       authorisedAsChildBenefitUser { _ =>
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold[Result](
-          {
-            case ConnectorError(statusCode, message) => errorHandler.handleError(statusCode, message)
-          },
+          err => errorHandler.handleError(err.statusCode, err.message),
           entitlement => Ok(proofOfEntitlement(entitlement))
         )
       }(routes.ProofOfEntitlementController.view)
@@ -66,7 +63,7 @@ object ProofOfEntitlementController {
       LocalDate.of(2021, 3, 15)
     )
 
-  def formatDate(
+  def formatEntitlementDate(
       date:                          LocalDate,
       checkForSpecialAwardStartDate: Boolean = false
   )(implicit messages:               Messages): String = {
@@ -80,7 +77,4 @@ object ProofOfEntitlementController {
       formattedDate
     }
   }
-
-  def formatMoney(amount: BigDecimal, currency: String = "£"): String =
-    f"$currency${amount.setScale(2)}"
 }

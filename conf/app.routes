@@ -26,4 +26,5 @@ GET         /service-down                                controllers.ServiceUnav
 GET         /task_two/nationality                        controllers.NationalityQuestionController.view
 
 GET         /view-proof-entitlement                      controllers.ProofOfEntitlementController.view
+GET         /view-payment-history                        controllers.PaymentHistoryController.view
 

@@ -18,8 +18,20 @@ package utils
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import models.entitlement.ChildBenefitEntitlement
+import play.api.libs.json.Json
 
-object AuthStub {
+object Stubs {
+
+  private val ChildBenefitRetrievals: String =
+    """
+      |{
+      |	"authorise": [{
+      |		"authProviders": ["GovernmentGateway"]
+      |	}],
+      |	"retrieve": ["nino", "credentialRole", "internalId"]
+      |}
+      |""".stripMargin
 
   def userLoggedInChildBenefitUser(testUserJson: String): StubMapping =
     stubFor(
@@ -41,13 +53,13 @@ object AuthStub {
         )
     )
 
-  private val ChildBenefitRetrievals: String =
-    """
-          |{
-          |	"authorise": [{
-          |		"authProviders": ["GovernmentGateway"]
-          |	}],
-          |	"retrieve": ["nino", "credentialRole", "internalId"]
-          |}
-          |""".stripMargin
+  def entitlementsAndPaymentHistoryStub(result: ChildBenefitEntitlement): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(result).toString)
+        )
+    )
 }

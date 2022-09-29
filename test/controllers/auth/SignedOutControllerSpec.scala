@@ -18,7 +18,7 @@ package controllers.auth
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.Stubs.userLoggedInChildBenefitUser
 import utils.BaseISpec
 import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser

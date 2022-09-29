@@ -38,6 +38,7 @@ class ErrorHandler @Inject() (
   ): Html =
     error(pageTitle, heading, message)
 
+  //addressing errors in separate task
   def handleError(status: Int, message: String)(implicit request: Request[_]): Result =
     status match {
       case SERVICE_UNAVAILABLE =>

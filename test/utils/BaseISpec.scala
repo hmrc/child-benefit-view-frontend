@@ -54,7 +54,12 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
         bind[ChildBenefitEntitlementConnector].to[DefaultChildBenefitEntitlementConnector]
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .configure(config ++ Map("microservice.services.auth.port" -> wiremockPort))
+      .configure(
+        config ++ Map(
+          "microservice.services.auth.port"                      -> wiremockPort,
+          "microservice.services.child-benefit-entitlement.port" -> wiremockPort
+        )
+      )
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),

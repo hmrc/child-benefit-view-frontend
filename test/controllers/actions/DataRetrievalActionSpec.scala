@@ -24,7 +24,7 @@ import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import repositories.SessionRepository
-import utils.AuthStub.userLoggedInChildBenefitUser
+import utils.Stubs.userLoggedInChildBenefitUser
 import utils.BaseISpec
 import utils.TestData.NinoUser
 

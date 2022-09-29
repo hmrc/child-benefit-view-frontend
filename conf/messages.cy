@@ -48,6 +48,45 @@ proofOfEntitlement.viewrecentpayments.part2=fwrw golwg dros eich taliadau Budd-d
 proofOfEntitlement.viewrecentpayments.part3=a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
 
 
+
+# ---------------------------- View Payment History ----------------------------
+paymentHistory.pageTitle=Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
+paymentHistory.title=Hanes taliadau Budd-dal Plant
+paymentHistory.viewEntitlementProof=Bwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant
+paymentHistory.viewEntitlementProof.p1=Gallwch <a class="govuk-link" target="_self" href="{0}"> fwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant</a>,  argraffu’r dudalen a’i defnyddio i ddangos eich bod yn gymwys.
+paymentHistory.recentCBPayments.header=Eich taliadau Budd-dal Plant diweddaraf
+paymentHistory.recentCBPayments.p1=Y 5 taliad diweddaraf a wnaed yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.table.date=Dyddiad
+paymentHistory.table.amount=Swm
+
+# --------- No Payment History ---------
+# ---- Variant 2 - In payment without payments in last 2 years
+paymentHistory.v2.noReceivedPayments=Nid ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+
+# ---- Variant 4 - HICBC without payments in last 2 years
+paymentHistory.v4.p1=Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
+paymentHistory.v4.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+
+# ---- Variant 6 - Entitlement ended and no payments in last 2 years
+paymentHistory.v6.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
+paymentHistory.v6.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+
+# --------- Some Payment History ---------
+# ---- Variant 1 - In payment with payments in last 2 years
+paymentHistory.v1.header=Cael gwybod pryd y cewch eich talu nesaf
+paymentHistory.v1.p1=Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
+paymentHistory.v1.p2 = Cewch eich talu cyn hynny os <a class="govuk-link" target="_blank" href="https://www.gov.uk/child-benefit-payment-dates/bank-holidays">yw’r taliad fod i gyrraedd ar ŵyl banc.</a>
+paymentHistory.v1.p3 = Mae Budd-dal Plant yn cael ei dalu’n wythnosol, neu bob 4 wythnos. Nid yw’n cael ei dalu yn ôl misoedd calendr.
+
+# ---- Variant 3 - HICBC with payments in last 2 years
+paymentHistory.v3.p1=Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
+paymentHistory.v3.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
+
+# ---- Variant 5 - Entitlement ended but received payments in last 2 year
+paymentHistory.v5.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
+paymentHistory.v5.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
+# ------------------------------------------------------------------------------------
+
 service-unavailable-error-template.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes ymlaen.
 service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun ynglŷn â’ch dyfarniad Budd-dal Plant.
