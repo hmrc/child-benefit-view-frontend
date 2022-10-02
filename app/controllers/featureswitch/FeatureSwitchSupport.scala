@@ -18,7 +18,7 @@ package controllers.featureswitch
 
 import play.api.Configuration
 import play.api.mvc.Results.NotFound
-import play.api.mvc.{ActionBuilder, ActionFilter, AnyContent, BodyParser, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{ActionFilter, Request, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 

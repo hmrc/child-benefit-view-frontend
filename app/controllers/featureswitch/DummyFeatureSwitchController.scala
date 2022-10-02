@@ -26,15 +26,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DummyFeatureSwitchController @Inject() (
     authConnector: AuthConnector
-  )(
-    implicit ec:          ExecutionContext,
+)(implicit
+    ec:                   ExecutionContext,
     controllerComponents: MessagesControllerComponents,
     env:                  Environment,
-    configuration:        Configuration)
-    extends ChildBenefitBaseController(authConnector)
+    configuration:        Configuration
+) extends ChildBenefitBaseController(authConnector)
     with FeatureSwitchSupport {
   def onPageLoad: Action[AnyContent] = {
-    (Action andThen featureSwitched).async {  _ =>
+    (Action andThen featureSwitched).async { _ =>
       Future.successful(Ok(""))
     }
   }
