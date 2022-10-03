@@ -17,14 +17,14 @@
 package handlers
 
 import controllers.routes
+import models.errors.ConnectorError
 import org.scalatest.EitherValues
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
-import play.api.mvc.Results.{InternalServerError, SeeOther}
+import play.api.mvc.Results.SeeOther
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.BaseISpec
-import views.html.ErrorTemplate
 
 class ErrorHandlerSpec extends BaseISpec with EitherValues {
   "Error handler" - {
@@ -36,30 +36,11 @@ class ErrorHandlerSpec extends BaseISpec with EitherValues {
 
         val errorHandler = application.injector.instanceOf[ErrorHandler]
 
-        val result = errorHandler.handleError(Status.SERVICE_UNAVAILABLE, "test")
+        val result = errorHandler.handleError(ConnectorError(Status.SERVICE_UNAVAILABLE, "test"))
 
         result mustEqual SeeOther(routes.ServiceUnavailableController.onPageLoad.url)
       }
     }
 
-    "handling error must render standard error page for statuses other than 503" in {
-      val application = applicationBuilder().build()
-
-      running(application) {
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
-
-        val errorHandler = application.injector.instanceOf[ErrorHandler]
-        val view         = application.injector.instanceOf[ErrorTemplate]
-
-        val result = errorHandler.handleError(Status.BAD_REQUEST, "test")
-
-        result mustEqual InternalServerError(
-          view("global.error.InternalServerError500.title", "global.error.InternalServerError500.heading", "test")(
-            request,
-            messages(application, request)
-          )
-        )
-      }
-    }
   }
 }

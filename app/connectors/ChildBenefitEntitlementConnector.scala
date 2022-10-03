@@ -22,8 +22,7 @@ import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
-import models.errors.ConnectorError
-import models.failure.Failures
+import models.errors.{CBErrorResponse, ConnectorError}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -40,7 +39,7 @@ trait ChildBenefitEntitlementConnector {
 @Singleton
 class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends ChildBenefitEntitlementConnector
-    with HttpReadsWrapper[ChildBenefitEntitlement, Failures] {
+    with HttpReadsWrapper[ChildBenefitEntitlement, CBErrorResponse] {
   def getChildBenefitEntitlement(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -57,6 +56,6 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
       )
     }
 
-  override def fromUpstreamErrorToCBError(status: Int, upstreamError: Failures): ConnectorError =
-    ConnectorError(status, upstreamError.failures.map(f => s"code: ${f.code}. reason: ${f.reason}").mkString(";"))
+  override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): ConnectorError =
+    ConnectorError(status, upstreamError.description)
 }

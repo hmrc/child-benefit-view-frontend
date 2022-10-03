@@ -62,4 +62,14 @@ object Stubs {
             .withBody(Json.toJson(result).toString)
         )
     )
+
+  def entitlementsAndPaymentHistoryFailureStub(result: String, status: Int = 200): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
 }

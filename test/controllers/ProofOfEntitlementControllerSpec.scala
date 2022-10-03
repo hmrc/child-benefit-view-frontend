@@ -79,7 +79,9 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         status(result) mustEqual INTERNAL_SERVER_ERROR
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          contentAsString(Future.successful(errorHandler.handleError(INTERNAL_SERVER_ERROR, "test-failure")))
+          contentAsString(
+            Future.successful(errorHandler.handleError(ConnectorError(INTERNAL_SERVER_ERROR, "test-failure")))
+          )
         )
       }
     }

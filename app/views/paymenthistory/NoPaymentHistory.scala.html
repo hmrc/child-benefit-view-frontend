@@ -23,7 +23,8 @@
 
 @this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
-@layout(pageTitle = "sca-apply-chb-frontend",
+@layout(pageTitle = messages("paymentHistory.pageTitle"),
+    dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
     showBackLink = true) {
     <span class="govuk-caption-xl">@{
         entitlement.claimant.name.value

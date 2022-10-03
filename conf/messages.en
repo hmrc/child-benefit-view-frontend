@@ -109,8 +109,9 @@ proofOfEntitlement.printMessage=Print this page
 
 
 # ---------------------------- View Payment History ----------------------------
+paymentHistory.pageTitle=Child Benefit payment history - Child Benefit - GOV.UK
 paymentHistory.title=Child Benefit payment history
-paymentHistory.viewEntitlementProof=View your proof of entitlement to Child Benefit
+paymentHistory.viewEntitlementProof=View proof of your entitlement to Child Benefit
 paymentHistory.viewEntitlementProof.p1=You can <a class="govuk-link" target="_self" href="{0}"> view proof of your entitlement to Child Benefit</a>, print the page and use it to show that you qualify.
 paymentHistory.recentCBPayments.header=Your most recent Child Benefit payments
 paymentHistory.recentCBPayments.p1=The 5 most recent payments made within the last 2 years.
