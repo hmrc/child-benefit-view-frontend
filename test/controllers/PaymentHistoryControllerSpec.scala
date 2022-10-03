@@ -18,17 +18,16 @@ package controllers
 
 import controllers.PaymentHistoryControllerSpec._
 import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, LastPaymentFinancialInfo}
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
 import utils.BaseISpec
-import views.html.paymenthistory.NoPaymentHistory
 import utils.NonceUtils.removeNonce
-import utils.Stubs.{entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, entitlementResult}
-import views.html.paymenthistory.PaymentHistory
+import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
+import utils.TestData.{NinoUser, entitlementResult, entitlementServiceNotFoundAccountError}
+import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
 
@@ -188,6 +187,23 @@ class PaymentHistoryControllerSpec extends BaseISpec {
             messages(application, request)
           ).toString
         )
+      }
+    }
+
+    "must return 404 and render the no account found view when services return no found account" in {
+      userLoggedInChildBenefitUser(NinoUser)
+      entitlementsAndPaymentHistoryFailureStub(entitlementServiceNotFoundAccountError, status = 404)
+
+      val application = applicationBuilder().build()
+
+      running(application) {
+
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.PaymentHistoryController.view.url).withSession("authToken" -> "Bearer 123")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
       }
     }
 

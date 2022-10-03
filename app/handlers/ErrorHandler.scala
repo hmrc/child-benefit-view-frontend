@@ -16,7 +16,8 @@
 
 package handlers
 
-import play.api.http.Status.SERVICE_UNAVAILABLE
+import models.errors.{CBError, ConnectorError, PaymentHistoryValidationError}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.{InternalServerError, Redirect}
 import play.api.mvc.{Request, Result}
@@ -38,19 +39,24 @@ class ErrorHandler @Inject() (
   ): Html =
     error(pageTitle, heading, message)
 
-  //addressing errors in separate task
-  def handleError(status: Int, message: String)(implicit request: Request[_]): Result =
-    status match {
-      case SERVICE_UNAVAILABLE =>
-        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+  def handleError(error: CBError)(implicit request: Request[_]): Result = {
+    val internalServerErrorDefaultPage = InternalServerError(
+      standardErrorTemplate(
+        "global.error.InternalServerError500.title",
+        "global.error.InternalServerError500.heading",
+        error.message
+      )
+    )
 
+    error match {
+      case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
+        Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
+      case e if e.statusCode == INTERNAL_SERVER_ERROR => internalServerErrorDefaultPage
+      case ConnectorError(_, _) =>
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case PaymentHistoryValidationError(_, _) => Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case _ =>
-        InternalServerError(
-          standardErrorTemplate(
-            "global.error.InternalServerError500.title",
-            "global.error.InternalServerError500.heading",
-            message
-          )
-        )
+        internalServerErrorDefaultPage
     }
+  }
 }

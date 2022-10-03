@@ -42,7 +42,7 @@ class PaymentHistoryController @Inject() (
     authorisedAsChildBenefitUser { _ =>
       paymentHistoryService.retrieveAndValidatePaymentHistory
         .fold(
-          err => errorHandler.handleError(err.statusCode, err.message),
+          err => errorHandler.handleError(err),
           result => Ok(result)
         )
     }(routes.PaymentHistoryController.view)

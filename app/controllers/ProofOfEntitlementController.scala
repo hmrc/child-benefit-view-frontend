@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.ProofOfEntitlement
@@ -46,8 +46,8 @@ class ProofOfEntitlementController @Inject() (
   val view: Action[AnyContent] =
     Action.async { implicit request =>
       authorisedAsChildBenefitUser { _ =>
-        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold[Result](
-          err => errorHandler.handleError(err.statusCode, err.message),
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+          err => errorHandler.handleError(err),
           entitlement => Ok(proofOfEntitlement(entitlement))
         )
       }(routes.ProofOfEntitlementController.view)

@@ -34,6 +34,8 @@ package views
 
 import play.api.data.Form
 import play.api.i18n.Messages
+import services.PaymentHistoryPageVariant
+import services.PaymentHistoryPageVariant._
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -63,4 +65,15 @@ object ViewUtils {
 
   def formatMoney(amount: BigDecimal, currency: String = "£"): String =
     f"$currency${amount.setScale(2)}"
+
+  def navigatePaymentHistory(pageVariant: PaymentHistoryPageVariant): String =
+    pageVariant match {
+      case InPaymentWithPaymentsInLastTwoYears               => "payment details - active - payments"
+      case InPaymentWithoutPaymentsInLastTwoYears            => "payment details - active - no payments"
+      case HICBCWithPaymentsInLastTwoYears                   => "payment details - hicbc - payments"
+      case HICBCWithoutPaymentsInLastTwoYears                => "payment details - hicbc - no payments"
+      case EntitlementEndedButReceivedPaymentsInLastTwoYears => "payment details - inactive - payments"
+      case EntitlementEndedButNoPaymentsInLastTwoYears       => "payment details - inactive - no payments"
+    }
+
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.failure
+package models.errors
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Json
 
-final case class Failure(code: String, reason: String)
+final case class CBErrorResponse(status: Int, description: String)
 
-object Failure {
-  implicit val format: Format[Failure] = Json.format[Failure]
+object CBErrorResponse {
+  implicit val format = Json.format[CBErrorResponse]
 }

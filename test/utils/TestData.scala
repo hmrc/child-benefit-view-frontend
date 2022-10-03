@@ -69,4 +69,12 @@ object TestData {
       )
     )
   )
+
+  val entitlementServiceNotFoundAccountError: String =
+    """
+      |{
+      |		"status": "404",
+      |		"reason": "NOT_FOUND_CB_ACCOUNT - downstream service returned NOT_FOUND_IDENTIFIER, suggesting user does not have a child benefit account"
+      |	}
+      |""".stripMargin
 }
