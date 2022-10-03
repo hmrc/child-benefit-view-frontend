@@ -27,7 +27,7 @@ trait FeatureSwitchSupport {
     new ActionFilter[Request] {
       val flag = config.get[Boolean]("feature-switch")
       override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
-        val result = if (flag) Some(NotFound) else None
+        val result = if (flag) None else Some(NotFound)
         Future.successful(result)
       }
 

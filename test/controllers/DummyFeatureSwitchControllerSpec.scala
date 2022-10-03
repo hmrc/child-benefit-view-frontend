@@ -12,15 +12,15 @@ class DummyFeatureSwitchControllerSpec extends BaseISpec {
   private val fakeRequest = FakeRequest("GET", "/")
 
   "Feature switch" - {
-    "prevent controller to move on and return NOT_FOUND when on" - {
-      val app        = applicationBuilder().configure(conf = Map("feature-switch" -> true)).build()
+    "prevent controller to move on and return NOT_FOUND when off" - {
+      val app        = applicationBuilder().configure(conf = Map("feature-switch" -> false)).build()
       val controller = app.injector.instanceOf[DummyFeatureSwitchController]
       val result     = controller.onPageLoad(fakeRequest)
       status(result) mustEqual Status.NOT_FOUND
     }
 
-    "allow controller to move on when off" in {
-      val app        = applicationBuilder().configure(conf = Map("feature-switch" -> false)).build()
+    "allow controller to move on when on" in {
+      val app        = applicationBuilder().configure(conf = Map("feature-switch" -> true)).build()
       val controller = app.injector.instanceOf[DummyFeatureSwitchController]
       val result     = controller.onPageLoad(fakeRequest)
       status(result) mustEqual Status.OK
