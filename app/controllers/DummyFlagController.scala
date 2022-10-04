@@ -16,8 +16,7 @@
 
 package controllers
 
-import controllers.actions.FeatureFlagSupport
-import features.{FeatureFlag, FeatureFlagService}
+import features.FeatureFlagService
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -27,16 +26,14 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DummyFlagController @Inject() (
-    val controllerComponents:  MessagesControllerComponents,
-    view:                      DummyFlagView,
-    override val featureFlags: FeatureFlagService
-)(implicit ec:                 ExecutionContext)
+    val controllerComponents: MessagesControllerComponents,
+    view:                     DummyFlagView,
+    featureFlags:             FeatureFlagService
+)(implicit ec:                ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport
-    with FeatureFlagSupport {
-  def onPageLoad: Action[AnyContent] = {
-    (Action andThen whenEnabled(FeatureFlag.DummyFlag)).async { implicit request =>
+    with I18nSupport {
+  val onPageLoad: Action[AnyContent] =
+    (Action andThen featureFlags.dummyFlagEnabled).async { implicit request =>
       Future.successful(Ok(view()))
     }
-  }
 }
