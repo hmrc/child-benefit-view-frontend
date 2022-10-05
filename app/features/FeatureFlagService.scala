@@ -16,23 +16,20 @@
 
 package features
 
-import features.FeatureFlagService.enumerableKeyConfigLoader
-import models.Enumerable
-import play.api.mvc.{ActionFilter, Result}
+import play.api.Configuration
 import play.api.mvc.Results.NotFound
-import play.api.{ConfigLoader, Configuration}
+import play.api.mvc.{ActionFilter, MessagesRequest, Result}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.higherKinds
 
 @Singleton
-class FeatureFlagService @Inject() (configuration: Configuration) {
-  private val featureFlags: Map[FeatureFlag, Boolean] = configuration.get[Map[FeatureFlag, Boolean]]("feature-flags")
+class FeatureFlagService @Inject() (configuration: Configuration)(implicit ec: ExecutionContext) {
+  private val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
 
-  private def whenEnabled[F[_]](featureFlag: FeatureFlag)(implicit ec: ExecutionContext): ActionFilter[F] =
-    new ActionFilter[F] {
-      override protected def filter[A](request: F[A]): Future[Option[Result]] =
+  private def whenEnabled(featureFlag: String): ActionFilter[MessagesRequest] =
+    new ActionFilter[MessagesRequest] {
+      override protected def filter[A](request: MessagesRequest[A]): Future[Option[Result]] =
         if (featureFlags.getOrElse(featureFlag, false)) {
           Future.successful(None)
         } else {
@@ -42,22 +39,5 @@ class FeatureFlagService @Inject() (configuration: Configuration) {
       override protected def executionContext: ExecutionContext = ec
     }
 
-  def dummyFlagEnabled[F[_]](implicit ec: ExecutionContext): ActionFilter[F] = whenEnabled(FeatureFlag.DummyFlag)
-}
-
-object FeatureFlagService {
-  implicit def enumerableKeyConfigLoader[K, V](implicit
-      enumerable:  Enumerable[K],
-      valueLoader: ConfigLoader[V]
-  ): ConfigLoader[Map[K, V]] =
-    implicitly[ConfigLoader[Map[String, V]]].map {
-      _.map {
-        case (stringKey, value) =>
-          val key = enumerable
-            .withName(stringKey)
-            .getOrElse(throw new NoSuchElementException(s"Invalid item '$stringKey'"))
-
-          key -> value
-      }
-    }
+  val dummyFlagEnabled: ActionFilter[MessagesRequest] = whenEnabled("dummy-flag")
 }
