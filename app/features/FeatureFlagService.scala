@@ -19,12 +19,15 @@ package features
 import play.api.Configuration
 import play.api.mvc.Results.NotFound
 import play.api.mvc.{ActionFilter, MessagesRequest, Result}
+import views.html.ErrorTemplate
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FeatureFlagService @Inject() (configuration: Configuration)(implicit ec: ExecutionContext) {
+class FeatureFlagService @Inject() (configuration: Configuration, errorTemplate: ErrorTemplate)(implicit
+    ec:                                            ExecutionContext
+) {
   private val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
 
   private def whenEnabled(featureFlag: String): ActionFilter[MessagesRequest] =
@@ -33,7 +36,16 @@ class FeatureFlagService @Inject() (configuration: Configuration)(implicit ec: E
         if (featureFlags.getOrElse(featureFlag, false)) {
           Future.successful(None)
         } else {
-          Future.successful(Some(NotFound))
+          Future.successful(
+            Some(
+              NotFound(
+                errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+                  request,
+                  request.messages
+                )
+              )
+            )
+          )
         }
 
       override protected def executionContext: ExecutionContext = ec

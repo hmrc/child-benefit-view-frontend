@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.BaseISpec
 import utils.NonceUtils.removeNonce
-import views.html.DummyFlagView
+import views.html.{DummyFlagView, ErrorTemplate}
 
 class DummyFlagControllerSpec extends BaseISpec with EitherValues {
   "Dummy flag controller" - {
@@ -54,7 +54,16 @@ class DummyFlagControllerSpec extends BaseISpec with EitherValues {
 
         val result = route(application, request).value
 
+        val view = application.injector.instanceOf[ErrorTemplate]
+
         status(result) mustEqual NOT_FOUND
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+            request,
+            messages(application, request)
+          ).toString
+        )
       }
     }
   }
