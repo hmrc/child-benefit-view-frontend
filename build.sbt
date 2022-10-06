@@ -48,6 +48,7 @@ lazy val root = (project in file("."))
     ),
     libraryDependencies ++= AppDependencies(),
     scalacOptions ++= Seq(
+      "-feature",
       "-deprecation",
       "-Ypartial-unification",
       "-Ywarn-dead-code",
