@@ -26,11 +26,11 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class DummyFlagController @Inject() (
-                                      val controllerComponents: MessagesControllerComponents,
-                                      view:                     DummyFlagView,
-                                      featureFlags:             FeatureFlagService
-                                    ) extends FrontendBaseController
-  with I18nSupport {
+    val controllerComponents: MessagesControllerComponents,
+    view:                     DummyFlagView,
+    featureFlags:             FeatureFlagService
+) extends FrontendBaseController
+    with I18nSupport {
   val onPageLoad: Action[AnyContent] =
     (Action andThen featureFlags.dummyFlagEnabled).async { implicit request =>
       Future.successful(Ok(view()))
