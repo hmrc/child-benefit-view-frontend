@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package audit
+package models.audit
 
-import play.api.libs.json.{Json}
+import models.entitlement.PaymentFinancialInfo
+import play.api.libs.json.Json
 
-case class ViewProofOfEntitlementModel(
-    nino:                       String,
-    status:                     String,
-    claimantEntitlementDetails: String
-)
+case class ViewPaymentDetailsModel(
+                                    nino: String,
+                                    status: String,
+                                    numOfPayments: Int,
+                                    payments: Seq[PaymentFinancialInfo]
+                                  )
 
-object ViewProofOfEntitlementModel {
-  implicit val formatViewProofOfEntitlementModel = Json.format[ViewProofOfEntitlementModel]
-  val eventType: String = "ViewProofOfEntitlement"
+object ViewPaymentDetailsModel {
+  implicit val formatViewPaymentDetailsModel = Json.format[ViewPaymentDetailsModel]
+  val eventType: String = "ViewPaymentDetails"
 
 }

@@ -19,9 +19,11 @@ package controllers
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
+import models.audit.ClaimantEntitlementDetails
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import services.Auditor
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.ProofOfEntitlement
 
@@ -35,7 +37,8 @@ class ProofOfEntitlementController @Inject() (
     authConnector:                    AuthConnector,
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
-    proofOfEntitlement:               ProofOfEntitlement
+    proofOfEntitlement:               ProofOfEntitlement,
+    auditor: Auditor
 )(implicit
     config:            Configuration,
     env:               Environment,
@@ -44,13 +47,25 @@ class ProofOfEntitlementController @Inject() (
     frontendAppConfig: FrontendAppConfig
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action.async { implicit request =>
-      authorisedAsChildBenefitUser { _ =>
-        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-          err => errorHandler.handleError(err),
-          entitlement => Ok(proofOfEntitlement(entitlement))
-        )
-      }(routes.ProofOfEntitlementController.view)
+    Action.async {
+      implicit request =>
+        authorisedAsChildBenefitUser { _ =>
+          childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+            err => errorHandler.handleError(err),
+            entitlement => {
+
+              //todo: AUDIT viewProofOfEntitlement fires here
+
+              val nino: String = "AB111111A"
+              val status = "In Peril"
+              val entDetails: Option[ClaimantEntitlementDetails] = None
+
+              auditor.viewProofOfEntitlement(nino, status, entDetails)
+
+              Ok(proofOfEntitlement(entitlement))
+            }
+          )
+        }(routes.ProofOfEntitlementController.view)
     }
 }
 
@@ -64,9 +79,9 @@ object ProofOfEntitlementController {
     )
 
   def formatEntitlementDate(
-      date:                          LocalDate,
-      checkForSpecialAwardStartDate: Boolean = false
-  )(implicit messages:               Messages): String = {
+                             date: LocalDate,
+                             checkForSpecialAwardStartDate: Boolean = false
+                           )(implicit messages: Messages): String = {
     val formattedDate = date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )

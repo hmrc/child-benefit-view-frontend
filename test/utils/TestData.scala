@@ -17,7 +17,7 @@
 package utils
 
 import models.common.{AddressLine, AddressPostcode}
-import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, Child, ChildBenefitEntitlement, Claimant, FullAddress, FullName, LastPaymentFinancialInfo}
+import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, Child, ChildBenefitEntitlement, Claimant, FullAddress, FullName, PaymentFinancialInfo}
 
 import java.time.LocalDate
 
@@ -41,11 +41,11 @@ object TestData {
       higherRateValue = 1000.00,
       standardRateValue = 50.00,
       lastPaymentsInfo = List(
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(2), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(3), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(4), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(5), 50.00),
-        LastPaymentFinancialInfo(LocalDate.now().minusMonths(6), 50.00)
+        PaymentFinancialInfo(LocalDate.now().minusMonths(2), 50.00),
+        PaymentFinancialInfo(LocalDate.now().minusMonths(3), 50.00),
+        PaymentFinancialInfo(LocalDate.now().minusMonths(4), 50.00),
+        PaymentFinancialInfo(LocalDate.now().minusMonths(5), 50.00),
+        PaymentFinancialInfo(LocalDate.now().minusMonths(6), 50.00)
       ),
       fullAddress = FullAddress(
         AddressLine("AddressLine1"),

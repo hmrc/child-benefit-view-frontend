@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.PaymentHistoryControllerSpec._
-import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, LastPaymentFinancialInfo}
+import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, PaymentFinancialInfo}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -215,7 +215,7 @@ object PaymentHistoryControllerSpec {
   val entitlementResultWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement =
     entitlementResult.copy(claimant =
       entitlementResult.claimant.copy(lastPaymentsInfo =
-        Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
+        Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 
@@ -227,7 +227,7 @@ object PaymentHistoryControllerSpec {
 
   val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
     entitlementResult.claimant.copy(
-      lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
+      lastPaymentsInfo = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
@@ -239,7 +239,7 @@ object PaymentHistoryControllerSpec {
     entitlementResult.copy(claimant =
       entitlementResult.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
-        lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
+        lastPaymentsInfo = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 

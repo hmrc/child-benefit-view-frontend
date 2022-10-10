@@ -16,23 +16,46 @@
 
 package services
 
-import audit.{ViewProofOfEntitlementModel}
+import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.entitlement.PaymentFinancialInfo
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class Auditor @Inject() (auditConnector: AuditConnector) {
+class Auditor @Inject()(auditConnector: AuditConnector) {
 
-  def viewProofOfEntitlement(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+
+  def viewProofOfEntitlement(nino: String,
+                             status: String,
+                             entitlementDeets: Option[ClaimantEntitlementDetails]
+                            )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+
     val payload = ViewProofOfEntitlementModel(
-      "AB123445A",
-      "successful",
-      "entitlementDeets"
+      nino,
+      status,
+      entitlementDeets
     )
 
     auditConnector.sendExplicitAudit(ViewProofOfEntitlementModel.eventType, payload)
+  }
+
+
+  def viewPaymentDetails(nino: String,
+                         status: String,
+                         numOfPayments: Int,
+                         payments: Seq[PaymentFinancialInfo]
+                        )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+
+    val payload = ViewPaymentDetailsModel(
+      nino,
+      status,
+      numOfPayments,
+      payments
+    )
+
+    auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.eventType, payload)
   }
 
 }

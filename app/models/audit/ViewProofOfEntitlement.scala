@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package models.entitlement
+package models.audit
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json}
 
-import java.time.LocalDate
+case class ViewProofOfEntitlementModel(
+    nino:                       String,
+    status:                     String,
+    claimantEntitlementDetails: Option[ClaimantEntitlementDetails]
+)
 
-final case class LastPaymentFinancialInfo(creditDate: LocalDate, creditAmount: BigDecimal)
+object ViewProofOfEntitlementModel {
+  implicit val formatViewProofOfEntitlementModel = Json.format[ViewProofOfEntitlementModel]
+  val eventType: String = "ViewProofOfEntitlement"
 
-object LastPaymentFinancialInfo {
-  implicit val format = Json.format[LastPaymentFinancialInfo]
 }

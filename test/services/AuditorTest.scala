@@ -16,24 +16,26 @@
 
 package services
 
-import audit.ViewProofOfEntitlementModel
-import org.mockito.{ArgumentCaptor, Mockito}
+import models.audit.{ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.entitlement.PaymentFinancialInfo
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{reset, times, verify}
+import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
+import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.play.PlaySpec
+import play.api.libs.json.Json.toJson
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
 class AuditorTest extends PlaySpec {
 
-  val auditConnector:        AuditConnector   = mock[AuditConnector]
-  val auditor:               Auditor          = new Auditor(auditConnector)
+  val auditConnector: AuditConnector = mock[AuditConnector]
+  val auditor: Auditor = new Auditor(auditConnector)
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
-  val someId:                String           = "failing testId"
+  protected implicit val hc: HeaderCarrier = HeaderCarrier()
 
   "Auditor" should {
 
@@ -45,14 +47,34 @@ class AuditorTest extends PlaySpec {
 
         val captor = ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
-        auditor.viewProofOfEntitlement
+        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "successful", entitlementDeets = None)
 
         verify(auditConnector, times(1))
           .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(any(), any(), any())
 
         val capturedEvent = captor.getValue.asInstanceOf[ViewProofOfEntitlementModel]
-        capturedEvent.nino mustBe "AB123445A"
+        println(toJson(capturedEvent))
+        capturedEvent.nino mustBe "CA123456A"
       }
+
+      "viewPrintDetails is called" in {
+
+        Mockito.reset(auditConnector)
+
+        val captor = ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
+
+        auditor.viewPaymentDetails(nino = "CA123456A", status = "successful", 2, Seq(PaymentFinancialInfo(LocalDate.now(), 300)))
+
+        verify(auditConnector, times(1))
+          .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.eventType), captor.capture())(any(), any(), any())
+
+        val capturedEvent = captor.getValue.asInstanceOf[ViewPaymentDetailsModel]
+        println(toJson(capturedEvent))
+        capturedEvent.nino mustBe "CA123456A"
+
+      }
+
+
     }
   }
 }
