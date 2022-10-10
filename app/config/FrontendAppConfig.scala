@@ -52,4 +52,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 
+  val childBenefitEntitlementConnector: ChildBenefitEntitlementConnectorConfig =
+    configuration.get[ChildBenefitEntitlementConnectorConfig]("child-benefit-entitlement-connector")
 }
