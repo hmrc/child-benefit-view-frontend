@@ -16,8 +16,8 @@
 
 package services
 
-import models.audit.{ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
-import models.entitlement.PaymentFinancialInfo
+import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.entitlement.{Child, PaymentFinancialInfo}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
@@ -26,6 +26,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json.toJson
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.TestData.entitlementResult
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
@@ -47,7 +48,28 @@ class AuditorTest extends PlaySpec {
 
         val captor = ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
-        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "successful", entitlementDeets = None)
+
+        val entitlement = entitlementResult
+
+        val entDetails: Option[ClaimantEntitlementDetails] =
+          Some(
+            ClaimantEntitlementDetails(
+              name = entitlement.claimant.name.value,
+              address = entitlement.claimant.fullAddress.toSingleLineString,
+              amount = entitlement.claimant.awardValue,
+              start = entitlement.claimant.awardStartDate.toString,
+              end = entitlement.claimant.awardEndDate.toString,
+              children = for (child <- entitlement.children) yield Child(
+                name = child.name,
+                dateOfBirth = child.dateOfBirth,
+                relationshipStartDate = child.relationshipStartDate,
+                relationshipEndDate = child.relationshipEndDate
+              )
+            )
+          )
+
+
+        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "successful", deviceFingerprint = "fingerprint", entitlementDetails = entDetails)
 
         verify(auditConnector, times(1))
           .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(any(), any(), any())

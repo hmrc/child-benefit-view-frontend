@@ -21,7 +21,7 @@ import play.api.libs.json.{Format, Json}
 
 case class ClaimantEntitlementDetails(name: String,
                                       address: String,
-                                      amount: Float,
+                                      amount: BigDecimal,
                                       start: String,
                                       end: String,
                                       children: Seq[Child]

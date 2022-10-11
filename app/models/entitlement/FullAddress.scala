@@ -26,7 +26,15 @@ final case class FullAddress(
     addressLine4:    Option[AddressLine],
     addressLine5:    Option[AddressLine],
     addressPostcode: AddressPostcode
-)
+){
+  def toSingleLineString =
+    s"${addressLine1.value} " +
+      s"${addressLine2.value} " +
+      s"${addressLine3.fold("")(_.value)} " +
+      s"${addressLine4.fold("")(_.value)} " +
+      s"${addressLine5.fold("")(_.value)} " +
+      s"${addressPostcode.value}"
+}
 
 object FullAddress {
   implicit val format = Json.format[FullAddress]

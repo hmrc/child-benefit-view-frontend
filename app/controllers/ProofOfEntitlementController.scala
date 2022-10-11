@@ -20,11 +20,13 @@ import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
 import models.audit.ClaimantEntitlementDetails
+import models.entitlement.Child
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.Auditor
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
@@ -49,18 +51,33 @@ class ProofOfEntitlementController @Inject() (
   val view: Action[AnyContent] =
     Action.async {
       implicit request =>
-        authorisedAsChildBenefitUser { _ =>
+        authorisedAsChildBenefitUser { authContext =>
+
+          val nino = authContext.nino.nino
+          val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+
           childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
             err => errorHandler.handleError(err),
             entitlement => {
 
-              //todo: AUDIT viewProofOfEntitlement fires here
-
-              val nino: String = "AB111111A"
-              val status = "In Peril"
-              val entDetails: Option[ClaimantEntitlementDetails] = None
-
-              auditor.viewProofOfEntitlement(nino, status, entDetails)
+              val status = "Success"
+              val entDetails: Option[ClaimantEntitlementDetails] =
+                Some(
+                  ClaimantEntitlementDetails(
+                    name = entitlement.claimant.name.value,
+                    address = entitlement.claimant.fullAddress.toString,
+                    amount = entitlement.claimant.awardValue,
+                    start = entitlement.claimant.awardStartDate.toString,
+                    end = entitlement.claimant.awardEndDate.toString,
+                    children = for (child <- entitlement.children) yield Child(
+                      name = child.name,
+                      dateOfBirth = child.dateOfBirth,
+                      relationshipStartDate = child.relationshipStartDate,
+                      relationshipEndDate = child.relationshipEndDate
+                    )
+                  )
+                )
+              auditor.viewProofOfEntitlement(nino, status, deviceFingerprint, entDetails)
 
               Ok(proofOfEntitlement(entitlement))
             }
