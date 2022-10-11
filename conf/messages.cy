@@ -17,13 +17,13 @@ noAccountFound.info2=Ffôn: 0300 200 1900
 noAccountFound.info3=Gwasanaeth Saesneg: 0300 200 3100
 noAccountFound.info4=Ffôn testun: 0300 200 3103
 noAccountFound.info5=O’r tu allan i’r DU: +44 300 200 1900
-noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:00 - 18:00
+noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:30 - 17:30
 noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
 noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau
 
 
 proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
-proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEM o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
+proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
 proofOfEntitlement.paidDetail=Caiff Budd-dal Plant ei dalu ar y cyfraddau canlynol:
 proofOfEntitlement.firstChild={0} ar gyfer y plentyn hynaf neu’r unig blentyn
 proofOfEntitlement.additionalchild={0} ar gyfer pob plentyn ychwanegol
@@ -96,6 +96,6 @@ service-unavailable-error-template.info.telephone = Ffôn: 0300 200 1900
 service-unavailable-error-template.info.welshTelephone = Gwasanaeth Saesneg: 0300 200 3100
 service-unavailable-error-template.info.textPhone = Ffôn testun: 0300 200 3103
 service-unavailable-error-template.info.outsideUKTelephone = O’r tu allan i’r DU: +44 300 200 1900
-service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:00 - 18:00
+service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:30 - 17:30
 service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau
 service-unavailable-error-template.info.callChargesUrl=https://www.gov.uk/costau-galwadau
