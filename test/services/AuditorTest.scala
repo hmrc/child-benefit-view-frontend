@@ -56,13 +56,13 @@ class AuditorTest extends PlaySpec {
               name = entitlement.claimant.name.value,
               address = entitlement.claimant.fullAddress.toSingleLineString,
               amount = entitlement.claimant.awardValue,
-              start = LocalDate.of(2022,1,1).toString,
-              end = LocalDate.of(2038,1,1).toString,
+              start = LocalDate.of(2022, 1, 1).toString,
+              end = LocalDate.of(2038, 1, 1).toString,
               children = for (child <- entitlement.children) yield Child(
                 name = child.name,
                 dateOfBirth = child.dateOfBirth,
-                relationshipStartDate = LocalDate.of(2022,1,1),
-                relationshipEndDate = Some(LocalDate.of(2038,1,1))
+                relationshipStartDate = LocalDate.of(2022, 1, 1),
+                relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
               )
             )
           )
@@ -103,7 +103,13 @@ class AuditorTest extends PlaySpec {
 
         val captor = ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-        auditor.viewPaymentDetails(nino = "CA123456A", status = "successful", 2, Seq(PaymentFinancialInfo(LocalDate.now(), 300)))
+        auditor.viewPaymentDetails(nino = "CA123456A",
+          status = "Successful",
+          referrer = "/bar",
+          deviceFingerprint = "fingerprint",
+          numOfPayments = 2,
+          payments = Seq(PaymentFinancialInfo(LocalDate.now(), 300), PaymentFinancialInfo(LocalDate.now(), 300))
+        )
 
         verify(auditConnector, times(1))
           .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.eventType), captor.capture())(any(), any(), any())
@@ -111,7 +117,10 @@ class AuditorTest extends PlaySpec {
         val capturedEvent = captor.getValue.asInstanceOf[ViewPaymentDetailsModel]
         println(toJson(capturedEvent))
         capturedEvent.nino mustBe "CA123456A"
-
+        capturedEvent.status mustBe "Successful"
+        capturedEvent.referrer mustBe "/bar"
+        capturedEvent.deviceFingerprint mustBe "fingerprint"
+        capturedEvent.numOfPayments mustBe 2
       }
 
 

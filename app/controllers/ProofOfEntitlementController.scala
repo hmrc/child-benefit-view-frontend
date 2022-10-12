@@ -35,12 +35,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ProofOfEntitlementController @Inject()(
-                                              authConnector: AuthConnector,
-                                              childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-                                              errorHandler: ErrorHandler,
-                                              proofOfEntitlement: ProofOfEntitlement,
-                                              auditor: Auditor
+class ProofOfEntitlementController @Inject()(authConnector: AuthConnector,
+                                             childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
+                                             errorHandler: ErrorHandler,
+                                             proofOfEntitlement: ProofOfEntitlement,
+                                             auditor: Auditor
                                             )(implicit
                                               config: Configuration,
                                               env: Environment,
@@ -59,8 +58,8 @@ class ProofOfEntitlementController @Inject()(
 
               val nino = authContext.nino.nino
               val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-              val ref = request.headers.get("referrer")
-                .getOrElse(request.headers.get("Referer")
+              val ref = request.headers.get("referer") //MDTP header
+                .getOrElse(request.headers.get("Referer") //common browser header
                   .getOrElse("Referrer not found")
                 )
               val entDetails: Option[ClaimantEntitlementDetails] =

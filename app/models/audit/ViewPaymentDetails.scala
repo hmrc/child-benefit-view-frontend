@@ -22,6 +22,8 @@ import play.api.libs.json.Json
 case class ViewPaymentDetailsModel(
                                     nino: String,
                                     status: String,
+                                    referrer: String,
+                                    deviceFingerprint: String,
                                     numOfPayments: Int,
                                     payments: Seq[PaymentFinancialInfo]
                                   )

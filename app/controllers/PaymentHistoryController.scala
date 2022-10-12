@@ -17,34 +17,57 @@
 package controllers
 
 import config.FrontendAppConfig
+import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
-import play.api.mvc.{Action, AnyContent}
-import services.PaymentHistoryService
-import play.api.mvc.MessagesControllerComponents
+import models.entitlement.PaymentFinancialInfo
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import services.{Auditor, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class PaymentHistoryController @Inject() (
-    authConnector:         AuthConnector,
-    paymentHistoryService: PaymentHistoryService,
-    errorHandler:          ErrorHandler
-)(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
-) extends ChildBenefitBaseController(authConnector) {
-  val view: Action[AnyContent] = Action.async { implicit request =>
-    authorisedAsChildBenefitUser { _ =>
-      paymentHistoryService.retrieveAndValidatePaymentHistory
-        .fold(
-          err => errorHandler.handleError(err),
-          result => Ok(result)
-        )
-    }(routes.PaymentHistoryController.view)
-  }
+class PaymentHistoryController @Inject()(authConnector: AuthConnector,
+                                         paymentHistoryService: PaymentHistoryService,
+                                         childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
+                                         errorHandler: ErrorHandler
+                                        )(implicit
+                                          config: Configuration,
+                                          env: Environment,
+                                          ec: ExecutionContext,
+                                          cc: MessagesControllerComponents,
+                                          frontendAppConfig: FrontendAppConfig,
+                                          auditor: Auditor
+                                        ) extends ChildBenefitBaseController(authConnector) {
+  val view: Action[AnyContent] =
+    Action.async {
+      implicit request =>
+        authorisedAsChildBenefitUser {
+          authContext =>
+            paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
+              err => errorHandler.handleError(err),
+              result => {
+                childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+                  err => errorHandler.handleError(err),
+                  entitlement => {
+
+                    val nino = authContext.nino.nino
+                    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+                    val ref = request.headers.get("referer") //MDTP header
+                      .getOrElse(request.headers.get("Referer") //common browser header
+                        .getOrElse("Referrer not found")
+                      )
+                    val payments = entitlement.claimant.lastPaymentsInfo.map(payment => PaymentFinancialInfo(payment.creditDate, payment.creditAmount))
+                    val numOfPayments = payments.length
+
+                    auditor.viewPaymentDetails(nino, status = "Success", ref, deviceFingerprint, numOfPayments, payments)
+                  }
+                )
+                Ok(result)
+              }
+            )
+        }(routes.PaymentHistoryController.view)
+    }
 }

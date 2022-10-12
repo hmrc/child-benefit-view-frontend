@@ -48,6 +48,8 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
 
   def viewPaymentDetails(nino: String,
                          status: String,
+                         referrer: String,
+                         deviceFingerprint: String,
                          numOfPayments: Int,
                          payments: Seq[PaymentFinancialInfo]
                         )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
@@ -55,6 +57,8 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
     val payload = ViewPaymentDetailsModel(
       nino,
       status,
+      referrer,
+      deviceFingerprint,
       numOfPayments,
       payments
     )
