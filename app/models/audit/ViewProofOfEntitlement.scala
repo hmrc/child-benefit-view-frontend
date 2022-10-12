@@ -21,6 +21,7 @@ import play.api.libs.json.{Json}
 case class ViewProofOfEntitlementModel(
     nino:                       String,
     status:                     String,
+    referrer:                   String,
     deviceFingerprint:          String,
     claimantEntitlementDetails: Option[ClaimantEntitlementDetails]
 )

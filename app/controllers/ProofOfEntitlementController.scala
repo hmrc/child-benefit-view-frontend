@@ -35,32 +35,34 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ProofOfEntitlementController @Inject() (
-    authConnector:                    AuthConnector,
-    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-    errorHandler:                     ErrorHandler,
-    proofOfEntitlement:               ProofOfEntitlement,
-    auditor: Auditor
-)(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
-) extends ChildBenefitBaseController(authConnector) {
+class ProofOfEntitlementController @Inject()(
+                                              authConnector: AuthConnector,
+                                              childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
+                                              errorHandler: ErrorHandler,
+                                              proofOfEntitlement: ProofOfEntitlement,
+                                              auditor: Auditor
+                                            )(implicit
+                                              config: Configuration,
+                                              env: Environment,
+                                              ec: ExecutionContext,
+                                              cc: MessagesControllerComponents,
+                                              frontendAppConfig: FrontendAppConfig
+                                            ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async {
       implicit request =>
         authorisedAsChildBenefitUser { authContext =>
 
-          val nino = authContext.nino.nino
-          val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-
           childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
             err => errorHandler.handleError(err),
             entitlement => {
 
-              val status = "Success"
+              val nino = authContext.nino.nino
+              val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+              val ref = request.headers.get("referrer")
+                .getOrElse(request.headers.get("Referer")
+                  .getOrElse("Referrer not found")
+                )
               val entDetails: Option[ClaimantEntitlementDetails] =
                 Some(
                   ClaimantEntitlementDetails(
@@ -77,7 +79,7 @@ class ProofOfEntitlementController @Inject() (
                     )
                   )
                 )
-              auditor.viewProofOfEntitlement(nino, status, deviceFingerprint, entDetails)
+              auditor.viewProofOfEntitlement(nino, status = "Success", ref, deviceFingerprint, entDetails)
 
               Ok(proofOfEntitlement(entitlement))
             }

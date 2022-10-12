@@ -29,6 +29,7 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
 
   def viewProofOfEntitlement(nino: String,
                              status: String,
+                             referrer: String,
                              deviceFingerprint: String,
                              entitlementDetails: Option[ClaimantEntitlementDetails]
                             )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
@@ -36,6 +37,7 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
     val payload = ViewProofOfEntitlementModel(
       nino,
       status,
+      referrer,
       deviceFingerprint,
       entitlementDetails
     )

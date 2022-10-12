@@ -48,7 +48,6 @@ class AuditorTest extends PlaySpec {
 
         val captor = ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
-
         val entitlement = entitlementResult
 
         val entDetails: Option[ClaimantEntitlementDetails] =
@@ -57,26 +56,45 @@ class AuditorTest extends PlaySpec {
               name = entitlement.claimant.name.value,
               address = entitlement.claimant.fullAddress.toSingleLineString,
               amount = entitlement.claimant.awardValue,
-              start = entitlement.claimant.awardStartDate.toString,
-              end = entitlement.claimant.awardEndDate.toString,
+              start = LocalDate.of(2022,1,1).toString,
+              end = LocalDate.of(2038,1,1).toString,
               children = for (child <- entitlement.children) yield Child(
                 name = child.name,
                 dateOfBirth = child.dateOfBirth,
-                relationshipStartDate = child.relationshipStartDate,
-                relationshipEndDate = child.relationshipEndDate
+                relationshipStartDate = LocalDate.of(2022,1,1),
+                relationshipEndDate = Some(LocalDate.of(2038,1,1))
               )
             )
           )
 
 
-        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "successful", deviceFingerprint = "fingerprint", entitlementDetails = entDetails)
+        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "Successful", referrer = "/foo", deviceFingerprint = "fingerprint", entitlementDetails = entDetails)
 
         verify(auditConnector, times(1))
           .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(any(), any(), any())
 
         val capturedEvent = captor.getValue.asInstanceOf[ViewProofOfEntitlementModel]
+        val capturedEntitlementDetails: ClaimantEntitlementDetails = capturedEvent.claimantEntitlementDetails.get
+        val capturedChild: Child = capturedEntitlementDetails.children.last
+
         println(toJson(capturedEvent))
+
         capturedEvent.nino mustBe "CA123456A"
+        capturedEvent.status mustBe "Successful"
+        capturedEvent.referrer mustBe "/foo"
+        capturedEvent.deviceFingerprint mustBe "fingerprint"
+
+        capturedEntitlementDetails.name mustBe "John Doe"
+        capturedEntitlementDetails.address mustBe "AddressLine1 AddressLine2 AddressLine3 AddressLine4 AddressLine5 SS1 7JJ"
+        capturedEntitlementDetails.start mustBe "2022-01-01"
+        capturedEntitlementDetails.end mustBe "2038-01-01"
+        capturedEntitlementDetails.children.length mustBe 1
+
+        capturedChild.name.value mustBe "Full Name"
+        capturedChild.dateOfBirth.toString mustBe "2012-01-01"
+        capturedChild.relationshipStartDate.toString mustBe "2022-01-01"
+        capturedChild.relationshipEndDate.get.toString mustBe "2038-01-01"
+
       }
 
       "viewPrintDetails is called" in {
