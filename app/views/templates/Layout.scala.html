@@ -43,7 +43,7 @@
       countdown = Some(appConfig.countdown),
       keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
       keepAliveButtonText = Some(messages("timeout.keepAlive")),
-      signOutUrl = Some(controllers.auth.routes.AuthController.signOut.url),
+      signOutUrl = Some(controllers.auth.routes.AuthController.signOutNoSurvey.url),
       signOutButtonText = Some(messages("timeout.signOut")),
       title = Some(messages("timeout.title")),
       message = Some(messages("timeout.message"))
@@ -57,7 +57,7 @@
     nonce = CSPNonce.get,
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     backLinkUrl = if(showBackLink) Some("javascript:history.back();") else None,
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOutNoSurvey.url) else None,
+    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)

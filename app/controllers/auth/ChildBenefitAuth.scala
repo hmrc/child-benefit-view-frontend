@@ -17,6 +17,7 @@
 package controllers.auth
 
 import config.FrontendAppConfig
+import controllers.auth.ChildBenefitAuth.toContinueUrl
 import models.common.NationalInsuranceNumber
 import play.api.Logging
 import play.api.mvc._
@@ -111,12 +112,15 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       InternalServerError
   }
 
-  private def toContinueUrl(call: Call)(implicit rh: RequestHeader): String = {
+}
+
+object ChildBenefitAuth {
+
+  def toContinueUrl(call: Call)(implicit rh: RequestHeader): String = {
     if (call.absoluteURL.contains("://localhost")) {
       call.absoluteURL()
     } else {
       call.url
     }
   }
-
 }
