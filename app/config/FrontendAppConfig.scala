@@ -26,14 +26,13 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  val host:             String = configuration.get[String]("host")
-  val appName:          String = configuration.get[String]("appName")
-  val loginUrl:         String = configuration.get[String]("urls.login")
-  val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
-  val signOutUrl:       String = configuration.get[String]("urls.signOut")
-  val timeout:          Int    = configuration.get[Int]("timeout-dialog.timeout")
-  val countdown:        Int    = configuration.get[Int]("timeout-dialog.countdown")
-  val cacheTtl:         Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  val host:       String = configuration.get[String]("host")
+  val appName:    String = configuration.get[String]("appName")
+  val loginUrl:   String = configuration.get[String]("urls.login")
+  val signOutUrl: String = configuration.get[String]("urls.signOut")
+  val timeout:    Int    = configuration.get[Int]("timeout-dialog.timeout")
+  val countdown:  Int    = configuration.get[Int]("timeout-dialog.countdown")
+  val cacheTtl:   Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
@@ -44,7 +43,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def childBenefitEntitlementUrl: String =
     s"$childBenefitEntitlementBaseUrl/child-benefit-service/view-entitlements-and-payments"
 
-  def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/child-benefit-view-frontend"
+  def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/CHIB"
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=child-benefit-view-frontend&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
