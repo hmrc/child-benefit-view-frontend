@@ -21,18 +21,14 @@ noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:30 - 17:30
 noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
 noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau
 
-
+# ---------------------------- Proof Of Entitlement ----------------------------
 proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
 proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
 proofOfEntitlement.paidDetail=Caiff Budd-dal Plant ei dalu ar y cyfraddau canlynol:
 proofOfEntitlement.firstChild={0} ar gyfer y plentyn hynaf neu’r unig blentyn
 proofOfEntitlement.additionalchild={0} ar gyfer pob plentyn ychwanegol
 proofOfEntitlement.entitlementdetail.title=Manylion hawl yr hawliwr
-proofOfEntitlement.entitlementdetail.part1=Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch
-proofOfEntitlement.entitlementdetail.part2=roi gwybod i ni am newidiadau i’ch amgylchiadau
-proofOfEntitlement.entitlementdetail.part3=neu am newidiadau i
-proofOfEntitlement.entitlementdetail.part4=amgylchiadau’ch plentyn neu’ch plant,
-proofOfEntitlement.entitlementdetail.part5=a byddwn yn eu diweddaru ar eich cyfer.
+proofOfEntitlement.entitlementdetail.p1=Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch <a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide">roi gwybod i ni am newidiadau i’ch amgylchiadau</a> neu am newidiadau i <a class="govuk-link" target="_self" href="https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide">amgylchiadau’ch plentyn neu’ch plant</a>, a byddwn yn eu diweddaru ar eich cyfer.
 proofOfEntitlement.claimantname=Enw
 proofOfEntitlement.address=Cyfeiriad
 proofOfEntitlement.amount=Swm
@@ -47,6 +43,7 @@ proofOfEntitlement.viewrecentpayments.part1=Gallwch
 proofOfEntitlement.viewrecentpayments.part2=fwrw golwg dros eich taliadau Budd-dal Plant diweddar
 proofOfEntitlement.viewrecentpayments.part3=a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
 proofOfEntitlement.printMessage=Argraffu’r dudalen hon
+# ------------------------------------------------------------------------------------
 
 
 # ---------------------------- View Payment History ----------------------------
