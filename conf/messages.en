@@ -86,11 +86,7 @@ proofOfEntitlement.paidDetail=Child Benefit is paid at:
 proofOfEntitlement.firstChild={0} for the eldest or only child
 proofOfEntitlement.additionalchild={0} for each additional child
 proofOfEntitlement.entitlementdetail.title=Claimant’s entitlement details
-proofOfEntitlement.entitlementdetail.part1=If your address or any names are incorrect, you can
-proofOfEntitlement.entitlementdetail.part2=tell us about changes to your circumstances
-proofOfEntitlement.entitlementdetail.part3=or about
-proofOfEntitlement.entitlementdetail.part4=your child’s or children’s circumstances
-proofOfEntitlement.entitlementdetail.part5=and we’ll update them for you.
+proofOfEntitlement.entitlementdetail.p1=If your address or any names are incorrect, you can <a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"> tell us about changes to your circumstances</a> or about <a class="govuk-link" target="_self" href="https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide">your child’s or children’s circumstances</a> and we’ll update them for you.
 proofOfEntitlement.claimantname=Name
 proofOfEntitlement.address=Address
 proofOfEntitlement.amount=Amount
