@@ -18,14 +18,16 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
+import controllers.PaymentHistoryController.getStatus
 import handlers.ErrorHandler
-import models.entitlement.PaymentFinancialInfo
+import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, PaymentFinancialInfo}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.{Auditor, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -60,9 +62,14 @@ class PaymentHistoryController @Inject()(authConnector: AuthConnector,
                         .getOrElse("Referrer not found")
                       )
                     val payments = entitlement.claimant.lastPaymentsInfo.map(payment => PaymentFinancialInfo(payment.creditDate, payment.creditAmount))
-                    val numOfPayments = payments.length
+                    val adjustmentInfo: Option[AdjustmentInformation] = if (entitlement.claimant.adjustmentInformation.isDefined) {
+                      entitlement.claimant.adjustmentInformation
+                    } else {
+                      None
+                    }
+                    val status = getStatus(payments, adjustmentInfo)
 
-                    auditor.viewPaymentDetails(nino, status = "Success", ref, deviceFingerprint, numOfPayments, payments)
+                    auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
                   }
                 )
                 Ok(result)
@@ -70,4 +77,33 @@ class PaymentHistoryController @Inject()(authConnector: AuthConnector,
             )
         }(routes.PaymentHistoryController.view)
     }
+
+
+}
+
+object PaymentHistoryController {
+
+  def getStatus(payments: Seq[PaymentFinancialInfo], adjustmentInfo: Option[AdjustmentInformation]): String = {
+
+    val paymentDates: Seq[LocalDate] = payments.map(_.creditDate)
+    val paymentDatesWithinTwoYears = paymentDates.filter(_.isAfter(LocalDate.now.minusYears(2)))
+
+    if (payments.isEmpty) {
+      "Inactive - No payments"
+    } else {
+      if (paymentDatesWithinTwoYears.nonEmpty) {
+        if (adjustmentInfo.isDefined) {
+          "HICBC - Payments"
+        } else {
+          "Active - Payments"
+        }
+      } else {
+        if (adjustmentInfo.isDefined) {
+          "HICBC - No payments"
+        } else {
+          "Active - No payments"
+        }
+      }
+    }
+  }
 }
