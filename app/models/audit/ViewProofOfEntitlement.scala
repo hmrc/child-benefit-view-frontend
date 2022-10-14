@@ -18,7 +18,7 @@ package models.audit
 
 import play.api.libs.json.{Json}
 
-case class ViewProofOfEntitlementModel(
+final case class ViewProofOfEntitlementModel(
     nino:                       String,
     status:                     String,
     referrer:                   String,
@@ -28,6 +28,6 @@ case class ViewProofOfEntitlementModel(
 
 object ViewProofOfEntitlementModel {
   implicit val formatViewProofOfEntitlementModel = Json.format[ViewProofOfEntitlementModel]
-  val eventType: String = "ViewProofOfEntitlement"
+  val EventType: String = "ViewProofOfEntitlement"
 
 }

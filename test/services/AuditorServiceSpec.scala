@@ -31,10 +31,10 @@ import utils.TestData.entitlementResult
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
-class AuditorTest extends PlaySpec {
+class AuditorServiceSpec extends PlaySpec {
 
   val auditConnector:        AuditConnector   = mock[AuditConnector]
-  val auditor:               Auditor          = new Auditor(auditConnector)
+  val auditor:               AuditorService   = new AuditorService(auditConnector)
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
 
@@ -78,7 +78,7 @@ class AuditorTest extends PlaySpec {
         )
 
         verify(auditConnector, times(1))
-          .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(
+          .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
             any[HeaderCarrier](),
             any[ExecutionContext](),
             any[Writes[ViewProofOfEntitlementModel]]()
@@ -121,7 +121,7 @@ class AuditorTest extends PlaySpec {
         )
 
         verify(auditConnector, times(1))
-          .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.eventType), captor.capture())(
+          .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.EventType), captor.capture())(
             any[HeaderCarrier](),
             any[ExecutionContext](),
             any[Writes[ViewPaymentDetailsModel]]()

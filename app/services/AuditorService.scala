@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class Auditor @Inject() (auditConnector: AuditConnector) {
+class AuditorService @Inject() (auditConnector: AuditConnector) {
 
   def viewProofOfEntitlement(
       nino:               String,
@@ -42,7 +42,7 @@ class Auditor @Inject() (auditConnector: AuditConnector) {
       entitlementDetails
     )
 
-    auditConnector.sendExplicitAudit(ViewProofOfEntitlementModel.eventType, payload)
+    auditConnector.sendExplicitAudit(ViewProofOfEntitlementModel.EventType, payload)
   }
 
   def viewPaymentDetails(
@@ -63,7 +63,7 @@ class Auditor @Inject() (auditConnector: AuditConnector) {
       payments
     )
 
-    auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.eventType, payload)
+    auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.EventType, payload)
   }
 
 }

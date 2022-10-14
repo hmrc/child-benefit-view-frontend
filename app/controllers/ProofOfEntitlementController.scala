@@ -18,14 +18,17 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
+import controllers.ProofOfEntitlementController.fireAuditEvent
+import controllers.auth.AuthContext
 import handlers.ErrorHandler
 import models.audit.ClaimantEntitlementDetails
-import models.entitlement.Child
+import models.entitlement.{Child, ChildBenefitEntitlement}
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
 import play.api.{Configuration, Environment}
-import services.Auditor
+import services.AuditorService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 import views.html.ProofOfEntitlement
 
@@ -39,14 +42,14 @@ class ProofOfEntitlementController @Inject() (
     authConnector:                    AuthConnector,
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
-    proofOfEntitlement:               ProofOfEntitlement,
-    auditor:                          Auditor
+    proofOfEntitlement:               ProofOfEntitlement
 )(implicit
     config:            Configuration,
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    frontendAppConfig: FrontendAppConfig,
+    auditor:           AuditorService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
@@ -54,35 +57,7 @@ class ProofOfEntitlementController @Inject() (
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
           err => errorHandler.handleError(err),
           entitlement => {
-
-            val nino              = authContext.nino.nino
-            val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-            val ref = request.headers
-              .get("referer") //MDTP header
-              .getOrElse(
-                request.headers
-                  .get("Referer") //common browser header
-                  .getOrElse("Referrer not found")
-              )
-            val entDetails: Option[ClaimantEntitlementDetails] =
-              Some(
-                ClaimantEntitlementDetails(
-                  name = entitlement.claimant.name.value,
-                  address = entitlement.claimant.fullAddress.toString,
-                  amount = entitlement.claimant.awardValue,
-                  start = entitlement.claimant.awardStartDate.toString,
-                  end = entitlement.claimant.awardEndDate.toString,
-                  children =
-                    for (child <- entitlement.children)
-                      yield Child(
-                        name = child.name,
-                        dateOfBirth = child.dateOfBirth,
-                        relationshipStartDate = child.relationshipStartDate,
-                        relationshipEndDate = child.relationshipEndDate
-                      )
-                )
-              )
-            auditor.viewProofOfEntitlement(nino, status = "Success", ref, deviceFingerprint, entDetails)
+            fireAuditEvent(request, entitlement, authContext)
 
             Ok(proofOfEntitlement(entitlement))
           }
@@ -100,10 +75,9 @@ object ProofOfEntitlementController {
       LocalDate.of(2021, 3, 15)
     )
 
-  def formatEntitlementDate(
-      date:                          LocalDate,
-      checkForSpecialAwardStartDate: Boolean = false
-  )(implicit messages:               Messages): String = {
+  def formatEntitlementDate(date: LocalDate, checkForSpecialAwardStartDate: Boolean = false)(implicit
+      messages:                   Messages
+  ): String = {
     val formattedDate = date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )
@@ -113,5 +87,35 @@ object ProofOfEntitlementController {
     } else {
       formattedDate
     }
+  }
+
+  def fireAuditEvent(
+      request:        MessagesRequest[AnyContent],
+      entitlement:    ChildBenefitEntitlement,
+      authContext:    AuthContext[Any]
+  )(implicit auditor: AuditorService, hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+
+    val nino              = authContext.nino.nino
+    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+    val ref = request.headers
+      .get("referer") //MDTP header
+      .getOrElse(
+        request.headers
+          .get("Referer") //common browser header
+          .getOrElse("Referrer not found")
+      )
+    val entDetails: Option[ClaimantEntitlementDetails] =
+      Some(
+        ClaimantEntitlementDetails(
+          name = entitlement.claimant.name.value,
+          address = entitlement.claimant.fullAddress.toSingleLineString,
+          amount = entitlement.claimant.awardValue,
+          start = entitlement.claimant.awardStartDate.toString,
+          end = entitlement.claimant.awardEndDate.toString,
+          children = entitlement.children
+        )
+      )
+    auditor.viewProofOfEntitlement(nino, status = "Success", ref, deviceFingerprint, entDetails)
+
   }
 }

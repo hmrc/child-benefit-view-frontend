@@ -18,13 +18,15 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
-import controllers.PaymentHistoryController.getStatus
+import controllers.PaymentHistoryController.{fireAuditEvent, getStatus}
+import controllers.auth.AuthContext
 import handlers.ErrorHandler
-import models.entitlement.LastPaymentFinancialInfo
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import models.entitlement.{ChildBenefitEntitlement, LastPaymentFinancialInfo}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
 import play.api.{Configuration, Environment}
-import services.{Auditor, PaymentHistoryService}
+import services.{AuditorService, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
 import java.time.LocalDate
@@ -42,7 +44,7 @@ class PaymentHistoryController @Inject() (
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig,
-    auditor:           Auditor
+    auditor:           AuditorService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
@@ -53,28 +55,7 @@ class PaymentHistoryController @Inject() (
             childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
               err => errorHandler.handleError(err),
               entitlement => {
-
-                val nino              = authContext.nino.nino
-                val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-                val ref = request.headers
-                  .get("referer") //MDTP header
-                  .getOrElse(
-                    request.headers
-                      .get("Referer") //common browser header
-                      .getOrElse("Referrer not found")
-                  )
-                val entEndDate = entitlement.claimant.awardEndDate
-                val payments = entitlement.claimant.lastPaymentsInfo.map(payment =>
-                  LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount)
-                )
-                val adjustmentReasonCode: Option[String] =
-                  Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value)
-                val adjustmentEndDate: Option[LocalDate] =
-                  Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
-
-                val status = getStatus(entEndDate, payments, adjustmentReasonCode, adjustmentEndDate)
-
-                auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
+                fireAuditEvent(request, entitlement, authContext)
               }
             )
             Ok(result)
@@ -89,6 +70,35 @@ object PaymentHistoryController {
 
   private def isTodayOrInPast(date: LocalDate): Boolean = {
     date.isBefore(LocalDate.now) || date.isEqual(LocalDate.now)
+  }
+
+  def fireAuditEvent(
+      request:        MessagesRequest[AnyContent],
+      entitlement:    ChildBenefitEntitlement,
+      authContext:    AuthContext[Any]
+  )(implicit auditor: AuditorService, hc: HeaderCarrier, ec: ExecutionContext): Unit = {
+    val nino              = authContext.nino.nino
+    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+    val ref = request.headers
+      .get("referer") //MDTP header
+      .getOrElse(
+        request.headers
+          .get("Referer") //common browser header
+          .getOrElse("Referrer not found")
+      )
+    val payments = entitlement.claimant.lastPaymentsInfo.map(payment =>
+      LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount)
+    )
+
+    val status = getStatus(
+      entitlement.claimant.awardEndDate,
+      payments,
+      Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value),
+      Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
+    )
+
+    auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
+
   }
 
   def getStatus(

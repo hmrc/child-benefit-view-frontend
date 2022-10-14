@@ -19,7 +19,7 @@ package models.audit
 import models.entitlement.Child
 import play.api.libs.json.{Format, Json}
 
-case class ClaimantEntitlementDetails(
+final case class ClaimantEntitlementDetails(
     name:     String,
     address:  String,
     amount:   BigDecimal,
