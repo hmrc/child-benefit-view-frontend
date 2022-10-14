@@ -24,15 +24,15 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class Auditor @Inject()(auditConnector: AuditConnector) {
+class Auditor @Inject() (auditConnector: AuditConnector) {
 
-
-  def viewProofOfEntitlement(nino: String,
-                             status: String,
-                             referrer: String,
-                             deviceFingerprint: String,
-                             entitlementDetails: Option[ClaimantEntitlementDetails]
-                            )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+  def viewProofOfEntitlement(
+      nino:               String,
+      status:             String,
+      referrer:           String,
+      deviceFingerprint:  String,
+      entitlementDetails: Option[ClaimantEntitlementDetails]
+  )(implicit hc:          HeaderCarrier, ex: ExecutionContext): Unit = {
 
     val payload = ViewProofOfEntitlementModel(
       nino,
@@ -45,14 +45,14 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
     auditConnector.sendExplicitAudit(ViewProofOfEntitlementModel.eventType, payload)
   }
 
-
-  def viewPaymentDetails(nino: String,
-                         status: String,
-                         referrer: String,
-                         deviceFingerprint: String,
-                         numOfPayments: Int,
-                         payments: Seq[LastPaymentFinancialInfo]
-                        )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+  def viewPaymentDetails(
+      nino:              String,
+      status:            String,
+      referrer:          String,
+      deviceFingerprint: String,
+      numOfPayments:     Int,
+      payments:          Seq[LastPaymentFinancialInfo]
+  )(implicit hc:         HeaderCarrier, ex: ExecutionContext): Unit = {
 
     val payload = ViewPaymentDetailsModel(
       nino,

@@ -212,18 +212,18 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     "must return relative audit status" - {
       "Entitlement end date in future, No Adjustment code 28 - active account" in {
 
-        val endDate = LocalDate.now.plusYears(1)
+        val endDate  = LocalDate.now.plusYears(1)
         val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
-        val result = PaymentHistoryController.getStatus(endDate, payments, None, None)
+        val result   = PaymentHistoryController.getStatus(endDate, payments, None, None)
 
         result mustBe "Active - Payments"
 
       }
       "Adjustment code 28 (HICBC) with an end date = today [OR in the past], At least one payment issued in last 2 years - active account" in {
 
-        val endDate = LocalDate.now
-        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
-        val reason = Some("28")
+        val endDate           = LocalDate.now
+        val payments          = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val reason            = Some("28")
         val adjustmentEndDate = Some(LocalDate.now)
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -237,8 +237,9 @@ class PaymentHistoryControllerSpec extends BaseISpec {
         val endDate = LocalDate.now
         val payments = Seq(
           LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400),
-          LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(3), 500))
-        val reason = Some("28")
+          LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(3), 500)
+        )
+        val reason            = Some("28")
         val adjustmentEndDate = Some(LocalDate.now)
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -247,9 +248,9 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       }
       "when claimant has opt out due to HICBC - one payment at least in the previous two years" in {
 
-        val endDate = LocalDate.now
-        val reason = Some("28")
-        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val endDate           = LocalDate.now
+        val reason            = Some("28")
+        val payments          = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
         val adjustmentEndDate = Some(LocalDate.now.plusYears(1))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -258,9 +259,9 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       }
       "when claimant has opt out due to HICBC - no payment in the last two years" in {
 
-        val endDate = LocalDate.now
-        val reason = Some("28")
-        val payments = Seq.empty
+        val endDate           = LocalDate.now
+        val reason            = Some("28")
+        val payments          = Seq.empty
         val adjustmentEndDate = Some(LocalDate.now.plusYears(1))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -268,9 +269,9 @@ class PaymentHistoryControllerSpec extends BaseISpec {
         result mustBe "HICBC - No payments"
       }
       "when claimant has payment suspended - active account" in {
-        val endDate = LocalDate.now.plusYears(2)
-        val payments = Seq.empty
-        val reason = Some("28")
+        val endDate           = LocalDate.now.plusYears(2)
+        val payments          = Seq.empty
+        val reason            = Some("28")
         val adjustmentEndDate = Some(LocalDate.now.plusYears(1))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -279,7 +280,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       }
       "when claimant has no payment - inactive account" in {
 
-        val endDate = LocalDate.now.minusYears(1)
+        val endDate  = LocalDate.now.minusYears(1)
         val payments = Seq.empty
 
         val result = PaymentHistoryController.getStatus(endDate, payments, None, None)
@@ -288,7 +289,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       }
       "when claimant has at least a single payment within the previous two years - inactive account." in {
 
-        val endDate = LocalDate.now.minusYears(1)
+        val endDate  = LocalDate.now.minusYears(1)
         val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, None, None)

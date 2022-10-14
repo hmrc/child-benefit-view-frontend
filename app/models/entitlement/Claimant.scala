@@ -21,15 +21,15 @@ import play.api.libs.json.{Format, Json}
 import java.time.LocalDate
 
 final case class Claimant(
-                           name:                  FullName,
-                           awardValue:            BigDecimal,
-                           awardStartDate:        LocalDate,
-                           awardEndDate:          LocalDate,
-                           higherRateValue:       BigDecimal,
-                           standardRateValue:     BigDecimal,
-                           lastPaymentsInfo:      Seq[LastPaymentFinancialInfo],
-                           fullAddress:           FullAddress,
-                           adjustmentInformation: Option[AdjustmentInformation]
+    name:                  FullName,
+    awardValue:            BigDecimal,
+    awardStartDate:        LocalDate,
+    awardEndDate:          LocalDate,
+    higherRateValue:       BigDecimal,
+    standardRateValue:     BigDecimal,
+    lastPaymentsInfo:      Seq[LastPaymentFinancialInfo],
+    fullAddress:           FullAddress,
+    adjustmentInformation: Option[AdjustmentInformation]
 )
 
 object Claimant {

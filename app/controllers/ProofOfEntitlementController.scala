@@ -35,55 +35,59 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ProofOfEntitlementController @Inject()(authConnector: AuthConnector,
-                                             childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-                                             errorHandler: ErrorHandler,
-                                             proofOfEntitlement: ProofOfEntitlement,
-                                             auditor: Auditor
-                                            )(implicit
-                                              config: Configuration,
-                                              env: Environment,
-                                              ec: ExecutionContext,
-                                              cc: MessagesControllerComponents,
-                                              frontendAppConfig: FrontendAppConfig
-                                            ) extends ChildBenefitBaseController(authConnector) {
+class ProofOfEntitlementController @Inject() (
+    authConnector:                    AuthConnector,
+    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
+    errorHandler:                     ErrorHandler,
+    proofOfEntitlement:               ProofOfEntitlement,
+    auditor:                          Auditor
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig
+) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action.async {
-      implicit request =>
-        authorisedAsChildBenefitUser { authContext =>
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { authContext =>
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+          err => errorHandler.handleError(err),
+          entitlement => {
 
-          childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-            err => errorHandler.handleError(err),
-            entitlement => {
-
-              val nino = authContext.nino.nino
-              val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-              val ref = request.headers.get("referer") //MDTP header
-                .getOrElse(request.headers.get("Referer") //common browser header
+            val nino              = authContext.nino.nino
+            val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+            val ref = request.headers
+              .get("referer") //MDTP header
+              .getOrElse(
+                request.headers
+                  .get("Referer") //common browser header
                   .getOrElse("Referrer not found")
+              )
+            val entDetails: Option[ClaimantEntitlementDetails] =
+              Some(
+                ClaimantEntitlementDetails(
+                  name = entitlement.claimant.name.value,
+                  address = entitlement.claimant.fullAddress.toString,
+                  amount = entitlement.claimant.awardValue,
+                  start = entitlement.claimant.awardStartDate.toString,
+                  end = entitlement.claimant.awardEndDate.toString,
+                  children =
+                    for (child <- entitlement.children)
+                      yield Child(
+                        name = child.name,
+                        dateOfBirth = child.dateOfBirth,
+                        relationshipStartDate = child.relationshipStartDate,
+                        relationshipEndDate = child.relationshipEndDate
+                      )
                 )
-              val entDetails: Option[ClaimantEntitlementDetails] =
-                Some(
-                  ClaimantEntitlementDetails(
-                    name = entitlement.claimant.name.value,
-                    address = entitlement.claimant.fullAddress.toString,
-                    amount = entitlement.claimant.awardValue,
-                    start = entitlement.claimant.awardStartDate.toString,
-                    end = entitlement.claimant.awardEndDate.toString,
-                    children = for (child <- entitlement.children) yield Child(
-                      name = child.name,
-                      dateOfBirth = child.dateOfBirth,
-                      relationshipStartDate = child.relationshipStartDate,
-                      relationshipEndDate = child.relationshipEndDate
-                    )
-                  )
-                )
-              auditor.viewProofOfEntitlement(nino, status = "Success", ref, deviceFingerprint, entDetails)
+              )
+            auditor.viewProofOfEntitlement(nino, status = "Success", ref, deviceFingerprint, entDetails)
 
-              Ok(proofOfEntitlement(entitlement))
-            }
-          )
-        }(routes.ProofOfEntitlementController.view)
+            Ok(proofOfEntitlement(entitlement))
+          }
+        )
+      }(routes.ProofOfEntitlementController.view)
     }
 }
 
@@ -97,9 +101,9 @@ object ProofOfEntitlementController {
     )
 
   def formatEntitlementDate(
-                             date: LocalDate,
-                             checkForSpecialAwardStartDate: Boolean = false
-                           )(implicit messages: Messages): String = {
+      date:                          LocalDate,
+      checkForSpecialAwardStartDate: Boolean = false
+  )(implicit messages:               Messages): String = {
     val formattedDate = date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )

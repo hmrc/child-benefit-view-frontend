@@ -31,52 +31,57 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class PaymentHistoryController @Inject()(authConnector: AuthConnector,
-                                         paymentHistoryService: PaymentHistoryService,
-                                         childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-                                         errorHandler: ErrorHandler
-                                        )(implicit
-                                          config: Configuration,
-                                          env: Environment,
-                                          ec: ExecutionContext,
-                                          cc: MessagesControllerComponents,
-                                          frontendAppConfig: FrontendAppConfig,
-                                          auditor: Auditor
-                                        ) extends ChildBenefitBaseController(authConnector) {
+class PaymentHistoryController @Inject() (
+    authConnector:                    AuthConnector,
+    paymentHistoryService:            PaymentHistoryService,
+    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
+    errorHandler:                     ErrorHandler
+)(implicit
+    config:            Configuration,
+    env:               Environment,
+    ec:                ExecutionContext,
+    cc:                MessagesControllerComponents,
+    frontendAppConfig: FrontendAppConfig,
+    auditor:           Auditor
+) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action.async {
-      implicit request =>
-        authorisedAsChildBenefitUser {
-          authContext =>
-            paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { authContext =>
+        paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
+          err => errorHandler.handleError(err),
+          result => {
+            childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
               err => errorHandler.handleError(err),
-              result => {
-                childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-                  err => errorHandler.handleError(err),
-                  entitlement => {
+              entitlement => {
 
-                    val nino = authContext.nino.nino
-                    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-                    val ref = request.headers.get("referer")    //MDTP header
-                      .getOrElse(request.headers.get("Referer") //common browser header
-                        .getOrElse("Referrer not found")
-                      )
-                    val entEndDate = entitlement.claimant.awardEndDate
-                    val payments = entitlement.claimant.lastPaymentsInfo.map(payment => LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount))
-                    val adjustmentReasonCode: Option[String] = Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value)
-                    val adjustmentEndDate: Option[LocalDate] = Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
-
-                    val status = getStatus(entEndDate, payments, adjustmentReasonCode, adjustmentEndDate)
-
-                    auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
-                  }
+                val nino              = authContext.nino.nino
+                val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+                val ref = request.headers
+                  .get("referer") //MDTP header
+                  .getOrElse(
+                    request.headers
+                      .get("Referer") //common browser header
+                      .getOrElse("Referrer not found")
+                  )
+                val entEndDate = entitlement.claimant.awardEndDate
+                val payments = entitlement.claimant.lastPaymentsInfo.map(payment =>
+                  LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount)
                 )
-                Ok(result)
+                val adjustmentReasonCode: Option[String] =
+                  Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value)
+                val adjustmentEndDate: Option[LocalDate] =
+                  Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
+
+                val status = getStatus(entEndDate, payments, adjustmentReasonCode, adjustmentEndDate)
+
+                auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
               }
             )
-        }(routes.PaymentHistoryController.view)
+            Ok(result)
+          }
+        )
+      }(routes.PaymentHistoryController.view)
     }
-
 
 }
 
@@ -86,25 +91,33 @@ object PaymentHistoryController {
     date.isBefore(LocalDate.now) || date.isEqual(LocalDate.now)
   }
 
-  def getStatus(entitlementEndDate: LocalDate,
-                payments: Seq[LastPaymentFinancialInfo],
-                adjustmentReasonCode: Option[String] = None,
-                adjustmentEndDate: Option[LocalDate] = None): String = {
+  def getStatus(
+      entitlementEndDate:   LocalDate,
+      payments:             Seq[LastPaymentFinancialInfo],
+      adjustmentReasonCode: Option[String] = None,
+      adjustmentEndDate:    Option[LocalDate] = None
+  ): String = {
 
     val paymentDatesWithinTwoYears = payments.map(_.creditDate).filter(_.isAfter(LocalDate.now.minusYears(2)))
-    val numOfPayments = paymentDatesWithinTwoYears.length
-    val today = LocalDate.now
+    val numOfPayments              = paymentDatesWithinTwoYears.length
+    val today                      = LocalDate.now
 
     if (entitlementEndDate.isAfter(today) && numOfPayments > 0 && adjustmentReasonCode.isEmpty) "Active - Payments"
-    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get)) "Active - Payments"
-    else if(entitlementEndDate.isAfter(today) && numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today)) "Active - No payments"
-    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get)) "Active - No payments"
-    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today)) "HICBC - Payments"
-    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today)) "HICBC - No payments"
+    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get))
+      "Active - Payments"
+    else if (
+      entitlementEndDate.isAfter(today) && numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get
+        .isAfter(today)
+    ) "Active - No payments"
+    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get))
+      "Active - No payments"
+    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today))
+      "HICBC - Payments"
+    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today))
+      "HICBC - No payments"
     else if (isTodayOrInPast(entitlementEndDate) && numOfPayments == 0) "Inactive - No payments"
     else if (isTodayOrInPast(entitlementEndDate) && numOfPayments > 0) "Inactive - Payments"
     else "NOT COVERED"
   }
-
 
 }

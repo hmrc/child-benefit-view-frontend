@@ -26,7 +26,7 @@ final case class FullAddress(
     addressLine4:    Option[AddressLine],
     addressLine5:    Option[AddressLine],
     addressPostcode: AddressPostcode
-){
+) {
   def toSingleLineString =
     s"${addressLine1.value} " +
       s"${addressLine2.value} " +

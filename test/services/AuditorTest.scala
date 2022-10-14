@@ -33,10 +33,10 @@ import scala.concurrent.ExecutionContext
 
 class AuditorTest extends PlaySpec {
 
-  val auditConnector: AuditConnector = mock[AuditConnector]
-  val auditor: Auditor = new Auditor(auditConnector)
+  val auditConnector:        AuditConnector   = mock[AuditConnector]
+  val auditor:               Auditor          = new Auditor(auditConnector)
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier = HeaderCarrier()
+  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
 
   "Auditor" should {
 
@@ -58,24 +58,31 @@ class AuditorTest extends PlaySpec {
               amount = entitlement.claimant.awardValue,
               start = LocalDate.of(2022, 1, 1).toString,
               end = LocalDate.of(2038, 1, 1).toString,
-              children = for (child <- entitlement.children) yield Child(
-                name = child.name,
-                dateOfBirth = child.dateOfBirth,
-                relationshipStartDate = LocalDate.of(2022, 1, 1),
-                relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
-              )
+              children =
+                for (child <- entitlement.children)
+                  yield Child(
+                    name = child.name,
+                    dateOfBirth = child.dateOfBirth,
+                    relationshipStartDate = LocalDate.of(2022, 1, 1),
+                    relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
+                  )
             )
           )
 
-
-        auditor.viewProofOfEntitlement(nino = "CA123456A", status = "Successful", referrer = "/foo", deviceFingerprint = "fingerprint", entitlementDetails = entDetails)
+        auditor.viewProofOfEntitlement(
+          nino = "CA123456A",
+          status = "Successful",
+          referrer = "/foo",
+          deviceFingerprint = "fingerprint",
+          entitlementDetails = entDetails
+        )
 
         verify(auditConnector, times(1))
           .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(any(), any(), any())
 
         val capturedEvent = captor.getValue.asInstanceOf[ViewProofOfEntitlementModel]
         val capturedEntitlementDetails: ClaimantEntitlementDetails = capturedEvent.claimantEntitlementDetails.get
-        val capturedChild: Child = capturedEntitlementDetails.children.last
+        val capturedChild:              Child                      = capturedEntitlementDetails.children.last
 
         println(toJson(capturedEvent))
 
@@ -103,7 +110,8 @@ class AuditorTest extends PlaySpec {
 
         val captor = ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-        auditor.viewPaymentDetails(nino = "CA123456A",
+        auditor.viewPaymentDetails(
+          nino = "CA123456A",
           status = "Successful",
           referrer = "/bar",
           deviceFingerprint = "fingerprint",
@@ -122,7 +130,6 @@ class AuditorTest extends PlaySpec {
         capturedEvent.deviceFingerprint mustBe "fingerprint"
         capturedEvent.numOfPayments mustBe 2
       }
-
 
     }
   }
