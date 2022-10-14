@@ -21,6 +21,7 @@ import models.entitlement.LastPaymentFinancialInfo
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -64,6 +65,39 @@ class AuditorService @Inject() (auditConnector: AuditConnector) {
     )
 
     auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.EventType, payload)
+  }
+
+  def isTodayOrInPast(date: LocalDate): Boolean = {
+    date.isBefore(LocalDate.now) || date.isEqual(LocalDate.now)
+  }
+
+  def getStatus(
+      entitlementEndDate:   LocalDate,
+      payments:             Seq[LastPaymentFinancialInfo],
+      adjustmentReasonCode: Option[String] = None,
+      adjustmentEndDate:    Option[LocalDate] = None
+  ): String = {
+
+    val paymentDatesWithinTwoYears = payments.map(_.creditDate).filter(_.isAfter(LocalDate.now.minusYears(2)))
+    val numOfPayments              = paymentDatesWithinTwoYears.length
+    val today                      = LocalDate.now
+
+    if (entitlementEndDate.isAfter(today) && numOfPayments > 0 && adjustmentReasonCode.isEmpty) "Active - Payments"
+    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get))
+      "Active - Payments"
+    else if (
+      entitlementEndDate.isAfter(today) && numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get
+        .isAfter(today)
+    ) "Active - No payments"
+    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && isTodayOrInPast(adjustmentEndDate.get))
+      "Active - No payments"
+    else if (numOfPayments > 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today))
+      "HICBC - Payments"
+    else if (numOfPayments == 0 && adjustmentReasonCode.isDefined && adjustmentEndDate.get.isAfter(today))
+      "HICBC - No payments"
+    else if (isTodayOrInPast(entitlementEndDate) && numOfPayments == 0) "Inactive - No payments"
+    else if (isTodayOrInPast(entitlementEndDate) && numOfPayments > 0) "Inactive - Payments"
+    else "NOT COVERED"
   }
 
 }
