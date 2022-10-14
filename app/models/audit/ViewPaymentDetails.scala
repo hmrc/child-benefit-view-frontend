@@ -16,7 +16,7 @@
 
 package models.audit
 
-import models.entitlement.PaymentFinancialInfo
+import models.entitlement.LastPaymentFinancialInfo
 import play.api.libs.json.Json
 
 case class ViewPaymentDetailsModel(
@@ -25,7 +25,7 @@ case class ViewPaymentDetailsModel(
                                     referrer: String,
                                     deviceFingerprint: String,
                                     numOfPayments: Int,
-                                    payments: Seq[PaymentFinancialInfo]
+                                    payments: Seq[LastPaymentFinancialInfo]
                                   )
 
 object ViewPaymentDetailsModel {

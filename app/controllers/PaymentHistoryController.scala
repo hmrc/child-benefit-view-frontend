@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
 import controllers.PaymentHistoryController.getStatus
 import handlers.ErrorHandler
-import models.entitlement.PaymentFinancialInfo
+import models.entitlement.LastPaymentFinancialInfo
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.{Auditor, PaymentHistoryService}
@@ -62,7 +62,7 @@ class PaymentHistoryController @Inject()(authConnector: AuthConnector,
                         .getOrElse("Referrer not found")
                       )
                     val entEndDate = entitlement.claimant.awardEndDate
-                    val payments = entitlement.claimant.lastPaymentsInfo.map(payment => PaymentFinancialInfo(payment.creditDate, payment.creditAmount))
+                    val payments = entitlement.claimant.lastPaymentsInfo.map(payment => LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount))
                     val adjustmentReasonCode: Option[String] = Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value)
                     val adjustmentEndDate: Option[LocalDate] = Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
 
@@ -87,7 +87,7 @@ object PaymentHistoryController {
   }
 
   def getStatus(entitlementEndDate: LocalDate,
-                payments: Seq[PaymentFinancialInfo],
+                payments: Seq[LastPaymentFinancialInfo],
                 adjustmentReasonCode: Option[String] = None,
                 adjustmentEndDate: Option[LocalDate] = None): String = {
 

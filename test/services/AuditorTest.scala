@@ -17,7 +17,7 @@
 package services
 
 import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
-import models.entitlement.{Child, PaymentFinancialInfo}
+import models.entitlement.{Child, LastPaymentFinancialInfo}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
@@ -108,7 +108,7 @@ class AuditorTest extends PlaySpec {
           referrer = "/bar",
           deviceFingerprint = "fingerprint",
           numOfPayments = 2,
-          payments = Seq(PaymentFinancialInfo(LocalDate.now(), 300), PaymentFinancialInfo(LocalDate.now(), 300))
+          payments = Seq(LastPaymentFinancialInfo(LocalDate.now(), 300), LastPaymentFinancialInfo(LocalDate.now(), 300))
         )
 
         verify(auditConnector, times(1))

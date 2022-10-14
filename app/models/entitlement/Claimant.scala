@@ -27,7 +27,7 @@ final case class Claimant(
                            awardEndDate:          LocalDate,
                            higherRateValue:       BigDecimal,
                            standardRateValue:     BigDecimal,
-                           lastPaymentsInfo:      Seq[PaymentFinancialInfo],
+                           lastPaymentsInfo:      Seq[LastPaymentFinancialInfo],
                            fullAddress:           FullAddress,
                            adjustmentInformation: Option[AdjustmentInformation]
 )

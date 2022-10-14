@@ -52,6 +52,7 @@ lazy val root = (project in file("."))
       "-deprecation",
       "-Ypartial-unification",
       "-Ywarn-dead-code",
+      "-Xfatal-warnings",
       "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
       "-Ywarn-unused:imports",   // Warn if an import selector is not referenced.
       "-Ywarn-unused:locals",    // Warn if a local definition is unused.

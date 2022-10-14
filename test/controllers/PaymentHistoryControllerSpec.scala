@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.PaymentHistoryControllerSpec._
-import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, PaymentFinancialInfo}
+import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, LastPaymentFinancialInfo}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -213,7 +213,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       "Entitlement end date in future, No Adjustment code 28 - active account" in {
 
         val endDate = LocalDate.now.plusYears(1)
-        val payments = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
         val result = PaymentHistoryController.getStatus(endDate, payments, None, None)
 
         result mustBe "Active - Payments"
@@ -222,7 +222,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       "Adjustment code 28 (HICBC) with an end date = today [OR in the past], At least one payment issued in last 2 years - active account" in {
 
         val endDate = LocalDate.now
-        val payments = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
         val reason = Some("28")
         val adjustmentEndDate = Some(LocalDate.now)
 
@@ -236,8 +236,8 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 
         val endDate = LocalDate.now
         val payments = Seq(
-          PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400),
-          PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(3), 500))
+          LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400),
+          LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(3), 500))
         val reason = Some("28")
         val adjustmentEndDate = Some(LocalDate.now)
 
@@ -249,7 +249,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 
         val endDate = LocalDate.now
         val reason = Some("28")
-        val payments = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
         val adjustmentEndDate = Some(LocalDate.now.plusYears(1))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, reason, adjustmentEndDate)
@@ -289,7 +289,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       "when claimant has at least a single payment within the previous two years - inactive account." in {
 
         val endDate = LocalDate.now.minusYears(1)
-        val payments = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
+        val payments = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(1), 400))
 
         val result = PaymentHistoryController.getStatus(endDate, payments, None, None)
 
@@ -304,7 +304,7 @@ object PaymentHistoryControllerSpec {
   val entitlementResultWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement =
     entitlementResult.copy(claimant =
       entitlementResult.claimant.copy(lastPaymentsInfo =
-        Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
+        Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 
@@ -316,7 +316,7 @@ object PaymentHistoryControllerSpec {
 
   val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
     entitlementResult.claimant.copy(
-      lastPaymentsInfo = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
+      lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
@@ -328,7 +328,7 @@ object PaymentHistoryControllerSpec {
     entitlementResult.copy(claimant =
       entitlementResult.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
-        lastPaymentsInfo = Seq(PaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
+        lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 

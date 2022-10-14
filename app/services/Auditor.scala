@@ -17,7 +17,7 @@
 package services
 
 import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
-import models.entitlement.PaymentFinancialInfo
+import models.entitlement.LastPaymentFinancialInfo
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -51,7 +51,7 @@ class Auditor @Inject()(auditConnector: AuditConnector) {
                          referrer: String,
                          deviceFingerprint: String,
                          numOfPayments: Int,
-                         payments: Seq[PaymentFinancialInfo]
+                         payments: Seq[LastPaymentFinancialInfo]
                         )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
 
     val payload = ViewPaymentDetailsModel(

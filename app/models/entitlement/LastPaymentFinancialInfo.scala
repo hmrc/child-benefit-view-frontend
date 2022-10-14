@@ -20,8 +20,8 @@ import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-final case class PaymentFinancialInfo(creditDate: LocalDate, creditAmount: BigDecimal)
+final case class LastPaymentFinancialInfo(creditDate: LocalDate, creditAmount: BigDecimal)
 
-object PaymentFinancialInfo {
-  implicit val format = Json.format[PaymentFinancialInfo]
+object LastPaymentFinancialInfo {
+  implicit val format = Json.format[LastPaymentFinancialInfo]
 }
