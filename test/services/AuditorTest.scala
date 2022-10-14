@@ -17,13 +17,13 @@
 package services
 
 import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
-import models.entitlement.{Child, LastPaymentFinancialInfo}
+import models.entitlement.Child
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.play.PlaySpec
-import play.api.libs.json.Json.toJson
+import play.api.libs.json.Writes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TestData.entitlementResult
@@ -42,49 +42,51 @@ class AuditorTest extends PlaySpec {
 
     "fire -event message-" when {
 
+      val entitlement = entitlementResult
+      val entitlementDetails: Option[ClaimantEntitlementDetails] =
+        Some(
+          ClaimantEntitlementDetails(
+            name = entitlement.claimant.name.value,
+            address = entitlement.claimant.fullAddress.toSingleLineString,
+            amount = entitlement.claimant.awardValue,
+            start = LocalDate.of(2022, 1, 1).toString,
+            end = LocalDate.of(2038, 1, 1).toString,
+            children =
+              for (child <- entitlement.children)
+                yield Child(
+                  name = child.name,
+                  dateOfBirth = child.dateOfBirth,
+                  relationshipStartDate = LocalDate.of(2022, 1, 1),
+                  relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
+                )
+          )
+        )
+
       "viewProofOfEntitlement is called" in {
 
         Mockito.reset(auditConnector)
 
-        val captor = ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
-
-        val entitlement = entitlementResult
-
-        val entDetails: Option[ClaimantEntitlementDetails] =
-          Some(
-            ClaimantEntitlementDetails(
-              name = entitlement.claimant.name.value,
-              address = entitlement.claimant.fullAddress.toSingleLineString,
-              amount = entitlement.claimant.awardValue,
-              start = LocalDate.of(2022, 1, 1).toString,
-              end = LocalDate.of(2038, 1, 1).toString,
-              children =
-                for (child <- entitlement.children)
-                  yield Child(
-                    name = child.name,
-                    dateOfBirth = child.dateOfBirth,
-                    relationshipStartDate = LocalDate.of(2022, 1, 1),
-                    relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
-                  )
-            )
-          )
+        val captor: ArgumentCaptor[ViewProofOfEntitlementModel] =
+          ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
         auditor.viewProofOfEntitlement(
           nino = "CA123456A",
           status = "Successful",
           referrer = "/foo",
           deviceFingerprint = "fingerprint",
-          entitlementDetails = entDetails
+          entitlementDetails = entitlementDetails
         )
 
         verify(auditConnector, times(1))
-          .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(any(), any(), any())
+          .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.eventType), captor.capture())(
+            any[HeaderCarrier](),
+            any[ExecutionContext](),
+            any[Writes[ViewProofOfEntitlementModel]]()
+          )
 
-        val capturedEvent = captor.getValue.asInstanceOf[ViewProofOfEntitlementModel]
+        val capturedEvent = captor.getValue
         val capturedEntitlementDetails: ClaimantEntitlementDetails = capturedEvent.claimantEntitlementDetails.get
         val capturedChild:              Child                      = capturedEntitlementDetails.children.last
-
-        println(toJson(capturedEvent))
 
         capturedEvent.nino mustBe "CA123456A"
         capturedEvent.status mustBe "Successful"
@@ -103,34 +105,38 @@ class AuditorTest extends PlaySpec {
         capturedChild.relationshipEndDate.get.toString mustBe "2038-01-01"
 
       }
-
-      "viewPrintDetails is called" in {
-
+      "viewPaymentDetails is called" in {
         Mockito.reset(auditConnector)
 
-        val captor = ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
+        val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
+          ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
         auditor.viewPaymentDetails(
           nino = "CA123456A",
-          status = "Successful",
-          referrer = "/bar",
+          status = "Status",
+          referrer = "/foo",
           deviceFingerprint = "fingerprint",
-          numOfPayments = 2,
-          payments = Seq(LastPaymentFinancialInfo(LocalDate.now(), 300), LastPaymentFinancialInfo(LocalDate.now(), 300))
+          numOfPayments = 5,
+          payments = Seq.empty
         )
 
         verify(auditConnector, times(1))
-          .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.eventType), captor.capture())(any(), any(), any())
+          .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.eventType), captor.capture())(
+            any[HeaderCarrier](),
+            any[ExecutionContext](),
+            any[Writes[ViewPaymentDetailsModel]]()
+          )
 
-        val capturedEvent = captor.getValue.asInstanceOf[ViewPaymentDetailsModel]
-        println(toJson(capturedEvent))
+        val capturedEvent = captor.getValue
+
         capturedEvent.nino mustBe "CA123456A"
-        capturedEvent.status mustBe "Successful"
-        capturedEvent.referrer mustBe "/bar"
+        capturedEvent.status mustBe "Status"
+        capturedEvent.referrer mustBe "/foo"
         capturedEvent.deviceFingerprint mustBe "fingerprint"
-        capturedEvent.numOfPayments mustBe 2
-      }
+        capturedEvent.numOfPayments mustBe 5
+        capturedEvent.payments mustBe Seq.empty
 
+      }
     }
   }
 }
