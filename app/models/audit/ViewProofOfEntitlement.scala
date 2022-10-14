@@ -16,7 +16,7 @@
 
 package models.audit
 
-import play.api.libs.json.{Json}
+import play.api.libs.json.Json
 
 final case class ViewProofOfEntitlementModel(
     nino:                       String,

@@ -22,7 +22,7 @@ import controllers.ProofOfEntitlementController.fireAuditEvent
 import controllers.auth.AuthContext
 import handlers.ErrorHandler
 import models.audit.ClaimantEntitlementDetails
-import models.entitlement.{Child, ChildBenefitEntitlement}
+import models.entitlement.ChildBenefitEntitlement
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
 import play.api.{Configuration, Environment}
