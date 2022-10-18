@@ -93,6 +93,28 @@ class PaymentHistoryService @Inject() (
 object PaymentHistoryService {
   private val today: LocalDate = LocalDate.now()
 
+  def getAuditStatus(cbe: ChildBenefitEntitlement): String = {
+    (entitlementEndDateIsInTheFuture(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
+      case (true, true, false) =>
+        "Active - Payments"
+      case (true, true, true) if adjustmentIsTodayOrInThePast(cbe) =>
+        "Active - Payments"
+      case (true, false, false) =>
+        "Active - No payments"
+      case (true, false, true) if adjustmentIsTodayOrInThePast(cbe) =>
+        "Active - No payments"
+      case (true, true, true) if adjustmentIsInTheFuture(cbe) =>
+        "HICBC - Payments"
+      case (true, false, true) if adjustmentIsInTheFuture(cbe) =>
+        "HICBC - No payments"
+      case (false, true, false) =>
+        "Inactive - Payments"
+      case (false, false, false) =>
+        "Inactive - No payments"
+      case _ => "Scenario not covered"
+    }
+  }
+
   val entitlementEndDateIsInTheFuture: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) => childBenefitEntitlement.claimant.awardEndDate.isAfter(today)
 

@@ -18,15 +18,11 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
-import controllers.PaymentHistoryController.fireAuditEvent
-import controllers.auth.AuthContext
 import handlers.ErrorHandler
-import models.entitlement.{ChildBenefitEntitlement, LastPaymentFinancialInfo}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, MessagesRequest}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
-import services.{AuditorService, PaymentHistoryService}
+import services.{AuditService, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
 import javax.inject.Inject
@@ -43,7 +39,7 @@ class PaymentHistoryController @Inject() (
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig,
-    auditor:           AuditorService
+    auditor:           AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
@@ -54,7 +50,19 @@ class PaymentHistoryController @Inject() (
             childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
               err => errorHandler.handleError(err),
               entitlement => {
-                fireAuditEvent(request, entitlement, authContext)
+                auditor.auditPaymentDetails(
+                  authContext.nino.nino,
+                  DeviceFingerprint.deviceFingerprintFrom(request),
+                  request.headers
+                    .get("referer") //MDTP header
+                    .getOrElse(
+                      request.headers
+                        .get("Referer") //common browser header
+                        .getOrElse("Referrer not found")
+                    ),
+                  entitlement
+                )
+
               }
             )
             Ok(result)
@@ -62,37 +70,5 @@ class PaymentHistoryController @Inject() (
         )
       }(routes.PaymentHistoryController.view)
     }
-
-}
-
-object PaymentHistoryController {
-
-  def fireAuditEvent(
-      request:        MessagesRequest[AnyContent],
-      entitlement:    ChildBenefitEntitlement,
-      authContext:    AuthContext[Any]
-  )(implicit auditor: AuditorService, hc: HeaderCarrier, ec: ExecutionContext): Unit = {
-    val nino              = authContext.nino.nino
-    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-    val ref = request.headers
-      .get("referer") //MDTP header
-      .getOrElse(
-        request.headers
-          .get("Referer") //common browser header
-          .getOrElse("Referrer not found")
-      )
-    val payments = entitlement.claimant.lastPaymentsInfo.map(payment =>
-      LastPaymentFinancialInfo(payment.creditDate, payment.creditAmount)
-    )
-
-    val status = auditor.getStatus(
-      entitlement.claimant.awardEndDate,
-      payments,
-      Some(entitlement.claimant.adjustmentInformation.get.adjustmentReasonCode.value),
-      Some(entitlement.claimant.adjustmentInformation.get.adjustmentEndDate)
-    )
-
-    auditor.viewPaymentDetails(nino, status, ref, deviceFingerprint, payments.length, payments)
-  }
 
 }

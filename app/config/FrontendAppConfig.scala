@@ -38,7 +38,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val childBenefitEntitlementBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
-  private val exitSurveyBaseUrl:              String = servicesConfig.baseUrl("feedback-frontend")
+  private val exitSurveyBaseUrl:              String = configuration.get[String]("microservice.services.feedback-frontend.url")
 
   def childBenefitEntitlementUrl: String =
     s"$childBenefitEntitlementBaseUrl/child-benefit-service/view-entitlements-and-payments"
