@@ -52,8 +52,8 @@
   <link href='@controllers.routes.Assets.versioned("stylesheets/print.css")' media="all" rel="stylesheet" type="text/css" />
 }
 
-@customTechnicalProblemLinkSection = {
-    <p class="govuk-body"><a target="_blank" href=@messages("site.technicalProblemUrl") class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
+@customTechnicalProblemLinkSection(url: String) = {
+    <p class="govuk-body"><a target="_blank" href=@{s"https://www.tax.service.gov.uk/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=$url"} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
 }
 
 @hmrcLayout(
@@ -65,4 +65,4 @@
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
-)(new Html(List(contentBlock, customTechnicalProblemLinkSection)))
+)(new Html(List(contentBlock, customTechnicalProblemLinkSection(s"${request.host}${request.uri}"))))

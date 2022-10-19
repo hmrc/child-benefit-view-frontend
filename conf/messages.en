@@ -8,7 +8,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
-site.technicalProblemMessage=<a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl={0}"> Is this page not working properly? (opens in new tab)</a>
+site.technicalProblemMessage = Is this page not working properly? (opens in new tab)
 
 date.day = Day
 date.month = Month
