@@ -18,10 +18,9 @@ package controllers
 
 import config.FrontendAppConfig
 import handlers.ErrorHandler
-import play.api.mvc.{Action, AnyContent}
-import services.PaymentHistoryService
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import services.{AuditService, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import javax.inject.Inject
@@ -36,15 +35,19 @@ class PaymentHistoryController @Inject() (
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    frontendAppConfig: FrontendAppConfig,
+    auditService:      AuditService
 ) extends ChildBenefitBaseController(authConnector) {
-  val view: Action[AnyContent] = Action.async { implicit request =>
-    authorisedAsChildBenefitUser { _ =>
-      paymentHistoryService.retrieveAndValidatePaymentHistory
-        .fold(
-          err => errorHandler.handleError(err),
-          result => Ok(result)
+  val view: Action[AnyContent] =
+    Action.async { implicit request =>
+      authorisedAsChildBenefitUser { implicit authContext =>
+        paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
+          err => errorHandler.handleError(err, Some("paymentDetails")),
+          result => {
+            Ok(result)
+          }
         )
-    }(routes.PaymentHistoryController.view)
-  }
+      }(routes.PaymentHistoryController.view)
+    }
+
 }

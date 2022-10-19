@@ -22,6 +22,7 @@ import handlers.ErrorHandler
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import services.AuditService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.ProofOfEntitlement
 
@@ -41,14 +42,23 @@ class ProofOfEntitlementController @Inject() (
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    frontendAppConfig: FrontendAppConfig,
+    auditor:           AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
-      authorisedAsChildBenefitUser { _ =>
+      authorisedAsChildBenefitUser { authContext =>
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-          err => errorHandler.handleError(err),
-          entitlement => Ok(proofOfEntitlement(entitlement))
+          err => errorHandler.handleError(err, Some("proofOfEntitlement")),
+          entitlement => {
+            auditor.auditProofOfEntitlement(
+              authContext.nino.nino,
+              "Successful",
+              request,
+              Some(entitlement)
+            )
+            Ok(proofOfEntitlement(entitlement))
+          }
         )
       }(routes.ProofOfEntitlementController.view)
     }
@@ -63,10 +73,9 @@ object ProofOfEntitlementController {
       LocalDate.of(2021, 3, 15)
     )
 
-  def formatEntitlementDate(
-      date:                          LocalDate,
-      checkForSpecialAwardStartDate: Boolean = false
-  )(implicit messages:               Messages): String = {
+  def formatEntitlementDate(date: LocalDate, checkForSpecialAwardStartDate: Boolean = false)(implicit
+      messages:                   Messages
+  ): String = {
     val formattedDate = date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )
@@ -77,4 +86,5 @@ object ProofOfEntitlementController {
       formattedDate
     }
   }
+
 }
