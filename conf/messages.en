@@ -8,6 +8,8 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
+site.technicalProblemMessage = Is this page not working properly? (opens in new tab)
+site.technicalProblemUrl = "https://www.tax.service.gov.uk/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=https://www.tax.service.gov.uk/child-benefit/view-proof-entitlement"
 
 date.day = Day
 date.month = Month

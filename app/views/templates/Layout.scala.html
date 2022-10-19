@@ -52,6 +52,10 @@
   <link href='@controllers.routes.Assets.versioned("stylesheets/print.css")' media="all" rel="stylesheet" type="text/css" />
 }
 
+@customTechnicalProblemLinkSection = {
+    <p class="govuk-body"><a target="_blank" href=@messages("site.technicalProblemUrl") class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
+}
+
 @hmrcLayout(
     pageTitle = Option(pageTitle),
     nonce = CSPNonce.get,
@@ -61,4 +65,4 @@
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
-)(contentBlock)
+)(new Html(List(contentBlock, customTechnicalProblemLinkSection)))
