@@ -18,6 +18,7 @@ package services
 
 import cats.data.EitherT
 import connectors.ChildBenefitEntitlementConnector
+import controllers.auth.AuthContext
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
@@ -43,10 +44,12 @@ class PaymentHistoryService @Inject() (
 ) {
 
   def retrieveAndValidatePaymentHistory(implicit
-      ec:       ExecutionContext,
-      hc:       HeaderCarrier,
-      request:  Request[_],
-      messages: Messages
+      auditor:     AuditService,
+      authContext: AuthContext[Any],
+      ec:          ExecutionContext,
+      hc:          HeaderCarrier,
+      request:     Request[_],
+      messages:    Messages
   ): EitherT[Future, CBError, HtmlFormat.Appendable] = {
     for {
       childBenefitEntitlement <- entitlementConnector.getChildBenefitEntitlement
@@ -55,13 +58,38 @@ class PaymentHistoryService @Inject() (
     } yield result
   }
 
-  private def validateAdjustmentToPage(
-      cbe:            ChildBenefitEntitlement
-  )(implicit request: Request[_], messages: Messages): CBEnvelope[HtmlFormat.Appendable] =
+  def audit(request:    Request[_], pageVariant: PaymentHistoryPageVariant, cbe: ChildBenefitEntitlement)(implicit
+      auditor:          AuditService,
+      authContext:      AuthContext[Any],
+      headerCarrier:    HeaderCarrier,
+      executionContext: ExecutionContext
+  ): Unit = {
+
+    val status = pageVariant match {
+      case PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears               => "Active - Payments"
+      case PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears            => "Active - No payments"
+      case PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears                   => "HICBC - Payments"
+      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears                => "HICBC - No payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears => "Inactive - Payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears       => "Inactive - No Payments"
+    }
+    auditor.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
+
+  }
+
+  private def validateAdjustmentToPage(cbe: ChildBenefitEntitlement)(implicit
+      auditor:                              AuditService,
+      authContext:                          AuthContext[Any],
+      hc:                                   HeaderCarrier,
+      ec:                                   ExecutionContext,
+      request:                              Request[_],
+      messages:                             Messages
+  ): CBEnvelope[HtmlFormat.Appendable] =
     CBEnvelope {
       (entitlementEndDateIsInTheFuture(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
         case (true, true, false) =>
-          Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears))
+          audit(request, InPaymentWithPaymentsInLastTwoYears, cbe)
+          Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears)) //todo audits
         case (true, true, true) if adjustmentIsTodayOrInThePast(cbe) =>
           Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears))
         case (true, false, false) =>
@@ -92,28 +120,6 @@ class PaymentHistoryService @Inject() (
 
 object PaymentHistoryService {
   private val today: LocalDate = LocalDate.now()
-
-  def getAuditStatus(cbe: ChildBenefitEntitlement): String = {
-    (entitlementEndDateIsInTheFuture(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
-      case (true, true, false) =>
-        "Active - Payments"
-      case (true, true, true) if adjustmentIsTodayOrInThePast(cbe) =>
-        "Active - Payments"
-      case (true, false, false) =>
-        "Active - No payments"
-      case (true, false, true) if adjustmentIsTodayOrInThePast(cbe) =>
-        "Active - No payments"
-      case (true, true, true) if adjustmentIsInTheFuture(cbe) =>
-        "HICBC - Payments"
-      case (true, false, true) if adjustmentIsInTheFuture(cbe) =>
-        "HICBC - No payments"
-      case (false, true, false) =>
-        "Inactive - Payments"
-      case (false, false, false) =>
-        "Inactive - No payments"
-      case _ => "Scenario not covered"
-    }
-  }
 
   val entitlementEndDateIsInTheFuture: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) => childBenefitEntitlement.claimant.awardEndDate.isAfter(today)

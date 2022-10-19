@@ -17,54 +17,33 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.ChildBenefitEntitlementConnector
 import handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.{AuditService, PaymentHistoryService}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class PaymentHistoryController @Inject() (
-    authConnector:                    AuthConnector,
-    paymentHistoryService:            PaymentHistoryService,
-    childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
-    errorHandler:                     ErrorHandler
+    authConnector:         AuthConnector,
+    paymentHistoryService: PaymentHistoryService,
+    errorHandler:          ErrorHandler
 )(implicit
     config:            Configuration,
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig,
-    auditor:           AuditService
+    auditService:      AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action.async { implicit request =>
-      authorisedAsChildBenefitUser { authContext =>
+      authorisedAsChildBenefitUser { implicit authContext =>
         paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
-          err => errorHandler.handleError(err),
+          err => errorHandler.handleError(err, Some("paymentDetails")),
           result => {
-            childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-              err => errorHandler.handleError(err),
-              entitlement => {
-                auditor.auditPaymentDetails(
-                  authContext.nino.nino,
-                  DeviceFingerprint.deviceFingerprintFrom(request),
-                  request.headers
-                    .get("referer") //MDTP header
-                    .getOrElse(
-                      request.headers
-                        .get("Referer") //common browser header
-                        .getOrElse("Referrer not found")
-                    ),
-                  entitlement
-                )
-
-              }
-            )
             Ok(result)
           }
         )

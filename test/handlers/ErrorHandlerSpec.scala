@@ -18,13 +18,18 @@ package handlers
 
 import controllers.routes
 import models.errors.ConnectorError
+import org.mockito.MockitoSugar.mock
 import org.scalatest.EitherValues
 import play.api.http.Status
 import play.api.mvc.AnyContentAsEmpty
 import play.api.mvc.Results.SeeOther
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.AuditService
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
+
+import scala.concurrent.ExecutionContext
 
 class ErrorHandlerSpec extends BaseISpec with EitherValues {
   "Error handler" - {
@@ -33,6 +38,9 @@ class ErrorHandlerSpec extends BaseISpec with EitherValues {
 
       running(application) {
         implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
+        implicit val auditor: AuditService                        = mock[AuditService]
+        implicit val ec:      ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
+        implicit val hc:      HeaderCarrier                       = HeaderCarrier()
 
         val errorHandler = application.injector.instanceOf[ErrorHandler]
 

@@ -18,8 +18,10 @@ package services
 
 import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
 import models.entitlement.ChildBenefitEntitlement
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
 import java.time.LocalDate
 import javax.inject.Inject
@@ -28,30 +30,45 @@ import scala.concurrent.ExecutionContext
 class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def auditProofOfEntitlement(
-      nino:              String,
-      deviceFingerprint: String,
-      referrer:          String,
-      entitlement:       ChildBenefitEntitlement
+      nino:        String,
+      status:      String,
+      request:     Request[_],
+      entitlement: Option[ChildBenefitEntitlement] = None
   )(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext
   ): Unit = {
 
-    val entDetails: Option[ClaimantEntitlementDetails] =
-      Some(
-        ClaimantEntitlementDetails(
-          name = entitlement.claimant.name.value,
-          address = entitlement.claimant.fullAddress.toSingleLineString,
-          amount = entitlement.claimant.awardValue,
-          start = entitlement.claimant.awardStartDate.toString,
-          end = entitlement.claimant.awardEndDate.toString,
-          children = entitlement.children
-        )
+    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+
+    val referrer = request.headers
+      .get("referer") //MDTP header
+      .getOrElse(
+        request.headers
+          .get("Referer") //common browser header
+          .getOrElse("Referrer not found")
       )
+
+    val entDetails: Option[ClaimantEntitlementDetails] = {
+      if (entitlement.isEmpty) None
+      else {
+        val cbe: ChildBenefitEntitlement = entitlement.get
+        Some(
+          ClaimantEntitlementDetails(
+            name = cbe.claimant.name.value,
+            address = cbe.claimant.fullAddress.toSingleLineString,
+            amount = cbe.claimant.awardValue,
+            start = cbe.claimant.awardStartDate.toString,
+            end = cbe.claimant.awardEndDate.toString,
+            children = cbe.children
+          )
+        )
+      }
+    }
 
     val payload = ViewProofOfEntitlementModel(
       nino,
-      "Successful",
+      status,
       referrer,
       deviceFingerprint,
       entDetails
@@ -61,15 +78,23 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   }
 
   def auditPaymentDetails(
-      nino:              String,
-      deviceFingerprint: String,
-      referrer:          String,
-      entitlement:       ChildBenefitEntitlement
-  )(implicit hc:         HeaderCarrier, ec: ExecutionContext): Unit = {
+      nino:        String,
+      status:      String,
+      request:     Request[_],
+      entitlement: Option[ChildBenefitEntitlement]
+  )(implicit hc:   HeaderCarrier, ec: ExecutionContext): Unit = {
 
-    val payments = entitlement.claimant.lastPaymentsInfo
+    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
 
-    val status = PaymentHistoryService.getAuditStatus(entitlement)
+    val referrer = request.headers
+      .get("referer") //MDTP header
+      .getOrElse(
+        request.headers
+          .get("Referer") //common browser header
+          .getOrElse("Referrer not found")
+      )
+
+    val payments = if (entitlement.isDefined) entitlement.get.claimant.lastPaymentsInfo else Seq.empty
 
     val payload = ViewPaymentDetailsModel(
       nino,

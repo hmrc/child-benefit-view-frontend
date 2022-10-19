@@ -24,6 +24,8 @@ import org.mockito.MockitoSugar.mock
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Writes
+import play.api.mvc.{Headers, Request}
+import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TestData.entitlementResult
@@ -36,6 +38,8 @@ class AuditServiceSpec extends PlaySpec {
   val auditConnector: AuditConnector = mock[AuditConnector]
   val auditor:        AuditService   = new AuditService(auditConnector)
 
+  protected val request: Request[_] =
+    FakeRequest().withHeaders(Headers(("referer", "/foo")))
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
 
@@ -66,7 +70,7 @@ class AuditServiceSpec extends PlaySpec {
       val captor: ArgumentCaptor[ViewProofOfEntitlementModel] =
         ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
-      auditor.auditProofOfEntitlement("CA123456A", "fingerprint", "/foo", entitlementResult)(hc, ec)
+      auditor.auditProofOfEntitlement("CA123456A", "testStatus", request, Some(entitlementResult))
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
@@ -80,14 +84,14 @@ class AuditServiceSpec extends PlaySpec {
       val capturedChild:              Child                      = capturedEntitlementDetails.children.last
 
       capturedEvent.nino mustBe "CA123456A"
-      capturedEvent.status mustBe "Successful"
+      capturedEvent.status mustBe "testStatus"
       capturedEvent.referrer mustBe "/foo"
-      capturedEvent.deviceFingerprint mustBe "fingerprint"
+      capturedEvent.deviceFingerprint mustBe "-"
 
       capturedEntitlementDetails.name mustBe "John Doe"
       capturedEntitlementDetails.address mustBe "AddressLine1 AddressLine2 AddressLine3 AddressLine4 AddressLine5 SS1 7JJ"
-      capturedEntitlementDetails.start mustBe "2022-10-18"
-      capturedEntitlementDetails.end mustBe "2025-10-18"
+      capturedEntitlementDetails.start mustBe "2022-10-19"
+      capturedEntitlementDetails.end mustBe "2025-10-19"
       capturedEntitlementDetails.children.length mustBe 1
 
       capturedChild.name.value mustBe "Full Name"
@@ -104,7 +108,7 @@ class AuditServiceSpec extends PlaySpec {
       val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
         ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-      auditor.auditPaymentDetails("CA123456A", "fingerprint", "/foo", entitlementResult)
+      auditor.auditPaymentDetails("CA123456A", "testStatus", request, Some(entitlementResult))
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.EventType), captor.capture())(
@@ -116,9 +120,9 @@ class AuditServiceSpec extends PlaySpec {
       val capturedEvent = captor.getValue
 
       capturedEvent.nino mustBe "CA123456A"
-      capturedEvent.status mustBe "Active - Payments"
+      capturedEvent.status mustBe "testStatus"
       capturedEvent.referrer mustBe "/foo"
-      capturedEvent.deviceFingerprint mustBe "fingerprint"
+      capturedEvent.deviceFingerprint mustBe "-"
       capturedEvent.numOfPayments mustBe 5
 
     }

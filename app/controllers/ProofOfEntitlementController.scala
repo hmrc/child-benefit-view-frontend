@@ -24,7 +24,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.AuditService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
@@ -50,19 +49,13 @@ class ProofOfEntitlementController @Inject() (
     Action.async { implicit request =>
       authorisedAsChildBenefitUser { authContext =>
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-          err => errorHandler.handleError(err), //todo account not found
+          err => errorHandler.handleError(err, Some("proofOfEntitlement")),
           entitlement => {
             auditor.auditProofOfEntitlement(
               authContext.nino.nino,
-              DeviceFingerprint.deviceFingerprintFrom(request),
-              request.headers
-                .get("referer") //MDTP header
-                .getOrElse(
-                  request.headers
-                    .get("Referer") //common browser header
-                    .getOrElse("Referrer not found")
-                ),
-              entitlement
+              "Successful",
+              request,
+              Some(entitlement)
             )
             Ok(proofOfEntitlement(entitlement))
           }
