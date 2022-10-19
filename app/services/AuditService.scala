@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -106,10 +105,6 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     )
 
     auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.EventType, payload)
-  }
-
-  def isTodayOrInPast(date: LocalDate): Boolean = {
-    date.isBefore(LocalDate.now) || date.isEqual(LocalDate.now)
   }
 
 }
