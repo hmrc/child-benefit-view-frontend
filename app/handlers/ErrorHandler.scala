@@ -44,7 +44,7 @@ class ErrorHandler @Inject() (
 
   def handleError(
       error:          CBError,
-      param:          Option[String] = None
+      auditOrigin:    Option[String] = None
   )(implicit auditor: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
     val internalServerErrorDefaultPage = InternalServerError(
       standardErrorTemplate(
@@ -56,14 +56,14 @@ class ErrorHandler @Inject() (
 
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
-        if (param.contains("proofOfEntitlement"))
+        if (auditOrigin.contains("proofOfEntitlement"))
           auditor.auditProofOfEntitlement(
             "Unknown",
             "No Accounts Found",
             request.asInstanceOf[MessagesRequest[AnyContent]],
             None
           )
-        else if (param.contains("proofOfEntitlement"))
+        else if (auditOrigin.contains("proofOfEntitlement"))
           auditor.auditPaymentDetails(
             "nino",
             "No Accounts Found",

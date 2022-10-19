@@ -58,7 +58,11 @@ class PaymentHistoryService @Inject() (
     } yield result
   }
 
-  def audit(request:    Request[_], pageVariant: PaymentHistoryPageVariant, cbe: ChildBenefitEntitlement)(implicit
+  private def auditViewPaymentDetails(
+      request:     Request[_],
+      pageVariant: PaymentHistoryPageVariant,
+      cbe:         ChildBenefitEntitlement
+  )(implicit
       auditor:          AuditService,
       authContext:      AuthContext[Any],
       headerCarrier:    HeaderCarrier,
@@ -88,17 +92,22 @@ class PaymentHistoryService @Inject() (
     CBEnvelope {
       (entitlementEndDateIsInTheFuture(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
         case (true, true, false) =>
-          audit(request, InPaymentWithPaymentsInLastTwoYears, cbe)
-          Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears)) //todo audits
+          auditViewPaymentDetails(request, InPaymentWithPaymentsInLastTwoYears, cbe)
+          Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears))
         case (true, true, true) if adjustmentIsTodayOrInThePast(cbe) =>
+          auditViewPaymentDetails(request, InPaymentWithPaymentsInLastTwoYears, cbe)
           Right(paymentHistory(cbe, InPaymentWithPaymentsInLastTwoYears))
         case (true, false, false) =>
+          auditViewPaymentDetails(request, InPaymentWithoutPaymentsInLastTwoYears, cbe)
           Right(noPaymentHistory(cbe, InPaymentWithoutPaymentsInLastTwoYears))
         case (true, false, true) if adjustmentIsTodayOrInThePast(cbe) =>
+          auditViewPaymentDetails(request, InPaymentWithoutPaymentsInLastTwoYears, cbe)
           Right(noPaymentHistory(cbe, InPaymentWithoutPaymentsInLastTwoYears))
         case (true, true, true) if adjustmentIsInTheFuture(cbe) =>
+          auditViewPaymentDetails(request, HICBCWithPaymentsInLastTwoYears, cbe)
           Right(paymentHistory(cbe, HICBCWithPaymentsInLastTwoYears))
         case (true, false, true) if adjustmentIsInTheFuture(cbe) =>
+          auditViewPaymentDetails(request, HICBCWithoutPaymentsInLastTwoYears, cbe)
           Right(noPaymentHistory(cbe, HICBCWithoutPaymentsInLastTwoYears))
         case _ => Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
       }
