@@ -25,17 +25,21 @@ import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import views.html.ErrorTemplate
-
+import views.html.{ErrorTemplate, NotFoundView}
 import javax.inject.{Inject, Singleton}
+
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
+    notFoundView:    NotFoundView,
     error:           ErrorTemplate
 )() extends FrontendErrorHandler
     with I18nSupport {
+
+  override def notFoundTemplate(implicit request: Request[_]): Html =
+    notFoundView()
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
       rh:                                       Request[_]
