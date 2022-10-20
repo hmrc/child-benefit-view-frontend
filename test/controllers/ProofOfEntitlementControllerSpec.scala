@@ -19,7 +19,7 @@ package controllers
 import cats.data.EitherT
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 import connectors.ChildBenefitEntitlementConnector
-import handlers.ErrorHandler
+import utils.handlers.ErrorHandler
 import models.CBEnvelope.CBEnvelope
 import models.entitlement._
 import models.errors.{CBError, ConnectorError}

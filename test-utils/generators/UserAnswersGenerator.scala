@@ -19,7 +19,7 @@ package generators
 import models.UserAnswers
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
-import pages._
+import utils.pages._
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersGenerator extends TryValues {

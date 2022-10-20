@@ -1,13 +1,13 @@
-package viewmodels.checkAnswers
+package models.viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, UserAnswers}
-import pages.$className$Page
+import utils.pages.$className$Page
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import models.viewmodels.govuk.summarylist._
+import models.viewmodels.implicits._
 
 object $className$Summary  {
 

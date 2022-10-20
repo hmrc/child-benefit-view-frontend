@@ -1,6 +1,6 @@
-package pages
+package utils.pages
 
-import pages.behaviours.PageBehaviours
+import utils.pages.behaviours.PageBehaviours
 
 class $className$PageSpec extends PageBehaviours {
 

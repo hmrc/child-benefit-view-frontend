@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import handlers.ErrorHandler
+import utils.handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.{AuditService, PaymentHistoryService}

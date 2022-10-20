@@ -39,7 +39,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
-import viewmodels.govuk.summarylist._
+import models.viewmodels.govuk.summarylist._
 import views.html.CheckYourAnswersView
 
 import scala.concurrent.ExecutionContext

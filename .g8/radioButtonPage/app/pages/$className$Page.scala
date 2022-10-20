@@ -1,4 +1,4 @@
-package pages
+package utils.pages
 
 import models.$className$
 import play.api.libs.json.JsPath
