@@ -16,7 +16,7 @@
 
 package controllers
 
-import features.FeatureFlagService
+import controllers.actions.FeatureFlagAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class DummyFlagController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view:                     DummyFlagView,
-    featureFlags:             FeatureFlagService
+    featureFlags:             FeatureFlagAction
 ) extends FrontendBaseController
     with I18nSupport {
   val onPageLoad: Action[AnyContent] =

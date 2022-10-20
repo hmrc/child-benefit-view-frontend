@@ -1,9 +1,9 @@
-package pages
+package utils.pages
 
 import java.time.LocalDate
 
 import org.scalacheck.Arbitrary
-import pages.behaviours.PageBehaviours
+import utils.pages.behaviours.PageBehaviours
 
 class $className$PageSpec extends PageBehaviours {
 

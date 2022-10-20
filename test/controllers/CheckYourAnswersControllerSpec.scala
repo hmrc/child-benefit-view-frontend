@@ -22,7 +22,7 @@ import utils.Stubs.userLoggedInChildBenefitUser
 import utils.BaseISpec
 import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
-import viewmodels.govuk.SummaryListFluency
+import models.viewmodels.govuk.SummaryListFluency
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {

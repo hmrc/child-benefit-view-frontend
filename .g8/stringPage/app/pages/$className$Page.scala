@@ -1,4 +1,4 @@
-package pages
+package utils.pages
 
 import play.api.libs.json.JsPath
 
