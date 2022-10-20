@@ -22,6 +22,10 @@ noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:30 - 17:30
 noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
 noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau
 
+notFound.header=Heb ddod o hyd i’r dudalen
+notFound.explanation1=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+notFound.explanation2=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+
 # ---------------------------- Proof Of Entitlement ----------------------------
 proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
 proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
