@@ -28,11 +28,29 @@ import play.api.test.Helpers._
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
-
+import views.html.NotFoundView
+import utils.NonceUtils.removeNonce
 import scala.concurrent.ExecutionContext
 
 class ErrorHandlerSpec extends BaseISpec with EitherValues {
   "Error handler" - {
+    "handling client error must render redirect to not found page for status 404" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, "non-existing-page")
+        val result  = route(application, request).value
+
+        val view = application.injector.instanceOf[NotFoundView]
+
+        status(result) mustEqual NOT_FOUND
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view()(request, messages(application)).toString
+        )
+      }
+    }
+
     "handling error must render redirect to service unavailable page for status 503" in {
       val application = applicationBuilder().build()
 
