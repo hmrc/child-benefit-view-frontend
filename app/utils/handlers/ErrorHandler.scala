@@ -17,6 +17,7 @@
 package utils.handlers
 
 import models.errors.{CBError, ConnectorError, PaymentHistoryValidationError}
+import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.{InternalServerError, Redirect}
@@ -26,8 +27,8 @@ import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import views.html.{ErrorTemplate, NotFoundView}
-import javax.inject.{Inject, Singleton}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -36,7 +37,8 @@ class ErrorHandler @Inject() (
     notFoundView:    NotFoundView,
     error:           ErrorTemplate
 )() extends FrontendErrorHandler
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()
@@ -58,15 +60,24 @@ class ErrorHandler @Inject() (
       )
     )
 
+    val logMessage = (message: String) => s"Failed to load: source=${auditOrigin.getOrElse("unknown")} message=$message"
+
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
+        logger.error(logMessage("cb account not found"))
         fireAuditEvent(auditOrigin, auditor, request)
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
-      case e if e.statusCode == INTERNAL_SERVER_ERROR => internalServerErrorDefaultPage
-      case ConnectorError(_, _) =>
+      case e if e.statusCode == INTERNAL_SERVER_ERROR =>
+        logger.error(logMessage(e.message))
+        internalServerErrorDefaultPage
+      case ConnectorError(code, message) =>
+        logger.error(logMessage(s"connector error: code=$code message=$message"))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
-      case PaymentHistoryValidationError(_, _) => Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case PaymentHistoryValidationError(code, message) =>
+        logger.error(logMessage(s"payment history validation error: code=$code message=$message"))
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case _ =>
+        logger.error(logMessage("unknown error occurred"))
         internalServerErrorDefaultPage
     }
   }

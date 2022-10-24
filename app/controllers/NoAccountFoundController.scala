@@ -44,6 +44,5 @@ class NoAccountFoundController @Inject() (
       authorisedAsChildBenefitUser { _ =>
         Future successful Ok(view())
       }(routes.NoAccountFoundController.onPageLoad)
-
     }
 }
