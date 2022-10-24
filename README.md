@@ -24,7 +24,7 @@ eg:
 https://www.development.tax.service.gov.uk/child-benefit-service/view-proof-entitlement
 https://www.development.tax.service.gov.uk/child-benefit/view-payment-history
 ## Team channel and who owns the service
-\#int-sca-childbenefitdigital
+\#team-sca-child-benefit
 ## Link to confluence page
 https://confluence.tools.tax.service.gov.uk/pages/viewpage.action?pageId=504988536
 
