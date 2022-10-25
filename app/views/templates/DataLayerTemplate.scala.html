@@ -21,4 +21,4 @@
 
 @(dataLayer: DataLayer)(implicit request: Request[_])
 
-<script id="gtmDataLayer" event="@dataLayer.event" navigate="@dataLayer.navigate" src='@controllers.routes.Assets.versioned("javascripts/dataLayer.js")' @CSPNonce.attr></script>
+<script id="gtmDataLayer" data-event="@dataLayer.event" data-navigate="@dataLayer.navigate" src='@controllers.routes.Assets.versioned("javascripts/dataLayer.js")' @CSPNonce.attr></script>
