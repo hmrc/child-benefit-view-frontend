@@ -46,6 +46,7 @@ class AuthController @Inject() (
         sessionRepository
           .clear(authContext.internalId)
           .map { _ =>
+            logger.debug("user signed out: redirecting to survey")
             Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(frontendAppConfig.exitSurveyUrl)))
               .withSession(("feedbackId", authContext.internalId))
           }
@@ -58,6 +59,7 @@ class AuthController @Inject() (
         sessionRepository
           .clear(authContext.internalId)
           .map { _ =>
+            logger.debug("user signed out, no survey: continuing")
             Redirect(
               frontendAppConfig.signOutUrl,
               Map("continue" -> Seq(toContinueUrl(routes.SignedOutController.onPageLoad)))

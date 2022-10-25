@@ -21,13 +21,14 @@ import cats.syntax.all._
 import connectors.HttpReadsWrapper._
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, ConnectorError}
+import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.{JsPath, JsonValidationError, Reads}
 import uk.gov.hmrc.http.HttpReads
 
 import scala.util.{Failure, Success, Try}
 
-trait HttpReadsWrapper[T, E] {
+trait HttpReadsWrapper[T, E] extends Logging {
   def withHttpReads(
       block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
   )(implicit
@@ -48,18 +49,17 @@ trait HttpReadsWrapper[T, E] {
               value
                 .validate[T]
                 .fold(
-                  error =>
-                    ConnectorError(
-                      Status.SERVICE_UNAVAILABLE,
-                      s"Couldn't parse body from upstream: error=${error.show}"
-                    ).asLeft[T],
+                  error => {
+                    val errorMessage = s"Couldn't parse body from upstream: error=${error.show}"
+                    logger.error(errorMessage)
+                    ConnectorError(Status.SERVICE_UNAVAILABLE, errorMessage).asLeft[T]
+                  },
                   Right(_)
                 )
             case Failure(e) =>
-              ConnectorError(
-                Status.INTERNAL_SERVER_ERROR,
-                s"Couldn't parse error body from upstream, error=${e.getMessage}"
-              ).asLeft[T]
+              val errorMessage = s"Couldn't parse error body from upstream, error=${e.getMessage}"
+              logger.error(errorMessage)
+              ConnectorError(Status.INTERNAL_SERVER_ERROR, errorMessage).asLeft[T]
           }
 
         case status =>
@@ -68,16 +68,17 @@ trait HttpReadsWrapper[T, E] {
               value
                 .validate[E]
                 .fold(
-                  e =>
-                    ConnectorError(
-                      Status.SERVICE_UNAVAILABLE,
-                      s"Couldn't parse error body from upstream, error=${e.show}"
-                    ),
+                  e => {
+                    val errorMessage = s"Couldn't parse error body from upstream, error=${e.show}"
+                    ConnectorError(Status.SERVICE_UNAVAILABLE, errorMessage)
+                  },
                   error => fromUpstreamErrorToCBError(status, error)
                 )
                 .asLeft[T]
             case Failure(e) =>
-              ConnectorError(status, s"Couldn't parse error body from upstream, error=${e.getMessage}").asLeft[T]
+              val errorMessage = s"Couldn't parse error body from upstream, error=${e.getMessage}"
+              logger.error(errorMessage)
+              ConnectorError(status, errorMessage).asLeft[T]
           }
       }
     }

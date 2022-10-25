@@ -87,8 +87,10 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
     authorised(AuthPredicate)
       .retrieve(ChildBenefitRetrievals) {
         case Some(nino) ~ Some(User) ~ Some(internalId) =>
+          logger.debug("user is authorised: executing action block")
           block(AuthContext(NationalInsuranceNumber(nino), isUser = true, internalId, request))
         case _ =>
+          logger.warn("user could not be authorised: redirecting")
           Future successful Redirect(
             controllers.routes.UnauthorisedController.onPageLoad
           ) // should redirect to the routes.NoAccountFoundController.onPageLoad - will be addressed in another ticket
@@ -102,9 +104,11 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
       loginContinueUrl: String
   )(implicit config:    FrontendAppConfig): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
+      logger.debug("no active session whilst attempting to authorise user: redirecting to login")
       Redirect(config.loginUrl, Map("continue" -> Seq(loginContinueUrl), "origin" -> Seq(config.appName)))
 
     case IncorrectNino =>
+      logger.warn("incorrect none encountered whilst attempting to authorise user")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad)
 
     case ex: AuthorisationException ⇒

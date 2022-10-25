@@ -23,6 +23,7 @@ import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBErrorResponse, ConnectorError}
+import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -39,7 +40,12 @@ trait ChildBenefitEntitlementConnector {
 @Singleton
 class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends ChildBenefitEntitlementConnector
-    with HttpReadsWrapper[ChildBenefitEntitlement, CBErrorResponse] {
+    with HttpReadsWrapper[ChildBenefitEntitlement, CBErrorResponse]
+    with Logging {
+
+  val logMessage = (code: Int, message: String) =>
+    s"unable to retrieve Child Benefit Entitlement: code=$code message=$message"
+
   def getChildBenefitEntitlement(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -49,8 +55,11 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
         httpClient
           .GET(appConfig.childBenefitEntitlementUrl)(httpReads, hc, ec)
           .recover {
-            case e: HttpException => ConnectorError(e.responseCode, e.getMessage).asLeft[ChildBenefitEntitlement]
+            case e: HttpException =>
+              logger.error(logMessage(e.responseCode, e.getMessage))
+              ConnectorError(e.responseCode, e.getMessage).asLeft[ChildBenefitEntitlement]
             case e: UpstreamErrorResponse =>
+              logger.error(logMessage(e.statusCode, e.getMessage))
               ConnectorError(e.statusCode, e.getMessage).asLeft[ChildBenefitEntitlement]
           }
       )
