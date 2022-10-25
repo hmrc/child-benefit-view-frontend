@@ -58,29 +58,6 @@ class PaymentHistoryService @Inject() (
     } yield result
   }
 
-  private def auditViewPaymentDetails(
-      request:     Request[_],
-      pageVariant: PaymentHistoryPageVariant,
-      cbe:         ChildBenefitEntitlement
-  )(implicit
-      auditor:          AuditService,
-      authContext:      AuthContext[Any],
-      headerCarrier:    HeaderCarrier,
-      executionContext: ExecutionContext
-  ): Unit = {
-
-    val status = pageVariant match {
-      case PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears               => "Active - Payments"
-      case PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears            => "Active - No payments"
-      case PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears                   => "HICBC - Payments"
-      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears                => "HICBC - No payments"
-      case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears => "Inactive - Payments"
-      case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears       => "Inactive - No Payments"
-    }
-    auditor.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
-
-  }
-
   private def validateAdjustmentToPage(cbe: ChildBenefitEntitlement)(implicit
       auditor:                              AuditService,
       authContext:                          AuthContext[Any],
@@ -125,6 +102,28 @@ class PaymentHistoryService @Inject() (
         case _ => Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
       }
     }
+
+  private def auditViewPaymentDetails(
+      request:     Request[_],
+      pageVariant: PaymentHistoryPageVariant,
+      cbe:         ChildBenefitEntitlement
+  )(implicit
+      auditor:          AuditService,
+      authContext:      AuthContext[Any],
+      headerCarrier:    HeaderCarrier,
+      executionContext: ExecutionContext
+  ): Unit = {
+
+    val status = pageVariant match {
+      case PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears               => "Active - Payments"
+      case PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears            => "Active - No payments"
+      case PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears                   => "HICBC - Payments"
+      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears                => "HICBC - No payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears => "Inactive - Payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears       => "Inactive - No Payments"
+    }
+    auditor.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
+  }
 }
 
 object PaymentHistoryService {
