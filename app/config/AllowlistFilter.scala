@@ -19,6 +19,7 @@ package config
 import akka.stream.Materializer
 import com.google.inject.Inject
 import play.api.Configuration
+import play.api.mvc.Results.Redirect
 import play.api.mvc.{Call, RequestHeader, Result}
 import uk.gov.hmrc.allowlist.AkamaiAllowlistFilter
 
@@ -45,6 +46,9 @@ class AllowlistFilter @Inject() (
     config.get[String]("bootstrap.filters.allowlist.excluded").split(",").map { path =>
       Call("GET", path.trim)
     }
+
+  override def noHeaderAction(f: RequestHeader => Future[Result], rh: RequestHeader): Future[Result] =
+    Future.successful(Redirect(destination))
 
   override def apply(f: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] =
     if (config.get[Boolean]("bootstrap.filters.allowlist.enabled")) {
