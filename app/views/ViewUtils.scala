@@ -68,12 +68,13 @@ object ViewUtils {
 
   def navigatePaymentHistory(pageVariant: PaymentHistoryPageVariant): String =
     pageVariant match {
-      case InPaymentWithPaymentsInLastTwoYears               => "payment details - active - payments"
-      case InPaymentWithoutPaymentsInLastTwoYears            => "payment details - active - no payments"
-      case HICBCWithPaymentsInLastTwoYears                   => "payment details - hicbc - payments"
-      case HICBCWithoutPaymentsInLastTwoYears                => "payment details - hicbc - no payments"
-      case EntitlementEndedButReceivedPaymentsInLastTwoYears => "payment details - inactive - payments"
-      case EntitlementEndedButNoPaymentsInLastTwoYears       => "payment details - inactive - no payments"
+      case InPaymentWithPaymentsInLastTwoYears                => "payment details - active - payments"
+      case InPaymentWithoutPaymentsInLastTwoYears             => "payment details - active - no payments"
+      case HICBCWithPaymentsInLastTwoYears                    => "payment details - hicbc - payments"
+      case HICBCWithoutPaymentsInLastTwoYears                 => "payment details - hicbc - no payments"
+      case HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast => "payment details - active - no payments"
+      case EntitlementEndedButReceivedPaymentsInLastTwoYears  => "payment details - inactive - payments"
+      case EntitlementEndedButNoPaymentsInLastTwoYears        => "payment details - inactive - no payments"
     }
 
 }

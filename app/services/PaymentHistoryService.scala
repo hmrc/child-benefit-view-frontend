@@ -94,10 +94,11 @@ class PaymentHistoryService @Inject() (
       cbe:            ChildBenefitEntitlement
   )(implicit request: Request[_], messages: Messages): CBEnvelope[HtmlFormat.Appendable] =
     CBEnvelope {
-      (entitlementEndDateIsTodayOrInThePast(cbe), paymentIssuedInLastTwoYears(cbe)) match {
-        case (true, true) =>
+      (entitlementEndDateIsTodayOrInThePast(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
+        case (true, true, _) =>
           Right(paymentHistory(cbe, EntitlementEndedButReceivedPaymentsInLastTwoYears))
-        case (true, false) =>
+        case (true, false, true) => Right(noPaymentHistory(cbe, HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast))
+        case (true, false, _) =>
           Right(noPaymentHistory(cbe, EntitlementEndedButNoPaymentsInLastTwoYears))
         case _ => Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
       }
@@ -115,12 +116,13 @@ class PaymentHistoryService @Inject() (
   ): Unit = {
 
     val status = pageVariant match {
-      case PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears               => "Active - Payments"
-      case PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears            => "Active - No payments"
-      case PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears                   => "HICBC - Payments"
-      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears                => "HICBC - No payments"
-      case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears => "Inactive - Payments"
-      case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears       => "Inactive - No Payments"
+      case PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears                => "Active - Payments"
+      case PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears             => "Active - No payments"
+      case PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears                    => "HICBC - Payments"
+      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears                 => "HICBC - No payments"
+      case PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast => "HICBC - No payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears  => "Inactive - Payments"
+      case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears        => "Inactive - No Payments"
     }
     auditor.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
   }
@@ -166,6 +168,8 @@ object PaymentHistoryPageVariant {
   case object HICBCWithPaymentsInLastTwoYears extends PaymentHistoryPageVariant
 
   case object HICBCWithoutPaymentsInLastTwoYears extends PaymentHistoryPageVariant
+
+  case object HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast extends PaymentHistoryPageVariant
 
   case object EntitlementEndedButReceivedPaymentsInLastTwoYears extends PaymentHistoryPageVariant
 

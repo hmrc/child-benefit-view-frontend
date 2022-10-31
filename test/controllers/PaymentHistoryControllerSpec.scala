@@ -190,6 +190,36 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       }
     }
 
+    "must return OK and render the correct view when entitlement ended, claimant is HICBIC and no payments in last 2 years" in {
+      userLoggedInChildBenefitUser(NinoUser)
+      entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast)
+
+      val application = applicationBuilder().build()
+
+      running(application) {
+
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.PaymentHistoryController.view.url).withSession("authToken" -> "Bearer 123")
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[NoPaymentHistory]
+
+        status(result) mustEqual OK
+
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view(
+            entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast,
+            HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast
+          )(
+            request,
+            messages(application, request)
+          ).toString
+        )
+      }
+    }
+
     "must return 404 and render the no account found view when services return no found account" in {
       userLoggedInChildBenefitUser(NinoUser)
       entitlementsAndPaymentHistoryFailureStub(entitlementServiceNotFoundAccountError, status = 404)
@@ -231,6 +261,15 @@ object PaymentHistoryControllerSpec {
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
+
+  val entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast: ChildBenefitEntitlement =
+    entitlementResult.copy(claimant =
+      entitlementResult.claimant.copy(
+        awardEndDate = LocalDate.now().minusDays(100),
+        lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
+        adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
+      )
+    )
 
   val entitlementEndedButReceivedPaymentsInLastTwoYears: ChildBenefitEntitlement =
     entitlementResult.copy(claimant = entitlementResult.claimant.copy(awardEndDate = LocalDate.now().minusDays(100)))

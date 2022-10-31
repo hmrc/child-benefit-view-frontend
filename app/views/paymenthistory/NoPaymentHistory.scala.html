@@ -20,6 +20,7 @@
 @import services.PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears
 @import services.PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears
 @import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears
+@import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast
 
 @this(layout: templates.Layout, summaryList: GovukSummaryList)
 @(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
@@ -34,7 +35,7 @@
     </h1>
 
   @{
-      if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears) {
+      if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
               <p class="govuk-body">{messages("paymentHistory.v2.noReceivedPayments")}</p>
       } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
               <p class="govuk-body">{messages("paymentHistory.v4.p1")}</p>
