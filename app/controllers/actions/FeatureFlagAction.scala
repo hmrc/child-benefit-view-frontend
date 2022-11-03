@@ -52,4 +52,11 @@ class FeatureFlagAction @Inject() (configuration: Configuration, errorTemplate: 
     }
 
   val dummyFlagEnabled: ActionFilter[MessagesRequest] = whenEnabled("dummy-flag")
+
+  val changeOfBankEnabled: ActionFilter[MessagesRequest] = whenEnabled("change-of-bank")
+  val newClaimEnabled:     ActionFilter[MessagesRequest] = whenEnabled("new-claim")
+  val ftnaeEnabled:        ActionFilter[MessagesRequest] = whenEnabled("ftnae")
+  val addChildEnabled:     ActionFilter[MessagesRequest] = whenEnabled("add-child")
+  val hicbcEnabled:        ActionFilter[MessagesRequest] = whenEnabled("hicbc")
+
 }
