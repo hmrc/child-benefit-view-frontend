@@ -47,7 +47,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def feedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=child-benefit-view-frontend&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
-
+  def reportTechnicalProblemUrl(uri: String): String =
+    s"$contactHost/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${SafeRedirectUrl(contactHost + uri).encodedUrl}"
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 

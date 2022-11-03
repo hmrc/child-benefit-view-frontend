@@ -53,7 +53,7 @@
 }
 
 @customTechnicalProblemLinkSection(uri: String) = {
-    <p class="govuk-body"><a target="_blank" href=@{s"https://www.tax.service.gov.uk/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=https://www.tax.service.gov.uk$uri"} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
+    <p id="technical-problem-report-link-section" class="govuk-body"><a target="_blank" href=@{appConfig.reportTechnicalProblemUrl(uri)} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
 }
 
 @hmrcLayout(
