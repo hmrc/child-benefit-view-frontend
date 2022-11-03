@@ -53,7 +53,7 @@
 }
 
 @customTechnicalProblemLinkSection(uri: String) = {
-    <p id="technical-problem-report-link-section" class="govuk-body"><a target="_blank" href=@{appConfig.reportTechnicalProblemUrl(uri)} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
+    <p class="govuk-body govuk-!-display-none-print"><a target="_blank" href=@{appConfig.reportTechnicalProblemUrl(uri)} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
 }
 
 @hmrcLayout(
