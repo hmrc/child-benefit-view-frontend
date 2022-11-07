@@ -20,16 +20,15 @@ import models.entitlement.LastPaymentFinancialInfo
 import play.api.libs.json.Json
 
 final case class ViewPaymentDetailsModel(
-    nino:              String,
-    status:            String,
-    referrer:          String,
-    deviceFingerprint: String,
-    numOfPayments:     Int,
-    payments:          Seq[LastPaymentFinancialInfo]
+    nino:                          String,
+    status:                        String,
+    referrer:                      String,
+    deviceFingerprint:             String,
+    numberOfPaymentsVisibleToUser: Int,
+    payments:                      Seq[LastPaymentFinancialInfo]
 )
 
 object ViewPaymentDetailsModel {
   implicit val formatViewPaymentDetailsModel = Json.format[ViewPaymentDetailsModel]
   val EventType: String = "ViewPaymentDetails"
-
 }
