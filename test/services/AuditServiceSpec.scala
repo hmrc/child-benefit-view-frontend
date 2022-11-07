@@ -123,7 +123,7 @@ class AuditServiceSpec extends PlaySpec {
       capturedEvent.status mustBe "testStatus"
       capturedEvent.referrer mustBe "/foo"
       capturedEvent.deviceFingerprint mustBe "-"
-      capturedEvent.numOfPayments mustBe 5
+      capturedEvent.numberOfPaymentsVisibleToUser mustBe 5
 
     }
   }
