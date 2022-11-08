@@ -23,11 +23,31 @@ import utils.BaseISpec
 import utils.NonceUtils.removeNonce
 import utils.TestData.NinoUser
 import models.viewmodels.govuk.SummaryListFluency
-import views.html.CheckYourAnswersView
+import views.html.{CheckYourAnswersView, ErrorTemplate}
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {
 
   "Check Your Answers Controller" - {
+
+    "must fail with a 404 when the new-claim feature is disabled" in {
+      val application = applicationBuilder(config = Map("feature-flags.new-claim" -> false)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+        val view    = application.injector.instanceOf[ErrorTemplate]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual NOT_FOUND
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+            request,
+            messages(application, request)
+          ).toString
+        )
+      }
+    }
 
     "must return OK and the correct view for a GET" in {
       userLoggedInChildBenefitUser(NinoUser)

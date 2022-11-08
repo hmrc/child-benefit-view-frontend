@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.FeatureFlagAction
+import controllers.actions.FeatureFlagActionFactory
 import play.api.{Configuration, Logging}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class DummyFlagController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view:                     DummyFlagView,
-    featureFlags:             FeatureFlagAction,
+    featureFlags:             FeatureFlagActionFactory,
     configuration:            Configuration
 ) extends FrontendBaseController
     with I18nSupport
