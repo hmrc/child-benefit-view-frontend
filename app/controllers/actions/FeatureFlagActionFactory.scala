@@ -25,15 +25,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FeatureFlagAction @Inject() (configuration: Configuration, errorTemplate: ErrorTemplate)(implicit
-    ec:                                           ExecutionContext
+class FeatureFlagActionFactory @Inject() (configuration: Configuration, errorTemplate: ErrorTemplate)(implicit
+    ec:                                                  ExecutionContext
 ) {
   private val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
 
-  private def whenEnabled(featureFlag: String): ActionFilter[MessagesRequest] =
-    new ActionFilter[MessagesRequest] {
-      override protected def filter[A](request: MessagesRequest[A]): Future[Option[Result]] =
-        if (featureFlags.getOrElse(featureFlag, false)) {
+  private def whenEnabled(featureFlag: String): FeatureFlagAction =
+    new FeatureFlagAction {
+      override protected def filter[A](request: MessagesRequest[A]): Future[Option[Result]] = {
+        val test = featureFlags.getOrElse(featureFlag, false)
+        if (test) {
           Future.successful(None)
         } else {
           Future.successful(
@@ -47,9 +48,17 @@ class FeatureFlagAction @Inject() (configuration: Configuration, errorTemplate: 
             )
           )
         }
+      }
 
       override protected def executionContext: ExecutionContext = ec
     }
 
-  val dummyFlagEnabled: ActionFilter[MessagesRequest] = whenEnabled("dummy-flag")
+  val dummyFlagEnabled:    FeatureFlagAction = whenEnabled("dummy-flag")
+  val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
+  val newClaimEnabled:     FeatureFlagAction = whenEnabled("new-claim")
+  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae")
+  val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")
+  val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
 }
+
+trait FeatureFlagAction extends ActionFilter[MessagesRequest]
