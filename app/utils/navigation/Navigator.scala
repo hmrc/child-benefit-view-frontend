@@ -33,9 +33,9 @@
 package utils.navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
 import controllers.routes
+import models.ConfirmNewAccountDetails.{No, Yes}
 import utils.pages._
 import models._
 
@@ -43,7 +43,9 @@ import models._
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case _ => _ => routes.IndexController.onPageLoad
+    case NewAccountDetailsPage        => _ => routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
+    case ConfirmNewAccountDetailsPage => userAnswers => confirmAccountDetails(userAnswers)
+    case _                            => _ => routes.IndexController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
@@ -56,5 +58,12 @@ class Navigator @Inject() () {
         normalRoutes(page)(userAnswers)
       case CheckMode =>
         checkRouteMap(page)(userAnswers)
+    }
+
+  private def confirmAccountDetails(userAnswers: UserAnswers): Call =
+    userAnswers.get(ConfirmNewAccountDetailsPage) match {
+      case Some(Yes) => routes.AccountChangedController.onPageLoad()
+      case Some(No)  => routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      case _         => routes.JourneyRecoveryController.onPageLoad()
     }
 }

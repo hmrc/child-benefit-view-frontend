@@ -29,3 +29,25 @@ GET         /view-proof-entitlement                      controllers.ProofOfEnti
 GET         /view-payment-history                        controllers.PaymentHistoryController.view
 
 GET         /dummy-flag                                  controllers.DummyFlagController.onPageLoad
+
+GET         /change-bank/new-account-details                        controllers.NewAccountDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST        /change-bank/new-account-details                        controllers.NewAccountDetailsController.onSubmit(mode: Mode = NormalMode)
+GET         /change-bank/change-new-account-details                  controllers.NewAccountDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-bank/change-new-account-details                  controllers.NewAccountDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET         /change-bank/account-changed                       controllers.AccountChangedController.onPageLoad()
+
+GET         /change-bank/account-not-changed                       controllers.AccountNotChangedController.onPageLoad()
+
+GET         /change-bank/locked-out                       controllers.BARSLockOutController.onPageLoad()
+
+GET         /change-bank/confirm-new-account-details                        controllers.ConfirmNewAccountDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST        /change-bank/confirm-new-account-details                        controllers.ConfirmNewAccountDetailsController.onSubmit(mode: Mode = NormalMode)
+GET         /change-bank/change-confirm-new-account-details                  controllers.ConfirmNewAccountDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-bank/change-confirm-new-account-details                  controllers.ConfirmNewAccountDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET         /change-bank/service-not-available/opted-out-payments                       controllers.HICBCOptedOutPaymentsController.onPageLoad()
+
+GET         /change-bank/change-account                       controllers.ChangeAccountController.onPageLoad()
+
+GET         /change-bank/cannot-verify-account                       controllers.CannotVerifyAccountController.onPageLoad()

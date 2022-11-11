@@ -29,7 +29,7 @@ import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import views.html.NotFoundView
-import utils.NonceUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonce
 import scala.concurrent.ExecutionContext
 
 class ErrorHandlerSpec extends BaseISpec with EitherValues {

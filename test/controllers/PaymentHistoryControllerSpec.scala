@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
 import utils.BaseISpec
-import utils.NonceUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
 import utils.TestData.{NinoUser, entitlementResult, entitlementServiceNotFoundAccountError}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}

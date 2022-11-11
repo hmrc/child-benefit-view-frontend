@@ -16,25 +16,20 @@
 
 package controllers.actions
 
-import controllers.auth.AuthContext
-import models.requests.OptionalDataRequest
-import play.api.mvc.ActionTransformer
-import repositories.SessionRepository
-
 import javax.inject.Inject
+import models.requests.IdentifierRequest
+import play.api.mvc._
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject() (
-    val sessionRepository:       SessionRepository
-)(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction {
 
-  override protected def transform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] = {
+  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
+    block(IdentifierRequest(request, "id"))
 
-    sessionRepository.get(request.internalId).map {
-      OptionalDataRequest(request.request, request.internalId, _)
-    }
-  }
+  override def parser: BodyParser[AnyContent] =
+    bodyParsers.default
+
+  override protected def executionContext: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
 }
-
-trait DataRetrievalAction extends ActionTransformer[AuthContext, OptionalDataRequest]

@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package controllers.auth
+package controllers
 
+import base.CobSpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.TestData.NinoUser
-import views.html.auth.SignedOutView
+import views.html.CannotVerifyAccountView
 
-class SignedOutControllerSpec extends BaseISpec {
+class CannotVerifyAccountControllerSpec extends CobSpecBase {
 
-  "SignedOut Controller" - {
+  "CannotVerifyAccount Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
-      userLoggedInChildBenefitUser(NinoUser)
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+        val request = FakeRequest(GET, routes.CannotVerifyAccountController.onPageLoad().url)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[SignedOutView]
+        val view = application.injector.instanceOf[CannotVerifyAccountView]
 
         status(result) mustEqual OK
+
         assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
       }
     }

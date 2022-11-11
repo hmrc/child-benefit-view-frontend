@@ -185,3 +185,45 @@ dummyFlag.heading=This page will be removed
 pageNotFound.title=Page not found
 pageNotFound.heading=This page can’t be found
 pageNotFound.paragraph1=Please check that you have entered the correct web address.
+
+changeAccount.title = Your Child Benefit is paid into this account
+changeAccount.heading = Your Child Benefit is paid into this account
+
+newAccountDetails.title = newAccountDetails
+newAccountDetails.heading = Tell us the new account details
+newAccountDetails.newAccountHoldersName = Account Holder's Name
+newAccountDetails.newSortCode = Sort Code
+newAccountDetails.newAccountNumber = Account Number
+newAccountDetails.checkYourAnswersLabel = NewAccountDetails
+newAccountDetails.error.newAccountHoldersName.required = Enter newAccountHoldersName
+newAccountDetails.error.newSortCode.required = Enter newSortCode
+newAccountDetails.error.newAccountHoldersName.required = Enter newAccountHoldersName
+newAccountDetails.error.newAccountHoldersName.length = newAccountHoldersName must be 512 characters or less
+newAccountDetails.error.newSortCode.length = newSortCode must be 6 characters or less
+newAccountDetails.error.newAccountNumber.length = newAccountNumber must be 24 characters or less
+newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
+newAccountDetails.newSortCode.change.hidden = newSortCode
+newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
+
+accountChanged.title = accountChanged
+accountChanged.heading = Your account details have been changed
+
+accountNotChanged.title = accountNotChanged
+accountNotChanged.heading = You have not changed your account
+
+bARSLockOut.title = bARSLockOut
+bARSLockOut.heading = You’re locked out of this service
+
+confirmNewAccountDetails.title = Check and confirm your new account details
+confirmNewAccountDetails.heading = Do you want to send us these details?
+confirmNewAccountDetails.yes = Yes
+confirmNewAccountDetails.no = No, I want to change them
+confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these details?
+confirmNewAccountDetails.error.required = Select confirmNewAccountDetails
+confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
+
+hICBCOptedOutPayments.title = hICBCOptedOutPayments
+hICBCOptedOutPayments.heading = You cannot use this service because you do not receive Child Benefit payments
+
+cannotVerifyAccount.title = cannotVerifyAccount
+cannotVerifyAccount.heading = We cannot verify the account details you’ve provided

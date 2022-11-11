@@ -16,25 +16,23 @@
 
 package controllers.actions
 
-import controllers.auth.AuthContext
-import models.requests.OptionalDataRequest
+import models.requests.{IdentifierRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
 import repositories.SessionRepository
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject() (
+class CobDataRetrievalActionImpl @Inject() (
     val sessionRepository:       SessionRepository
 )(implicit val executionContext: ExecutionContext)
-    extends DataRetrievalAction {
+    extends CobDataRetrievalAction {
 
-  override protected def transform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] = {
-
-    sessionRepository.get(request.internalId).map {
-      OptionalDataRequest(request.request, request.internalId, _)
+  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+    sessionRepository.get(request.userId).map {
+      OptionalDataRequest(request.request, request.userId, _)
     }
   }
 }
 
-trait DataRetrievalAction extends ActionTransformer[AuthContext, OptionalDataRequest]
+trait CobDataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
