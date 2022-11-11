@@ -17,7 +17,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import models.ConfirmNewAccountDetails
+import models.cob.ConfirmNewAccountDetails
 import play.api.data.FormError
 
 class ConfirmNewAccountDetailsFormProviderSpec extends OptionFieldBehaviours {

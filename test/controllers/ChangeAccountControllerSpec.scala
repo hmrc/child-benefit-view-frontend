@@ -20,7 +20,7 @@ import base.CobSpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
-import views.html.ChangeAccountView
+import views.html.cob.ChangeAccountView
 
 class ChangeAccountControllerSpec extends CobSpecBase {
 
@@ -31,7 +31,7 @@ class ChangeAccountControllerSpec extends CobSpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ChangeAccountController.onPageLoad().url)
+        val request = FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
 
         val result = route(application, request).value
 

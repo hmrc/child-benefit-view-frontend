@@ -26,11 +26,11 @@
     <h1 class="govuk-heading-xl">@messages("changeAccount.heading")</h1>
 
     <div class="govuk-button-group">
-        <a class="govuk-button" href="@routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
+        <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
             Continue
         </a>
 
-        <a class="govuk-button govuk-button--secondary" href="@routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
+        <a class="govuk-button govuk-button--secondary" href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
             Do not change
         </a>
     </div>

@@ -18,27 +18,28 @@ package controllers
 
 import base.CobSpecBase
 import forms.ConfirmNewAccountDetailsFormProvider
-import models.ConfirmNewAccountDetails.Yes
-import models.{ConfirmNewAccountDetails, NewAccountDetails, NormalMode, UserAnswers}
+import models.cob.ConfirmNewAccountDetails.Yes
+import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
+import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
-import utils.pages.NewAccountDetailsPage
 import views.html.cob.ConfirmNewAccountDetailsView
 import scala.concurrent.Future
 import org.scalatestplus.mockito.MockitoSugar
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import utils.pages.ConfirmNewAccountDetailsPage
 
 class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val confirmNewAccountDetailsRoute = routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode).url
+  lazy val confirmNewAccountDetailsRoute =
+    controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode).url
 
   val formProvider = new ConfirmNewAccountDetailsFormProvider()
   val form         = formProvider()

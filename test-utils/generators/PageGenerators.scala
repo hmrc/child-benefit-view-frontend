@@ -17,7 +17,7 @@
 package generators
 
 import org.scalacheck.Arbitrary
-import utils.pages.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 
 trait PageGenerators {
 

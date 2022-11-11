@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
 import controllers.actions._
 import forms.ConfirmNewAccountDetailsFormProvider
-import models.{Mode, NewAccountDetails}
+import models.Mode
+import models.cob.NewAccountDetails
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
-import utils.pages.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import views.html.cob.ConfirmNewAccountDetailsView
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 

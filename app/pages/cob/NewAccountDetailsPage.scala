@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package utils.pages
+package pages.cob
 
-import models.ConfirmNewAccountDetails
+import models.cob.NewAccountDetails
 import play.api.libs.json.JsPath
+import utils.pages.QuestionPage
 
-case object ConfirmNewAccountDetailsPage extends QuestionPage[ConfirmNewAccountDetails] {
+case object NewAccountDetailsPage extends QuestionPage[NewAccountDetails] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "confirmNewAccountDetails"
+  override def toString: String = "newAccountDetails"
 }

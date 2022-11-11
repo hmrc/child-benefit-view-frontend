@@ -16,7 +16,8 @@
 
 package utils.pages
 
-import models.NewAccountDetails
+import models.cob.NewAccountDetails
+import pages.cob.NewAccountDetailsPage
 import utils.pages.behaviours.PageBehaviours
 
 class NewAccountDetailsPageSpec extends PageBehaviours {

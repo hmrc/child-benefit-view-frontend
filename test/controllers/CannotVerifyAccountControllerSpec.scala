@@ -20,7 +20,7 @@ import base.CobSpecBase
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
-import views.html.CannotVerifyAccountView
+import views.html.cob.CannotVerifyAccountView
 
 class CannotVerifyAccountControllerSpec extends CobSpecBase {
 
@@ -31,7 +31,7 @@ class CannotVerifyAccountControllerSpec extends CobSpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CannotVerifyAccountController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.CannotVerifyAccountController.onPageLoad().url)
 
         val result = route(application, request).value
 

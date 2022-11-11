@@ -16,7 +16,8 @@
 
 package utils.pages
 
-import models.ConfirmNewAccountDetails
+import models.cob.ConfirmNewAccountDetails
+import pages.cob.ConfirmNewAccountDetailsPage
 import utils.pages.behaviours.PageBehaviours
 
 class ConfirmNewAccountDetailsPageSpec extends PageBehaviours {

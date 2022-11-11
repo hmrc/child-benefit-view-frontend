@@ -31,7 +31,7 @@ class BARSLockOutControllerSpec extends CobSpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.BARSLockOutController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.BARSLockOutController.onPageLoad().url)
 
         val result = route(application, request).value
 

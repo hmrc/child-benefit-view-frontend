@@ -31,7 +31,7 @@ class AccountNotChangedControllerSpec extends CobSpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.AccountNotChangedController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
 
         val result = route(application, request).value
 

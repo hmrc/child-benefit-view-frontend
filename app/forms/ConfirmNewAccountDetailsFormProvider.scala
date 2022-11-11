@@ -16,11 +16,11 @@
 
 package forms
 
+import models.cob.ConfirmNewAccountDetails
 import javax.inject.Inject
 
 import utils.mappings.Mappings
 import play.api.data.Form
-import models.ConfirmNewAccountDetails
 
 class ConfirmNewAccountDetailsFormProvider @Inject() extends Mappings {
 

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
 import controllers.actions._
 import forms.NewAccountDetailsFormProvider
 import models.{Mode, UserAnswers}
+import pages.cob.NewAccountDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
-import utils.pages.NewAccountDetailsPage
 import views.html.cob.NewAccountDetailsView
 
 import javax.inject.Inject

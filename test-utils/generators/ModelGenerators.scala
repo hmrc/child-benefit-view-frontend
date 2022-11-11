@@ -16,7 +16,7 @@
 
 package generators
 
-import models._
+import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Arbitrary
 

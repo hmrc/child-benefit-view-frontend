@@ -18,9 +18,11 @@ package controllers
 
 import base.CobSpecBase
 import forms.NewAccountDetailsFormProvider
-import models.{NewAccountDetails, NormalMode, UserAnswers}
+import models.cob.NewAccountDetails
+import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.cob.NewAccountDetailsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
@@ -29,7 +31,6 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
-import utils.pages.NewAccountDetailsPage
 import views.html.cob.NewAccountDetailsView
 
 import scala.concurrent.Future
@@ -41,7 +42,7 @@ class NewAccountDetailsControllerSpec extends CobSpecBase with MockitoSugar {
   val formProvider = new NewAccountDetailsFormProvider()
   val form         = formProvider()
 
-  lazy val newAccountDetailsRoute = routes.NewAccountDetailsController.onPageLoad(NormalMode).url
+  lazy val newAccountDetailsRoute = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
   val newAccountDetails           = NewAccountDetails("name", "123456", "11110000")
   val userAnswers = UserAnswers(
     userAnswersId,

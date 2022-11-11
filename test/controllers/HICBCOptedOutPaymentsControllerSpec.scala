@@ -31,7 +31,7 @@ class HICBCOptedOutPaymentsControllerSpec extends CobSpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.HICBCOptedOutPaymentsController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad().url)
 
         val result = route(application, request).value
 

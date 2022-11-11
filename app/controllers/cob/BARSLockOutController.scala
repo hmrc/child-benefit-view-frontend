@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.cob.HICBCOptedOutPaymentsView
+import views.html.cob.BARSLockOutView
 
 import javax.inject.Inject
 
-class HICBCOptedOutPaymentsController @Inject() (
+class BARSLockOutController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
     val controllerComponents: MessagesControllerComponents,
-    view:                     HICBCOptedOutPaymentsView
+    view:                     BARSLockOutView
 ) extends FrontendBaseController
     with I18nSupport {
 

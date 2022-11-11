@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ChangeAccountView
+import views.html.cob.HICBCOptedOutPaymentsView
 
 import javax.inject.Inject
 
-class ChangeAccountController @Inject() (
+class HICBCOptedOutPaymentsController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
-    getData:                  CobDataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
-    view:                     ChangeAccountView
+    view:                     HICBCOptedOutPaymentsView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData) { implicit request =>
+    identify { implicit request =>
       Ok(view())
     }
 }

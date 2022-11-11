@@ -29,7 +29,7 @@
 @layout(pageTitle = title(form, messages("newAccountDetails.title"))) {
 <h1 class="govuk-heading-xl">@messages("newAccountDetails.heading")</h1>
 
-    @formHelper(action = routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package pages.cob
 
-import play.api.libs.json._
+import models.cob.ConfirmNewAccountDetails
+import play.api.libs.json.JsPath
+import utils.pages.QuestionPage
 
-case class NewAccountDetails(newAccountHoldersName: String, newSortCode: String, newAccountNumber: String)
+case object ConfirmNewAccountDetailsPage extends QuestionPage[ConfirmNewAccountDetails] {
 
-object NewAccountDetails {
-  implicit val format = Json.format[NewAccountDetails]
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "confirmNewAccountDetails"
 }

@@ -16,15 +16,15 @@
 
 package models.viewmodels.checkAnswers
 
-import controllers.routes
+import controllers.cob.routes
 import models.{CheckMode, UserAnswers}
-import utils.pages.NewAccountDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import models.viewmodels.govuk.summarylist._
 import models.viewmodels.implicits._
+import pages.cob.NewAccountDetailsPage
 
 object NewAccountDetailsSummary {
 

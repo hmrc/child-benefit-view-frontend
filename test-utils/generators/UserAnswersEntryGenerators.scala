@@ -16,11 +16,11 @@
 
 package generators
 
-import models._
+import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.libs.json.{JsValue, Json}
-import utils.pages.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
 

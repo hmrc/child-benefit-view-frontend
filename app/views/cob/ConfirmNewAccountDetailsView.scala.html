@@ -15,6 +15,8 @@
  *@
 
 @import models.viewmodels.LegendSize._
+@import models.cob.ConfirmNewAccountDetails
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -44,7 +46,7 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
         classes = "govuk-!-margin-bottom-9"
     ))
 
-    @formHelper(action = routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
