@@ -49,7 +49,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
   implicit val hc:      HeaderCarrier                       = HeaderCarrier()
 
   "Proof of entitlement controller" - {
-    "must return INTERNAL_SERVER_ERROR and render the error view for a GET when getting entitlement fails" in {
+    "must return SEE_OTHER and redirect to the service down view for a GET when getting entitlement fails" in {
       userLoggedInChildBenefitUser(NinoUser)
 
       val failingChildBenefitEntitlementConnector = new ChildBenefitEntitlementConnector {
@@ -83,7 +83,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
 
         maybeEntitlement.isLeft mustBe true
 
-        status(result) mustEqual INTERNAL_SERVER_ERROR
+        status(result) mustEqual SEE_OTHER
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
           contentAsString(

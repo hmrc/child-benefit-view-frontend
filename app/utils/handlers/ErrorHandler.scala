@@ -20,7 +20,7 @@ import models.errors.{CBError, ConnectorError, PaymentHistoryValidationError}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.Results.{InternalServerError, Redirect}
+import play.api.mvc.Results.Redirect
 import play.api.mvc.{AnyContent, MessagesRequest, Request, Result}
 import play.twirl.api.Html
 import services.AuditService
@@ -52,33 +52,26 @@ class ErrorHandler @Inject() (
       error:          CBError,
       auditOrigin:    Option[String] = None
   )(implicit auditor: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
-    val internalServerErrorDefaultPage = InternalServerError(
-      standardErrorTemplate(
-        "global.error.InternalServerError500.title",
-        "global.error.InternalServerError500.heading",
-        error.message
-      )
-    )
-
-    val logMessage = (message: String) => s"Failed to load: source=${auditOrigin.getOrElse("unknown")} message=$message"
+    def logMessage(message: String, code: Option[Int]) =
+      s"Failed to load: source=${auditOrigin.getOrElse("unknown")} code=${code.getOrElse("N/A")} message=$message"
 
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
-        logger.error(logMessage("cb account not found"))
+        logger.error(logMessage("cb account not found", Some(NOT_FOUND)))
         fireAuditEvent(auditOrigin, auditor, request)
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case e if e.statusCode == INTERNAL_SERVER_ERROR =>
-        logger.error(logMessage(e.message))
-        internalServerErrorDefaultPage
+        logger.error(logMessage(e.message, Some(INTERNAL_SERVER_ERROR)))
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case ConnectorError(code, message) =>
-        logger.error(logMessage(s"connector error: code=$code message=$message"))
+        logger.error(logMessage(s"connector error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case PaymentHistoryValidationError(code, message) =>
-        logger.error(logMessage(s"payment history validation error: code=$code message=$message"))
+        logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case _ =>
-        logger.error(logMessage("unknown error occurred"))
-        internalServerErrorDefaultPage
+        logger.error(logMessage("unknown error occurred", None))
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
     }
   }
 
