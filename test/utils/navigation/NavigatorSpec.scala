@@ -18,8 +18,13 @@ package utils.navigation
 
 import base.SpecBase
 import controllers.routes
+import models.cob.ConfirmNewAccountDetails.Yes
 import utils.pages._
 import models._
+import models.cob.ConfirmNewAccountDetails._
+import models.cob.NewAccountDetails
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import play.api.libs.json.Json
 
 class NavigatorSpec extends SpecBase {
 
@@ -33,6 +38,34 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, UserAnswers("id")) mustBe routes.IndexController.onPageLoad
+      }
+
+      "must go from NewAccountDetails to ConfirmNewAccountDetails page" in {
+        navigator.nextPage(
+          NewAccountDetailsPage,
+          NormalMode,
+          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+        ) mustBe controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
+      }
+
+      "must go from ConfirmNewAccountDetails to AccountChanged page" in {
+        navigator.nextPage(
+          ConfirmNewAccountDetailsPage,
+          NormalMode,
+          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+            .set(ConfirmNewAccountDetailsPage, Yes)
+            .get
+        ) mustBe controllers.cob.routes.AccountChangedController.onPageLoad()
+      }
+
+      "must go from ConfirmNewAccountDetails back to NewAccountDetails page when No is selected" in {
+        navigator.nextPage(
+          ConfirmNewAccountDetailsPage,
+          NormalMode,
+          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+            .set(ConfirmNewAccountDetailsPage, No)
+            .get
+        ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
       }
     }
 

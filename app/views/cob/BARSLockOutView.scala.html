@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package utils
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton
+)
 
-object NonceUtils {
+@()(implicit request: Request[_], messages: Messages)
 
-  val pattern: String = """nonce="[^"]+""""
+@layout(pageTitle = titleNoForm(messages("bARSLockOut.title"))) {
 
-  def removeNonce(html: String): String = {
-    html.replaceAll(pattern, "")
-  }
-
+    <h1 class="govuk-heading-xl">@messages("bARSLockOut.heading")</h1>
 }

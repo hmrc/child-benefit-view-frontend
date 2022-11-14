@@ -33,21 +33,23 @@
 package utils.navigation
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.mvc.Call
-import controllers.routes
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
+import models.cob.ConfirmNewAccountDetails.{No, Yes}
 import utils.pages._
-import models._
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 
 @Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case _ => _ => routes.IndexController.onPageLoad
+    case NewAccountDetailsPage        => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
+    case ConfirmNewAccountDetailsPage => userAnswers => confirmAccountDetails(userAnswers)
+    case _                            => _ => controllers.routes.IndexController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
-    case _ => _ => routes.CheckYourAnswersController.onPageLoad
+    case _ => _ => controllers.routes.CheckYourAnswersController.onPageLoad
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
@@ -56,5 +58,12 @@ class Navigator @Inject() () {
         normalRoutes(page)(userAnswers)
       case CheckMode =>
         checkRouteMap(page)(userAnswers)
+    }
+
+  private def confirmAccountDetails(userAnswers: UserAnswers): Call =
+    userAnswers.get(ConfirmNewAccountDetailsPage) match {
+      case Some(Yes) => controllers.cob.routes.AccountChangedController.onPageLoad()
+      case Some(No)  => controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      case _         => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
 }

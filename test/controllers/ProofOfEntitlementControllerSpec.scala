@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
-import utils.NonceUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.{NinoUser, entitlementResult}
 import views.html.ProofOfEntitlement
