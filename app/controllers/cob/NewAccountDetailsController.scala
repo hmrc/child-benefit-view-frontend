@@ -17,7 +17,7 @@
 package controllers.cob
 
 import controllers.actions._
-import forms.NewAccountDetailsFormProvider
+import forms.cob.NewAccountDetailsFormProvider
 import models.{Mode, UserAnswers}
 import pages.cob.NewAccountDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}

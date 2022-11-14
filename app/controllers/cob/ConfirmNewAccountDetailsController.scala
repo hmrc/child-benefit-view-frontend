@@ -17,7 +17,7 @@
 package controllers.cob
 
 import controllers.actions._
-import forms.ConfirmNewAccountDetailsFormProvider
+import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.Mode
 import models.cob.NewAccountDetails
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}

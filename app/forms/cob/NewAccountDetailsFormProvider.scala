@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package forms
+package forms.cob
 
 import models.cob.NewAccountDetails
-import javax.inject.Inject
-
-import utils.mappings.Mappings
 import play.api.data.Form
 import play.api.data.Forms._
+import utils.mappings.Mappings
+
+import javax.inject.Inject
 
 class NewAccountDetailsFormProvider @Inject() extends Mappings {
 

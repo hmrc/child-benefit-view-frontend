@@ -17,6 +17,7 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
+import forms.cob.NewAccountDetailsFormProvider
 import play.api.data.FormError
 
 class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {

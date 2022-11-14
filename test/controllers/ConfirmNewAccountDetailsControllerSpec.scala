@@ -17,7 +17,7 @@
 package controllers
 
 import base.CobSpecBase
-import forms.ConfirmNewAccountDetailsFormProvider
+import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.cob.ConfirmNewAccountDetails.Yes
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import models.{NormalMode, UserAnswers}

@@ -17,6 +17,7 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
+import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.cob.ConfirmNewAccountDetails
 import play.api.data.FormError
 

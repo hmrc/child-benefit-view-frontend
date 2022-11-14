@@ -17,7 +17,7 @@
 package controllers
 
 import base.CobSpecBase
-import forms.NewAccountDetailsFormProvider
+import forms.cob.NewAccountDetailsFormProvider
 import models.cob.NewAccountDetails
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when

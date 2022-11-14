@@ -186,6 +186,7 @@ pageNotFound.title=Page not found
 pageNotFound.heading=This page can’t be found
 pageNotFound.paragraph1=Please check that you have entered the correct web address.
 
+# ---------------------------- Change Of Bank ----------------------------
 changeAccount.title = Your Child Benefit is paid into this account
 changeAccount.heading = Your Child Benefit is paid into this account
 
@@ -227,3 +228,5 @@ hICBCOptedOutPayments.heading = You cannot use this service because you do not r
 
 cannotVerifyAccount.title = cannotVerifyAccount
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
+
+# ------------------------------------------------------------------------------------

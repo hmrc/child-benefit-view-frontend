@@ -21,7 +21,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Arbitrary
 
 trait ModelGenerators {
-  val ALLOWED_SORT_CODE_LENGTH = 6
+  private val ALLOWED_SORT_CODE_LENGTH = 6
   implicit lazy val arbitraryNewAccountDetails: Arbitrary[NewAccountDetails] =
     Arbitrary {
       for {
