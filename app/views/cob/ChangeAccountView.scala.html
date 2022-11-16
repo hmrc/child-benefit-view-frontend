@@ -14,24 +14,106 @@
  * limitations under the License.
  *@
 
+@import components._
+@import models.changeofbank.ClaimantBankAccountInformation
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        captionHeader: CaptionHeader,
+        heading: Heading,
+        sectionHeading: SectionHeading,
+        para: ParagraphBody,
+        bullitList: BulletList,
+        govukTable : GovukTable,
+        warning: Warning,
+        link: Link,
+        note: Notification,
+        buttons: ButtonGroup
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(claimantName: String, accountDetails: ClaimantBankAccountInformation)(implicit request: Request[_], messages: Messages)
+
+@isStandardAccount = @{accountDetails.buildingSocietyRollNumber.isEmpty}
+
+@formLink = {@link( id = "form-link",
+                    text = messages("changeAccount.link.text"),
+                    call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"),
+                    newTab = true)
+            }
+@subHeading = @{if(isStandardAccount) messages("changeAccount.subHeading") else messages("changeAccount.subHeading.alt")}
+
+@detailsTable = {@govukTable(
+                                Table(
+                                    rows = Seq(
+                                        Seq(
+                                            TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.accountHolderName.fold(claimantName)(_.value)),format = Some("text"))
+                                        ),
+                                        Seq(
+                                            TableRow(content = Text(messages("changeAccount.table.sort.code")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.sortCode.fold("Sort not found")(_.value)),format = Some("text"))
+                                        ),
+                                        Seq(
+                                            TableRow(content = Text(messages("changeAccount.table.account.number")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.bankAccountNumber.fold("Account not found")(_.number)),format = Some("text"))
+                                        )
+                                    ),
+                                    firstCellIsHeader = true,
+                                    attributes = Map("id" -> "account-details-table")
+)
+                            )
+                        }
+
+@altDetailsTable = {@govukTable(
+                                Table(
+                                    rows = Seq(
+                                        Seq(
+                                            TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.accountHolderName.fold(claimantName)(_.value)),format = Some("text"))
+                                        )
+                                    ),
+                                    firstCellIsHeader = true,
+                                    attributes = Map("id" -> "account-details-table")
+                                )
+                    )
+
+                    @note(content = messages("changeAccount.notification.text"),
+                          id = Some("info-notice")
+                    )
+                    }
+
+
 
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("changeAccount.heading")</h1>
+    @captionHeader(claimantName)
 
-    <div class="govuk-button-group">
-        <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
-            Continue
-        </a>
+    @heading("changeAccount.heading")
 
-        <a class="govuk-button govuk-button--secondary" href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
-            Do not change
-        </a>
-    </div>
+<!--Account details table-->
+    @{if(isStandardAccount) detailsTable else altDetailsTable}
+
+    @sectionHeading(subHeading, id = Some("change-account-h2"))
+
+    @para(messages("changeAccount.paragraph.1"))
+
+    @bullitList(elements = Seq(
+                            Html(messages("changeAccount.bullet.1")),
+                            Html(messages("changeAccount.bullet.2"))
+                            )
+    )
+
+    @warning(messages("changeAccount.warning"))
+
+    @para(messages("changeAccount.paragraph.2", formLink))
+
+    @buttons(   messages("changeAccount.button.1"),
+                Call("GET", controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url),
+                messages("changeAccount.button.2"),
+                Call("GET", controllers.cob.routes.AccountNotChangedController.onPageLoad().url),
+                primaryId = Some("continue-button"),
+                secondaryId = Some("do-not-change-button")
+    )
+
 }

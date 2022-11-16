@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.changeofbank
+@this()
 
-import play.api.libs.json.Json
+@(primaryText: String, primaryHref: Call, secondaryText: String, secondaryHref: Call, primaryId: Option[String], secondaryId: Option[String] = None)
 
-final case class ClaimantBankAccountInformation(
-    accountHolderName:         Option[AccountHolderName],
-    sortCode:                  Option[SortCode],
-    bankAccountNumber:         Option[BankAccountNumber],
-    buildingSocietyRollNumber: Option[BuildingSocietyRollNumber]
-)
+        <div class="govuk-button-group" >
+            <a class="govuk-button" href="@primaryHref" data-module="govuk-button" @primaryId.map{id => id="@id"}>
+                @primaryText
+            </a>
 
-object ClaimantBankAccountInformation {
-  implicit val format = Json.format[ClaimantBankAccountInformation]
-}
+            <a class="govuk-button govuk-button--secondary" href="@secondaryHref" data-module="govuk-button" @secondaryId.map{id => id="@id"}>
+                @secondaryText
+            </a>
+        </div>

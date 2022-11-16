@@ -73,7 +73,6 @@ class SanitisedNumberMappingSpec extends AnyFreeSpec with Matchers with OptionVa
     def mustNotBindInvalidValue(caseName: String, testValue: String) = {
       s"$caseName: $testValue" in {
         val sutResult = sutForm.bind(Map(valueKey -> testValue))
-        println(sutResult)
         sutResult.errors must contain(FormError(valueKey, formatError, testValue))
       }
     }

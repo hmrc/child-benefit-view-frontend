@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models.changeofbank
+@this()
 
-import play.api.libs.json.Json
+@(message: String, id: Option[String] = None, size: String = "m")
 
-final case class ClaimantBankAccountInformation(
-    accountHolderName:         Option[AccountHolderName],
-    sortCode:                  Option[SortCode],
-    bankAccountNumber:         Option[BankAccountNumber],
-    buildingSocietyRollNumber: Option[BuildingSocietyRollNumber]
-)
-
-object ClaimantBankAccountInformation {
-  implicit val format = Json.format[ClaimantBankAccountInformation]
-}
+<h2 class="govuk-heading-@size govuk-!-margin-top-6" @id.map{id => id="@id"}>@message</h2>
