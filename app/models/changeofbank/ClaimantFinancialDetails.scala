@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package models.entitlement
+package models.changeofbank
 
 import models.common.AdjustmentReasonCode
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-final case class AdjustmentInformation(adjustmentReasonCode: AdjustmentReasonCode, adjustmentEndDate: LocalDate)
+final case class ClaimantFinancialDetails(
+    awardEndDate:           LocalDate,
+    adjustmentReasonCode:   Option[AdjustmentReasonCode],
+    adjustmentEndDate:      Option[LocalDate],
+    bankAccountInformation: ClaimantBankAccountInformation
+)
 
-object AdjustmentInformation {
-  implicit val format: OFormat[AdjustmentInformation] = Json.format[AdjustmentInformation]
+object ClaimantFinancialDetails {
+  implicit val format = Json.format[ClaimantFinancialDetails]
 }

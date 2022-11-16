@@ -44,12 +44,12 @@ class PaymentHistoryService @Inject() (
 ) {
 
   def retrieveAndValidatePaymentHistory(implicit
-      auditor:     AuditService,
-      authContext: AuthContext[Any],
-      ec:          ExecutionContext,
-      hc:          HeaderCarrier,
-      request:     Request[_],
-      messages:    Messages
+      auditService: AuditService,
+      authContext:  AuthContext[Any],
+      ec:           ExecutionContext,
+      hc:           HeaderCarrier,
+      request:      Request[_],
+      messages:     Messages
   ): EitherT[Future, CBError, HtmlFormat.Appendable] = {
     for {
       childBenefitEntitlement <- entitlementConnector.getChildBenefitEntitlement
@@ -59,7 +59,7 @@ class PaymentHistoryService @Inject() (
   }
 
   private def validateAdjustmentToPage(cbe: ChildBenefitEntitlement)(implicit
-      auditor:                              AuditService,
+      auditService:                         AuditService,
       authContext:                          AuthContext[Any],
       hc:                                   HeaderCarrier,
       ec:                                   ExecutionContext,
@@ -109,7 +109,7 @@ class PaymentHistoryService @Inject() (
       pageVariant: PaymentHistoryPageVariant,
       cbe:         ChildBenefitEntitlement
   )(implicit
-      auditor:          AuditService,
+      auditService:     AuditService,
       authContext:      AuthContext[Any],
       headerCarrier:    HeaderCarrier,
       executionContext: ExecutionContext
@@ -124,7 +124,7 @@ class PaymentHistoryService @Inject() (
       case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears  => "Inactive - Payments"
       case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears        => "Inactive - No Payments"
     }
-    auditor.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
+    auditService.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
   }
 }
 

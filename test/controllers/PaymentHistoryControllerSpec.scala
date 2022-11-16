@@ -17,7 +17,8 @@
 package controllers
 
 import controllers.PaymentHistoryControllerSpec._
-import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, ChildBenefitEntitlement, LastPaymentFinancialInfo}
+import models.common.AdjustmentReasonCode
+import models.entitlement.{AdjustmentInformation, ChildBenefitEntitlement, LastPaymentFinancialInfo}
 import play.api.http.Status.{OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -26,7 +27,7 @@ import services.PaymentHistoryPageVariant._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, entitlementResult, entitlementServiceNotFoundAccountError}
+import utils.TestData.{NinoUser, entitlementResult, NotFoundAccountError}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
@@ -222,7 +223,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 
     "must return 404 and render the no account found view when services return no found account" in {
       userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryFailureStub(entitlementServiceNotFoundAccountError, status = 404)
+      entitlementsAndPaymentHistoryFailureStub(NotFoundAccountError, status = 404)
 
       val application = applicationBuilder().build()
 
