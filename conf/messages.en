@@ -189,10 +189,18 @@ pageNotFound.paragraph1=Please check that you have entered the correct web addre
 # ---------------------------- Change Of Bank ----------------------------
 changeAccount.title = Your Child Benefit is paid into this account
 changeAccount.heading = Your Child Benefit is paid into this account
+changeAccount.subHeading = If you want to change this account
+changeAccount.subHeading.different = If you want to change to a different account
+changeAccount.paragraph.1 = Continue with this service if you want to change to:
+changeAccount.bullet.1 = a personal bank account
+changeAccount.bullet.2 = a building society account that does not have a roll number
+changeAccount.warning = If you change your account and your next payment’s due in the next 3 working days, it will be paid into your previous account.
+changeAccount.paragraph.2 = To change to a different type of account, use the {0}.
+changeAccount.link.text = change of circumstances form
 
 newAccountDetails.title = newAccountDetails
 newAccountDetails.heading = Tell us the new account details
-newAccountDetails.newAccountHoldersName = Account Holder's Name
+newAccountDetails.newAccountHoldersName = Account Holder’s Name
 newAccountDetails.newSortCode = Sort Code
 newAccountDetails.newAccountNumber = Account Number
 newAccountDetails.checkYourAnswersLabel = NewAccountDetails

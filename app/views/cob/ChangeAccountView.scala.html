@@ -14,24 +14,78 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        captionHeader: CaptionHeader,
+        heading: Heading,
+        sectionHeading: SectionHeading,
+        para: ParagraphBody,
+        bullitList: BulletList,
+        govukTable : GovukTable,
+        warning: Warning,
+        link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@formLink = {@link( id = "form-link",
+                    text = messages("changeAccount.link.text"),
+                    call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"),
+                    newTab = true)
+            }
+
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("changeAccount.heading")</h1>
+<!--todo: take name from request-->
+    @captionHeader("Liz Jones")
+    @heading("changeAccount.heading")
 
-    <div class="govuk-button-group">
-        <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
-            Continue
-        </a>
+<!--Account details table-->
+<!--todo: get account information from CBS-->
+    @govukTable(
+            Table(
+                rows = Seq(
+                    Seq(
+                        TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
+                        TableRow(content =  Text("SOME ROW"),format = Some("text"))
+                    ),
+                    Seq(
+                        TableRow(content = Text(messages("Sort code:")),format = Some("text")),
+                        TableRow(content =  Text("SOME ANOTHER ROW"),format = Some("text"))
+                    ),
+                    Seq(
+                        TableRow(content = Text(messages("Account code:")),format = Some("text")),
+                        TableRow(content =  Text("SOME ANOTHER ROW"),format = Some("text"))
+                    )
+                ),
+                firstCellIsHeader = true
+            )
+    )
 
-        <a class="govuk-button govuk-button--secondary" href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
-            Do not change
-        </a>
-    </div>
+    @sectionHeading(messages("changeAccount.subHeading"))
+
+    @para(messages("changeAccount.paragraph.1"))
+
+    @bullitList(elements = Seq(
+                            Html(messages("changeAccount.bullet.1")),
+                            Html(messages("changeAccount.bullet.2"))
+                            )
+    )
+
+    @warning(messages("changeAccount.warning"))
+
+    @para(messages("changeAccount.paragraph.2", formLink))
+
+        <div class="govuk-button-group">
+            <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
+                Continue
+            </a>
+
+            <a class="govuk-button govuk-button--secondary" href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
+                Do not change
+            </a>
+        </div>
 }
