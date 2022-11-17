@@ -22,7 +22,7 @@ import models.cob.ConfirmNewAccountDetails.Yes
 import utils.pages._
 import models._
 import models.cob.ConfirmNewAccountDetails._
-import models.cob.NewAccountDetails
+import models.cob.AccountDetails
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.libs.json.Json
 
@@ -44,7 +44,7 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           NewAccountDetailsPage,
           NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+          UserAnswers("id", Json.toJsObject(AccountDetails("Name", "123456", "00000000001")))
         ) mustBe controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
       }
 
@@ -52,7 +52,7 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           ConfirmNewAccountDetailsPage,
           NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+          UserAnswers("id", Json.toJsObject(AccountDetails("Name", "123456", "00000000001")))
             .set(ConfirmNewAccountDetailsPage, Yes)
             .get
         ) mustBe controllers.cob.routes.AccountChangedController.onPageLoad()
@@ -62,7 +62,7 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           ConfirmNewAccountDetailsPage,
           NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+          UserAnswers("id", Json.toJsObject(AccountDetails("Name", "123456", "00000000001")))
             .set(ConfirmNewAccountDetailsPage, No)
             .get
         ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)

@@ -16,7 +16,7 @@
 
 package forms.cob
 
-import models.cob.NewAccountDetails
+import models.cob.AccountDetails
 import play.api.data.Form
 import play.api.data.Forms._
 import utils.mappings.Mappings
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class NewAccountDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[NewAccountDetails] =
+  def apply(): Form[AccountDetails] =
     Form(
       mapping(
         "newAccountHoldersName" -> text("newAccountDetails.error.newAccountHoldersName.required")
@@ -34,6 +34,6 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
           .verifying(maxLength(6, "newAccountDetails.error.newSortCode.length")),
         "newAccountNumber" -> text("newAccountDetails.error.newAccountNumber.required")
           .verifying(maxLength(24, "newAccountDetails.error.newAccountNumber.length"))
-      )(NewAccountDetails.apply)(NewAccountDetails.unapply)
+      )(AccountDetails.apply)(AccountDetails.unapply)
     )
 }

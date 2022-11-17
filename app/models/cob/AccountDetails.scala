@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package utils.pages
+package models.cob
 
-import models.cob.AccountDetails
-import pages.cob.NewAccountDetailsPage
-import utils.pages.behaviours.PageBehaviours
+import play.api.libs.json._
 
-class NewAccountDetailsPageSpec extends PageBehaviours {
+case class AccountDetails(accountHoldersName: String, sortCode: String, accountNumber: String)
 
-  "NewAccountDetailsPage" - {
-
-    beRetrievable[AccountDetails](NewAccountDetailsPage)
-
-    beSettable[AccountDetails](NewAccountDetailsPage)
-
-    beRemovable[AccountDetails](NewAccountDetailsPage)
-  }
+object AccountDetails {
+  implicit val format = Json.format[AccountDetails]
 }

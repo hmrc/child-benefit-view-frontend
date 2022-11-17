@@ -16,11 +16,11 @@
 
 package pages.cob
 
-import models.cob.NewAccountDetails
+import models.cob.AccountDetails
 import play.api.libs.json.JsPath
 import utils.pages.QuestionPage
 
-case object NewAccountDetailsPage extends QuestionPage[NewAccountDetails] {
+case object NewAccountDetailsPage extends QuestionPage[AccountDetails] {
 
   override def path: JsPath = JsPath \ toString
 

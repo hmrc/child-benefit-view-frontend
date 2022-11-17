@@ -30,8 +30,8 @@ object NewAccountDetailsSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(NewAccountDetailsPage).map { answer =>
-      val value = HtmlFormat.escape(answer.newAccountHoldersName).toString + "<br/>" + HtmlFormat
-        .escape(answer.newSortCode)
+      val value = HtmlFormat.escape(answer.accountHoldersName).toString + "<br/>" + HtmlFormat
+        .escape(answer.sortCode)
         .toString
 
       SummaryListRowViewModel(

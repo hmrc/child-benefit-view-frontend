@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import models.cob.AccountDetails
 
 @this(
         layout: templates.Layout,
@@ -26,46 +27,73 @@
         bullitList: BulletList,
         govukTable : GovukTable,
         warning: Warning,
-        link: Link
+        link: Link,
+        note: Notification
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(claimantName: String, accountDetails: Option[AccountDetails] = None)(implicit request: Request[_], messages: Messages)
+
+@isStandardAccount = @{accountDetails.isDefined}
 
 @formLink = {@link( id = "form-link",
                     text = messages("changeAccount.link.text"),
                     call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"),
                     newTab = true)
             }
+@subHeading = @{if(isStandardAccount) messages("changeAccount.subHeading") else messages("changeAccount.subHeading.alt")}
+
+@detailsTable = @{if(isStandardAccount)
+                    govukTable(
+                                Table(
+                                    rows = Seq(
+                                        Seq(
+                                            TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.get.accountHoldersName),format = Some("text"))
+                                        ),
+                                        Seq(
+                                            TableRow(content = Text(messages("Sort code:")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.get.sortCode),format = Some("text"))
+                                        ),
+                                        Seq(
+                                            TableRow(content = Text(messages("Account code:")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.get.accountNumber),format = Some("text"))
+                                        )
+                                    ),
+                                    firstCellIsHeader = true
+                                )
+                            )
+                        }
+
+@altDetailsTable = {@govukTable(
+                                Table(
+                                    rows = Seq(
+                                        Seq(
+                                            TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
+                                            TableRow(content =  Text("get name from finance details api"),format = Some("text"))
+                                        )
+                                    ),
+                                    firstCellIsHeader = true
+                                )
+                    )
+
+                    @note(content = messages("changeAccount.notification.text"),
+                          id = Some("info-notice")
+                    )
+                    }
+
+
 
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
-<!--todo: take name from request-->
-    @captionHeader("Liz Jones")
+    @captionHeader(claimantName)
+
     @heading("changeAccount.heading")
 
 <!--Account details table-->
-<!--todo: get account information from CBS-->
-    @govukTable(
-            Table(
-                rows = Seq(
-                    Seq(
-                        TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
-                        TableRow(content =  Text("SOME ROW"),format = Some("text"))
-                    ),
-                    Seq(
-                        TableRow(content = Text(messages("Sort code:")),format = Some("text")),
-                        TableRow(content =  Text("SOME ANOTHER ROW"),format = Some("text"))
-                    ),
-                    Seq(
-                        TableRow(content = Text(messages("Account code:")),format = Some("text")),
-                        TableRow(content =  Text("SOME ANOTHER ROW"),format = Some("text"))
-                    )
-                ),
-                firstCellIsHeader = true
-            )
-    )
+    @{if(isStandardAccount) detailsTable else altDetailsTable}
 
-    @sectionHeading(messages("changeAccount.subHeading"))
+<!--//todo this is variable-->
+    @sectionHeading(subHeading, id = Some("change-account-h2"))
 
     @para(messages("changeAccount.paragraph.1"))
 

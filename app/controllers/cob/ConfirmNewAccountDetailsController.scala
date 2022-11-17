@@ -19,7 +19,7 @@ package controllers.cob
 import controllers.actions._
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.Mode
-import models.cob.NewAccountDetails
+import models.cob.AccountDetails
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -53,21 +53,21 @@ class ConfirmNewAccountDetailsController @Inject() (
         case None        => form
         case Some(value) => form.fill(value)
       }
-      val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+      val changeAccount: Option[AccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
       Ok(
         view(
           preparedForm,
           mode,
-          changeAccount.get.newAccountHoldersName,
-          changeAccount.get.newSortCode,
-          changeAccount.get.newAccountNumber
+          changeAccount.get.accountHoldersName,
+          changeAccount.get.sortCode,
+          changeAccount.get.accountNumber
         )
       )
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+      val changeAccount: Option[AccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
       form
         .bindFromRequest()
         .fold(
@@ -77,9 +77,9 @@ class ConfirmNewAccountDetailsController @Inject() (
                 view(
                   formWithErrors,
                   mode,
-                  changeAccount.get.newAccountHoldersName,
-                  changeAccount.get.newSortCode,
-                  changeAccount.get.newAccountNumber
+                  changeAccount.get.accountHoldersName,
+                  changeAccount.get.sortCode,
+                  changeAccount.get.accountNumber
                 )
               )
             ),

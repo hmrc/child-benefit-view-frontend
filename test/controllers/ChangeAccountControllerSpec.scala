@@ -17,6 +17,7 @@
 package controllers
 
 import base.CobSpecBase
+import models.cob.AccountDetails
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
@@ -28,7 +29,7 @@ class ChangeAccountControllerSpec extends CobSpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
@@ -37,8 +38,11 @@ class ChangeAccountControllerSpec extends CobSpecBase {
 
         val view = application.injector.instanceOf[ChangeAccountView]
 
+        val name = "Liz Jones"
+        val details = AccountDetails("Lizbeth Jones", "12-34-56", "123456789")
+
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(name, Some(details))(request, messages(application)).toString)
       }
     }
   }

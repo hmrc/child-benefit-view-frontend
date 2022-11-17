@@ -18,7 +18,7 @@ package controllers
 
 import base.CobSpecBase
 import forms.cob.NewAccountDetailsFormProvider
-import models.cob.NewAccountDetails
+import models.cob.AccountDetails
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -43,7 +43,7 @@ class NewAccountDetailsControllerSpec extends CobSpecBase with MockitoSugar {
   val form         = formProvider()
 
   lazy val newAccountDetailsRoute = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
-  val newAccountDetails           = NewAccountDetails("name", "123456", "11110000")
+  val newAccountDetails           = AccountDetails("name", "123456", "11110000")
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
@@ -116,9 +116,9 @@ class NewAccountDetailsControllerSpec extends CobSpecBase with MockitoSugar {
         val request =
           FakeRequest(POST, newAccountDetailsRoute)
             .withFormUrlEncodedBody(
-              ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
-              ("newSortCode", newAccountDetails.newSortCode),
-              ("newAccountNumber", newAccountDetails.newAccountNumber)
+              ("newAccountHoldersName", newAccountDetails.accountHoldersName),
+              ("newSortCode", newAccountDetails.sortCode),
+              ("newAccountNumber", newAccountDetails.accountNumber)
             )
 
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))

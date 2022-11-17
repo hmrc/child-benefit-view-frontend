@@ -19,7 +19,7 @@ package controllers
 import base.CobSpecBase
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.cob.ConfirmNewAccountDetails.Yes
-import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
+import models.cob.{ConfirmNewAccountDetails, AccountDetails}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -44,7 +44,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
   val formProvider = new ConfirmNewAccountDetailsFormProvider()
   val form         = formProvider()
 
-  val newAccountDetails = NewAccountDetails("name", "123456", "11110000")
+  val newAccountDetails = AccountDetails("name", "123456", "11110000")
 
   "ConfirmNewAccountDetails Controller" - {
 
@@ -72,9 +72,9 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
           view(
             form,
             NormalMode,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
+            newAccountDetails.accountHoldersName,
+            newAccountDetails.sortCode,
+            newAccountDetails.accountNumber
           )(request, messages(application)).toString
         )
       }
@@ -110,9 +110,9 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
           view(
             form.fill(ConfirmNewAccountDetails.values.head),
             NormalMode,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
+            newAccountDetails.accountHoldersName,
+            newAccountDetails.sortCode,
+            newAccountDetails.accountNumber
           )(request, messages(application)).toString
         )
       }
@@ -181,9 +181,9 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
           view(
             boundForm,
             NormalMode,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
+            newAccountDetails.accountHoldersName,
+            newAccountDetails.sortCode,
+            newAccountDetails.accountNumber
           )(request, messages(application)).toString
         )
       }

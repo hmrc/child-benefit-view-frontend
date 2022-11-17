@@ -16,19 +16,19 @@
 
 package generators
 
-import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
+import models.cob.{ConfirmNewAccountDetails, AccountDetails}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Arbitrary
 
 trait ModelGenerators {
   private val ALLOWED_SORT_CODE_LENGTH = 6
-  implicit lazy val arbitraryNewAccountDetails: Arbitrary[NewAccountDetails] =
+  implicit lazy val arbitraryNewAccountDetails: Arbitrary[AccountDetails] =
     Arbitrary {
       for {
         accountHolder <- arbitrary[String]
         sortCode      <- arbitrary[String].map(_.take(ALLOWED_SORT_CODE_LENGTH))
         accountNumber <- arbitrary[String]
-      } yield NewAccountDetails(accountHolder, sortCode, accountNumber)
+      } yield AccountDetails(accountHolder, sortCode, accountNumber)
     }
   implicit lazy val arbitraryConfirmNewAccountDetails: Arbitrary[ConfirmNewAccountDetails] =
     Arbitrary {
