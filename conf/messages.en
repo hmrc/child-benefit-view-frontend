@@ -206,8 +206,14 @@ newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 newAccountDetails.newSortCode.change.hidden = newSortCode
 newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 
-accountChanged.title = accountChanged
+accountChanged.title = Your account details have been changed
 accountChanged.heading = Your account details have been changed
+accountChanged.subHeading.1 = What happens next
+accountChanged.paragraph.1 = If your next Child Benefit payment’s due within the next 3 working days, it will be paid into your previous account. Payments due after that will be paid into the new account.
+accountChanged.subHeading.2 = Before you go
+accountChanged.paragraph.2 = We use feedback to make our services better.
+accountChanged.feedback = Please {0}.
+accountChanged.feedback.link.text = take the feedback survey
 
 accountNotChanged.title = accountNotChanged
 accountNotChanged.heading = You have not changed your account
