@@ -24,6 +24,7 @@
         h3: HeadingH3,
         para: ParagraphBody,
         link: Link,
+        panel: ConfirmationPanel,
         config: FrontendAppConfig
 )
 
@@ -36,11 +37,7 @@
 
 @layout(pageTitle = titleNoForm(messages("accountChanged.title"))) {
 
-    <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">
-            @messages("accountChanged.heading")
-        </h1>
-    </div>
+    @panel(messages("accountChanged.heading"))
 
     @h2(messages("accountChanged.subHeading.1"))
 
