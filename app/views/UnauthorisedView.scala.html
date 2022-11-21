@@ -30,9 +30,12 @@
  * limitations under the License.
  *@
 
+@import components._
 
 @this(
-    layout: templates.Layout
+        layout: templates.Layout,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -42,7 +45,7 @@
     timeout   = false
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
+    @heading(messages("unauthorised.heading"))
 
-    <p class="govuk-body">@messages("unauthorised.guidance")</p>
+    para(messages("unauthorised.guidance"))
 }

@@ -33,7 +33,9 @@ proofOfEntitlement.paidDetail=Caiff Budd-dal Plant ei dalu ar y cyfraddau canlyn
 proofOfEntitlement.firstChild={0} ar gyfer y plentyn hynaf neu’r unig blentyn
 proofOfEntitlement.additionalchild={0} ar gyfer pob plentyn ychwanegol
 proofOfEntitlement.entitlementdetail.title=Manylion hawl yr hawliwr
-proofOfEntitlement.entitlementdetail.p1=Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch <a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide">roi gwybod i ni am newidiadau i’ch amgylchiadau</a> neu am newidiadau i <a class="govuk-link" target="_self" href="https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide">amgylchiadau’ch plentyn neu’ch plant</a>, a byddwn yn eu diweddaru ar eich cyfer.
+proofOfEntitlement.entitlementdetail.p1=Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch {0} neu am newidiadau i {1}, a byddwn yn eu diweddaru ar eich cyfer.
+proofOfEntitlement.entitlementdetail.p1.link.1 = roi gwybod i ni am newidiadau i’ch amgylchiadau
+proofOfEntitlement.entitlementdetail.p1.link.2 = amgylchiadau’ch plentyn neu’ch plant
 proofOfEntitlement.claimantname=Enw
 proofOfEntitlement.address=Cyfeiriad
 proofOfEntitlement.amount=Swm
@@ -44,9 +46,8 @@ proofOfEntitlement.enddate=Dyddiad dod i ben
 proofOfEntitlement.awardDetail=Manylion dyfarniad Budd-dal Plant ar gyfe {0}
 proofOfEntitlement.dateOfBirth=Dyddiad geni
 proofOfEntitlement.viewpayments=Bwrw golwg dros eich taliadau Budd-dal Plant
-proofOfEntitlement.viewrecentpayments.part1=Gallwch
-proofOfEntitlement.viewrecentpayments.part2=fwrw golwg dros eich taliadau Budd-dal Plant diweddar
-proofOfEntitlement.viewrecentpayments.part3=a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
+proofOfEntitlement.viewrecentpayments.para = Gallwch {0} a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
+proofOfEntitlement.viewrecentpayments.link = fwrw golwg dros eich taliadau Budd-dal Plant diweddar
 proofOfEntitlement.printMessage=Argraffu’r dudalen hon
 # ------------------------------------------------------------------------------------
 

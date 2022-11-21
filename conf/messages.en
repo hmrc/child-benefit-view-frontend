@@ -87,7 +87,9 @@ proofOfEntitlement.paidDetail=Child Benefit is paid at:
 proofOfEntitlement.firstChild={0} for the eldest or only child
 proofOfEntitlement.additionalchild={0} for each additional child
 proofOfEntitlement.entitlementdetail.title=Claimant’s entitlement details
-proofOfEntitlement.entitlementdetail.p1=If your address or any names are incorrect, you can <a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"> tell us about changes to your circumstances</a> or about <a class="govuk-link" target="_self" href="https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide">your child’s or children’s circumstances</a> and we’ll update them for you.
+proofOfEntitlement.entitlementdetail.p1 =If your address or any names are incorrect, you can {0} or about {1} and we’ll update them for you.
+proofOfEntitlement.entitlementdetail.p1.link.1 = tell us about changes to your circumstances
+proofOfEntitlement.entitlementdetail.p1.link.2 = your child’s or children’s circumstances
 proofOfEntitlement.claimantname=Name
 proofOfEntitlement.address=Address
 proofOfEntitlement.amount=Amount
@@ -98,10 +100,9 @@ proofOfEntitlement.enddate=End date
 proofOfEntitlement.awardDetail=Child Benefit award details for {0}
 proofOfEntitlement.dateOfBirth=Date of birth
 proofOfEntitlement.viewpayments=View your Child Benefit payments
-proofOfEntitlement.viewrecentpayments.part1=You can
-proofOfEntitlement.viewrecentpayments.part2=view your recent Child Benefit payments
-proofOfEntitlement.viewrecentpayments.part3=and see your last 5 payment dates and how much you were paid.
-proofOfEntitlement.printMessage=Print this page
+proofOfEntitlement.viewrecentpayments.para = You can {0} and see your last 5 payment dates and how much you were paid.
+proofOfEntitlement.viewrecentpayments.link = view your recent Child Benefit payments
+proofOfEntitlement.printMessage = Print this page
 # ------------------------------------------------------------------------------------
 
 
