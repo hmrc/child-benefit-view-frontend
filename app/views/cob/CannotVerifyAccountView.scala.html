@@ -14,14 +14,28 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        heading: Heading,
+        para: ParagraphBody,
+link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@formLink = @{link( id = "change-of-circumstances-form",
+                    text = messages("cannotVerifyAccount.link.text"),
+                    call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide")
+            )}
+
 @layout(pageTitle = titleNoForm(messages("cannotVerifyAccount.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("cannotVerifyAccount.heading")</h1>
+    @heading(messages("cannotVerifyAccount.heading"))
+
+    @para(messages("cannotVerifyAccount.paragraph.1"))
+
+    @para(messages("cannotVerifyAccount.paragraph.2", formLink))
 }

@@ -232,7 +232,10 @@ confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 hICBCOptedOutPayments.title = hICBCOptedOutPayments
 hICBCOptedOutPayments.heading = You cannot use this service because you do not receive Child Benefit payments
 
-cannotVerifyAccount.title = cannotVerifyAccount
+cannotVerifyAccount.title = We cannot verify the account details you’ve provided
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
+cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
+cannotVerifyAccount.paragraph.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
+cannotVerifyAccount.link.text = change of circumstances form
 
 # ------------------------------------------------------------------------------------
