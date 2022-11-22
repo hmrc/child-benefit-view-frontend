@@ -21,7 +21,8 @@
         layout: templates.Layout,
         list: BulletList,
         heading: Heading,
-        para: ParagraphBody
+        para: ParagraphBody,
+        helplineSection: HelplineSection
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -47,16 +48,5 @@
     @para(messages("noAccountFound.callInfo1"))
     @para(messages("noAccountFound.callInfo2"))
 
-<!--todo: make helpline component-->
-<div class="govuk-inset-text">
- <ul class="govuk-list">
-   <li>@messages("noAccountFound.info1")</li>
-   <li>@messages("noAccountFound.info2")</li>
-   <li>@messages("noAccountFound.info3")</li>
-   <li>@messages("noAccountFound.info4")</li>
-   <li>@messages("noAccountFound.info5")</li>
-   <li>@messages("noAccountFound.info6")</li>
-   <li><a class="govuk-link" href=@messages("noAccountFound.callChargesUrl")>@messages("noAccountFound.linkMessage")</a></li>
- </ul>
-</div>
+    @helplineSection()
 }

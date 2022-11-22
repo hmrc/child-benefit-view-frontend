@@ -13,18 +13,20 @@ noAccountFound.bulletPoint3=cafodd yr hawliad ei wneud gan rywun arall - er engh
 noAccountFound.bulletPoint4=nid ydych yn cael Budd-dal Plant mwyach
 noAccountFound.callInfo1=Gallwch ein ffonio os oes angen gwybodaeth arnoch am hawliad sydd wedi dod i ben.
 noAccountFound.callInfo2=Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
-noAccountFound.info1=Gwasanaeth Cwsmeriaid Cymraeg CThEM
-noAccountFound.info2=Ffôn: 0300 200 1900
-noAccountFound.info3=Gwasanaeth Saesneg: 0300 200 3100
-noAccountFound.info4=Ffôn testun: 0300 200 3103
-noAccountFound.info5=O’r tu allan i’r DU: +44 300 200 1900
-noAccountFound.info6=Dydd Llun - Dydd Gwener, 08:30 - 17:30
-noAccountFound.linkMessage=Gwybodaeth am gostau galwadau
-noAccountFound.callChargesUrl=https://www.gov.uk/costau-galwadau
 
 notFound.header=Heb ddod o hyd i’r dudalen
 notFound.explanation1=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 notFound.explanation2=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+
+# ---------------------------- Helpline Section ----------------------------
+helpline.info.title = Gwasanaeth Cwsmeriaid Cymraeg CThEM
+helpline.info.telephone = Ffôn: 0300 200 1900
+helpline.info.welshTelephone = Gwasanaeth Saesneg: 0300 200 3100
+helpline.info.textPhone = Ffôn testun: 0300 200 3103
+helpline.info.outsideUKTelephone = O’r tu allan i’r DU: +44 300 200 1900
+helpline.info.availability = Dydd Llun - Dydd Gwener, 08:30 - 17:30
+helpline.info.charges = Gwybodaeth am gostau galwadau
+helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 
 # ---------------------------- Proof Of Entitlement ----------------------------
 proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
@@ -96,11 +98,3 @@ service-unavailable-error-template.heading = Mae’n ddrwg gennym – mae proble
 service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes ymlaen.
 service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun ynglŷn â’ch dyfarniad Budd-dal Plant.
 service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
-service-unavailable-error-template.info.title = Gwasanaeth Cwsmeriaid Cymraeg CThEM
-service-unavailable-error-template.info.telephone = Ffôn: 0300 200 1900
-service-unavailable-error-template.info.welshTelephone = Gwasanaeth Saesneg: 0300 200 3100
-service-unavailable-error-template.info.textPhone = Ffôn testun: 0300 200 3103
-service-unavailable-error-template.info.outsideUKTelephone = O’r tu allan i’r DU: +44 300 200 1900
-service-unavailable-error-template.info.availability = Dydd Llun - Dydd Gwener, 08:30 - 17:30
-service-unavailable-error-template.info.charges = Gwybodaeth am gostau galwadau
-service-unavailable-error-template.info.callChargesUrl=https://www.gov.uk/costau-galwadau

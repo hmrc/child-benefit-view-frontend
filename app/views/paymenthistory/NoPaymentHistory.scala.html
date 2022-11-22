@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @import models.entitlement.ChildBenefitEntitlement
 @import viewmodels.govuk.DataLayer
 @import services.PaymentHistoryPageVariant
@@ -22,32 +24,42 @@
 @import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears
 @import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast
 
-@this(layout: templates.Layout, summaryList: GovukSummaryList)
+@this(
+    layout: templates.Layout,
+    summaryList: GovukSummaryList,
+    heading: Heading,
+    h2: HeadingH2,
+    link: Link,
+    para: ParagraphBody,
+    caption: CaptionHeader
+)
+
 @(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
+
+@viewEntitlementLink = @{link( id = "view-entitlement-link",
+                        text = messages("paymentHistory.viewEntitlementProof.p1.link.text"),
+                        call = Call("GET", routes.ProofOfEntitlementController.view.url)
+                        )}
+
 @layout(pageTitle = messages("paymentHistory.pageTitle"),
     dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
     showBackLink = true) {
-    <span class="govuk-caption-xl">@{
-        entitlement.claimant.name.value
-    }</span>
-    <h1 class="govuk-heading-xl">
-    @messages("paymentHistory.title")
-    </h1>
+
+    @caption(entitlement.claimant.name.value)
+    @heading(messages("paymentHistory.title"))
 
   @{
       if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
-              <p class="govuk-body">{messages("paymentHistory.v2.noReceivedPayments")}</p>
+            para(messages("paymentHistory.v2.noReceivedPayments"))
       } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
-              <p class="govuk-body">{messages("paymentHistory.v4.p1")}</p>
-              <p class="govuk-body">{messages("paymentHistory.v4.p2")}</p>
+            para(messages("paymentHistory.v4.p1"))
+            para(messages("paymentHistory.v4.p2"))
 
       } else if(pageVariant == EntitlementEndedButNoPaymentsInLastTwoYears) {
-              <p class="govuk-body">{messages("paymentHistory.v6.p1")}</p>
-              <p class="govuk-body">{messages("paymentHistory.v6.p2")}</p>
+            para(messages("paymentHistory.v6.p1"))
+            para(messages("paymentHistory.v6.p2"))
       }
-
   }
-    <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("paymentHistory.viewEntitlementProof")</h2>
-    <p class="govuk-body govuk-!-display-none-print">@Html(Messages("paymentHistory.viewEntitlementProof.p1", routes.ProofOfEntitlementController.view.url))</p>
-
+    @h2(messages("paymentHistory.viewEntitlementProof"))
+    @para(messages("paymentHistory.viewEntitlementProof.p1", viewEntitlementLink))
 }
