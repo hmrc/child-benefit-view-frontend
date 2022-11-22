@@ -217,6 +217,7 @@ accountChanged.feedback.link.text = take the feedback survey
 
 accountNotChanged.title = accountNotChanged
 accountNotChanged.heading = You have not changed your account
+accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
 
 bARSLockOut.title = bARSLockOut
 bARSLockOut.heading = You’re locked out of this service
