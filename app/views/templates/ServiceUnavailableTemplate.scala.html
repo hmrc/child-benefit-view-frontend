@@ -15,8 +15,14 @@
  *@
 
 @import viewmodels.govuk.DataLayer
+@import components._
 
-@this(layout: templates.Layout, insetText: GovukInsetText)
+@this(
+    layout: templates.Layout,
+    insetText: GovukInsetText,
+    heading: Heading,
+    para: ParagraphBody
+)
 
 @()(implicit request: Request[_], messages: Messages)
 
@@ -24,12 +30,13 @@
     pageTitle = titleNoForm(messages("service-unavailable-error-template.heading")),
     dataLayer = Some(DataLayer(event = "journey_step", navigate = "service unavailable"))
 ) {
-    <h1 class="govuk-heading-xl">@messages("service-unavailable-error-template.heading")</h1>
+    @heading(messages("service-unavailable-error-template.heading"))
 
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.1")</p>
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.2")</p>
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.3")</p>
+    @para(messages("service-unavailable-error-template.paragraph.1"))
+    @para(messages("service-unavailable-error-template.paragraph.2"))
+    @para(messages("service-unavailable-error-template.paragraph.3"))
 
+<!--todo: helpline component-->
     @insetText(
         InsetText(content = HtmlContent(
             List(

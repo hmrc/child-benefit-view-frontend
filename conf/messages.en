@@ -107,14 +107,15 @@ proofOfEntitlement.printMessage = Print this page
 
 
 # ---------------------------- View Payment History ----------------------------
-paymentHistory.pageTitle=Child Benefit payment history - Child Benefit - GOV.UK
-paymentHistory.title=Child Benefit payment history
-paymentHistory.viewEntitlementProof=View proof of your entitlement to Child Benefit
-paymentHistory.viewEntitlementProof.p1=You can <a class="govuk-link" target="_self" href="{0}"> view proof of your entitlement to Child Benefit</a>, print the page and use it to show that you qualify.
-paymentHistory.recentCBPayments.header=Your most recent Child Benefit payments
-paymentHistory.recentCBPayments.p1=The 5 most recent payments made within the last 2 years.
-paymentHistory.table.date=Date
-paymentHistory.table.amount=Amount
+paymentHistory.pageTitle = Child Benefit payment history - Child Benefit - GOV.UK
+paymentHistory.title = Child Benefit payment history
+paymentHistory.viewEntitlementProof = View proof of your entitlement to Child Benefit
+paymentHistory.viewEntitlementProof.p1 = You can {0}, print the page and use it to show that you qualify.
+paymentHistory.viewEntitlementProof.p1.link.text = view proof of your entitlement to Child Benefit
+paymentHistory.recentCBPayments.header = Your most recent Child Benefit payments
+paymentHistory.recentCBPayments.p1 = The 5 most recent payments made within the last 2 years.
+paymentHistory.table.date = Date
+paymentHistory.table.amount = Amount
 
 # --------- No Payment History ---------
 # ---- Variant 2 - In payment without payments in last 2 years
@@ -131,8 +132,9 @@ paymentHistory.v6.p2=Our records show that you have not received any payments in
 # --------- Some Payment History ---------
 # ---- Variant 1 - In payment with payments in last 2 years
 paymentHistory.v1.header=Find out when you’ll be paid next
-paymentHistory.v1.p1=If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
-paymentHistory.v1.p2 = You’ll be paid earlier if <a class="govuk-link" target="_blank" href="https://www.gov.uk/child-benefit-payment-dates/bank-holidays">the payment’s due on a bank holiday.</a>
+paymentHistory.v1.p1 = If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
+paymentHistory.v1.p2 = You’ll be paid earlier if {0}
+paymentHistory.v1.link.text = the payment’s due on a bank holiday.
 paymentHistory.v1.p3 = Child Benefit is paid weekly or every 4 weeks. It is not paid by calendar month.
 
 # ---- Variant 3 - HICBC with payments in last 2 years

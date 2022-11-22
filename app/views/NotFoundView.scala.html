@@ -14,8 +14,12 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
-        layout: templates.Layout
+        layout: templates.Layout,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -26,8 +30,8 @@
     dataLayer = None
 ) {
 
-    <h1 class="govuk-heading-l">@messages("notFound.header")</h1>
+    @heading(messages("notFound.header"))
 
-    <p class="govuk-body">@messages("notFound.explanation1")</p>
-    <p class="govuk-body">@messages("notFound.explanation2")</p>
+    @para(messages("notFound.explanation1"))
+    @para(messages("notFound.explanation2"))
 }

@@ -53,14 +53,15 @@ proofOfEntitlement.printMessage=Argraffu’r dudalen hon
 
 
 # ---------------------------- View Payment History ----------------------------
-paymentHistory.pageTitle=Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
-paymentHistory.title=Hanes taliadau Budd-dal Plant
-paymentHistory.viewEntitlementProof=Bwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant
-paymentHistory.viewEntitlementProof.p1=Gallwch <a class="govuk-link" target="_self" href="{0}"> fwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant</a>,  argraffu’r dudalen a’i defnyddio i ddangos eich bod yn gymwys.
-paymentHistory.recentCBPayments.header=Eich taliadau Budd-dal Plant diweddaraf
-paymentHistory.recentCBPayments.p1=Y 5 taliad diweddaraf a wnaed yn ystod y 2 flynedd ddiwethaf.
-paymentHistory.table.date=Dyddiad
-paymentHistory.table.amount=Swm
+paymentHistory.pageTitle = Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
+paymentHistory.title = Hanes taliadau Budd-dal Plant
+paymentHistory.viewEntitlementProof = Bwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant
+paymentHistory.viewEntitlementProof.p1 = Gallwch {0}, argraffu’r dudalen a’i defnyddio i ddangos eich bod yn gymwys.
+paymentHistory.viewEntitlementProof.p1.link.text = fwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant
+paymentHistory.recentCBPayments.header = Eich taliadau Budd-dal Plant diweddaraf
+paymentHistory.recentCBPayments.p1 = Y 5 taliad diweddaraf a wnaed yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.table.date = Dyddiad
+paymentHistory.table.amount = Swm
 
 # --------- No Payment History ---------
 # ---- Variant 2 - In payment without payments in last 2 years
@@ -76,9 +77,10 @@ paymentHistory.v6.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw dali
 
 # --------- Some Payment History ---------
 # ---- Variant 1 - In payment with payments in last 2 years
-paymentHistory.v1.header=Cael gwybod pryd y cewch eich talu nesaf
-paymentHistory.v1.p1=Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
-paymentHistory.v1.p2 = Cewch eich talu cyn hynny os <a class="govuk-link" target="_blank" href="https://www.gov.uk/child-benefit-payment-dates/bank-holidays">yw’r taliad fod i gyrraedd ar ŵyl banc.</a>
+paymentHistory.v1.header = Cael gwybod pryd y cewch eich talu nesaf
+paymentHistory.v1.p1 = Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
+paymentHistory.v1.p2 = Cewch eich talu cyn hynny os {0}
+paymentHistory.v1.link.text = yw’r taliad fod i gyrraedd ar ŵyl banc.
 paymentHistory.v1.p3 = Mae Budd-dal Plant yn cael ei dalu’n wythnosol, neu bob 4 wythnos. Nid yw’n cael ei dalu yn ôl misoedd calendr.
 
 # ---- Variant 3 - HICBC with payments in last 2 years

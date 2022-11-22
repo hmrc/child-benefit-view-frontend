@@ -30,24 +30,26 @@
  * limitations under the License.
  *@
 
+@import components._
 
 @this(
     layout: templates.Layout,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    heading: Heading,
+    para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("journeyRecovery.startAgain.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("journeyRecovery.startAgain.heading")</h1>
+    @heading(messages("journeyRecovery.startAgain.heading"))
 
-    <p class="govuk-body">@messages("journeyRecovery.startAgain.guidance")</p>
+    @para(messages("journeyRecovery.startAgain.guidance"))
 
-    <p class="govuk-body">
-        @govukButton(
-            ButtonViewModel(messages("site.startAgain"))
-                .asLink(routes.IndexController.onPageLoad.url)
-        )
-    </p>
+    @govukButton(
+        ButtonViewModel(messages("site.startAgain"))
+            .asLink(routes.IndexController.onPageLoad.url)
+            .withAttribute("id", "start-again-button")
+    )
 }

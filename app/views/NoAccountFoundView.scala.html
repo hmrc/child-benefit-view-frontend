@@ -14,33 +14,40 @@
  * limitations under the License.
  *@
 
+@import components._
 @import viewmodels.govuk.DataLayer
 
 @this(
-layout: templates.Layout
+        layout: templates.Layout,
+        list: BulletList,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-pageTitle    = titleNoForm(messages("noAccountFound.header")),
-showBackLink = true,
+    pageTitle    = titleNoForm(messages("noAccountFound.header")),
+    showBackLink = true,
     dataLayer = Some(DataLayer(event = "journey_step", navigate = "no match"))
 ) {
 
-<h1 class="govuk-heading-l">@messages("noAccountFound.header")</h1>
+    @heading(messages("noAccountFound.header"))
 
-<p class="govuk-body">@messages("noAccountFound.explanation")</p>
-<p class="govuk-body">@messages("noAccountFound.reason")</p>
+    @para(messages("noAccountFound.explanation"))
+    @para(messages("noAccountFound.reason"))
 
-<ul class="govuk-list govuk-list--bullet">
- <li>@messages("noAccountFound.bulletPoint1")</li>
- <li>@messages("noAccountFound.bulletPoint2")</li>
- <li>@messages("noAccountFound.bulletPoint3")</li>
- <li>@messages("noAccountFound.bulletPoint4")</li>
-</ul>
-<p class="govuk-body">@messages("noAccountFound.callInfo1")</p>
-<p class="govuk-body">@messages("noAccountFound.callInfo2")</p>
+
+@list(elements = Seq(   Html(messages("noAccountFound.bulletPoint1")),
+                        Html(messages("noAccountFound.bulletPoint2")),
+                        Html(messages("noAccountFound.bulletPoint3")),
+                        Html(messages("noAccountFound.bulletPoint4"))
+))
+
+    @para(messages("noAccountFound.callInfo1"))
+    @para(messages("noAccountFound.callInfo2"))
+
+<!--todo: make helpline component-->
 <div class="govuk-inset-text">
  <ul class="govuk-list">
    <li>@messages("noAccountFound.info1")</li>
