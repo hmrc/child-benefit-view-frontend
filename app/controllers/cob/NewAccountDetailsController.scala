@@ -48,10 +48,8 @@ class NewAccountDetailsController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (identify andThen getData) { implicit request =>
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
-        case None => form
-        case Some(value) =>
-          form.fill(value)
-
+        case None        => form
+        case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, mode))

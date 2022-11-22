@@ -29,19 +29,20 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "newAccountHoldersName"
     val requiredKey = "newAccountDetails.error.newAccountHoldersName.required"
     val lengthKey   = "newAccountDetails.error.newAccountHoldersName.length"
-    val maxLength   = 512
+    val maxLength   = 60
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      nonNumerics suchThat (_.size <= maxLength)
     )
 
     behave like fieldWithMaxLength(
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength)),
+      maxLength => nonNumerics suchThat (_.size > maxLength)
     )
 
     behave like mandatoryField(
@@ -55,20 +56,21 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "newSortCode"
     val requiredKey = "newAccountDetails.error.newSortCode.required"
-    val lengthKey   = "newAccountDetails.error.newSortCode.length"
+    val lengthKey   = "newAccountDetails.error.newSortCode.format"
     val maxLength   = 6
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      numericalString(maxLength)
     )
 
     behave like fieldWithMaxLength(
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength)),
+      maxLength => numericalString(maxLength + 1)
     )
 
     behave like mandatoryField(

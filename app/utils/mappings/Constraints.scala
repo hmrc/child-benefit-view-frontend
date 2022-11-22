@@ -71,6 +71,14 @@ trait Constraints {
         Invalid(errorKey, regex)
     }
 
+  protected def minLength(minimum: Int, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.length >= minimum =>
+        Valid
+      case _ =>
+        Invalid(errorKey, minimum)
+    }
+
   protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.length <= maximum =>

@@ -15,19 +15,24 @@
  *@
 
 @import viewmodels.InputWidth._
+@import components._
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukInput: GovukInput,
-    govukButton: GovukButton
+    govukButton: GovukButton,
+    heading: HeadingL,
+    paragraph: ParagraphBody
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("newAccountDetails.title"))) {
-<h1 class="govuk-heading-xl">@messages("newAccountDetails.heading")</h1>
+@heading("newAccountDetails.heading")
+
+    @paragraph(messages("newAccountDetails.paragraph"))
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -41,6 +46,7 @@
                 label = LabelViewModel(messages("newAccountDetails.newAccountHoldersName"))
             )
             .withWidth(Full)
+            .withHint(HintViewModel(messages("newAccountDetails.newAccountHoldersNameHint")))
         )
 
         @govukInput(
@@ -48,7 +54,8 @@
                 field = form("newSortCode"),
                 label = LabelViewModel(messages("newAccountDetails.newSortCode"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed5)
+            .withHint(HintViewModel(messages("newAccountDetails.newSortCodeHint")))
         )
 
         @govukInput(
@@ -56,7 +63,8 @@
                 field = form("newAccountNumber"),
                 label = LabelViewModel(messages("newAccountDetails.newAccountNumber"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("newAccountDetails.newAccountNumberHint")))
         )
 
         @govukButton(
