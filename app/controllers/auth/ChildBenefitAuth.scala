@@ -93,7 +93,7 @@ trait ChildBenefitAuth extends AuthorisedFunctions with AuthRedirects with Loggi
           logger.warn("user could not be authorised: redirecting")
           Future successful Redirect(
             controllers.routes.UnauthorisedController.onPageLoad
-          ) // should redirect to the routes.NoAccountFoundController.onPageLoad - will be addressed in another ticket
+          )
       }
       .recover {
         handleFailure(toContinueUrl(loginContinueUrl))

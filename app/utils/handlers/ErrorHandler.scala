@@ -16,7 +16,8 @@
 
 package utils.handlers
 
-import models.errors.{CBError, ConnectorError, PaymentHistoryValidationError}
+import controllers.cob
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PaymentHistoryValidationError}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -49,16 +50,16 @@ class ErrorHandler @Inject() (
     error(pageTitle, heading, message)
 
   def handleError(
-      error:          CBError,
-      auditOrigin:    Option[String] = None
-  )(implicit auditor: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
+      error:               CBError,
+      auditOrigin:         Option[String] = None
+  )(implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
     def logMessage(message: String, code: Option[Int]) =
       s"Failed to load: source=${auditOrigin.getOrElse("unknown")} code=${code.getOrElse("N/A")} message=$message"
 
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
         logger.error(logMessage("cb account not found", Some(NOT_FOUND)))
-        fireAuditEvent(auditOrigin, auditor, request)
+        fireAuditEvent(auditOrigin, auditService, request)
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case e if e.statusCode == INTERNAL_SERVER_ERROR =>
         logger.error(logMessage(e.message, Some(INTERNAL_SERVER_ERROR)))
@@ -66,6 +67,9 @@ class ErrorHandler @Inject() (
       case ConnectorError(code, message) =>
         logger.error(logMessage(s"connector error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case ClaimantIsLockedOutOfChangeOfBank(code, message) =>
+        logger.error(logMessage(s"claimant is locked out due to bars failure: $message", Some(code)))
+        Redirect(cob.routes.BARSLockOutController.onPageLoad())
       case PaymentHistoryValidationError(code, message) =>
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
@@ -75,19 +79,19 @@ class ErrorHandler @Inject() (
     }
   }
 
-  private def fireAuditEvent(auditOrigin: Option[String], auditor: AuditService, request: Request[_])(implicit
+  private def fireAuditEvent(auditOrigin: Option[String], auditService: AuditService, request: Request[_])(implicit
       hc:                                 HeaderCarrier,
       ec:                                 ExecutionContext
   ): Unit = {
     if (auditOrigin.contains("proofOfEntitlement"))
-      auditor.auditProofOfEntitlement(
+      auditService.auditProofOfEntitlement(
         "Unknown",
         "No Accounts Found",
         request.asInstanceOf[MessagesRequest[AnyContent]],
         None
       )
     else if (auditOrigin.contains("paymentDetails"))
-      auditor.auditPaymentDetails(
+      auditService.auditPaymentDetails(
         "nino",
         "No Accounts Found",
         request,

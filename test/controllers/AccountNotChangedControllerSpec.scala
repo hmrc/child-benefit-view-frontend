@@ -16,22 +16,26 @@
 
 package controllers
 
-import base.CobSpecBase
+import utils.BaseISpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
+import utils.Stubs.userLoggedInChildBenefitUser
+import utils.TestData.NinoUser
 import views.html.cob.AccountNotChangedView
 
-class AccountNotChangedControllerSpec extends CobSpecBase {
+class AccountNotChangedControllerSpec extends BaseISpec {
 
   "AccountNotChanged Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 

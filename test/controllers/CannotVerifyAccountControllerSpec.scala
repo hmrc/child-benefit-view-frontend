@@ -16,22 +16,26 @@
 
 package controllers
 
-import base.CobSpecBase
+import utils.BaseISpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
+import utils.Stubs.userLoggedInChildBenefitUser
+import utils.TestData.NinoUser
 import views.html.cob.CannotVerifyAccountView
 
-class CannotVerifyAccountControllerSpec extends CobSpecBase {
+class CannotVerifyAccountControllerSpec extends BaseISpec {
 
   "CannotVerifyAccount Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.cob.routes.CannotVerifyAccountController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 

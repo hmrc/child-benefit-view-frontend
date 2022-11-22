@@ -40,7 +40,7 @@ trait ChildBenefitEntitlementConnector {
 @Singleton
 class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends ChildBenefitEntitlementConnector
-    with HttpReadsWrapper[ChildBenefitEntitlement, CBErrorResponse]
+    with HttpReadsWrapper[CBErrorResponse]
     with Logging {
 
   val logMessage = (code: Int, message: String) =>

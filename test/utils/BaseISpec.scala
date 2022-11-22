@@ -17,7 +17,7 @@
 package utils
 
 import connectors.{ChildBenefitEntitlementConnector, DefaultChildBenefitEntitlementConnector}
-import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction}
+import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, IdentifierAction}
 import models.UserAnswers
 import org.jsoup.Jsoup
 import org.scalactic.source.Position
@@ -62,6 +62,7 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
       )
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
+        bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         entitlementConnector
       )

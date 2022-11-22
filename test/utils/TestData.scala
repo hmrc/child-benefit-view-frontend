@@ -16,14 +16,15 @@
 
 package utils
 
-import models.common.{AddressLine, AddressPostcode}
-import models.entitlement.{AdjustmentInformation, AdjustmentReasonCode, Child, ChildBenefitEntitlement, Claimant, FullAddress, FullName, LastPaymentFinancialInfo}
+import models.changeofbank._
+import models.common._
+import models.entitlement._
 
 import java.time.LocalDate
 
 object TestData {
 
-  val NinoUser =
+  val NinoUser: String =
     """
       |{
       |	"nino": "QQ123456A",
@@ -32,7 +33,23 @@ object TestData {
       |}
       |""".stripMargin
 
-  val entitlementResult = ChildBenefitEntitlement(
+  val NotFoundAccountError: String =
+    """
+      |{
+      |		"status": 404,
+      |		"description": "NOT_FOUND_CB_ACCOUNT - downstream service returned NOT_FOUND_IDENTIFIER, suggesting user does not have a child benefit account"
+      |	}
+      |""".stripMargin
+
+  val LockedOutErrorResponse: String =
+    """
+      |{
+      |		"status": 403,
+      |		"description": "ClaimantIsLockedOut"
+      |	}
+      |""".stripMargin
+
+  val entitlementResult: ChildBenefitEntitlement = ChildBenefitEntitlement(
     Claimant(
       name = FullName("John Doe"),
       awardValue = 500.00,
@@ -70,11 +87,20 @@ object TestData {
     )
   )
 
-  val entitlementServiceNotFoundAccountError: String =
-    """
-      |{
-      |		"status": "404",
-      |		"reason": "NOT_FOUND_CB_ACCOUNT - downstream service returned NOT_FOUND_IDENTIFIER, suggesting user does not have a child benefit account"
-      |	}
-      |""".stripMargin
+  val claimantBankInformation: ClaimantBankInformation = ClaimantBankInformation(
+    firstForename = FirstForename("John"),
+    surname = Surname("Doe"),
+    activeChildBenefitClaim = true,
+    financialDetails = ClaimantFinancialDetails(
+      awardEndDate = LocalDate.now.plusYears(2),
+      adjustmentReasonCode = None,
+      adjustmentEndDate = None,
+      bankAccountInformation = ClaimantBankAccountInformation(
+        accountHolderName = Some(AccountHolderName("Mr J Doe")),
+        sortCode = SortCode("112233"),
+        bankAccountNumber = BankAccountNumber("12345678"),
+        buildingSocietyRollNumber = None
+      )
+    )
+  )
 }

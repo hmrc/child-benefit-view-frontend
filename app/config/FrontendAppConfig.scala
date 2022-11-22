@@ -36,11 +36,17 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[Boolean]("features.welsh-translation")
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val childBenefitEntitlementBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
-  private val exitSurveyBaseUrl:              String = configuration.get[String]("microservice.services.feedback-frontend.url")
+  private val childBenefitServiceBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
+  private val exitSurveyBaseUrl:          String = configuration.get[String]("microservice.services.feedback-frontend.url")
 
   def childBenefitEntitlementUrl: String =
-    s"$childBenefitEntitlementBaseUrl/child-benefit-service/view-entitlements-and-payments"
+    s"$childBenefitServiceBaseUrl/child-benefit-service/view-entitlements-and-payments"
+
+  def changeOfBankUserInfoUrl: String =
+    s"$childBenefitServiceBaseUrl/child-benefit-service/change-bank-user-information"
+
+  def verifyBankAccountUrl: String =
+    s"$childBenefitServiceBaseUrl/child-benefit-service/verify-claimant-bank-account"
 
   def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/CHIB"
 

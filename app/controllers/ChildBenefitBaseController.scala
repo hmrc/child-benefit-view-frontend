@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.auth.ChildBenefitAuth
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{MessagesControllerComponents, RequestHeader}
 import play.api.{Configuration, Environment}
@@ -26,13 +25,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-import scala.concurrent.ExecutionContext
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ChildBenefitBaseController @Inject() (val authConnector: AuthConnector)(implicit
     val config:                                                Configuration,
     val env:                                                   Environment,
-    val ec:                                                    ExecutionContext,
     cc:                                                        MessagesControllerComponents
 ) extends FrontendController(cc)
     with ChildBenefitAuth
