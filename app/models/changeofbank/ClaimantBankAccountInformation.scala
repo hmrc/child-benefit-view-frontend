@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package models.entitlement
+package models.changeofbank
 
 import play.api.libs.json.Json
 
-final case class AdjustmentReasonCode(value: String) extends AnyVal
+final case class ClaimantBankAccountInformation(
+    accountHolderName:         Option[AccountHolderName],
+    sortCode:                  SortCode,
+    bankAccountNumber:         BankAccountNumber,
+    buildingSocietyRollNumber: Option[BuildingSocietyRollNumber]
+)
 
-object AdjustmentReasonCode {
-  implicit val format = Json.valueFormat[AdjustmentReasonCode]
+object ClaimantBankAccountInformation {
+  implicit val format = Json.format[ClaimantBankAccountInformation]
 }

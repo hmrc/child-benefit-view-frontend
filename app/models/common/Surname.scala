@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package models.entitlement
+package models.common
 
-import models.common.AdjustmentReasonCode
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
 
-import java.time.LocalDate
+final case class Surname(value: String) extends AnyVal
 
-final case class AdjustmentInformation(adjustmentReasonCode: AdjustmentReasonCode, adjustmentEndDate: LocalDate)
-
-object AdjustmentInformation {
-  implicit val format: OFormat[AdjustmentInformation] = Json.format[AdjustmentInformation]
+object Surname {
+  implicit val format = Json.valueFormat[Surname]
 }

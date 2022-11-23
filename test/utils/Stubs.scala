@@ -18,6 +18,7 @@ package utils
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
 import play.api.libs.json.Json
 
@@ -66,6 +67,46 @@ object Stubs {
   def entitlementsAndPaymentHistoryFailureStub(result: String, status: Int = 200): StubMapping =
     stubFor(
       get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
+  def changeOfBankUserInfoStub(result: ClaimantBankInformation): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/change-bank-user-information"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(result).toString)
+        )
+    )
+
+  def changeOfBankUserInfoFailureStub(status: Int = 404, result: String): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/change-bank-user-information"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
+  def verifyClaimantBankInfoStub(): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(true).toString)
+        )
+    )
+
+  def verifyClaimantBankInfoFailureStub(status: Int = 403, result: String): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
         .willReturn(
           aResponse()
             .withStatus(status)
