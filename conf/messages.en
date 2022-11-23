@@ -219,8 +219,11 @@ accountNotChanged.title = accountNotChanged
 accountNotChanged.heading = You have not changed your account
 accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
 
-bARSLockOut.title = bARSLockOut
+bARSLockOut.title = You’re locked out of this service
 bARSLockOut.heading = You’re locked out of this service
+bARSLockOut.para.1 = You’re locked out because you entered details that could not be verified too many times within the last 24 hours.
+bARSLockOut.para.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
+bARSLockOut.link.text = change of circumstances form
 
 confirmNewAccountDetails.title = Check and confirm your new account details
 confirmNewAccountDetails.heading = Do you want to send us these details?
