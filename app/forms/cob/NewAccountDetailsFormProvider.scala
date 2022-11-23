@@ -36,7 +36,11 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
         "newAccountHoldersName" -> text("newAccountDetails.error.newAccountHoldersName.required")
           .verifying(
             maxLength(nameMaxLength, "newAccountDetails.error.newAccountHoldersName.length"),
-            regexp("""^[\w\s\-']+$""", "newAccountDetails.error.newAccountHoldersName.format")
+            pattern(
+              """^[\w\s\-']+$""".r,
+              "newAccountHoldersName.pattern",
+              "newAccountDetails.error.newAccountHoldersName.format"
+            )
           ),
         "newSortCode" -> sanitisedNumber(
           "newAccountDetails.error.newSortCode.required",
