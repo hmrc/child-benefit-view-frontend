@@ -216,14 +216,24 @@ newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 newAccountDetails.newSortCode.change.hidden = newSortCode
 newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 
-accountChanged.title = accountChanged
+accountChanged.title = Your account details have been changed
 accountChanged.heading = Your account details have been changed
+accountChanged.subHeading.1 = What happens next
+accountChanged.paragraph.1 = If your next Child Benefit payment’s due within the next 3 working days, it will be paid into your previous account. Payments due after that will be paid into the new account.
+accountChanged.subHeading.2 = Before you go
+accountChanged.paragraph.2 = We use feedback to make our services better.
+accountChanged.feedback = Please {0}.
+accountChanged.feedback.link.text = take the feedback survey
 
 accountNotChanged.title = accountNotChanged
 accountNotChanged.heading = You have not changed your account
+accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
 
-bARSLockOut.title = bARSLockOut
+bARSLockOut.title = You’re locked out of this service
 bARSLockOut.heading = You’re locked out of this service
+bARSLockOut.para.1 = You’re locked out because you entered details that could not be verified too many times within the last 24 hours.
+bARSLockOut.para.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
+bARSLockOut.link.text = change of circumstances form
 
 confirmNewAccountDetails.title = Check and confirm your new account details
 confirmNewAccountDetails.heading = Do you want to send us these details?
@@ -236,7 +246,10 @@ confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 hICBCOptedOutPayments.title = hICBCOptedOutPayments
 hICBCOptedOutPayments.heading = You cannot use this service because you do not receive Child Benefit payments
 
-cannotVerifyAccount.title = cannotVerifyAccount
+cannotVerifyAccount.title = We cannot verify the account details you’ve provided
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
+cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
+cannotVerifyAccount.paragraph.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
+cannotVerifyAccount.link.text = change of circumstances form
 
 # ------------------------------------------------------------------------------------

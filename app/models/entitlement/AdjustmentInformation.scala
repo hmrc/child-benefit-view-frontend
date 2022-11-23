@@ -16,6 +16,7 @@
 
 package models.entitlement
 
+import models.common.AdjustmentReasonCode
 import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate

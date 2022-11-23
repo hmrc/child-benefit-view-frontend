@@ -16,7 +16,7 @@
 
 package controllers
 
-import base.CobSpecBase
+import utils.BaseISpec
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.cob.ConfirmNewAccountDetails.Yes
 import models.cob.{ConfirmNewAccountDetails, AccountDetails}
@@ -25,6 +25,7 @@ import org.mockito.Mockito.when
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.cob.ConfirmNewAccountDetailsView
+
 import scala.concurrent.Future
 import org.scalatestplus.mockito.MockitoSugar
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
@@ -33,8 +34,10 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import utils.Stubs.userLoggedInChildBenefitUser
+import utils.TestData.NinoUser
 
-class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSugar {
+class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -49,6 +52,8 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
   "ConfirmNewAccountDetails Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
+
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers           = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
       val application = applicationBuilder(userAnswers = userAnswers)
@@ -59,7 +64,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
+        val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
 
         val result = route(application, request).value
@@ -81,6 +86,8 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
+      userLoggedInChildBenefitUser(NinoUser)
+
       val mockSessionRepository = mock[SessionRepository]
 
       val userAnswers: UserAnswers = UserAnswers(userAnswersId)
@@ -97,7 +104,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
+        val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
 
         val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
@@ -119,6 +126,8 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
     }
 
     "must redirect to the next page when valid data is submitted" in {
+      userLoggedInChildBenefitUser(NinoUser)
+
       val confirmNewAccountDetails = Yes
       val userAnswers = UserAnswers(userAnswersId)
         .set(NewAccountDetailsPage, newAccountDetails)
@@ -139,6 +148,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
         val request =
           FakeRequest(POST, confirmNewAccountDetailsRoute)
             .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
+            .withSession("authToken" -> "Bearer 123")
 
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
         when(mockSessionRepository.set(userAnswers.get)) thenReturn Future.successful(true)
@@ -151,6 +161,8 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      userLoggedInChildBenefitUser(NinoUser)
+
       val mockSessionRepository = mock[SessionRepository]
 
       val userAnswers = UserAnswers(userAnswersId)
@@ -170,6 +182,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
         val request =
           FakeRequest(POST, confirmNewAccountDetailsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
+            .withSession("authToken" -> "Bearer 123")
 
         val result    = route(application, request).value
         val boundForm = form.bind(Map("value" -> "invalid value"))
@@ -190,11 +203,14 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
+          .withSession("authToken" -> "Bearer 123")
+          .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 
@@ -204,6 +220,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(userAnswers = None).build()
 
@@ -211,6 +228,7 @@ class ConfirmNewAccountDetailsControllerSpec extends CobSpecBase with MockitoSug
         val request =
           FakeRequest(POST, confirmNewAccountDetailsRoute)
             .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
+            .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 

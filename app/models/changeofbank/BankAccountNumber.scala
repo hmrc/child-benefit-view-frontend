@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package models.changeofbank
 
-@(id: String, text: String, call: Call, newTab: Boolean = true, classes: String = "govuk-link govuk-link--no-visited-state")
+import play.api.libs.json.Json
 
-<a class="@classes" href="@call" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">@text</a>
+final case class BankAccountNumber(number: String) extends AnyVal
+
+object BankAccountNumber {
+  implicit val format = Json.valueFormat[BankAccountNumber]
+}

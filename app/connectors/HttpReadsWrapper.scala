@@ -28,8 +28,8 @@ import uk.gov.hmrc.http.HttpReads
 
 import scala.util.{Failure, Success, Try}
 
-trait HttpReadsWrapper[T, E] extends Logging {
-  def withHttpReads(
+trait HttpReadsWrapper[E] extends Logging {
+  def withHttpReads[T](
       block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
   )(implicit
       readsSuccess: Reads[T],
@@ -37,7 +37,7 @@ trait HttpReadsWrapper[T, E] extends Logging {
   ): CBEnvelope[T] =
     block(getHttpReads(readsSuccess, readsError))
 
-  private def getHttpReads(implicit
+  private def getHttpReads[T](implicit
       readsSuccess: Reads[T],
       readsError:   Reads[E]
   ): HttpReads[Either[CBError, T]] =

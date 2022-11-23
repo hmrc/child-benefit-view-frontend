@@ -17,30 +17,33 @@
 package controllers.cob
 
 import controllers.actions._
-import models.cob.AccountDetails
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.cob.ChangeAccountView
+import utils.handlers.ErrorHandler
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class ChangeAccountController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
+    changeOfBankService:      ChangeOfBankService,
+    errorHandler:             ErrorHandler,
     getData:                  CobDataRetrievalAction,
-    val controllerComponents: MessagesControllerComponents,
-    view:                     ChangeAccountView
-) extends FrontendBaseController
+    val controllerComponents: MessagesControllerComponents
+)(implicit ec:                ExecutionContext, auditService: AuditService)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData) { implicit request =>
-
-      //Get Child Benefit Financial Details' API
-      val details = AccountDetails("Lizbeth Jones", "12-34-56", "123456789")
-      println(details)
-      val claimantName = "Liz Jones"
-      Ok(view(claimantName, None))
+    (identify andThen getData).async { implicit request =>
+      changeOfBankService
+        .processClaimantInformation()
+        .fold(
+          err => errorHandler.handleError(err),
+          result => result
+        )
     }
 }
