@@ -14,8 +14,11 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
-        layout: templates.Layout
+    layout: templates.Layout,
+    heading: Heading
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -24,5 +27,5 @@
     pageTitle = titleNoForm(messages("dummyFlag.title")),
     timeout   = false
 ) {
-    <h1 class="govuk-heading-xl">@messages("dummyFlag.heading")</h1>
+    @heading(messages("dummyFlag.heading"))
 }

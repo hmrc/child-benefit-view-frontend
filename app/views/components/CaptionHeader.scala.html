@@ -14,24 +14,8 @@
  * limitations under the License.
  *@
 
-@import components._
+@this()
 
-@this(
-        layout: templates.Layout,
-        heading: Heading,
-        para: ParagraphBody
-)
+@(message: String, classes: String = "govuk-caption-l", id: Option[String] = Some("section-header"))
 
-@()(implicit request: Request[_], messages: Messages)
-
-@layout(
-    pageTitle = titleNoForm(messages("notFound.header")),
-    showBackLink = false,
-    dataLayer = None
-) {
-
-    @heading(messages("notFound.header"))
-
-    @para(messages("notFound.explanation1"))
-    @para(messages("notFound.explanation2"))
-}
+<span class="@classes" @id.map{id => id="@id"}>@message</span>

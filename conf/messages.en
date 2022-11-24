@@ -80,6 +80,16 @@ homepage.text14=your bank or building society details
 homepage.text15=What do we mean by ’partner’?
 homepage.text16=’Partner’ means someone you’re married to and not permanently separated from, a civil partner, or someone you’re living with as if they were your civil partner.
 
+# ---------------------------- Helpline Section ----------------------------
+helpline.info.title = Child Benefit helpline
+helpline.info.telephone = Telephone: 0300 200 3100
+helpline.info.welshTelephone = Welsh language: 0300 200 1900
+helpline.info.textPhone = Textphone: 0300 200 3103
+helpline.info.outsideUKTelephone = Outside UK: +44 161 210 3086
+helpline.info.availability = Monday to Friday, 8AM to 6PM
+helpline.info.charges = Find out about call charges
+helpline.info.callChargesUrl = https://www.gov.uk/call-charges
+
 # ---------------------------- Proof Of Entitlement ----------------------------
 proofOfEntitlement.title=Proof of entitlement to Child Benefit
 proofOfEntitlement.confirmation=This is confirmation from HMRC of the Child Benefit entitlement for {0} on {1}.
@@ -87,7 +97,9 @@ proofOfEntitlement.paidDetail=Child Benefit is paid at:
 proofOfEntitlement.firstChild={0} for the eldest or only child
 proofOfEntitlement.additionalchild={0} for each additional child
 proofOfEntitlement.entitlementdetail.title=Claimant’s entitlement details
-proofOfEntitlement.entitlementdetail.p1=If your address or any names are incorrect, you can <a class="govuk-link" target="_blank" href="https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"> tell us about changes to your circumstances</a> or about <a class="govuk-link" target="_self" href="https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide">your child’s or children’s circumstances</a> and we’ll update them for you.
+proofOfEntitlement.entitlementdetail.p1 =If your address or any names are incorrect, you can {0} or about {1} and we’ll update them for you.
+proofOfEntitlement.entitlementdetail.p1.link.1 = tell us about changes to your circumstances
+proofOfEntitlement.entitlementdetail.p1.link.2 = your child’s or children’s circumstances
 proofOfEntitlement.claimantname=Name
 proofOfEntitlement.address=Address
 proofOfEntitlement.amount=Amount
@@ -98,22 +110,22 @@ proofOfEntitlement.enddate=End date
 proofOfEntitlement.awardDetail=Child Benefit award details for {0}
 proofOfEntitlement.dateOfBirth=Date of birth
 proofOfEntitlement.viewpayments=View your Child Benefit payments
-proofOfEntitlement.viewrecentpayments.part1=You can
-proofOfEntitlement.viewrecentpayments.part2=view your recent Child Benefit payments
-proofOfEntitlement.viewrecentpayments.part3=and see your last 5 payment dates and how much you were paid.
-proofOfEntitlement.printMessage=Print this page
+proofOfEntitlement.viewrecentpayments.para = You can {0} and see your last 5 payment dates and how much you were paid.
+proofOfEntitlement.viewrecentpayments.link = view your recent Child Benefit payments
+proofOfEntitlement.printMessage = Print this page
 # ------------------------------------------------------------------------------------
 
 
 # ---------------------------- View Payment History ----------------------------
-paymentHistory.pageTitle=Child Benefit payment history - Child Benefit - GOV.UK
-paymentHistory.title=Child Benefit payment history
-paymentHistory.viewEntitlementProof=View proof of your entitlement to Child Benefit
-paymentHistory.viewEntitlementProof.p1=You can <a class="govuk-link" target="_self" href="{0}"> view proof of your entitlement to Child Benefit</a>, print the page and use it to show that you qualify.
-paymentHistory.recentCBPayments.header=Your most recent Child Benefit payments
-paymentHistory.recentCBPayments.p1=The 5 most recent payments made within the last 2 years.
-paymentHistory.table.date=Date
-paymentHistory.table.amount=Amount
+paymentHistory.pageTitle = Child Benefit payment history - Child Benefit - GOV.UK
+paymentHistory.title = Child Benefit payment history
+paymentHistory.viewEntitlementProof = View proof of your entitlement to Child Benefit
+paymentHistory.viewEntitlementProof.p1 = You can {0}, print the page and use it to show that you qualify.
+paymentHistory.viewEntitlementProof.p1.link.text = view proof of your entitlement to Child Benefit
+paymentHistory.recentCBPayments.header = Your most recent Child Benefit payments
+paymentHistory.recentCBPayments.p1 = The 5 most recent payments made within the last 2 years.
+paymentHistory.table.date = Date
+paymentHistory.table.amount = Amount
 
 # --------- No Payment History ---------
 # ---- Variant 2 - In payment without payments in last 2 years
@@ -130,8 +142,9 @@ paymentHistory.v6.p2=Our records show that you have not received any payments in
 # --------- Some Payment History ---------
 # ---- Variant 1 - In payment with payments in last 2 years
 paymentHistory.v1.header=Find out when you’ll be paid next
-paymentHistory.v1.p1=If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
-paymentHistory.v1.p2 = You’ll be paid earlier if <a class="govuk-link" target="_blank" href="https://www.gov.uk/child-benefit-payment-dates/bank-holidays">the payment’s due on a bank holiday.</a>
+paymentHistory.v1.p1 = If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
+paymentHistory.v1.p2 = You’ll be paid earlier if {0}
+paymentHistory.v1.link.text = the payment’s due on a bank holiday.
 paymentHistory.v1.p3 = Child Benefit is paid weekly or every 4 weeks. It is not paid by calendar month.
 
 # ---- Variant 3 - HICBC with payments in last 2 years
@@ -147,14 +160,6 @@ service-unavailable-error-template.heading = Sorry, there is a problem with the 
 service-unavailable-error-template.paragraph.1 = Try again later.
 service-unavailable-error-template.paragraph.2 = You can call us if you’d like to speak with someone about your Child Benefit award.
 service-unavailable-error-template.paragraph.3 = When you call, you’ll need your National Insurance number.
-service-unavailable-error-template.info.title = Child Benefit helpline
-service-unavailable-error-template.info.telephone = Telephone: 0300 200 3100
-service-unavailable-error-template.info.welshTelephone = Welsh language: 0300 200 1900
-service-unavailable-error-template.info.textPhone = Textphone: 0300 200 3103
-service-unavailable-error-template.info.outsideUKTelephone = Outside UK: +44 161 210 3086
-service-unavailable-error-template.info.availability = Monday to Friday, 8AM to 6PM
-service-unavailable-error-template.info.charges = Find out about call charges
-service-unavailable-error-template.info.callChargesUrl=https://www.gov.uk/call-charges
 
 noAccountFound.header=You’re not claiming Child Benefit
 noAccountFound.explanation=We cannot find a Child Benefit claim for you.
@@ -165,15 +170,6 @@ noAccountFound.bulletPoint3=someone else made the claim – for example, it may 
 noAccountFound.bulletPoint4=you no longer receive Child Benefit
 noAccountFound.callInfo1=You can call us if you need information about a claim that has ended.
 noAccountFound.callInfo2=When you call, you’ll need your National Insurance number.
-noAccountFound.info1=Child Benefit helpline
-noAccountFound.info2=Telephone: 0300 200 3100
-noAccountFound.info3=Welsh language: 0300 200 1900
-noAccountFound.info4=Textphone: 0300 200 3103
-noAccountFound.info5=Outside UK: +44 161 210 3086
-noAccountFound.info6=Monday to Friday, 8am to 6pm
-
-noAccountFound.linkMessage=Find out about call charges
-noAccountFound.callChargesUrl=https://www.gov.uk/call-charges
 
 notFound.header=Page not found
 notFound.explanation1=If you typed the web address, check it’s correct.

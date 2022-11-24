@@ -14,29 +14,62 @@
  * limitations under the License.
  *@
 
+@import components._
 @import controllers.ProofOfEntitlementController._
 @import models.entitlement.ChildBenefitEntitlement
 @import viewmodels.govuk.DataLayer
 
-@this(layout: templates.Layout, summaryList: GovukSummaryList)
-@(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
-@layout(pageTitle = titleNoForm(messages("proofOfEntitlement.title")),
-    dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
-    showBackLink = true) {
-    <span class="govuk-caption-xl">@{entitlement.claimant.name.value}</span>
-    <h1 class="govuk-heading-xl">
-    @messages("proofOfEntitlement.title")
-    </h1>
-    <div><a class="govuk-list govuk-link print-link govuk-!-display-none-print" href="" onclick="window.print();return;">@messages("proofOfEntitlement.printMessage")</a></div>
-    <p class="govuk-body"> @messages("proofOfEntitlement.confirmation", entitlement.claimant.name.value, formatDate(entitlement.entitlementDate))</p>
-    <p class="govuk-body">@messages("proofOfEntitlement.paidDetail")</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("proofOfEntitlement.firstChild", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))</li>
-        <li>@messages("proofOfEntitlement.additionalchild", formatMoney(entitlement.paidAmountForEachAdditionalChild))</li>
-    </ul>
+@this(  layout: templates.Layout,
+        summaryList: GovukSummaryList,
+        heading: Heading,
+        h2: HeadingH2,
+        para: ParagraphBody,
+        link: Link,
+        list: BulletList,
+        caption: CaptionHeader,
+        printLink: PrintLink
+)
 
-    <h2 class="govuk-heading-m">@messages("proofOfEntitlement.entitlementdetail.title")</h2>
-    <p class="govuk-body govuk-!-display-none-print">@Html(Messages("proofOfEntitlement.entitlementdetail.p1"))</p>
+@(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
+
+@claimantChocLink = @{link( id = "claimant-change-of-circumstances-link",
+                        text = messages("proofOfEntitlement.entitlementdetail.p1.link.1"),
+                        call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide")
+                        )}
+
+@childChocLink = @{link( id = "child-change-of-circumstances-link",
+                        text = messages("proofOfEntitlement.entitlementdetail.p1.link.2"),
+                        call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide")
+                        )}
+
+@paymentsLink = @{link( id = "recent-payments-link",
+                        text = messages("proofOfEntitlement.viewrecentpayments.link"),
+                        call = Call("GET", routes.PaymentHistoryController.view.url)
+                        )}
+
+@layout(    pageTitle = titleNoForm(messages("proofOfEntitlement.title")),
+            dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
+            showBackLink = true) {
+
+    @caption(entitlement.claimant.name.value)
+
+    @heading(messages("proofOfEntitlement.title"))
+
+    @printLink("proofOfEntitlement.printMessage")
+
+    @para(messages("proofOfEntitlement.confirmation", entitlement.claimant.name.value, formatDate(entitlement.entitlementDate)))
+
+    @para(messages("proofOfEntitlement.paidDetail"))
+
+    @list(elements = Seq(   Html(messages("proofOfEntitlement.firstChild", formatMoney(entitlement.paidAmountForEldestOrOnlyChild))),
+                            Html(messages("proofOfEntitlement.additionalchild", formatMoney(entitlement.paidAmountForEachAdditionalChild)))
+                            ))
+
+    @h2(messages("proofOfEntitlement.entitlementdetail.title"))
+
+    @para(messages("proofOfEntitlement.entitlementdetail.p1", claimantChocLink, childChocLink))
+
+    <!--details table-->
     @summaryList(
         SummaryList(
             rows = Seq(
@@ -55,10 +88,10 @@
             classes = "govuk-!-margin-bottom-9"
         )
     )
-
+    <!--details per child-->
     @for(child <- entitlement.children) {
       @if(child.relationshipStartDate.isBefore(child.relationshipEndDate.get)) {
-        <h2 class="govuk-heading-m">@messages("proofOfEntitlement.awardDetail", child.name.value)</h2>
+        @h2(messages("proofOfEntitlement.awardDetail", child.name.value))
         @summaryList(
             SummaryList(
                 rows = Seq(
@@ -71,6 +104,9 @@
         )
       }
     }
-    <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("proofOfEntitlement.viewpayments")</h2>
-    <p class="govuk-body govuk-!-display-none-print">@messages("proofOfEntitlement.viewrecentpayments.part1") <a class ="govuk-link" target="_self" href="@routes.PaymentHistoryController.view.url"> @messages("proofOfEntitlement.viewrecentpayments.part2")</a> @messages("proofOfEntitlement.viewrecentpayments.part3")</p>
+
+    @h2(messages("proofOfEntitlement.viewpayments"))
+
+    @para(messages("proofOfEntitlement.viewrecentpayments.para", paymentsLink))
+
 }

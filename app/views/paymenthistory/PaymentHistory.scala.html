@@ -18,33 +18,53 @@
 @import viewmodels.govuk.DataLayer
 @import services.PaymentHistoryPageVariant
 @import views.ViewUtils._
+@import components._
 @import services.PaymentHistoryPageVariant.InPaymentWithPaymentsInLastTwoYears
 @import services.PaymentHistoryPageVariant.HICBCWithPaymentsInLastTwoYears
 @import services.PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears
 
-@this(layout: templates.Layout, table: GovukTable)
+@this(
+    layout: templates.Layout,
+    table: GovukTable,
+    heading: Heading,
+    h2: HeadingH2,
+    para: ParagraphBody,
+    link: Link,
+    list: BulletList,
+    caption: CaptionHeader
+)
+
 @(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
+
+@paymentDatesLink = @{link( id = "payment-dates-link",
+                        text = messages("paymentHistory.v1.link.text"),
+                        call = Call("GET", "https://www.gov.uk/child-benefit-payment-dates/bank-holidays")
+                        )}
+
+@viewEntitlementLink = @{link( id = "view-entitlement-link",
+                        text = messages("paymentHistory.viewEntitlementProof.p1.link.text"),
+                        call = Call("GET", routes.ProofOfEntitlementController.view.url)
+                        )}
+
 @layout(pageTitle = messages("paymentHistory.pageTitle"),
     dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
     showBackLink = true) {
-    <span class="govuk-caption-xl">@{
-        entitlement.claimant.name.value
-    }</span>
-    <h1 class="govuk-heading-xl">
-    @messages("paymentHistory.title")
-    </h1>
+
+    @caption(entitlement.claimant.name.value)
+
+    @heading(messages("paymentHistory.title"))
 
     @if(pageVariant == HICBCWithPaymentsInLastTwoYears) {
-        <p class="govuk-body">@messages("paymentHistory.v3.p1")</p>
-        <p class="govuk-body">@messages("paymentHistory.v3.p2")</p>
+        @para(messages("paymentHistory.v3.p1"))
+        @para(messages("paymentHistory.v3.p2"))
     }
     @if(pageVariant == EntitlementEndedButReceivedPaymentsInLastTwoYears) {
-        <p class="govuk-body">@messages("paymentHistory.v5.p1")</p>
-        <p class="govuk-body">@messages("paymentHistory.v5.p2")</p>
+        @para(messages("paymentHistory.v5.p1"))
+        @para(messages("paymentHistory.v5.p2"))
     }
 
-    <h2 class="govuk-heading-m">@messages("paymentHistory.recentCBPayments.header")</h2>
-    <p class="govuk-body">@messages("paymentHistory.recentCBPayments.p1")</p>
+    @h2(messages("paymentHistory.recentCBPayments.header"))
+    @para(messages("paymentHistory.recentCBPayments.p1"))
 
     @table(Table(
     head = Some(Seq(HeadCell(messages("paymentHistory.table.date")), HeadCell(messages("paymentHistory.table.amount")))),
@@ -53,12 +73,12 @@
   ))
 
     @if(pageVariant == InPaymentWithPaymentsInLastTwoYears) {
-        <h2 class="govuk-heading-m">@messages("paymentHistory.v1.header")</h2>
-        <p class="govuk-body">@messages("paymentHistory.v1.p1")</p>
-        <p class="govuk-body">@Html(Messages("paymentHistory.v1.p2"))</p>
-        <p class="govuk-body">@messages("paymentHistory.v1.p3")</p>
+        @h2(messages("paymentHistory.v1.header"))
+        @para(messages("paymentHistory.v1.p1"))
+        @para(messages("paymentHistory.v1.p2", paymentDatesLink))
+        @para(messages("paymentHistory.v1.p3"))
     }
 
-    <h2 class="govuk-heading-m govuk-!-display-none-print">@messages("paymentHistory.viewEntitlementProof")</h2>
-    <p class="govuk-body govuk-!-display-none-print">@Html(Messages("paymentHistory.viewEntitlementProof.p1", routes.ProofOfEntitlementController.view.url))</p>
+    @h2(messages("paymentHistory.viewEntitlementProof"))
+    @para(messages("paymentHistory.viewEntitlementProof.p1", viewEntitlementLink))
 }
