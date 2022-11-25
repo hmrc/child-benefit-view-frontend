@@ -14,24 +14,11 @@
  * limitations under the License.
  *@
 
-@import components._
+@this()
 
-@this(
-        layout: templates.Layout,
-        heading: Heading,
-        para: ParagraphBody
-)
+@(text: String)(implicit messages: Messages)
 
-@()(implicit request: Request[_], messages: Messages)
+<div>
+    <a class="govuk-list govuk-link print-link govuk-!-display-none-print" href="" onclick="window.print();return;">@messages(text)</a>
+</div>
 
-@layout(
-    pageTitle = titleNoForm(messages("notFound.header")),
-    showBackLink = false,
-    dataLayer = None
-) {
-
-    @heading(messages("notFound.header"))
-
-    @para(messages("notFound.explanation1"))
-    @para(messages("notFound.explanation2"))
-}

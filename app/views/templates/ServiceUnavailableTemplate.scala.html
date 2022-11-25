@@ -15,8 +15,15 @@
  *@
 
 @import viewmodels.govuk.DataLayer
+@import components._
 
-@this(layout: templates.Layout, insetText: GovukInsetText)
+@this(
+    layout: templates.Layout,
+    insetText: GovukInsetText,
+    heading: Heading,
+    para: ParagraphBody,
+    helplineSection: HelplineSection
+)
 
 @()(implicit request: Request[_], messages: Messages)
 
@@ -24,25 +31,11 @@
     pageTitle = titleNoForm(messages("service-unavailable-error-template.heading")),
     dataLayer = Some(DataLayer(event = "journey_step", navigate = "service unavailable"))
 ) {
-    <h1 class="govuk-heading-xl">@messages("service-unavailable-error-template.heading")</h1>
+    @heading(messages("service-unavailable-error-template.heading"))
 
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.1")</p>
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.2")</p>
-    <p class="govuk-body">@messages("service-unavailable-error-template.paragraph.3")</p>
+    @para(messages("service-unavailable-error-template.paragraph.1"))
+    @para(messages("service-unavailable-error-template.paragraph.2"))
+    @para(messages("service-unavailable-error-template.paragraph.3"))
 
-    @insetText(
-        InsetText(content = HtmlContent(
-            List(
-                messages("service-unavailable-error-template.info.title"),
-                messages("service-unavailable-error-template.info.telephone"),
-                messages("service-unavailable-error-template.info.welshTelephone"),
-                messages("service-unavailable-error-template.info.textPhone"),
-                messages("service-unavailable-error-template.info.outsideUKTelephone"),
-                messages("service-unavailable-error-template.info.availability"),
-                s"""<a class="govuk-link" href=${messages("service-unavailable-error-template.info.callChargesUrl")}>
-                   |${messages("service-unavailable-error-template.info.charges")}
-                   |</a>""".stripMargin
-            ).mkString("<br />")
-        ))
-    )
+    @helplineSection()
 }
