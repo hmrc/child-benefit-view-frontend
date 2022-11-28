@@ -19,8 +19,9 @@ package utils.mappings
 import java.time.LocalDate
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.validation.{Constraints => PlayConstraints}
 
-trait Constraints {
+trait Constraints extends PlayConstraints {
 
   protected def firstError[A](constraints: Constraint[A]*): Constraint[A] =
     Constraint { input =>
@@ -61,22 +62,6 @@ trait Constraints {
       } else {
         Invalid(errorKey, minimum, maximum)
       }
-    }
-
-  protected def regexp(regex: String, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.matches(regex) =>
-        Valid
-      case _ =>
-        Invalid(errorKey, regex)
-    }
-
-  protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.length <= maximum =>
-        Valid
-      case _ =>
-        Invalid(errorKey, maximum)
     }
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =

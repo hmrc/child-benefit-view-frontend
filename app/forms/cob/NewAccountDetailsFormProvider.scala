@@ -20,20 +20,42 @@ import models.cob.NewAccountDetails
 import play.api.data.Form
 import play.api.data.Forms._
 import utils.mappings.Mappings
+import utils.mappings.SanitisedNumberMapping.sanitisedNumber
 
 import javax.inject.Inject
 
 class NewAccountDetailsFormProvider @Inject() extends Mappings {
+  val nameMaxLength          = 60
+  val sortCodeLength         = 6
+  val accountNumberMinLength = 6
+  val accountNumberMaxLength = 8
 
   def apply(): Form[NewAccountDetails] =
     Form(
       mapping(
         "newAccountHoldersName" -> text("newAccountDetails.error.newAccountHoldersName.required")
-          .verifying(maxLength(512, "newAccountDetails.error.newAccountHoldersName.length")),
-        "newSortCode" -> text("newAccountDetails.error.newSortCode.required")
-          .verifying(maxLength(6, "newAccountDetails.error.newSortCode.length")),
-        "newAccountNumber" -> text("newAccountDetails.error.newAccountNumber.required")
-          .verifying(maxLength(24, "newAccountDetails.error.newAccountNumber.length"))
+          .verifying(
+            maxLength(nameMaxLength, "newAccountDetails.error.newAccountHoldersName.length"),
+            pattern(
+              """^[\w\s\-']+$""".r,
+              "newAccountHoldersName.pattern",
+              "newAccountDetails.error.newAccountHoldersName.format"
+            )
+          ),
+        "newSortCode" -> sanitisedNumber(
+          "newAccountDetails.error.newSortCode.required",
+          "newAccountDetails.error.newSortCode.format"
+        ).verifying(
+          minLength(sortCodeLength, "newAccountDetails.error.newSortCode.format"),
+          maxLength(sortCodeLength, "newAccountDetails.error.newSortCode.format")
+        ),
+        "newAccountNumber" -> sanitisedNumber(
+          "newAccountDetails.error.newAccountNumber.required",
+          "newAccountDetails.error.newAccountNumber.format"
+        ).verifying(
+          minLength(accountNumberMinLength, "newAccountDetails.error.newAccountNumber.length"),
+          maxLength(accountNumberMaxLength, "newAccountDetails.error.newAccountNumber.length")
+        )
       )(NewAccountDetails.apply)(NewAccountDetails.unapply)
     )
 }

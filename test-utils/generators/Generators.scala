@@ -48,6 +48,16 @@ trait Generators extends UserAnswersGenerator with PageGenerators with ModelGene
     genIntersperseString(numberGen, ",")
   }
 
+  val defaultMinNumerical = 0
+  val defaultMaxNumerical = 9
+  def numericalString(
+      stringLength: Int,
+      min:          Int = defaultMinNumerical,
+      max:          Int = defaultMaxNumerical
+  ): Gen[String] = {
+    Gen.listOfN(stringLength, choose[Int](min, max)).flatMap(_.mkString)
+  }
+
   def intsLargerThanMaxValue: Gen[BigInt] =
     arbitrary[BigInt] suchThat (x => x > Int.MaxValue)
 
