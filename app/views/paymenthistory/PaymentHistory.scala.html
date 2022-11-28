@@ -43,7 +43,8 @@
 
 @viewEntitlementLink = @{link( id = "view-entitlement-link",
                         text = messages("paymentHistory.viewEntitlementProof.p1.link.text"),
-                        call = Call("GET", routes.ProofOfEntitlementController.view.url)
+                        call = Call("GET", routes.ProofOfEntitlementController.view.url),
+                        newTab = false
                         )}
 
 @layout(pageTitle = messages("paymentHistory.pageTitle"),
