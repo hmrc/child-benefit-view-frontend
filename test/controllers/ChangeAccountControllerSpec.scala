@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.ChangeAccountControllerSpec.{claimantBankInformationWithBuildingSocietyRollNumber, claimantBankInformationWithEndDateInPast, claimantBankInformationWithEndDateToday, claimantBankInformationWithHICBC}
-import models.changeofbank.{BuildingSocietyRollNumber, ClaimantBankInformation}
+import models.changeofbank.{AccountHolderName, BankAccountNumber, BuildingSocietyRollNumber, ClaimantBankAccountInformation, ClaimantBankInformation, SortCode}
 import models.common.AdjustmentReasonCode
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
@@ -34,6 +34,13 @@ import java.time.LocalDate
 class ChangeAccountControllerSpec extends BaseISpec {
 
   "ChangeAccount Controller" - {
+
+    val accountInfo = ClaimantBankAccountInformation(
+      accountHolderName = Some(AccountHolderName("Mr J Doe")),
+      sortCode = Some(SortCode("112233")),
+      bankAccountNumber = Some(BankAccountNumber("12345678")),
+      buildingSocietyRollNumber = None
+    )
 
     "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
       val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -54,7 +61,7 @@ class ChangeAccountControllerSpec extends BaseISpec {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view()(request, messages(application)).toString
+          view("John Doe", accountInfo)(request, messages(application)).toString
         )
       }
     }
@@ -75,10 +82,13 @@ class ChangeAccountControllerSpec extends BaseISpec {
 
         val view = application.injector.instanceOf[ChangeAccountView]
 
+        val accountInfoWithRollNumber = accountInfo.copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234987650"))
+        )
+
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view()(request, messages(application)).toString
+          view("John Doe", accountInfoWithRollNumber)(request, messages(application)).toString
         )
       }
     }

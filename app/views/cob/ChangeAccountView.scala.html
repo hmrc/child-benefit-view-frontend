@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import models.cob.AccountDetails
+@import models.changeofbank.ClaimantBankAccountInformation
 
 @this(
         layout: templates.Layout,
@@ -28,12 +28,13 @@
         govukTable : GovukTable,
         warning: Warning,
         link: Link,
-        note: Notification
+        note: Notification,
+        buttons: ButtonGroup
 )
 
-@(claimantName: String, accountDetails: Option[AccountDetails] = None)(implicit request: Request[_], messages: Messages)
+@(claimantName: String, accountDetails: ClaimantBankAccountInformation)(implicit request: Request[_], messages: Messages)
 
-@isStandardAccount = @{accountDetails.isDefined}
+@isStandardAccount = @{accountDetails.buildingSocietyRollNumber.isEmpty}
 
 @formLink = {@link( id = "form-link",
                     text = messages("changeAccount.link.text"),
@@ -42,25 +43,27 @@
             }
 @subHeading = @{if(isStandardAccount) messages("changeAccount.subHeading") else messages("changeAccount.subHeading.alt")}
 
-@detailsTable = @{if(isStandardAccount)
-                    govukTable(
+<!--todo: consult BA on Optional account holders name and what text should be there if = None-->
+
+@detailsTable = {@govukTable(
                                 Table(
                                     rows = Seq(
                                         Seq(
-                                            TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
-                                            TableRow(content =  Text(accountDetails.get.accountHoldersName),format = Some("text"))
+                                            TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.accountHolderName.fold(messages("changeAccount.table.noName"))(_.value)),format = Some("text"))
                                         ),
                                         Seq(
-                                            TableRow(content = Text(messages("Sort code:")),format = Some("text")),
-                                            TableRow(content =  Text(accountDetails.get.sortCode),format = Some("text"))
+                                            TableRow(content = Text(messages("changeAccount.table.sort.code")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.sortCode.fold("Sort not found")(_.value)),format = Some("text"))
                                         ),
                                         Seq(
-                                            TableRow(content = Text(messages("Account code:")),format = Some("text")),
-                                            TableRow(content =  Text(accountDetails.get.accountNumber),format = Some("text"))
+                                            TableRow(content = Text(messages("changeAccount.table.account.number")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.bankAccountNumber.fold("Account not found")(_.number)),format = Some("text"))
                                         )
                                     ),
-                                    firstCellIsHeader = true
-                                )
+                                    firstCellIsHeader = true,
+                                    attributes = Map("id" -> "account-details-table")
+)
                             )
                         }
 
@@ -68,11 +71,12 @@
                                 Table(
                                     rows = Seq(
                                         Seq(
-                                            TableRow(content = Text(messages("Account holders name:")),format = Some("text")),
-                                            TableRow(content =  Text("get name from finance details api"),format = Some("text"))
+                                            TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
+                                            TableRow(content =  Text(accountDetails.accountHolderName.fold(messages("changeAccount.table.noName"))(_.value)),format = Some("text"))
                                         )
                                     ),
-                                    firstCellIsHeader = true
+                                    firstCellIsHeader = true,
+                                    attributes = Map("id" -> "account-details-table")
                                 )
                     )
 
@@ -92,7 +96,6 @@
 <!--Account details table-->
     @{if(isStandardAccount) detailsTable else altDetailsTable}
 
-<!--//todo this is variable-->
     @sectionHeading(subHeading, id = Some("change-account-h2"))
 
     @para(messages("changeAccount.paragraph.1"))
@@ -107,13 +110,12 @@
 
     @para(messages("changeAccount.paragraph.2", formLink))
 
-        <div class="govuk-button-group">
-            <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)" data-module="govuk-button">
-                Continue
-            </a>
+    @buttons(   messages("changeAccount.button.1"),
+                Call("GET", controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url),
+                messages("changeAccount.button.2"),
+                Call("GET", controllers.cob.routes.AccountNotChangedController.onPageLoad().url),
+                primaryId = Some("continue-button"),
+                secondaryId = Some("do-not-change-button")
+    )
 
-            <a class="govuk-button govuk-button--secondary" href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()" data-module="govuk-button">
-                Do not change
-            </a>
-        </div>
 }

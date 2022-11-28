@@ -194,7 +194,12 @@ changeAccount.warning = If you change your account and your next payment’s due
 changeAccount.paragraph.2 = To change to a different type of account, use the {0}.
 changeAccount.link.text = change of circumstances form
 changeAccount.notification.text = We’re unable to show the account number because you use a non-standard account to receive your payments – for example, a building society account with a roll number.
-
+changeAccount.table.noName = Name not found
+changeAccount.table.name = Account holder’s name:
+changeAccount.table.sort.code = Sort code:
+changeAccount.table.account.number = Account number:
+changeAccount.button.1 = Continue
+changeAccount.button.2 = Do not change
 
 newAccountDetails.title = newAccountDetails
 newAccountDetails.heading = Tell us the new account details

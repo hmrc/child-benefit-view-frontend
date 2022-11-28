@@ -97,8 +97,8 @@ object TestData {
       adjustmentEndDate = None,
       bankAccountInformation = ClaimantBankAccountInformation(
         accountHolderName = Some(AccountHolderName("Mr J Doe")),
-        sortCode = SortCode("112233"),
-        bankAccountNumber = BankAccountNumber("12345678"),
+        sortCode = Some(SortCode("112233")),
+        bankAccountNumber = Some(BankAccountNumber("12345678")),
         buildingSocietyRollNumber = None
       )
     )

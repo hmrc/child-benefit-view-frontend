@@ -16,12 +16,14 @@
 
 @this()
 
-@(message: String)
+@(primaryText: String, primaryHref: Call, secondaryText: String, secondaryHref: Call, primaryId: Option[String], secondaryId: Option[String] = None)
 
-<div class="govuk-warning-text", id="warning-text">
-  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-  <strong class="govuk-warning-text__text">
-    <span class="govuk-warning-text__assistive">Warning</span>
-    @message
-  </strong>
-</div>
+        <div class="govuk-button-group" >
+            <a class="govuk-button" href="@primaryHref" data-module="govuk-button" @primaryId.map{id => id="@id"}>
+                @primaryText
+            </a>
+
+            <a class="govuk-button govuk-button--secondary" href="@secondaryHref" data-module="govuk-button" @secondaryId.map{id => id="@id"}>
+                @secondaryText
+            </a>
+        </div>
