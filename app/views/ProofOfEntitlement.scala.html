@@ -44,7 +44,8 @@
 
 @paymentsLink = @{link( id = "recent-payments-link",
                         text = messages("proofOfEntitlement.viewrecentpayments.link"),
-                        call = Call("GET", routes.PaymentHistoryController.view.url)
+                        call = Call("GET", routes.PaymentHistoryController.view.url),
+                        newTab = false
                         )}
 
 @layout(    pageTitle = titleNoForm(messages("proofOfEntitlement.title")),
