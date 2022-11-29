@@ -49,18 +49,17 @@
     @caption(entitlement.claimant.name.value)
     @heading(messages("paymentHistory.title"))
 
-  @{
-      if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
-            para(messages("paymentHistory.v2.noReceivedPayments"))
+    @if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
+            @para(messages("paymentHistory.v2.noReceivedPayments"))
       } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
-            para(messages("paymentHistory.v4.p1"))
-            para(messages("paymentHistory.v4.p2"))
+            @para(messages("paymentHistory.v4.p1"))
+            @para(messages("paymentHistory.v4.p2"))
 
       } else if(pageVariant == EntitlementEndedButNoPaymentsInLastTwoYears) {
-            para(messages("paymentHistory.v6.p1"))
-            para(messages("paymentHistory.v6.p2"))
+            @para(messages("paymentHistory.v6.p1"))
+            @para(messages("paymentHistory.v6.p2"))
       }
-  }
+
     @h2(messages("paymentHistory.viewEntitlementProof"))
     @para(messages("paymentHistory.viewEntitlementProof.p1", viewEntitlementLink))
 }
