@@ -18,6 +18,8 @@ package views.cob
 
 import base.ViewSpecBase
 import models.changeofbank._
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import views.html.cob.ChangeAccountView
 
@@ -35,19 +37,20 @@ class ChangeAccountViewSpec extends ViewSpecBase {
   private def createView(name: String, details: ClaimantBankAccountInformation): Html =
     page(name, details)(request, messages)
 
+  val view: Document = Jsoup.parse(createView(name, details.copy(buildingSocietyRollNumber = None)).toString)
+  val altView = Jsoup.parse(createView(name, details).toString)
+  val noNameView =
+    Jsoup.parse(createView(name, details.copy(accountHolderName = None, buildingSocietyRollNumber = None)).toString)
+
   "Change Account View" should {
 
-    val view       = createView(name, details.copy(buildingSocietyRollNumber = None))
-    val altView    = createView(name, details)
-    val noNameView = createView(name, details.copy(accountHolderName = None, buildingSocietyRollNumber = None))
-
     "have a title" in {
-      view.select("title").text must include(" - Child Benefit - GOV.UK")
-      view.select("title").text must include(messages("changeAccount.title"))
+      view.getElementsByTag("title").text must include(" - Child Benefit - GOV.UK")
+      view.getElementsByTag("title").text must include(messages("changeAccount.title"))
     }
 
     "have a heading" in {
-      view.select("h1").text mustBe messages("changeAccount.heading")
+      view.getElementsByTag("h1").text mustBe messages("changeAccount.heading")
     }
 
     "have a caption/section header" in {
@@ -93,7 +96,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     "have a continue button" in {
       view.getElementById("continue-button").text() mustBe messages("changeAccount.button.1")
     }
-    "have a don-not-change button" in {
+    "have a do-not-change button" in {
       view.getElementById("do-not-change-button").text() mustBe messages("changeAccount.button.2")
     }
 

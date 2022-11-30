@@ -22,11 +22,10 @@
         govukButton: GovukButton,
         captionHeader: CaptionHeader,
         heading: Heading,
-        sectionHeading: SectionHeading,
+        h2: HeadingH2,
         para: ParagraphBody,
-        bullitList: BulletList,
+        bulletList: BulletList,
         govukTable : GovukTable,
-        warning: Warning,
         link: Link,
         note: Notification
 )
@@ -88,22 +87,28 @@
 
     @captionHeader(claimantName)
 
-    @heading("changeAccount.heading")
+    @heading(messages("changeAccount.heading"))
 
 <!--Account details table-->
     @{if(isStandardAccount) detailsTable else altDetailsTable}
 
-    @sectionHeading(subHeading, id = Some("change-account-h2"))
+    @h2(subHeading, id = Some("change-account-h2"))
 
     @para(messages("changeAccount.paragraph.1"))
 
-    @bullitList(elements = Seq(
+    @bulletList(elements = Seq(
                             Html(messages("changeAccount.bullet.1")),
                             Html(messages("changeAccount.bullet.2"))
                             )
     )
 
-    @warning(messages("changeAccount.warning"))
+    <div class="govuk-warning-text", id="warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            @messages("changeAccount.warning")
+        </strong>
+    </div>
 
     @para(messages("changeAccount.paragraph.2", formLink))
 
