@@ -16,6 +16,6 @@
 
 @this()
 
-@(headingKey: String, args: Any*)(implicit messages: Messages)
+@(content: String, classes: String = "govuk-inset-text", id: Option[String] = None)
 
-<h1 class="govuk-heading-l" >@messages(headingKey, args: _*)</h1>
+<div class="@classes" @id.map{id => id="@id" }>@Html(content)</div>

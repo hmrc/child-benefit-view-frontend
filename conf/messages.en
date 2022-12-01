@@ -185,12 +185,27 @@ pageNotFound.paragraph1=Please check that you have entered the correct web addre
 # ---------------------------- Change Of Bank ----------------------------
 changeAccount.title = Your Child Benefit is paid into this account
 changeAccount.heading = Your Child Benefit is paid into this account
+changeAccount.subHeading = If you want to change this account
+changeAccount.subHeading.alt = If you want to change to a different account
+changeAccount.paragraph.1 = Continue with this service if you want to change to:
+changeAccount.bullet.1 = a personal bank account
+changeAccount.bullet.2 = a building society account that does not have a roll number
+changeAccount.warning = If you change your account and your next payment’s due in the next 3 working days, it will be paid into your previous account.
+changeAccount.paragraph.2 = To change to a different type of account, use the {0}.
+changeAccount.link.text = change of circumstances form
+changeAccount.notification.text = We’re unable to show the account number because you use a non-standard account to receive your payments – for example, a building society account with a roll number.
+changeAccount.table.noName = Name not found
+changeAccount.table.name = Account holder’s name:
+changeAccount.table.sort.code = Sort code:
+changeAccount.table.account.number = Account number:
+changeAccount.button.1 = Continue
+changeAccount.button.2 = Do not change
 
 # ------------------------- New Account Details ---------------------------
 newAccountDetails.title = New Account Details
 newAccountDetails.heading = Tell us the new account details
 newAccountDetails.paragraph = If you want to use an account that’s not in your name, you’re responsible for making sure you get the money and that the money is used how you want.
-newAccountDetails.newAccountHoldersName = Account holder's name
+newAccountDetails.newAccountHoldersName = Account holder’s name
 newAccountDetails.newAccountHoldersNameHint = Only enter the first and last names – do not use initials or titles like Mr or Mrs. If it’s a joint account, enter the first and last names of just one of the account holders.
 newAccountDetails.newSortCode = Sort Code
 newAccountDetails.newSortCodeHint = Must be 6 digits long

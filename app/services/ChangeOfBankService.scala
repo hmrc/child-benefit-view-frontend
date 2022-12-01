@@ -20,7 +20,7 @@ import connectors.ChangeOfBankConnector
 import controllers.{cob, routes}
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
-import models.changeofbank.ClaimantBankInformation
+import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation}
 import models.errors.ChangeOfBankValidationError
 import play.api.http.Status
 import play.api.i18n.Messages
@@ -57,6 +57,10 @@ class ChangeOfBankService @Inject() (
       cbi:            ClaimantBankInformation
   )(implicit request: Request[_], messages: Messages): CBEnvelope[Result] =
     CBEnvelope {
+
+      val accountInfo:  ClaimantBankAccountInformation = cbi.financialDetails.bankAccountInformation
+      val claimantName: String                         = s"${cbi.firstForename.value} ${cbi.surname.value}"
+
       (
         awardEndDateIsInTheFuture(cbi),
         claimantIsHICBCWithAdjustmentEndDateInFuture(cbi),
@@ -65,9 +69,9 @@ class ChangeOfBankService @Inject() (
         case (_, true, _) =>
           Right(Redirect(cob.routes.HICBCOptedOutPaymentsController.onPageLoad()))
         case (true, false, false) =>
-          Right(Ok(changeAccountView()))
+          Right(Ok(changeAccountView(claimantName, accountInfo)))
         case (true, false, true) =>
-          Right(Ok(changeAccountView()))
+          Right(Ok(changeAccountView(claimantName, accountInfo)))
         case (false, _, _) =>
           Right(Redirect(routes.NoAccountFoundController.onPageLoad))
         case _ =>

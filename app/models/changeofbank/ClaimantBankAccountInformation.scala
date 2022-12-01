@@ -20,8 +20,8 @@ import play.api.libs.json.Json
 
 final case class ClaimantBankAccountInformation(
     accountHolderName:         Option[AccountHolderName],
-    sortCode:                  SortCode,
-    bankAccountNumber:         BankAccountNumber,
+    sortCode:                  Option[SortCode],
+    bankAccountNumber:         Option[BankAccountNumber],
     buildingSocietyRollNumber: Option[BuildingSocietyRollNumber]
 )
 
