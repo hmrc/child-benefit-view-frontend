@@ -30,7 +30,7 @@
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("newAccountDetails.title"))) {
-    @heading("newAccountDetails.heading", classes = "govuk-heading-l")
+    @heading(messages("newAccountDetails.heading"), classes = "govuk-heading-l")
 
     @paragraph(messages("newAccountDetails.paragraph"))
 
