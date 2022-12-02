@@ -89,7 +89,7 @@ class AuditServiceSpec extends PlaySpec {
       capturedEvent.deviceFingerprint mustBe "-"
 
       capturedEntitlementDetails.name mustBe "John Doe"
-      capturedEntitlementDetails.address mustBe "AddressLine1 AddressLine2 AddressLine3 AddressLine4 AddressLine5 SS1 7JJ"
+      capturedEntitlementDetails.address mustBe "Addressline1 Addressline2 Addressline3 Addressline4 Addressline5 SS1 7JJ"
       LocalDate.parse(capturedEntitlementDetails.start) mustBe LocalDate.now()
       LocalDate.parse(capturedEntitlementDetails.end) mustBe LocalDate.now().plusYears(3)
       capturedEntitlementDetails.children.length mustBe 1

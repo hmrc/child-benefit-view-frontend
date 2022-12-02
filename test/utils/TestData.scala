@@ -65,11 +65,11 @@ object TestData {
         LastPaymentFinancialInfo(LocalDate.now().minusMonths(6), 50.00)
       ),
       fullAddress = FullAddress(
-        AddressLine("AddressLine1"),
-        AddressLine("AddressLine2"),
-        Some(AddressLine("AddressLine3")),
-        Some(AddressLine("AddressLine4")),
-        Some(AddressLine("AddressLine5")),
+        AddressLine("Addressline1"),
+        AddressLine("Addressline2"),
+        Some(AddressLine("Addressline3")),
+        Some(AddressLine("Addressline4")),
+        Some(AddressLine("Addressline5")),
         AddressPostcode("SS1 7JJ")
       ),
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("12"), LocalDate.now().minusDays(4)))
