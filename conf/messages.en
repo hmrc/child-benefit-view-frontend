@@ -244,11 +244,15 @@ bARSLockOut.para.2 = To change the account you use for your Child Benefit paymen
 bARSLockOut.link.text = change of circumstances form
 
 confirmNewAccountDetails.title = Check and confirm your new account details
-confirmNewAccountDetails.heading = Do you want to send us these details?
+confirmNewAccountDetails.heading = Check and confirm your new account details
+confirmNewAccountDetails.subHeading = Do you want to send us these details?
+confirmNewAccountDetails.table.name = Do you want to send us these details?
+confirmNewAccountDetails.table.sortCode = Do you want to send us these details?
+confirmNewAccountDetails.table.accountNumber = Do you want to send us these details?
 confirmNewAccountDetails.yes = Yes
 confirmNewAccountDetails.no = No, I want to change them
 confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these details?
-confirmNewAccountDetails.error.required = Select confirmNewAccountDetails
+confirmNewAccountDetails.error.required = Select ‘Yes’ or ‘No, I want to change them’
 confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
 hICBCOptedOutPayments.title = hICBCOptedOutPayments
