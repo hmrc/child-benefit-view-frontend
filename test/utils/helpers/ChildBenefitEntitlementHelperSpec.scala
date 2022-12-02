@@ -83,26 +83,26 @@ object ChildBenefitEntitlementHelperSpec {
   type TestCase[A] = (String, String, Transformer, Selector[A], A)
 
   //Base Test Case work
-  private val lowercaseTestName = "lowercase"
-  private val lowercaseTestValue = "test value"
-  private val uppercaseTestName = "uppercase"
-  private val uppercaseTestValue = "TEST VALUE"
-  private val mixedCaseTestName = "mixed case"
-  private val mixedCaseTestValue = "TesT VaLuE"
-  private val defaultExpectedResult = "Test Value"
-  private val exceptedCaseTestName = "excepted words"
-  private val exceptedCaseTestValue = "Test and Value"
+  private val lowercaseTestName      = "lowercase"
+  private val lowercaseTestValue     = "test value"
+  private val uppercaseTestName      = "uppercase"
+  private val uppercaseTestValue     = "TEST VALUE"
+  private val mixedCaseTestName      = "mixed case"
+  private val mixedCaseTestValue     = "TesT VaLuE"
+  private val defaultExpectedResult  = "Test Value"
+  private val exceptedCaseTestName   = "excepted words"
+  private val exceptedCaseTestValue  = "Test and Value"
   private val exceptedExpectedResult = "Test and Value"
 
   private def generateTestCase[A](
-                                   groupName: String,
-                                   testCaseName: String,
-                                   testValue: String,
-                                   expectedValue: String,
-                                   testSetter: String => Transformer,
-                                   selector: Selector[A],
-                                   expectedSetter: String => A
-                                 ): TestCase[A] =
+      groupName:      String,
+      testCaseName:   String,
+      testValue:      String,
+      expectedValue:  String,
+      testSetter:     String => Transformer,
+      selector:       Selector[A],
+      expectedSetter: String => A
+  ): TestCase[A] =
     (
       groupName,
       testCaseName,
@@ -122,10 +122,10 @@ object ChildBenefitEntitlementHelperSpec {
     generateFullNameTestCase(exceptedCaseTestName, exceptedCaseTestValue, exceptedExpectedResult)
 
   private def generateFullNameTestCase(
-                                        testCaseName: String,
-                                        testValue: String,
-                                        expectedResult: String = defaultExpectedResult
-                                      ): TestCase[FullName] =
+      testCaseName:   String,
+      testValue:      String,
+      expectedResult: String = defaultExpectedResult
+  ): TestCase[FullName] =
     generateTestCase(
       claimantGroup,
       s"Full Name - $testCaseName",
@@ -137,16 +137,22 @@ object ChildBenefitEntitlementHelperSpec {
     )
 
   // Address Line 1 test cases
-  val addressLine1Lowercase: TestCase[AddressLine] = generateAddressLineTestCase(lowercaseTestName, lowercaseTestValue, "1")
-  val addressLine1Uppercase: TestCase[AddressLine] = generateAddressLineTestCase(uppercaseTestName, uppercaseTestValue, "1")
-  val addressLine1MixedCase: TestCase[AddressLine] = generateAddressLineTestCase(mixedCaseTestName, mixedCaseTestValue, "1")
+  val addressLine1Lowercase: TestCase[AddressLine] =
+    generateAddressLineTestCase(lowercaseTestName, lowercaseTestValue, "1")
+  val addressLine1Uppercase: TestCase[AddressLine] =
+    generateAddressLineTestCase(uppercaseTestName, uppercaseTestValue, "1")
+  val addressLine1MixedCase: TestCase[AddressLine] =
+    generateAddressLineTestCase(mixedCaseTestName, mixedCaseTestValue, "1")
   val addressLine1Excepted: TestCase[AddressLine] =
     generateAddressLineTestCase(exceptedCaseTestName, exceptedCaseTestValue, "1", exceptedExpectedResult)
 
   // Address Line 2 test cases
-  val addressLine2Lowercase: TestCase[AddressLine] = generateAddressLineTestCase(lowercaseTestName, lowercaseTestValue, "2")
-  val addressLine2Uppercase: TestCase[AddressLine] = generateAddressLineTestCase(uppercaseTestName, uppercaseTestValue, "2")
-  val addressLine2MixedCase: TestCase[AddressLine] = generateAddressLineTestCase(mixedCaseTestName, mixedCaseTestValue, "2")
+  val addressLine2Lowercase: TestCase[AddressLine] =
+    generateAddressLineTestCase(lowercaseTestName, lowercaseTestValue, "2")
+  val addressLine2Uppercase: TestCase[AddressLine] =
+    generateAddressLineTestCase(uppercaseTestName, uppercaseTestValue, "2")
+  val addressLine2MixedCase: TestCase[AddressLine] =
+    generateAddressLineTestCase(mixedCaseTestName, mixedCaseTestValue, "2")
   val addressLine2Excepted: TestCase[AddressLine] =
     generateAddressLineTestCase(exceptedCaseTestName, exceptedCaseTestValue, "2", exceptedExpectedResult)
 
@@ -208,11 +214,11 @@ object ChildBenefitEntitlementHelperSpec {
     )
 
   private def generateAddressLineTestCase(
-                                           testCaseName: String,
-                                           testValue: String,
-                                           line: String,
-                                           expectedResult: String = defaultExpectedResult
-                                         ): TestCase[AddressLine] =
+      testCaseName:   String,
+      testValue:      String,
+      line:           String,
+      expectedResult: String = defaultExpectedResult
+  ): TestCase[AddressLine] =
     generateTestCase(
       claimantGroup,
       s"Address Line $line - $testCaseName",
@@ -220,19 +226,17 @@ object ChildBenefitEntitlementHelperSpec {
       expectedResult,
       str =>
         cbe =>
-          cbe.copy(claimant =
-            cbe.claimant.copy(fullAddress = getAddressLineCopy(cbe.claimant.fullAddress, str, line))
-          ),
+          cbe.copy(claimant = cbe.claimant.copy(fullAddress = getAddressLineCopy(cbe.claimant.fullAddress, str, line))),
       getAddressSelector(line),
       str => AddressLine(str)
     )
 
   private def generateOptionalAddressLineTestCase(
-                                                   testCaseName: String,
-                                                   testValue: String,
-                                                   line: String,
-                                                   expectedResult: String = defaultExpectedResult
-                                                 ): TestCase[Option[AddressLine]] =
+      testCaseName:   String,
+      testValue:      String,
+      line:           String,
+      expectedResult: String = defaultExpectedResult
+  ): TestCase[Option[AddressLine]] =
     generateTestCase(
       claimantGroup,
       s"Address Line $line - $testCaseName",
@@ -240,9 +244,7 @@ object ChildBenefitEntitlementHelperSpec {
       expectedResult,
       str =>
         cbe =>
-          cbe.copy(claimant =
-            cbe.claimant.copy(fullAddress = getAddressLineCopy(cbe.claimant.fullAddress, str, line))
-          ),
+          cbe.copy(claimant = cbe.claimant.copy(fullAddress = getAddressLineCopy(cbe.claimant.fullAddress, str, line))),
       getOptionalAddressSelector(line),
       str => Some(AddressLine(str))
     )
