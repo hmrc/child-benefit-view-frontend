@@ -74,6 +74,59 @@ class ChildBenefitEntitlementHelperSpec extends AnyFreeSpec with Matchers with M
           }
       }
     }
+
+    "example data tests" - {
+      // These are the examples of data given to work against on SB-1210: an explicit test of the intended behaviour
+      "JOHN DOE O'MALLEY" in {
+        forAll(arbitrary[ChildBenefitEntitlement] -> "cbe") { cbe =>
+          val exampleEntitlement = cbe.copy(claimant = cbe.claimant.copy(name = FullName("JOHN DOE O'MALLEY")))
+          val sutResult          = formatChildBenefitEntitlement(exampleEntitlement)
+          sutResult.claimant.name.value mustEqual "John Doe O'Malley"
+        }
+      }
+
+      "SARA LEE SMYTHE-JONES" in {
+        forAll(arbitrary[ChildBenefitEntitlement] -> "cbe") { cbe =>
+          val exampleEntitlement = cbe.copy(claimant = cbe.claimant.copy(name = FullName("SARA LEE SMYTHE-JONES")))
+          val sutResult          = formatChildBenefitEntitlement(exampleEntitlement)
+          sutResult.claimant.name.value mustEqual "Sara Lee Smythe-Jones"
+        }
+      }
+
+      "MR J D O'MALLEY AND MRS O'MALLEY" in {
+        forAll(arbitrary[ChildBenefitEntitlement] -> "cbe") { cbe =>
+          val exampleEntitlement =
+            cbe.copy(claimant = cbe.claimant.copy(name = FullName("MR J D O'MALLEY AND MRS O'MALLEY")))
+          val sutResult = formatChildBenefitEntitlement(exampleEntitlement)
+          sutResult.claimant.name.value mustEqual "Mr J D O'Malley and Mrs O'Malley"
+        }
+      }
+
+      "Example Address" in {
+        forAll(arbitrary[ChildBenefitEntitlement] -> "cbe") { cbe =>
+          val exampleEntitlement = cbe.copy(claimant =
+            cbe.claimant.copy(
+              fullAddress = FullAddress(
+                AddressLine("FLAT 4A"),
+                AddressLine("18 NEWPORT HIGH STREET"),
+                Some(AddressLine("NEWCASTLE-UPON-TYNE")),
+                None,
+                None,
+                AddressPostcode("NE10 5QA")
+              )
+            )
+          )
+
+          val sutResult = formatChildBenefitEntitlement(exampleEntitlement)
+
+          sutResult.claimant.fullAddress.addressLine1.value mustEqual "Flat 4a"
+          sutResult.claimant.fullAddress.addressLine2.value mustEqual "18 Newport High Street"
+          sutResult.claimant.fullAddress.addressLine3.isDefined mustEqual true
+          sutResult.claimant.fullAddress.addressLine3.get.value mustEqual "Newcastle-Upon-Tyne"
+          sutResult.claimant.fullAddress.addressPostcode.value mustEqual "NE10 5QA"
+        }
+      }
+    }
   }
 }
 object ChildBenefitEntitlementHelperSpec {
