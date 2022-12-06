@@ -33,6 +33,7 @@
 package controllers
 
 import config.FrontendAppConfig
+import controllers.actions.FeatureFlagActionFactory
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -50,12 +51,13 @@ class IndexController @Inject() (
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    frontendAppConfig: FrontendAppConfig,
+    featureFlags:      FeatureFlagActionFactory
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    Action.async { implicit request =>
+    (Action andThen featureFlags.newClaimEnabled andThen featureFlags.ftnaeEnabled).async { implicit request =>
       authorisedAsChildBenefitUser { _ =>
         Future successful Ok(view())
       }(routes.IndexController.onPageLoad)

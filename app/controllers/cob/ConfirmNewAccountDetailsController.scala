@@ -40,7 +40,8 @@ class ConfirmNewAccountDetailsController @Inject() (
     requireData:              DataRequiredAction,
     formProvider:             ConfirmNewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view:                     ConfirmNewAccountDetailsView
+    view:                     ConfirmNewAccountDetailsView,
+    featureFlags:             FeatureFlagActionFactory
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -48,21 +49,22 @@ class ConfirmNewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
-      val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-      Ok(
-        view(
-          preparedForm,
-          mode,
-          changeAccount.get.newAccountHoldersName,
-          changeAccount.get.newSortCode,
-          changeAccount.get.newAccountNumber
+    (Action andThen featureFlags.changeOfBankEnabled andThen identify andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+        Ok(
+          view(
+            preparedForm,
+            mode,
+            changeAccount.get.newAccountHoldersName,
+            changeAccount.get.newSortCode,
+            changeAccount.get.newAccountNumber
+          )
         )
-      )
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =

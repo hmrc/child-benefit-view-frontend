@@ -38,7 +38,8 @@ class NewAccountDetailsController @Inject() (
     getData:                  CobDataRetrievalAction,
     formProvider:             NewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view:                     NewAccountDetailsView
+    view:                     NewAccountDetailsView,
+    featureFlags:             FeatureFlagActionFactory
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -46,7 +47,7 @@ class NewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData) { implicit request =>
+    (Action andThen featureFlags.changeOfBankEnabled andThen identify andThen getData) { implicit request =>
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
