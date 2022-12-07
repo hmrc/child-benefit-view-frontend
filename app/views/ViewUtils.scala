@@ -56,8 +56,8 @@ object ViewUtils {
   }
 
   def formatDate(
-      date:            LocalDate
-  )(implicit messages: Messages): String = {
+                  date: LocalDate
+                )(implicit messages: Messages): String = {
     date.format(
       DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
     )
@@ -68,13 +68,22 @@ object ViewUtils {
 
   def navigatePaymentHistory(pageVariant: PaymentHistoryPageVariant): String =
     pageVariant match {
-      case InPaymentWithPaymentsInLastTwoYears                => "payment details - active - payments"
-      case InPaymentWithoutPaymentsInLastTwoYears             => "payment details - active - no payments"
-      case HICBCWithPaymentsInLastTwoYears                    => "payment details - hicbc - payments"
-      case HICBCWithoutPaymentsInLastTwoYears                 => "payment details - hicbc - no payments"
+      case InPaymentWithPaymentsInLastTwoYears => "payment details - active - payments"
+      case InPaymentWithoutPaymentsInLastTwoYears => "payment details - active - no payments"
+      case HICBCWithPaymentsInLastTwoYears => "payment details - hicbc - payments"
+      case HICBCWithoutPaymentsInLastTwoYears => "payment details - hicbc - no payments"
       case HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast => "payment details - active - no payments"
-      case EntitlementEndedButReceivedPaymentsInLastTwoYears  => "payment details - inactive - payments"
-      case EntitlementEndedButNoPaymentsInLastTwoYears        => "payment details - inactive - no payments"
+      case EntitlementEndedButReceivedPaymentsInLastTwoYears => "payment details - inactive - payments"
+      case EntitlementEndedButNoPaymentsInLastTwoYears => "payment details - inactive - no payments"
     }
+
+  def formatSensitiveSort(raw: String): String = {
+    s"""xx-xx-${raw.filter(_.isDigit).substring(4)}"""
+  }
+
+  def formatSensitiveAccNumber(raw: String): String = {
+    val exes: String = (for (_ <- 0 to (raw.length - 4)) yield "x").mkString
+    s"""$exes${raw.takeRight(4)}"""
+  }
 
 }

@@ -16,6 +16,7 @@
 
 @import components._
 @import models.changeofbank.ClaimantBankAccountInformation
+@import views.ViewUtils._
 
 @this(
         layout: templates.Layout,
@@ -50,11 +51,15 @@
                             ),
                             Seq(
                                 TableRow(content = Text(messages("changeAccount.table.sort.code")),format = Some("text")),
-                                TableRow(content =  Text(accountDetails.sortCode.fold("Sort not found")(_.value)),format = Some("text"))
+                                TableRow(content =  Text(formatSensitiveSort(
+                                                            accountDetails.sortCode.fold("Sort not found")(_.value))
+                                                        ),format = Some("text"))
                             ),
                             Seq(
                                 TableRow(content = Text(messages("changeAccount.table.account.number")),format = Some("text")),
-                                TableRow(content =  Text(accountDetails.bankAccountNumber.fold("Account not found")(_.number)),format = Some("text"))
+                                TableRow(content =  Text(formatSensitiveAccNumber(
+                                                            accountDetails.bankAccountNumber.fold("Account not found")(_.number))
+                                                        ),format = Some("text"))
                             )
                         ),
                         firstCellIsHeader = true,

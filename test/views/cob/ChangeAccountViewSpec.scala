@@ -26,7 +26,7 @@ import views.html.cob.ChangeAccountView
 class ChangeAccountViewSpec extends ViewSpecBase {
 
   val page: ChangeAccountView = inject[ChangeAccountView]
-  val name: String            = "Cindy Boo"
+  val name: String = "Cindy Boo"
   val details: ClaimantBankAccountInformation = ClaimantBankAccountInformation(
     Some(AccountHolderName("Cindy")),
     Some(SortCode("123456")),
@@ -70,9 +70,16 @@ class ChangeAccountViewSpec extends ViewSpecBase {
       }
 
     }
+    "have obscured details" when {
+      "claimant has bank account" in {
+        view.getElementById("account-details-table").text must include("xx-xx-56")
+        view.getElementById("account-details-table").text must include("xxxx6789")
+      }
+    }
+
     "have a details table" when {
       "claimant has bank account" in {
-        view.getElementById("account-details-table").text() must include(messages("changeAccount.table.name"))
+        view.getElementById("account-details-table").text must include(messages("changeAccount.table.name"))
         view.getElementById("account-details-table").text must include(messages("changeAccount.table.sort.code"))
         view.getElementById("account-details-table").text must include(messages("changeAccount.table.account.number"))
       }
