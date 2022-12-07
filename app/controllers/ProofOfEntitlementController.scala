@@ -24,6 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import services.AuditService
 import uk.gov.hmrc.auth.core.AuthConnector
+import utils.helpers.ChildBenefitEntitlementHelper.formatChildBenefitEntitlement
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
@@ -57,7 +58,7 @@ class ProofOfEntitlementController @Inject() (
               request,
               Some(entitlement)
             )
-            Ok(proofOfEntitlement(entitlement))
+            Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
           }
         )
       }(routes.ProofOfEntitlementController.view)

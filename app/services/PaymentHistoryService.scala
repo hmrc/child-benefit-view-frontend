@@ -30,6 +30,7 @@ import play.twirl.api.HtmlFormat
 import services.PaymentHistoryPageVariant._
 import services.PaymentHistoryService._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.helpers.ChildBenefitEntitlementHelper.formatChildBenefitEntitlement
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
@@ -53,8 +54,9 @@ class PaymentHistoryService @Inject() (
   ): EitherT[Future, CBError, HtmlFormat.Appendable] = {
     for {
       childBenefitEntitlement <- entitlementConnector.getChildBenefitEntitlement
+      formattedEntitlement    <- CBEnvelope(formatChildBenefitEntitlement(childBenefitEntitlement))
       result <-
-        validateEntitlementToPage(childBenefitEntitlement).orElse(validateAdjustmentToPage(childBenefitEntitlement))
+        validateEntitlementToPage(formattedEntitlement).orElse(validateAdjustmentToPage(childBenefitEntitlement))
     } yield result
   }
 
