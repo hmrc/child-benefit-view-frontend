@@ -26,7 +26,7 @@ import views.html.cob.ChangeAccountView
 class ChangeAccountViewSpec extends ViewSpecBase {
 
   val page: ChangeAccountView = inject[ChangeAccountView]
-  val name: String = "Cindy Boo"
+  val name: String            = "Cindy Boo"
   val details: ClaimantBankAccountInformation = ClaimantBankAccountInformation(
     Some(AccountHolderName("Cindy")),
     Some(SortCode("123456")),
