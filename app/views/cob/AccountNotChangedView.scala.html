@@ -14,16 +14,20 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("accountNotChanged.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("accountNotChanged.heading")</h1>
-    <p class="govuk-body">@messages("accountNotChanged.p1")</p>
+    @heading(messages("accountNotChanged.heading"))
+    @para(messages("accountNotChanged.p1"))
 
 }

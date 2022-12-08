@@ -233,7 +233,7 @@ accountChanged.paragraph.2 = We use feedback to make our services better.
 accountChanged.feedback = Please {0}.
 accountChanged.feedback.link.text = take the feedback survey
 
-accountNotChanged.title = accountNotChanged
+accountNotChanged.title = You have not changed your account
 accountNotChanged.heading = You have not changed your account
 accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
 
