@@ -82,7 +82,7 @@ object ViewUtils {
   }
 
   def formatSensitiveAccNumber(raw: String): String = {
-    val exes: String = (for (_ <- 0 to (raw.length - 4)) yield "x").mkString
+    val exes: String = (for (_ <- 1 to (raw.length - 4)) yield "x").mkString
     s"""$exes${raw.takeRight(4)}"""
   }
 
