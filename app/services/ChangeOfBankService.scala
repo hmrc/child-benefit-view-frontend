@@ -66,7 +66,7 @@ class ChangeOfBankService @Inject() (
 
   private def validateToChangeOfBankPage(
       cbi:            ClaimantBankInformation,
-      view:           ChangeAccountView
+      changeAccountView:           ChangeAccountView
   )(implicit request: Request[_], messages: Messages): CBEnvelope[Result] =
     CBEnvelope {
 
@@ -81,9 +81,9 @@ class ChangeOfBankService @Inject() (
         case (_, true, _) =>
           Right(Redirect(cob.routes.HICBCOptedOutPaymentsController.onPageLoad()))
         case (true, false, false) =>
-          Right(Ok(view(claimantName, accountInfo)))
+          Right(Ok(changeAccountView(claimantName, accountInfo)))
         case (true, false, true) =>
-          Right(Ok(view(claimantName, accountInfo)))
+          Right(Ok(changeAccountView(claimantName, accountInfo)))
         case (false, _, _) =>
           Right(Redirect(routes.NoAccountFoundController.onPageLoad))
         case _ =>
