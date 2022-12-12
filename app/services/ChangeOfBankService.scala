@@ -65,9 +65,9 @@ class ChangeOfBankService @Inject() (
   }
 
   private def validateToChangeOfBankPage(
-      cbi:            ClaimantBankInformation,
-      changeAccountView:           ChangeAccountView
-  )(implicit request: Request[_], messages: Messages): CBEnvelope[Result] =
+      cbi:               ClaimantBankInformation,
+      changeAccountView: ChangeAccountView
+  )(implicit request:    Request[_], messages: Messages): CBEnvelope[Result] =
     CBEnvelope {
 
       val accountInfo:  ClaimantBankAccountInformation = cbi.financialDetails.bankAccountInformation
