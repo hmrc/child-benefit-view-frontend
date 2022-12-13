@@ -16,6 +16,7 @@
 
 @import models.viewmodels.LegendSize._
 @import models.cob.ConfirmNewAccountDetails
+@import components._
 
 @this(
     layout: templates.Layout,
@@ -23,27 +24,32 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
- summaryList: GovukSummaryList
+    summaryList: GovukSummaryList,
+    heading: Heading,
+    h2: HeadingH2,
+    captionHeader: CaptionHeader
 )
 
-@(form: Form[_], mode: Mode, accountHolder: String,
+@(form: Form[_], mode: Mode, claimantName:String, accountHolder: String,
 accountSortCode: String,
 accountNumber: String)(implicit request: Request[_], messages: Messages)
 
+
 @layout(pageTitle = title(form, messages("confirmNewAccountDetails.title"))) {
 
-<h1 class="govuk-heading-xl">
-   @messages("confirmNewAccountDetails.title")
-</h1>
+    @captionHeader(claimantName)
+
+    @heading(messages("confirmNewAccountDetails.title"))
 
     @summaryList(
     SummaryList(
     rows = Seq(
-            SummaryListRow(key = Key(HtmlContent(messages("Account Holder's Name"))), value = Value(HtmlContent(accountHolder))),
-            SummaryListRow(key = Key(HtmlContent(messages("Sort Code"))), value = Value(HtmlContent(accountSortCode))),
-            SummaryListRow(key = Key(HtmlContent(messages("Account Number"))), value = Value(HtmlContent(accountNumber)))
+            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.name"))), value = Value(HtmlContent(accountHolder))),
+            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.sortCode"))), value = Value(HtmlContent(accountSortCode))),
+            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.accountNumber"))), value = Value(HtmlContent(accountNumber)))
         ),
-        classes = "govuk-!-margin-bottom-9"
+        classes = "govuk-!-margin-bottom-9",
+        attributes = Map("id" -> "account-details-list")
     ))
 
     @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
@@ -52,10 +58,11 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
+        @h2(messages("confirmNewAccountDetails.subHeading"), Some("confirm-details-h2"))
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("confirmNewAccountDetails.heading")).asPageHeading(Medium),
+                legend = Legend(),
                 items  = ConfirmNewAccountDetails.options
             )
         )

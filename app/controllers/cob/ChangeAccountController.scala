@@ -22,6 +22,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
+import views.html.cob.ChangeAccountView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -32,7 +33,8 @@ class ChangeAccountController @Inject() (
     changeOfBankService:      ChangeOfBankService,
     errorHandler:             ErrorHandler,
     getData:                  CobDataRetrievalAction,
-    val controllerComponents: MessagesControllerComponents
+    val controllerComponents: MessagesControllerComponents,
+    view:                     ChangeAccountView
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
@@ -40,7 +42,7 @@ class ChangeAccountController @Inject() (
   def onPageLoad: Action[AnyContent] =
     (identify andThen getData).async { implicit request =>
       changeOfBankService
-        .processClaimantInformation()
+        .processClaimantInformation(view)
         .fold(
           err => errorHandler.handleError(err),
           result => result

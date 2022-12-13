@@ -24,6 +24,7 @@ import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.cob.ConfirmNewAccountDetailsView
@@ -39,55 +40,64 @@ class ConfirmNewAccountDetailsController @Inject() (
     getData:                  CobDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             ConfirmNewAccountDetailsFormProvider,
+    changeOfBankService:      ChangeOfBankService,
     val controllerComponents: MessagesControllerComponents,
     view:                     ConfirmNewAccountDetailsView
-)(implicit ec:                ExecutionContext)
+)(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+    (identify andThen getData andThen requireData).async { implicit request =>
+      changeOfBankService.getClaimantName.flatMap { claimantName =>
+        val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
+        val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+        Future.successful {
+          Ok(
+            view(
+              preparedForm,
+              mode,
+              claimantName,
+              changeAccount.get.newAccountHoldersName,
+              changeAccount.get.newSortCode,
+              changeAccount.get.newAccountNumber
+            )
+          )
+        }
       }
-      val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-      Ok(
-        view(
-          preparedForm,
-          mode,
-          changeAccount.get.newAccountHoldersName,
-          changeAccount.get.newSortCode,
-          changeAccount.get.newAccountNumber
-        )
-      )
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (identify andThen getData andThen requireData).async { implicit request =>
-      val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors =>
-            Future.successful(
-              BadRequest(
-                view(
-                  formWithErrors,
-                  mode,
-                  changeAccount.get.newAccountHoldersName,
-                  changeAccount.get.newSortCode,
-                  changeAccount.get.newAccountNumber
+      changeOfBankService.getClaimantName.flatMap { claimantName =>
+        val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors =>
+              Future.successful(
+                BadRequest(
+                  view(
+                    formWithErrors,
+                    mode,
+                    claimantName,
+                    changeAccount.get.newAccountHoldersName,
+                    changeAccount.get.newSortCode,
+                    changeAccount.get.newAccountNumber
+                  )
                 )
-              )
-            ),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
-        )
+              ),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
+          )
+      }
     }
 }

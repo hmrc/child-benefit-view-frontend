@@ -28,34 +28,46 @@ import play.api.mvc.Results.{Ok, Redirect}
 import play.api.mvc.{Request, Result}
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.handlers.ErrorHandler
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ChangeOfBankService @Inject() (
     changeOfBankConnector: ChangeOfBankConnector,
-    changeAccountView:     ChangeAccountView
+    errorHandler:          ErrorHandler
 ) {
 
-  def processClaimantInformation()(implicit
-      ec:       ExecutionContext,
-      hc:       HeaderCarrier,
-      request:  Request[_],
-      messages: Messages
+  def getClaimantName(implicit
+      ec:           ExecutionContext,
+      hc:           HeaderCarrier,
+      auditService: AuditService,
+      request:      Request[_]
+  ): Future[String] =
+    changeOfBankConnector.getChangeOfBankClaimantInfo
+      .fold(err => errorHandler.handleError(err), res => s"${res.firstForename.value} ${res.surname.value}")
+      .map(_.toString)
+
+  def processClaimantInformation(view: ChangeAccountView)(implicit
+      ec:                              ExecutionContext,
+      hc:                              HeaderCarrier,
+      request:                         Request[_],
+      messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
       _                <- changeOfBankConnector.verifyClaimantBankAccount
       claimantInfo     <- changeOfBankConnector.getChangeOfBankClaimantInfo
-      childBenefitPage <- validateToChangeOfBankPage(claimantInfo)
+      childBenefitPage <- validateToChangeOfBankPage(claimantInfo, view)
     } yield childBenefitPage
   }
 
   private def validateToChangeOfBankPage(
-      cbi:            ClaimantBankInformation
-  )(implicit request: Request[_], messages: Messages): CBEnvelope[Result] =
+      cbi:               ClaimantBankInformation,
+      changeAccountView: ChangeAccountView
+  )(implicit request:    Request[_], messages: Messages): CBEnvelope[Result] =
     CBEnvelope {
 
       val accountInfo:  ClaimantBankAccountInformation = cbi.financialDetails.bankAccountInformation

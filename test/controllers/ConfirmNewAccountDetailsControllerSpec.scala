@@ -16,50 +16,85 @@
 
 package controllers
 
-import utils.BaseISpec
+import connectors.ChangeOfBankConnector
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.cob.ConfirmNewAccountDetails.Yes
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import models.{NormalMode, UserAnswers}
-import org.mockito.Mockito.when
-import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.navigation.{FakeNavigator, Navigator}
-import views.html.cob.ConfirmNewAccountDetailsView
-
-import scala.concurrent.Future
+import org.mockito.Mockito.reset
+import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.{Call, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import services.{AuditService, ChangeOfBankService}
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.BaseISpec
+import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
+import utils.handlers.ErrorHandler
+import utils.navigation.{FakeNavigator, Navigator}
+import views.html.cob.ConfirmNewAccountDetailsView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val confirmNewAccountDetailsRoute =
+  val mockSessionRepository         = mock[SessionRepository]
+  val mockCobConnector              = mock[ChangeOfBankConnector]
+  val mockErrorHandler              = mock[ErrorHandler]
+  implicit val mockExecutionContext = mock[ExecutionContext]
+  implicit val mockHeaderCarrier    = mock[HeaderCarrier]
+  implicit val mockAuditService     = mock[AuditService]
+
+  lazy val confirmNewAccountDetailsRoute: String =
     controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode).url
 
   val formProvider = new ConfirmNewAccountDetailsFormProvider()
-  val form         = formProvider()
+  val form: Form[ConfirmNewAccountDetails] = formProvider()
 
-  val newAccountDetails = NewAccountDetails("name", "123456", "11110000")
+  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector, errorHandler = mockErrorHandler) {
+    override def getClaimantName(implicit
+        ec:           ExecutionContext,
+        hc:           HeaderCarrier,
+        auditService: AuditService,
+        request:      Request[_]
+    ): Future[String] = Future.successful(claimantName)
+  }
+
+  val claimantName      = "Susie Test"
+  val newAccountDetails = NewAccountDetails("Susie Test", "123456", "11110000")
+
+  override protected def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(
+      mockCobConnector,
+      mockSessionRepository,
+      mockErrorHandler,
+      mockExecutionContext,
+      mockHeaderCarrier,
+      mockAuditService
+    )
+  }
 
   "ConfirmNewAccountDetails Controller" - {
 
     "must return OK and the correct view for a GET" in {
       userLoggedInChildBenefitUser(NinoUser)
 
-      val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
+      val userAnswers = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
       val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
           bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository)
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[ChangeOfBankService].toInstance(cobService)
         )
         .build()
 
@@ -67,9 +102,9 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
         val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
 
-        val result = route(application, request).value
-
         val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
+
+        val result = route(application, request).value
 
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
@@ -77,6 +112,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           view(
             form,
             NormalMode,
+            claimantName,
             newAccountDetails.newAccountHoldersName,
             newAccountDetails.newSortCode,
             newAccountDetails.newAccountNumber
@@ -88,8 +124,6 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
     "must populate the view correctly on a GET when the question has previously been answered" in {
       userLoggedInChildBenefitUser(NinoUser)
 
-      val mockSessionRepository = mock[SessionRepository]
-
       val userAnswers: UserAnswers = UserAnswers(userAnswersId)
         .set(NewAccountDetailsPage, newAccountDetails)
         .flatMap(ua => ua.set(ConfirmNewAccountDetailsPage, ConfirmNewAccountDetails.values.head))
@@ -99,7 +133,8 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository)
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[ChangeOfBankService].toInstance(cobService)
         )
         .build()
 
@@ -117,6 +152,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           view(
             form.fill(ConfirmNewAccountDetails.values.head),
             NormalMode,
+            claimantName,
             newAccountDetails.newAccountHoldersName,
             newAccountDetails.newSortCode,
             newAccountDetails.newAccountNumber
@@ -172,7 +208,8 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
       val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
           bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository)
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[ChangeOfBankService].toInstance(cobService)
         )
         .build()
 
@@ -194,6 +231,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           view(
             boundForm,
             NormalMode,
+            claimantName,
             newAccountDetails.newAccountHoldersName,
             newAccountDetails.newSortCode,
             newAccountDetails.newAccountNumber
