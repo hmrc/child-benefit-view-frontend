@@ -20,6 +20,7 @@ import generators.ModelGenerators
 import models.common.{AddressLine, AddressPostcode}
 import models.entitlement.{ChildBenefitEntitlement, FullAddress, FullName}
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks.Table
@@ -27,7 +28,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import utils.helpers.ChildBenefitEntitlementHelper.formatChildBenefitEntitlement
 import utils.helpers.ChildBenefitEntitlementHelperSpec._
 
-class ChildBenefitEntitlementHelperSpec extends AnyFreeSpec with Matchers with ModelGenerators {
+class ChildBenefitEntitlementHelperSpec extends AnyFreeSpec with Matchers with OptionValues with ModelGenerators {
   "formatChildBenefitEntitlement" - {
     val testCases = Table(
       ("groupName", "caseName", "transform", "propertySelector", "expectedValue"),
@@ -60,7 +61,11 @@ class ChildBenefitEntitlementHelperSpec extends AnyFreeSpec with Matchers with M
       addressLine5NoneTestCase,
       addressPostcodeLowercase,
       addressPostcodeUppercase,
-      addressPostcodeMixedCase
+      addressPostcodeMixedCase,
+      childNameLowercase,
+      childNameUppercase,
+      childNameMixedCase,
+      childNameExcepted
     )
     "should return a CBE with the expected field formatted" - {
       forAll(testCases) {
@@ -121,8 +126,9 @@ class ChildBenefitEntitlementHelperSpec extends AnyFreeSpec with Matchers with M
 
           sutResult.claimant.fullAddress.addressLine1.value mustEqual "Flat 4a"
           sutResult.claimant.fullAddress.addressLine2.value mustEqual "18 Newport High Street"
-          sutResult.claimant.fullAddress.addressLine3.isDefined mustEqual true
-          sutResult.claimant.fullAddress.addressLine3.get.value mustEqual "Newcastle-Upon-Tyne"
+          sutResult.claimant.fullAddress.addressLine3.value.value mustEqual "Newcastle-Upon-Tyne"
+          sutResult.claimant.fullAddress.addressLine4 mustBe None
+          sutResult.claimant.fullAddress.addressLine5 mustBe None
           sutResult.claimant.fullAddress.addressPostcode.value mustEqual "NE10 5QA"
         }
       }
@@ -164,8 +170,9 @@ object ChildBenefitEntitlementHelperSpec {
       expectedSetter(expectedValue)
     )
 
-  // Claimant test case group
+  // Group names
   private val claimantGroup = "Claimant"
+  private val childrenGroup = "Children"
 
   // Full Name test cases
   val fullNameLowercase: TestCase[FullName] = generateFullNameTestCase(lowercaseTestName, lowercaseTestValue)
@@ -346,4 +353,27 @@ object ChildBenefitEntitlementHelperSpec {
       cbe => cbe.claimant.fullAddress.addressPostcode,
       str => AddressPostcode(str)
     )
+
+  // Child's name test cases
+  val childNameLowercase: TestCase[FullName] = generateChildNameTestCase(lowercaseTestName, lowercaseTestValue)
+  val childNameUppercase: TestCase[FullName] = generateChildNameTestCase(uppercaseTestName, uppercaseTestValue)
+  val childNameMixedCase: TestCase[FullName] = generateChildNameTestCase(mixedCaseTestName, mixedCaseTestValue)
+  val childNameExcepted: TestCase[FullName] =
+    generateChildNameTestCase(exceptedCaseTestName, exceptedCaseTestValue, exceptedExpectedResult)
+
+  private def generateChildNameTestCase(
+      testCaseName:   String,
+      testValue:      String,
+      expectedResult: String = defaultExpectedResult
+  ): TestCase[FullName] = {
+    generateTestCase(
+      childrenGroup,
+      s"Child Name - $testCaseName",
+      testValue,
+      expectedResult,
+      str => cbe => cbe.copy(children = List(cbe.children.head.copy(name = FullName(str)))),
+      cbe => cbe.children.head.name,
+      str => FullName(str)
+    )
+  }
 }

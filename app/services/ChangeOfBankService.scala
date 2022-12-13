@@ -29,6 +29,7 @@ import play.api.mvc.{Request, Result}
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.handlers.ErrorHandler
+import utils.helpers.ClaimantBankInformationHelper.formatClaimantBankInformation
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
@@ -58,9 +59,10 @@ class ChangeOfBankService @Inject() (
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
-      _                <- changeOfBankConnector.verifyClaimantBankAccount
-      claimantInfo     <- changeOfBankConnector.getChangeOfBankClaimantInfo
-      childBenefitPage <- validateToChangeOfBankPage(claimantInfo, view)
+      _                     <- changeOfBankConnector.verifyClaimantBankAccount
+      claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
+      formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
+      childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)
     } yield childBenefitPage
   }
 

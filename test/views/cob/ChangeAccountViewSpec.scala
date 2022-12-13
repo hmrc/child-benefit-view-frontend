@@ -72,6 +72,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     }
     "have obscured details" when {
       "claimant has bank account" in {
+        println(view.getElementById("account-details-table").text)
         view.getElementById("account-details-table").text must include("xx-xx-56")
         view.getElementById("account-details-table").text must include("xxxx6789")
       }
