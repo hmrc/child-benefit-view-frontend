@@ -22,7 +22,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks._
 
 class StringHelperSpec extends AnyFreeSpec with Matchers {
   "toTitleCase" - {
-    val testCases = Table(
+    val delimitedTestCases = Table(
       ("caseName", "initial", "delimiters", "exceptedWords", "expected"),
       ("whitespace", "test value", List(" "), List(), "Test Value"),
       ("hyphen", "test-value", List("-"), List(), "Test-Value"),
@@ -31,12 +31,29 @@ class StringHelperSpec extends AnyFreeSpec with Matchers {
       ("excepted words ignored", "test and value", List(" "), List("and"), "Test and Value")
     )
     "For a given initial value and set of delimiters: return the expected value" - {
-      forAll(testCases) {
+      forAll(delimitedTestCases) {
         (caseName: String, initial: String, delimiters: List[String], exceptedWords: List[String], expected: String) =>
           s"$caseName: initial: $initial - delimiters: $delimiters -> expected: $expected" in {
             val result = StringHelper.toTitleCase(initial, delimiters, exceptedWords)
             result mustEqual expected
           }
+      }
+    }
+
+    val defaultTestCases = Table(
+      ("caseName", "initial", "expected"),
+      ("whitespace", "test value", "Test Value"),
+      ("hyphen", "test-value", "Test-Value"),
+      ("apostrophe", "test'value", "Test'Value"),
+      ("multiple delimiters", "test-va lu'e", "Test-Va Lu'E"),
+      ("excepted words ignored", "test and value", "Test and Value")
+    )
+    "When given no delimiters, default are used as expected" - {
+      forAll(defaultTestCases) { (caseName: String, initial: String, expected: String) =>
+        s"$caseName: initial: $initial" in {
+          val result = StringHelper.toTitleCase(initial)
+          result mustEqual expected
+        }
       }
     }
   }

@@ -16,8 +16,9 @@
 
 package generators
 
+import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
-import models.common.{AddressLine, AddressPostcode}
+import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
 import models.entitlement._
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen._
@@ -50,7 +51,7 @@ trait ModelGenerators {
         entitlementDate                  <- arbitrary[LocalDate]
         paidAmountForEldestOrOnlyChild   <- arbitrary[BigDecimal]
         paidAmountForEachAdditionalChild <- arbitrary[BigDecimal]
-        children                         <- Gen.containerOf[List, Child](arbitrary(arbitraryChild))
+        children                         <- Gen.containerOf[List, Child](arbitrary(arbitraryChild)) suchThat (x => x.nonEmpty)
       } yield ChildBenefitEntitlement(
         claimant,
         entitlementDate,
@@ -138,4 +139,39 @@ trait ModelGenerators {
         relationshipEndDate   <- arbitrary[Option[LocalDate]]
       } yield Child(fullName, dateOfBirth, relationshipStartDate, relationshipEndDate)
     }
+
+  // Claimant Bank Information and associated models
+  implicit lazy val arbitraryClaimantBankInformation: Arbitrary[ClaimantBankInformation] =
+    Arbitrary {
+      for {
+        firstForename    <- arbitrary[FirstForename]
+        surname          <- arbitrary[Surname]
+        activeClaim      <- arbitrary[Boolean]
+        financialDetails <- arbitrary[ClaimantFinancialDetails]
+      } yield ClaimantBankInformation(firstForename, surname, activeClaim, financialDetails)
+    }
+  implicit lazy val arbitraryFirstForename: Arbitrary[FirstForename] =
+    Arbitrary {
+      for {
+        name <- arbitrary[String]
+      } yield FirstForename(name)
+    }
+  implicit lazy val arbitrarySurname: Arbitrary[Surname] =
+    Arbitrary {
+      for {
+        name <- arbitrary[String]
+      } yield Surname(name)
+    }
+  implicit lazy val arbitraryClaimantFinancialDetails: Arbitrary[ClaimantFinancialDetails] =
+    Arbitrary {
+      for {
+        awardEndDate            <- arbitrary[LocalDate]
+        claimantBankInformation <- arbitrary[ClaimantBankAccountInformation]
+      } yield ClaimantFinancialDetails(awardEndDate, None, None, claimantBankInformation)
+    }
+  implicit lazy val arbitraryClaimantBankAccountInformation: Arbitrary[ClaimantBankAccountInformation] =
+    Arbitrary {
+      ClaimantBankAccountInformation(None, None, None, None)
+    }
+
 }

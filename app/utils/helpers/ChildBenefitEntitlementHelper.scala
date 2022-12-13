@@ -21,31 +21,30 @@ import models.entitlement.{ChildBenefitEntitlement, FullName}
 import utils.helpers.StringHelper.toTitleCase
 
 object ChildBenefitEntitlementHelper {
-  val defaultDelimiters    = List(" ", "-", "'")
-  val defaultExceptedWords = List("and")
 
   def formatChildBenefitEntitlement(entitlement: ChildBenefitEntitlement): ChildBenefitEntitlement =
     entitlement.copy(
       claimant = entitlement.claimant.copy(
-        name = FullName(toTitleCase(entitlement.claimant.name.value, defaultDelimiters, defaultExceptedWords)),
+        name = FullName(toTitleCase(entitlement.claimant.name.value)),
         fullAddress = entitlement.claimant.fullAddress.copy(
           addressLine1 = AddressLine(
-            toTitleCase(entitlement.claimant.fullAddress.addressLine1.value, defaultDelimiters, defaultExceptedWords)
+            toTitleCase(entitlement.claimant.fullAddress.addressLine1.value)
           ),
           addressLine2 = AddressLine(
-            toTitleCase(entitlement.claimant.fullAddress.addressLine2.value, defaultDelimiters, defaultExceptedWords)
+            toTitleCase(entitlement.claimant.fullAddress.addressLine2.value)
           ),
           addressLine3 = entitlement.claimant.fullAddress.addressLine3.fold[Option[AddressLine]](None)(al3 =>
-            Some(AddressLine(toTitleCase(al3.value, defaultDelimiters, defaultExceptedWords)))
+            Some(AddressLine(toTitleCase(al3.value)))
           ),
           addressLine4 = entitlement.claimant.fullAddress.addressLine4.fold[Option[AddressLine]](None)(al4 =>
-            Some(AddressLine(toTitleCase(al4.value, defaultDelimiters, defaultExceptedWords)))
+            Some(AddressLine(toTitleCase(al4.value)))
           ),
           addressLine5 = entitlement.claimant.fullAddress.addressLine5.fold[Option[AddressLine]](None)(al5 =>
-            Some(AddressLine(toTitleCase(al5.value, defaultDelimiters, defaultExceptedWords)))
+            Some(AddressLine(toTitleCase(al5.value)))
           ),
           addressPostcode = AddressPostcode(entitlement.claimant.fullAddress.addressPostcode.value.toUpperCase)
         )
-      )
+      ),
+      children = entitlement.children.map(child => child.copy(name = FullName(toTitleCase(child.name.value))))
     )
 }

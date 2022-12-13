@@ -16,18 +16,14 @@
 
 package utils.helpers
 
-object StringHelper {
-  val defaultDelimiters    = List(" ", "-", "'")
-  val defaultExceptedWords = List("and")
+import models.changeofbank.ClaimantBankInformation
+import models.common.{FirstForename, Surname}
+import utils.helpers.StringHelper.toTitleCase
 
-  def toTitleCase(
-      str:           String,
-      delimiters:    List[String] = defaultDelimiters,
-      exceptedWords: List[String] = defaultExceptedWords
-  ): String = {
-    val lowercase = str.toLowerCase()
-    delimiters.foldRight(lowercase)((delimiter, str) =>
-      str.split(delimiter).map(f => if (exceptedWords.contains(f)) f else f.capitalize).mkString(delimiter)
+object ClaimantBankInformationHelper {
+  def formatClaimantBankInformation(information: ClaimantBankInformation): ClaimantBankInformation =
+    information.copy(
+      firstForename = FirstForename(toTitleCase(information.firstForename.value)),
+      surname = Surname(toTitleCase(information.surname.value))
     )
-  }
 }
