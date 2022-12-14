@@ -55,8 +55,7 @@ class PaymentHistoryService @Inject() (
     for {
       childBenefitEntitlement <- entitlementConnector.getChildBenefitEntitlement
       formattedEntitlement    <- CBEnvelope(formatChildBenefitEntitlement(childBenefitEntitlement))
-      result <-
-        validateEntitlementToPage(formattedEntitlement).orElse(validateAdjustmentToPage(childBenefitEntitlement))
+      result                  <- validateEntitlementToPage(formattedEntitlement).orElse(validateAdjustmentToPage(formattedEntitlement))
     } yield result
   }
 
