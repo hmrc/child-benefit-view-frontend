@@ -255,8 +255,11 @@ confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these de
 confirmNewAccountDetails.error.required = Select ‘Yes’ or ‘No, I want to change them’
 confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
-hICBCOptedOutPayments.title = hICBCOptedOutPayments
+hICBCOptedOutPayments.title = You cannot use this service because you do not receive Child Benefit payments
 hICBCOptedOutPayments.heading = You cannot use this service because you do not receive Child Benefit payments
+hICBCOptedOutPayments.paragraph.1 = You do not receive payments because you’ve told us you do not want to pay the High Income Child Benefit Charge.
+hICBCOptedOutPayments.paragraph.2 = You can tell us if you want to {0}.
+hICBCOptedOutPayments.guide.link.text = start receiving Child Benefit payments
 
 cannotVerifyAccount.title = We cannot verify the account details you’ve provided
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
