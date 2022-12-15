@@ -78,12 +78,12 @@ object ViewUtils {
     }
 
   def formatSensitiveSort(raw: String): String = {
-    s"""xx-xx-${raw.filter(_.isDigit).substring(4)}"""
+    s"""**-**-${raw.filter(_.isDigit).substring(4)}"""
   }
 
   def formatSensitiveAccNumber(raw: String): String = {
-    val exes: String = (for (_ <- 1 to (raw.length - 4)) yield "x").mkString
-    s"""$exes${raw.takeRight(4)}"""
+    val asterisks: String = (for (_ <- 1 to (raw.length - 4)) yield "*").mkString
+    s"""$asterisks${raw.takeRight(4)}"""
   }
 
 }
