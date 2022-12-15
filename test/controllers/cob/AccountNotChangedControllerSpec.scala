@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
-import utils.BaseISpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.HtmlMatcherUtils.removeNonce
+import utils.BaseISpec
+import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
-import views.html.cob.BARSLockOutView
+import views.html.cob.AccountNotChangedView
 
-class BARSLockOutControllerSpec extends BaseISpec {
+class AccountNotChangedControllerSpec extends BaseISpec {
 
-  "BARSLockOut Controller" - {
+  "AccountNotChanged Controller" - {
 
     "must return OK and the correct view for a GET" in {
       userLoggedInChildBenefitUser(NinoUser)
@@ -34,15 +34,15 @@ class BARSLockOutControllerSpec extends BaseISpec {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.cob.routes.BARSLockOutController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
           .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[BARSLockOutView]
+        val view = application.injector.instanceOf[AccountNotChangedView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
           view()(request, messages(application)).toString
         )

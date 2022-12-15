@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 
 class ChangeAccountController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     changeOfBankService:      ChangeOfBankService,
     errorHandler:             ErrorHandler,
     getData:                  CobDataRetrievalAction,
@@ -40,7 +40,7 @@ class ChangeAccountController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData).async { implicit request =>
+    (featureActions.changeBankAction andThen getData).async { implicit request =>
       changeOfBankService
         .processClaimantInformation(view)
         .fold(

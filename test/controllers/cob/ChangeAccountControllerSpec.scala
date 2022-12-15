@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
-import controllers.ChangeAccountControllerSpec.{claimantBankInformationWithBuildingSocietyRollNumber, claimantBankInformationWithEndDateInPast, claimantBankInformationWithEndDateToday, claimantBankInformationWithHICBC}
-import models.changeofbank.{AccountHolderName, BankAccountNumber, BuildingSocietyRollNumber, ClaimantBankAccountInformation, ClaimantBankInformation, SortCode}
+import controllers.cob
+import controllers.cob.ChangeAccountControllerSpec.{claimantBankInformationWithBuildingSocietyRollNumber, claimantBankInformationWithEndDateInPast, claimantBankInformationWithEndDateToday, claimantBankInformationWithHICBC}
+import models.changeofbank._
 import models.common.AdjustmentReasonCode
 import play.api.Application
 import play.api.mvc.AnyContentAsEmpty

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
-import utils.BaseISpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser

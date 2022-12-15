@@ -34,7 +34,7 @@ package controllers
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagActionFactory}
+import actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -47,7 +47,7 @@ import scala.concurrent.ExecutionContext
 class CheckYourAnswersController @Inject() (
     override val messagesApi: MessagesApi,
     authConnector:            AuthConnector,
-    features:                 FeatureFlagActionFactory,
+    featureActions:           FeatureFlagComposedActions,
     getData:                  DataRetrievalAction,
     requireData:              DataRequiredAction,
     view:                     CheckYourAnswersView
@@ -63,7 +63,7 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] = {
     implicit val loginContinueUrl: Call = routes.CheckYourAnswersController.onPageLoad
 
-    (Action andThen features.newClaimEnabled andThen authorisedAsChildBenefitUser andThen getData andThen requireData) {
+    (featureActions.newClaimAction andThen authorisedAsChildBenefitUser andThen getData andThen requireData) {
       implicit request =>
         val list = SummaryListViewModel(
           rows = Seq.empty

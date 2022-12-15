@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
-import utils.BaseISpec
 import forms.cob.NewAccountDetailsFormProvider
 import models.cob.NewAccountDetails
 import models.{NormalMode, UserAnswers}
@@ -29,6 +28,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser

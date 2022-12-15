@@ -26,14 +26,14 @@ import javax.inject.Inject
 
 class BARSLockOutController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     val controllerComponents: MessagesControllerComponents,
     view:                     BARSLockOutView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    identify { implicit request =>
+    featureActions.changeBankAction { implicit request =>
       Ok(view())
     }
 }

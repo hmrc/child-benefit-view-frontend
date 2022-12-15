@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.cob
 
-import utils.BaseISpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.HtmlMatcherUtils.removeCsrfAndNonce
+import utils.BaseISpec
+import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
-import views.html.cob.HICBCOptedOutPaymentsView
+import views.html.cob.CannotVerifyAccountView
 
-class HICBCOptedOutPaymentsControllerSpec extends BaseISpec {
+class CannotVerifyAccountControllerSpec extends BaseISpec {
 
-  "HICBCOptedOutPayments Controller" - {
+  "CannotVerifyAccount Controller" - {
 
     "must return OK and the correct view for a GET" in {
       userLoggedInChildBenefitUser(NinoUser)
@@ -34,18 +34,16 @@ class HICBCOptedOutPaymentsControllerSpec extends BaseISpec {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad().url)
+        val request = FakeRequest(GET, controllers.cob.routes.CannotVerifyAccountController.onPageLoad().url)
           .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[HICBCOptedOutPaymentsView]
+        val view = application.injector.instanceOf[CannotVerifyAccountView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result).trim(),
-          view()(request, messages(application)).toString.trim()
-        )
+
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
       }
     }
   }
