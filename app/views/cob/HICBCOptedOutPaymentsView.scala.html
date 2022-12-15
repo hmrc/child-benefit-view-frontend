@@ -14,14 +14,26 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        heading: Heading,
+        para: ParagraphBody,
+        link: Link
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@guidanceLink = @{link( id = "guide-link",
+                        text = messages("hICBCOptedOutPayments.guide.link.text"),
+                        call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/high-income-child-benefit-tax-charge/draft/guide")
+                        )}
+
 @layout(pageTitle = titleNoForm(messages("hICBCOptedOutPayments.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("hICBCOptedOutPayments.heading")</h1>
+    @heading(messages("hICBCOptedOutPayments.heading"))
+    @para(messages("hICBCOptedOutPayments.paragraph.1"))
+    @para(messages("hICBCOptedOutPayments.paragraph.2", guidanceLink))
 }
