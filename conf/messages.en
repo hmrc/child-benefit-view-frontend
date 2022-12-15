@@ -240,8 +240,8 @@ accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same acco
 bARSLockOut.title = You’re locked out of this service
 bARSLockOut.heading = You’re locked out of this service
 bARSLockOut.para.1 = You’re locked out because you entered details that could not be verified too many times within the last 24 hours.
-bARSLockOut.para.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
-bARSLockOut.link.text = change of circumstances form
+bARSLockOut.para.2 = You can {0} for your Child Benefit payments.
+bARSLockOut.link.text = use a different service to change the account details
 
 confirmNewAccountDetails.title = Check and confirm your new account details
 confirmNewAccountDetails.heading = Check and confirm your new account details
@@ -261,7 +261,7 @@ hICBCOptedOutPayments.heading = You cannot use this service because you do not r
 cannotVerifyAccount.title = We cannot verify the account details you’ve provided
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
 cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
-cannotVerifyAccount.paragraph.2 = To change the account you use for your Child Benefit payments, you can use the {0}.
-cannotVerifyAccount.link.text = change of circumstances form
+cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
+cannotVerifyAccount.link.text = use a different service to change the account details
 
 # ------------------------------------------------------------------------------------
