@@ -18,34 +18,69 @@ package controllers.cob
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import testconfig.TestConfig
+import testconfig.TestConfig._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
+import views.html.ErrorTemplate
 import views.html.cob.AccountNotChangedView
 
 class AccountNotChangedControllerSpec extends BaseISpec {
 
   "AccountNotChanged Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+    "when the change of bank feature is enabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "must return OK and the correct view for a GET" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-      running(application) {
-        val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
-          .withSession("authToken" -> "Bearer 123")
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        val result = route(application, request).value
+        running(application) {
+          val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
+            .withSession("authToken" -> "Bearer 123")
 
-        val view = application.injector.instanceOf[AccountNotChangedView]
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result),
-          view()(request, messages(application)).toString
-        )
+          val view = application.injector.instanceOf[AccountNotChangedView]
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view()(request, messages(application)).toString
+          )
+        }
+      }
+    }
+
+    "when the change of bank feature is disabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
+
+      "must return Not Found and the Error view" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        running(application) {
+          val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
+            .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[ErrorTemplate]
+
+          status(result) mustEqual NOT_FOUND
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+              request,
+              messages(application)
+            ).toString
+          )
+        }
       }
     }
   }

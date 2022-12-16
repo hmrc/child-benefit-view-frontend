@@ -32,6 +32,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
+import testconfig.TestConfig
+import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -39,6 +41,7 @@ import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
+import views.html.ErrorTemplate
 import views.html.cob.ConfirmNewAccountDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -86,193 +89,224 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
 
   "ConfirmNewAccountDetails Controller" - {
 
-    "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+    "when the change of bank feature is enabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
-      val userAnswers = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
-      val application = applicationBuilder(userAnswers = userAnswers)
-        .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository),
-          bind[ChangeOfBankService].toInstance(cobService)
-        )
-        .build()
+      "must return OK and the correct view for a GET" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-      running(application) {
-        val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
-        when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
-
-        val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result),
-          view(
-            form,
-            NormalMode,
-            claimantName,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
-          )(request, messages(application)).toString
-        )
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-      userLoggedInChildBenefitUser(NinoUser)
-
-      val userAnswers: UserAnswers = UserAnswers(userAnswersId)
-        .set(NewAccountDetailsPage, newAccountDetails)
-        .flatMap(ua => ua.set(ConfirmNewAccountDetailsPage, ConfirmNewAccountDetails.values.head))
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository),
-          bind[ChangeOfBankService].toInstance(cobService)
-        )
-        .build()
-
-      running(application) {
-        val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
-        when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-
-        val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result),
-          view(
-            form.fill(ConfirmNewAccountDetails.values.head),
-            NormalMode,
-            claimantName,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
-          )(request, messages(application)).toString
-        )
-      }
-    }
-
-    "must redirect to the next page when valid data is submitted" in {
-      userLoggedInChildBenefitUser(NinoUser)
-
-      val confirmNewAccountDetails = Yes
-      val userAnswers = UserAnswers(userAnswersId)
-        .set(NewAccountDetailsPage, newAccountDetails)
-        .flatMap(_.set(ConfirmNewAccountDetailsPage, confirmNewAccountDetails))
-        .toOption
-
-      val mockSessionRepository = mock[SessionRepository]
-
-      val application =
-        applicationBuilder(userAnswers = userAnswers)
+        val userAnswers = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
+        val application = applicationBuilder(config, userAnswers = userAnswers)
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[ChangeOfBankService].toInstance(cobService)
           )
           .build()
 
-      running(application) {
-        val request =
-          FakeRequest(POST, confirmNewAccountDetailsRoute)
-            .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
-            .withSession("authToken" -> "Bearer 123")
+        running(application) {
+          val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
+          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+
+          val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view(
+              form,
+              NormalMode,
+              claimantName,
+              newAccountDetails.newAccountHoldersName,
+              newAccountDetails.newSortCode,
+              newAccountDetails.newAccountNumber
+            )(request, messages(application)).toString
+          )
+        }
+      }
+
+      "must populate the view correctly on a GET when the question has previously been answered" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val userAnswers: UserAnswers = UserAnswers(userAnswersId)
+          .set(NewAccountDetailsPage, newAccountDetails)
+          .flatMap(ua => ua.set(ConfirmNewAccountDetailsPage, ConfirmNewAccountDetails.values.head))
+          .success
+          .value
+
+        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[ChangeOfBankService].toInstance(cobService)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
+          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+
+          val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view(
+              form.fill(ConfirmNewAccountDetails.values.head),
+              NormalMode,
+              claimantName,
+              newAccountDetails.newAccountHoldersName,
+              newAccountDetails.newSortCode,
+              newAccountDetails.newAccountNumber
+            )(request, messages(application)).toString
+          )
+        }
+      }
+
+      "must redirect to the next page when valid data is submitted" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val confirmNewAccountDetails = Yes
+        val userAnswers = UserAnswers(userAnswersId)
+          .set(NewAccountDetailsPage, newAccountDetails)
+          .flatMap(_.set(ConfirmNewAccountDetailsPage, confirmNewAccountDetails))
+          .toOption
+
+        val mockSessionRepository = mock[SessionRepository]
+
+        val application =
+          applicationBuilder(config, userAnswers = userAnswers)
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, confirmNewAccountDetailsRoute)
+              .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
+              .withSession("authToken" -> "Bearer 123")
+
+          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+          when(mockSessionRepository.set(userAnswers.get)) thenReturn Future.successful(true)
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual onwardRoute.url
+        }
+      }
+
+      "must return a Bad Request and errors when invalid data is submitted" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val mockSessionRepository = mock[SessionRepository]
+
+        val userAnswers = UserAnswers(userAnswersId)
+          .set(NewAccountDetailsPage, newAccountDetails)
+          .toOption
+
+        val application = applicationBuilder(config, userAnswers = userAnswers)
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[ChangeOfBankService].toInstance(cobService)
+          )
+          .build()
 
         when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
-        when(mockSessionRepository.set(userAnswers.get)) thenReturn Future.successful(true)
 
-        val result = route(application, request).value
+        running(application) {
+          val request =
+            FakeRequest(POST, confirmNewAccountDetailsRoute)
+              .withFormUrlEncodedBody(("value", "invalid value"))
+              .withSession("authToken" -> "Bearer 123")
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+          val result    = route(application, request).value
+          val boundForm = form.bind(Map("value" -> "invalid value"))
+          status(result) mustEqual BAD_REQUEST
+          val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
+
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view(
+              boundForm,
+              NormalMode,
+              claimantName,
+              newAccountDetails.newAccountHoldersName,
+              newAccountDetails.newSortCode,
+              newAccountDetails.newAccountNumber
+            )(request, messages(application)).toString
+          )
+        }
       }
-    }
 
-    "must return a Bad Request and errors when invalid data is submitted" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      "must redirect to Journey Recovery for a GET if no existing data is found" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-      val mockSessionRepository = mock[SessionRepository]
+        val application = applicationBuilder(config, userAnswers = None).build()
 
-      val userAnswers = UserAnswers(userAnswersId)
-        .set(NewAccountDetailsPage, newAccountDetails)
-        .toOption
-
-      val application = applicationBuilder(userAnswers = userAnswers)
-        .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-          bind[SessionRepository].toInstance(mockSessionRepository),
-          bind[ChangeOfBankService].toInstance(cobService)
-        )
-        .build()
-
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
-
-      running(application) {
-        val request =
-          FakeRequest(POST, confirmNewAccountDetailsRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+        running(application) {
+          val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
+            .withSession("authToken" -> "Bearer 123")
             .withSession("authToken" -> "Bearer 123")
 
-        val result    = route(application, request).value
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-        status(result) mustEqual BAD_REQUEST
-        val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
+          val result = route(application, request).value
 
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result),
-          view(
-            boundForm,
-            NormalMode,
-            claimantName,
-            newAccountDetails.newAccountHoldersName,
-            newAccountDetails.newSortCode,
-            newAccountDetails.newAccountNumber
-          )(request, messages(application)).toString
-        )
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "redirect to Journey Recovery for a POST if no existing data is found" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val application = applicationBuilder(config, userAnswers = None).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, confirmNewAccountDetailsRoute)
+              .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+
+          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
+    "when the change of bank feature is disabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      "must return Not Found and the Error view" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-      val application = applicationBuilder(userAnswers = None).build()
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
-        val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
-          .withSession("authToken" -> "Bearer 123")
-          .withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
-      userLoggedInChildBenefitUser(NinoUser)
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, confirmNewAccountDetailsRoute)
-            .withFormUrlEncodedBody(("value", ConfirmNewAccountDetails.values.head.toString))
+        running(application) {
+          val request = FakeRequest(GET, confirmNewAccountDetailsRoute)
             .withSession("authToken" -> "Bearer 123")
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+          val view = application.injector.instanceOf[ErrorTemplate]
 
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual NOT_FOUND
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+              request,
+              messages(application)
+            ).toString
+          )
+        }
       }
     }
   }

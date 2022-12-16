@@ -24,10 +24,13 @@ import play.api.Application
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import testconfig.TestConfig
+import testconfig.TestConfig._
 import utils.BaseISpec
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
 import utils.Stubs._
 import utils.TestData.{LockedOutErrorResponse, NinoUser, NotFoundAccountError, claimantBankInformation}
+import views.html.ErrorTemplate
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
@@ -43,151 +46,189 @@ class ChangeAccountControllerSpec extends BaseISpec {
       buildingSocietyRollNumber = None
     )
 
-    "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "when the change of bank feature is enabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformation)
-      verifyClaimantBankInfoStub()
+      "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
-      running(application) {
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformation)
+        verifyClaimantBankInfoStub()
 
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
+        running(application) {
 
-        val result = route(application, request).value
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
 
-        val view = application.injector.instanceOf[ChangeAccountView]
+          val result = route(application, request).value
 
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
-          contentAsString(result),
-          view("John Doe", accountInfo)(request, messages(application)).toString
-        )
+          val view = application.injector.instanceOf[ChangeAccountView]
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            view("John Doe", accountInfo)(request, messages(application)).toString
+          )
+        }
+      }
+
+      "must return OK and render the correct view for ChB claimant who is in payment and has a non-standard bank account type" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
+        verifyClaimantBankInfoStub()
+
+        running(application) {
+
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[ChangeAccountView]
+
+          val accountInfoWithRollNumber =
+            accountInfo.copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234987650")))
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            view("John Doe", accountInfoWithRollNumber)(request, messages(application)).toString
+          )
+        }
+      }
+
+      "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformation)
+        verifyClaimantBankInfoFailureStub(result = LockedOutErrorResponse)
+
+        running(application) {
+
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual ("/child-benefit/change-bank/locked-out")
+        }
+      }
+
+      "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
+        verifyClaimantBankInfoStub()
+
+        running(application) {
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual "/child-benefit/change-bank/service-not-available/opted-out-payments"
+
+        }
+      }
+
+      "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date in the past" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
+        verifyClaimantBankInfoStub()
+
+        running(application) {
+
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
+
+        }
+      }
+
+      "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date is day of request" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
+        verifyClaimantBankInfoStub()
+
+        running(application) {
+
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
+        }
+      }
+
+      "must return SEE_OTHER and render the correct view for No ChB account found" in {
+        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+
+        userLoggedInChildBenefitUser(NinoUser)
+        changeOfBankUserInfoFailureStub(result = NotFoundAccountError)
+        verifyClaimantBankInfoStub()
+
+        running(application) {
+
+          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
+        }
       }
     }
 
-    "must return OK and render the correct view for ChB claimant who is in payment and has a non-standard bank account type" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    "when the change of bank feature is disabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
-      verifyClaimantBankInfoStub()
+      "must return Not Found and the Error view" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-      running(application) {
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
+        running(application) {
+          val request = FakeRequest(GET, controllers.cob.routes.ChangeAccountController.onPageLoad().url)
+            .withSession("authToken" -> "Bearer 123")
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ChangeAccountView]
+          val view = application.injector.instanceOf[ErrorTemplate]
 
-        val accountInfoWithRollNumber =
-          accountInfo.copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234987650")))
-
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
-          contentAsString(result),
-          view("John Doe", accountInfoWithRollNumber)(request, messages(application)).toString
-        )
-      }
-    }
-
-    "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformation)
-      verifyClaimantBankInfoFailureStub(result = LockedOutErrorResponse)
-
-      running(application) {
-
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual ("/child-benefit/change-bank/locked-out")
-      }
-    }
-
-    "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
-      verifyClaimantBankInfoStub()
-
-      running(application) {
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "/child-benefit/change-bank/service-not-available/opted-out-payments"
-
-      }
-    }
-
-    "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date in the past" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
-      verifyClaimantBankInfoStub()
-
-      running(application) {
-
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
-
-      }
-    }
-
-    "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date is day of request" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
-      verifyClaimantBankInfoStub()
-
-      running(application) {
-
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
-      }
-    }
-
-    "must return SEE_OTHER and render the correct view for No ChB account found" in {
-      val application: Application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      userLoggedInChildBenefitUser(NinoUser)
-      changeOfBankUserInfoFailureStub(result = NotFoundAccountError)
-      verifyClaimantBankInfoStub()
-
-      running(application) {
-
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-          FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url).withSession("authToken" -> "Bearer 123")
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual "/child-benefit/no-account-found"
-
+          status(result) mustEqual NOT_FOUND
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+              request,
+              messages(application)
+            ).toString
+          )
+        }
       }
     }
   }
