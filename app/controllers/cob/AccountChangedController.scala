@@ -26,14 +26,14 @@ import javax.inject.Inject
 
 class AccountChangedController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     val controllerComponents: MessagesControllerComponents,
     view:                     AccountChangedView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    identify { implicit request =>
+    featureActions.changeBankAction { implicit request =>
       Ok(view())
     }
 }

@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class AccountNotChangedController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     getData:                  CobDataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     AccountNotChangedView
@@ -34,7 +34,7 @@ class AccountNotChangedController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (identify andThen getData) { implicit request =>
+    (featureActions.changeBankAction andThen getData) { implicit request =>
       Ok(view())
     }
 }

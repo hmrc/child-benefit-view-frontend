@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import controllers.actions.FeatureFlagActionFactory
+import controllers.actions.FeatureFlagComposedActions
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class NationalityQuestionController @Inject() (
     authConnector:       AuthConnector,
-    features:            FeatureFlagActionFactory,
+    featureActions:      FeatureFlagComposedActions,
     nationalityQuestion: NationalityQuestionView
 )(implicit
     config:            Configuration,
@@ -41,7 +41,7 @@ class NationalityQuestionController @Inject() (
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
-  val view: Action[AnyContent] = Action andThen features.newClaimEnabled async { implicit request =>
+  val view: Action[AnyContent] = featureActions.newClaimAction async { implicit request =>
     authorisedAsChildBenefitUser { _ =>
       Future.successful(Ok(nationalityQuestion()))
     }(routes.HomeController.view)

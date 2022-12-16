@@ -34,7 +34,7 @@ class NewAccountDetailsController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     getData:                  CobDataRetrievalAction,
     formProvider:             NewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,
@@ -46,7 +46,7 @@ class NewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData) { implicit request =>
+    (featureActions.changeBankAction andThen getData) { implicit request =>
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -56,7 +56,7 @@ class NewAccountDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData).async { implicit request =>
+    (featureActions.changeBankAction andThen getData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

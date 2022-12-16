@@ -23,68 +23,78 @@ import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.TestData.NinoUser
 import models.viewmodels.govuk.SummaryListFluency
+import testconfig.TestConfig
+import testconfig.TestConfig._
 import views.html.{CheckYourAnswersView, ErrorTemplate}
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency {
 
   "Check Your Answers Controller" - {
 
-    "must fail with a 404 when the new-claim feature is disabled" in {
-      val application = applicationBuilder(config = Map("feature-flags.new-claim" -> false)).build()
+    "when the new-claim feature is enabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(newClaim = true))
 
-      running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
-        val view    = application.injector.instanceOf[ErrorTemplate]
+      "must return OK and the correct view for a GET" in {
+        userLoggedInChildBenefitUser(NinoUser)
 
-        val result = route(application, request).value
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers))
+          .configure(
+            "microservice.services.auth.port" -> wiremockPort
+          )
+          .build()
 
-        status(result) mustEqual NOT_FOUND
-        assertSameHtmlAfter(removeNonce)(
-          contentAsString(result),
-          view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
-            request,
-            messages(application, request)
-          ).toString
-        )
+        running(application) {
+          val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+            .withSession(("authToken", "Bearer 123"))
+
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[CheckYourAnswersView]
+          val list = SummaryListViewModel(Seq.empty)
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
+        }
+      }
+
+      "must redirect to Journey Recovery for a GET if no existing data is found" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val application = applicationBuilder(config, userAnswers = None).configure().build()
+
+        running(application) {
+          val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+            .withSession(("authToken", "Bearer 123"))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        }
       }
     }
 
-    "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+    "when the new-claim feature is disabled" - {
+      val config = TestConfig().withFeatureFlags(featureFlags(newClaim = false))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .configure(
-          "microservice.services.auth.port" -> wiremockPort
-        )
-        .build()
+      "must return Not Found and the Error view" in {
+        val application = applicationBuilder(config).build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
-          .withSession(("authToken", "Bearer 123"))
+        running(application) {
+          val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
+          val view    = application.injector.instanceOf[ErrorTemplate]
 
-        val result = route(application, request).value
+          val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CheckYourAnswersView]
-        val list = SummaryListViewModel(Seq.empty)
-
-        status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      userLoggedInChildBenefitUser(NinoUser)
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad.url)
-          .withSession(("authToken", "Bearer 123"))
-
-        val result = route(app, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+          status(result) mustEqual NOT_FOUND
+          assertSameHtmlAfter(removeNonce)(
+            contentAsString(result),
+            view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+              request,
+              messages(application, request)
+            ).toString
+          )
+        }
       }
     }
   }

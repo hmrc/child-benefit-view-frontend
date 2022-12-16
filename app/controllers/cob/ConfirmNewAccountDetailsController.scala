@@ -36,7 +36,7 @@ class ConfirmNewAccountDetailsController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    featureActions:           FeatureFlagComposedActions,
     getData:                  CobDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             ConfirmNewAccountDetailsFormProvider,
@@ -50,7 +50,7 @@ class ConfirmNewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
       changeOfBankService.getClaimantName.flatMap { claimantName =>
         val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
           case None        => form
@@ -73,7 +73,7 @@ class ConfirmNewAccountDetailsController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
       changeOfBankService.getClaimantName.flatMap { claimantName =>
         val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
         form
