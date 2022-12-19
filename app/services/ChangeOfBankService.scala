@@ -59,7 +59,7 @@ class ChangeOfBankService @Inject() (
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
-      _                     <- changeOfBankConnector.verifyClaimantBankAccount
+//    _                     <- changeOfBankConnector.verifyClaimantBankAccount Todo: This should be called properly in SB-1053
       claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
       formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
       childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)
