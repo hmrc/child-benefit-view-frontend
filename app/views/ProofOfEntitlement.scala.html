@@ -68,7 +68,7 @@
 
     @h2(messages("proofOfEntitlement.entitlementdetail.title"))
 
-    @para(messages("proofOfEntitlement.entitlementdetail.p1", claimantChocLink, childChocLink))
+    @para(messages("proofOfEntitlement.entitlementdetail.p1", claimantChocLink, childChocLink), extraClasses = Seq("govuk-!-display-none-print"))
 
     <!--details table-->
     @summaryList(
@@ -106,8 +106,8 @@
       }
     }
 
-    @h2(messages("proofOfEntitlement.viewpayments"))
+    @h2(messages("proofOfEntitlement.viewpayments"), extraClasses = Seq("govuk-!-display-none-print"))
 
-    @para(messages("proofOfEntitlement.viewrecentpayments.para", paymentsLink))
+    @para(messages("proofOfEntitlement.viewrecentpayments.para", paymentsLink), extraClasses = Seq("govuk-!-display-none-print"))
 
 }
