@@ -66,7 +66,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
         view.getElementById("change-account-h2").text mustBe messages("changeAccount.subHeading")
       }
       "claimant has building society roll number" in {
-        altView.getElementById("change-account-h2").text mustBe messages("changeAccount.subHeading.alt")
+        altView.getElementById("change-account-h2").text mustBe messages("changeAccount.subHeading")
       }
 
     }
