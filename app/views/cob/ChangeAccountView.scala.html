@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@
                     call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"),
                     newTab = true)
             }
-@subHeading = @{if(isStandardAccount) messages("changeAccount.subHeading") else messages("changeAccount.subHeading.alt")}
 
 @detailsTable = {@govukTable(
                     Table(
@@ -97,7 +96,7 @@
 <!--Account details table-->
     @{if(isStandardAccount) detailsTable else altDetailsTable}
 
-    @h2(subHeading, id = Some("change-account-h2"))
+    @h2(messages("changeAccount.subHeading"), id = Some("change-account-h2"))
 
     @para(messages("changeAccount.paragraph.1"))
 
