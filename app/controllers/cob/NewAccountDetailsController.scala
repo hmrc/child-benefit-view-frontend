@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,27 @@
 
 package controllers.cob
 
+import cats.data.EitherT
 import controllers.actions._
 import forms.cob.NewAccountDetailsFormProvider
+import scala.concurrent.Future
+import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
+import models.cob.NewAccountDetails
+import models.errors.CBError
+import play.api.mvc.{Request, Result}
+import repositories.SessionRepository
+import services.ChangeOfBankService
+import models.requests.OptionalDataRequest
 import models.{Mode, UserAnswers}
 import pages.cob.NewAccountDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.cob.NewAccountDetailsView
-
+import cats.syntax.either._
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext}
 
 class NewAccountDetailsController @Inject() (
     override val messagesApi: MessagesApi,
@@ -36,6 +44,7 @@ class NewAccountDetailsController @Inject() (
     navigator:                Navigator,
     featureActions:           FeatureFlagComposedActions,
     getData:                  CobDataRetrievalAction,
+    changeOfBankService:      ChangeOfBankService,
     formProvider:             NewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,
     view:                     NewAccountDetailsView
@@ -48,8 +57,17 @@ class NewAccountDetailsController @Inject() (
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.changeBankAction andThen getData) { implicit request =>
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
+        case None => form
+        case Some(value) =>
+          form
+            .bind(
+              Map(
+                "bacsError"             -> "",
+                "newSortCode"           -> value.newSortCode,
+                "newAccountHoldersName" -> value.newAccountHoldersName,
+                "newAccountNumber"      -> value.newAccountNumber
+              )
+            )
       }
 
       Ok(view(preparedForm, mode))
@@ -60,19 +78,59 @@ class NewAccountDetailsController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value => {
-
-            for {
-              updatedAnswers <- Future.fromTry(
-                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(NewAccountDetailsPage, value)
-              )
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield {
-
-              Redirect(navigator.nextPage(NewAccountDetailsPage, mode, updatedAnswers))
-            }
-          }
+          formWithErrors => {
+            Future.successful(BadRequest(view(formWithErrors, mode)))
+          },
+          value => validateBankSaveSessionAndRedirect(mode, value)
         )
     }
+
+  private def validateBankSaveSessionAndRedirect(mode: Mode, value: NewAccountDetails)(implicit
+      request:                                         OptionalDataRequest[AnyContent]
+  ): Future[Result] = {
+    val result: EitherT[Future, CBError, Result] = validateBank(value, mode) {
+      for {
+        updatedAnswers <- Future.fromTry(
+          request.userAnswers.getOrElse(UserAnswers(request.userId)).set(NewAccountDetailsPage, value)
+        )
+        _ <- sessionRepository.set(updatedAnswers)
+      } yield Redirect(navigator.nextPage(NewAccountDetailsPage, mode, updatedAnswers))
+    }
+
+    result.value.map(x => x.fold(_ => InternalServerError, r => r))
+  }
+
+  private def validateBank(value: NewAccountDetails, mode: Mode)(
+      block:                      Future[Result]
+  )(implicit request:             Request[_]):             EitherT[Future, CBError, Result] = {
+    changeOfBankService
+      .validate(
+        AccountHolderName(value.newAccountHoldersName),
+        SortCode(value.newSortCode),
+        BankAccountNumber(value.newAccountNumber)
+      )
+      .flatMap(msg => {
+        val foldedResult: Future[Result] = msg.fold({
+          block
+        })(x => {
+          Future.successful {
+            BadRequest(
+              view(
+                form
+                  .bind(
+                    Map(
+                      "bacsError"             -> x,
+                      "newSortCode"           -> value.newSortCode,
+                      "newAccountHoldersName" -> value.newAccountHoldersName,
+                      "newAccountNumber"      -> value.newAccountNumber
+                    )
+                  ),
+                mode
+              )
+            )
+          }
+        })
+        EitherT(foldedResult.map(x => x.asRight[CBError]))
+      })
+  }
 }
