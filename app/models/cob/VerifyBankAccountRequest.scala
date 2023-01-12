@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package models.cob
 
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.templates.ServiceUnavailableTemplate
+import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
+import play.api.libs.json.Json
 
-import javax.inject.Inject
+final case class VerifyBankAccountRequest(
+    accountHolderName: AccountHolderName,
+    sortCode:          SortCode,
+    bankAccount:       BankAccountNumber
+)
 
-class ServiceUnavailableController @Inject() (
-    val controllerComponents: MessagesControllerComponents,
-    view:                     ServiceUnavailableTemplate
-) extends FrontendBaseController
-    with I18nSupport {
-  def onPageLoad: Action[AnyContent] =
-    Action { implicit request =>
-      Ok(view())
-    }
+object VerifyBankAccountRequest {
+  implicit val format = Json.format[VerifyBankAccountRequest]
 }

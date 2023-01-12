@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,8 @@ import connectors.ChangeOfBankConnector
 import controllers.{cob, routes}
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
-import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation}
+import models.changeofbank.{AccountHolderName, BankAccountNumber, ClaimantBankAccountInformation, ClaimantBankInformation, SortCode}
+import models.cob.VerifyBankAccountRequest
 import models.errors.ChangeOfBankValidationError
 import play.api.http.Status
 import play.api.i18n.Messages
@@ -52,6 +53,20 @@ class ChangeOfBankService @Inject() (
       .fold(err => errorHandler.handleError(err), res => s"${res.firstForename.value} ${res.surname.value}")
       .map(_.toString)
 
+  def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
+      hc:                         HeaderCarrier,
+      ec:                         ExecutionContext
+  ): CBEnvelope[Option[String]] =
+    changeOfBankConnector
+      .verifyClaimantBankAccount(
+        VerifyBankAccountRequest(
+          accountHolderName,
+          sortCode,
+          bankAccountNumber
+        )
+      )
+      .biflatMap(c => CBEnvelope(Some(c.message)), _ => CBEnvelope(None))
+
   def processClaimantInformation(view: ChangeAccountView)(implicit
       ec:                              ExecutionContext,
       hc:                              HeaderCarrier,
@@ -59,7 +74,6 @@ class ChangeOfBankService @Inject() (
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
-//    _                     <- changeOfBankConnector.verifyClaimantBankAccount Todo: This should be called properly in SB-1053
       claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
       formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
       childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)

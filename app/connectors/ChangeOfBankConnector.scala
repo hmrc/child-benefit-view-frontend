@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@ import cats.syntax.either._
 import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
+import models.cob.VerifyBankAccountRequest
 import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError}
 import play.api.Logging
 import play.api.http.Status
+import play.api.libs.json.{JsSuccess, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import uk.gov.hmrc.http.{ForbiddenException, HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 
@@ -60,29 +62,36 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
       )
     }
 
-  //TODO - won't be a Boolean but this will be addressed in another ticket
-  def verifyClaimantBankAccount(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier
-  ): CBEnvelope[Boolean] =
+  implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
+    JsSuccess(())
+  }
+  def verifyClaimantBankAccount(verifyBankAccountRequest: VerifyBankAccountRequest)(implicit
+      ec:                                                 ExecutionContext,
+      hc:                                                 HeaderCarrier
+  ): CBEnvelope[Unit] = {
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.verifyBankAccountUrl)(httpReads, hc, ec)
+          .PUT(appConfig.verifyBankAccountUrl, verifyBankAccountRequest)(
+            VerifyBankAccountRequest.format,
+            httpReads,
+            hc,
+            ec
+          )
           .recover {
             case e: ForbiddenException if e.message.contains("ClaimantIsLockedOut") =>
               logger.debug(claimantVerificationLogMessage(e.responseCode, e.getMessage))
-              ClaimantIsLockedOutOfChangeOfBank(e.responseCode).asLeft[Boolean]
+              ClaimantIsLockedOutOfChangeOfBank(e.responseCode).asLeft[Unit]
             case e: HttpException =>
               logger.error(claimantVerificationLogMessage(e.responseCode, e.getMessage))
-              ConnectorError(e.responseCode, e.getMessage).asLeft[Boolean]
+              ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
             case e: UpstreamErrorResponse =>
               logger.error(claimantVerificationLogMessage(e.statusCode, e.getMessage))
-              ConnectorError(e.statusCode, e.getMessage).asLeft[Boolean]
+              ConnectorError(e.statusCode, e.getMessage).asLeft[Unit]
           }
       )
     }
-
+  }
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError =
     status match {
       case Status.FORBIDDEN if upstreamError.description.contains("ClaimantIsLockedOut") =>

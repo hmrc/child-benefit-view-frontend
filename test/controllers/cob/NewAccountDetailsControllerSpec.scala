@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
+import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
 import utils.TestData.NinoUser
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
@@ -84,7 +84,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
         userLoggedInChildBenefitUser(NinoUser)
-
+        verifyClaimantBankAccount(None)
         val mockSessionRepository = mock[SessionRepository]
         val application = applicationBuilder(config, userAnswers = Some(userAnswers))
           .overrides(
@@ -103,7 +103,18 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
-            view(form.fill(newAccountDetails), NormalMode)(
+            view(
+              form
+                .bind(
+                  Map(
+                    "bacsError"             -> "",
+                    "newSortCode"           -> newAccountDetails.newSortCode,
+                    "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
+                    "newAccountNumber"      -> newAccountDetails.newAccountNumber
+                  )
+                ),
+              NormalMode
+            )(
               request,
               messages(application)
             ).toString
@@ -113,7 +124,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
       "must redirect to the next page when valid data is submitted" in {
         userLoggedInChildBenefitUser(NinoUser)
-
+        verifyClaimantBankAccount(None)
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
@@ -144,6 +155,52 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
         }
       }
 
+      "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
+        userLoggedInChildBenefitUser(NinoUser)
+        verifyClaimantBankAccount(Some("{\"status\": 400, \"description\": \"Sort Code Not Found\"}"))
+
+        val mockSessionRepository = mock[SessionRepository]
+
+        val application =
+          applicationBuilder(config, userAnswers = Some(userAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, newAccountDetailsRoute)
+              .withFormUrlEncodedBody(
+                ("bacsError", "Sort Code Not Found"),
+                ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
+                ("newSortCode", newAccountDetails.newSortCode),
+                ("newAccountNumber", newAccountDetails.newAccountNumber)
+              )
+              .withSession("authToken" -> "Bearer 123")
+
+          val expectedBoundForm = form.bind(
+            Map(
+              "bacsError"             -> "Sort Code Not Found",
+              "newSortCode"           -> newAccountDetails.newSortCode,
+              "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
+              "newAccountNumber"      -> newAccountDetails.newAccountNumber
+            )
+          )
+
+          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+          when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+
+          val result = route(application, request).value
+          val view   = application.injector.instanceOf[NewAccountDetailsView]
+          status(result) mustEqual BAD_REQUEST
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view(expectedBoundForm, NormalMode)(request, messages(application)).toString
+          )
+        }
+      }
       "must return a Bad Request and errors when invalid data is submitted" in {
         userLoggedInChildBenefitUser(NinoUser)
 

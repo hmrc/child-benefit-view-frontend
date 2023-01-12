@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package forms.cob
 import models.cob.NewAccountDetails
 import play.api.data.Form
 import play.api.data.Forms._
+import utils.mappings.BacsErrorMapping.bacsString
 import utils.mappings.Mappings
 import utils.mappings.SanitisedNumberMapping.sanitisedNumber
 
@@ -33,6 +34,7 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[NewAccountDetails] =
     Form(
       mapping(
+        "bacsError" -> bacsString(),
         "newAccountHoldersName" -> text("newAccountDetails.error.newAccountHoldersName.required")
           .verifying(
             maxLength(nameMaxLength, "newAccountDetails.error.newAccountHoldersName.length"),
@@ -56,6 +58,8 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
           minLength(accountNumberMinLength, "newAccountDetails.error.newAccountNumber.length"),
           maxLength(accountNumberMaxLength, "newAccountDetails.error.newAccountNumber.length")
         )
-      )(NewAccountDetails.apply)(NewAccountDetails.unapply)
+      )((_, a, b, c) => NewAccountDetails(a, b, c))(a =>
+        Some(("", a.newAccountNumber, a.newSortCode, a.newAccountHoldersName))
+      )
     )
 }

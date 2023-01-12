@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package utils
 
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.changeofbank.ClaimantBankInformation
@@ -53,6 +54,25 @@ object Stubs {
           unauthorized.withHeader("WWW-Authenticate", s"""MDTP detail="$error"""")
         )
     )
+
+  def verifyClaimantBankAccount(message: Option[String]): StubMapping = {
+    val response: ResponseDefinitionBuilder = message.fold(
+      aResponse()
+        .withStatus(200)
+        .withBody("""""""")
+    )(msg =>
+      aResponse()
+        .withStatus(400)
+        .withBody(msg)
+    )
+
+    stubFor(
+      put(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
+        .willReturn(
+          response
+        )
+    )
+  }
 
   def entitlementsAndPaymentHistoryStub(result: ChildBenefitEntitlement): StubMapping =
     stubFor(
