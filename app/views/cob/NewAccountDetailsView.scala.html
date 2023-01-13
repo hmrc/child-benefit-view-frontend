@@ -30,15 +30,15 @@
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("newAccountDetails.title"))) {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+    }
+
     @heading(messages("newAccountDetails.heading"), classes = "govuk-heading-l")
 
     @paragraph(messages("newAccountDetails.paragraph"))
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
 
         @govukInput(
             InputViewModel(
