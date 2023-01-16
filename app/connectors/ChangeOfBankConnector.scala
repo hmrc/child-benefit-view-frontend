@@ -21,7 +21,7 @@ import cats.syntax.either._
 import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
-import models.cob.VerifyBankAccountRequest
+import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError}
 import play.api.Logging
 import play.api.http.Status
@@ -42,6 +42,9 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
 
   private val claimantVerificationLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank bank account verification: code=$code message=$message"
+
+  private val claimantUpdateBankLogMessage = (code: Int, message: String) =>
+    s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
 
   def getChangeOfBankClaimantInfo(implicit
       ec: ExecutionContext,
@@ -92,6 +95,31 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
       )
     }
   }
+
+  def updateBankAccount(updateBankAccountRequest: UpdateBankAccountRequest)(implicit
+      ec:                                         ExecutionContext,
+      hc:                                         HeaderCarrier
+  ): CBEnvelope[UpdateBankDetailsResponse] =
+    withHttpReads { implicit httpReads =>
+      EitherT(
+        httpClient
+          .PUT(appConfig.updateBankAccountUrl, updateBankAccountRequest)(
+            UpdateBankAccountRequest.format,
+            httpReads,
+            hc,
+            ec
+          )
+          .recover {
+            case e: HttpException =>
+              logger.error(claimantUpdateBankLogMessage(e.responseCode, e.getMessage))
+              ConnectorError(e.responseCode, e.getMessage).asLeft[UpdateBankDetailsResponse]
+            case e: UpstreamErrorResponse =>
+              logger.error(claimantUpdateBankLogMessage(e.statusCode, e.getMessage))
+              ConnectorError(e.statusCode, e.getMessage).asLeft[UpdateBankDetailsResponse]
+          }
+      )
+    }
+
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError =
     status match {
       case Status.FORBIDDEN if upstreamError.description.contains("ClaimantIsLockedOut") =>

@@ -26,6 +26,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.handlers.ErrorHandler
 import utils.navigation.Navigator
 import views.html.cob.ConfirmNewAccountDetailsView
 
@@ -42,7 +43,8 @@ class ConfirmNewAccountDetailsController @Inject() (
     formProvider:             ConfirmNewAccountDetailsFormProvider,
     changeOfBankService:      ChangeOfBankService,
     val controllerComponents: MessagesControllerComponents,
-    view:                     ConfirmNewAccountDetailsView
+    view:                     ConfirmNewAccountDetailsView,
+    errorHandler:             ErrorHandler
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
@@ -51,53 +53,64 @@ class ConfirmNewAccountDetailsController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
-      changeOfBankService.getClaimantName.flatMap { claimantName =>
-        val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
-          case None        => form
-          case Some(value) => form.fill(value)
-        }
-        val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-        Future.successful {
+      changeOfBankService.retrieveBankClaimantInfo.fold(
+        err => errorHandler.handleError(err),
+        claimantInfo => {
+          val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
+          val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
           Ok(
             view(
               preparedForm,
               mode,
-              claimantName,
+              s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
               changeAccount.get.newAccountHoldersName,
               changeAccount.get.newSortCode,
               changeAccount.get.newAccountNumber
             )
           )
         }
-      }
+      )
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
-      changeOfBankService.getClaimantName.flatMap { claimantName =>
-        val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(
-                BadRequest(
-                  view(
-                    formWithErrors,
-                    mode,
-                    claimantName,
-                    changeAccount.get.newAccountHoldersName,
-                    changeAccount.get.newSortCode,
-                    changeAccount.get.newAccountNumber
+      changeOfBankService.retrieveBankClaimantInfo.value.flatMap {
+        case Left(err) => Future.successful(errorHandler.handleError(err))
+        case Right(claimantInfo) => {
+          val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(
+                  BadRequest(
+                    view(
+                      formWithErrors,
+                      mode,
+                      s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
+                      changeAccount.get.newAccountHoldersName,
+                      changeAccount.get.newSortCode,
+                      changeAccount.get.newAccountNumber
+                    )
                   )
-                )
-              ),
-            value =>
-              for {
-                updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
-                _              <- sessionRepository.set(updatedAnswers)
-              } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
-          )
+                ),
+              value =>
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
+                  _              <- sessionRepository.set(updatedAnswers)
+                  _ <-
+                    changeOfBankService
+                      .submitClaimantChangeOfBank(
+                        claimantInfo.financialDetails.bankAccountInformation,
+                        changeAccount
+                      )
+                      .value
+                } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
+            )
+        }
       }
     }
 }
