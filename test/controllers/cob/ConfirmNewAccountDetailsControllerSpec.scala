@@ -18,16 +18,18 @@ package controllers.cob
 
 import connectors.ChangeOfBankConnector
 import forms.cob.ConfirmNewAccountDetailsFormProvider
+import models.CBEnvelope.CBEnvelope
+import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation}
 import models.cob.ConfirmNewAccountDetails.Yes
-import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
-import models.{NormalMode, UserAnswers}
+import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankDetailsResponse}
+import models.{CBEnvelope, NormalMode, UserAnswers}
 import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.{Call, Request}
+import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -38,7 +40,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.{NinoUser, claimantBankInformation}
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
@@ -63,17 +65,23 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
   val formProvider = new ConfirmNewAccountDetailsFormProvider()
   val form: Form[ConfirmNewAccountDetails] = formProvider()
 
-  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector, errorHandler = mockErrorHandler) {
-    override def getClaimantName(implicit
-        ec:           ExecutionContext,
-        hc:           HeaderCarrier,
-        auditService: AuditService,
-        request:      Request[_]
-    ): Future[String] = Future.successful(claimantName)
+  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector) {
+    override def retrieveBankClaimantInfo(implicit
+        ec: ExecutionContext,
+        hc: HeaderCarrier
+    ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(claimantBankInformation)
+
+    override def submitClaimantChangeOfBank(
+        currentBankInfo:    ClaimantBankAccountInformation,
+        newBankAccountInfo: Option[NewAccountDetails]
+    )(implicit
+        ec: ExecutionContext,
+        hc: HeaderCarrier
+    ): CBEnvelope[UpdateBankDetailsResponse] = CBEnvelope(UpdateBankDetailsResponse("submitted"))
   }
 
-  val claimantName      = "Susie Test"
-  val newAccountDetails = NewAccountDetails("Susie Test", "123456", "11110000")
+  val claimantName      = "John Doe"
+  val newAccountDetails = NewAccountDetails("John Doe", "123456", "11110000")
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -182,7 +190,8 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           applicationBuilder(config, userAnswers = userAnswers)
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-              bind[SessionRepository].toInstance(mockSessionRepository)
+              bind[SessionRepository].toInstance(mockSessionRepository),
+              bind[ChangeOfBankService].toInstance(cobService)
             )
             .build()
 

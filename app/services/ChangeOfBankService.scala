@@ -20,8 +20,8 @@ import connectors.ChangeOfBankConnector
 import controllers.{cob, routes}
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
-import models.changeofbank.{AccountHolderName, BankAccountNumber, ClaimantBankAccountInformation, ClaimantBankInformation, SortCode}
-import models.cob.VerifyBankAccountRequest
+import models.changeofbank._
+import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.ChangeOfBankValidationError
 import play.api.http.Status
 import play.api.i18n.Messages
@@ -29,29 +29,23 @@ import play.api.mvc.Results.{Ok, Redirect}
 import play.api.mvc.{Request, Result}
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.handlers.ErrorHandler
 import utils.helpers.ClaimantBankInformationHelper.formatClaimantBankInformation
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ChangeOfBankService @Inject() (
-    changeOfBankConnector: ChangeOfBankConnector,
-    errorHandler:          ErrorHandler
+    changeOfBankConnector: ChangeOfBankConnector
 ) {
 
-  def getClaimantName(implicit
-      ec:           ExecutionContext,
-      hc:           HeaderCarrier,
-      auditService: AuditService,
-      request:      Request[_]
-  ): Future[String] =
+  def retrieveBankClaimantInfo(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[ClaimantBankInformation] =
     changeOfBankConnector.getChangeOfBankClaimantInfo
-      .fold(err => errorHandler.handleError(err), res => s"${res.firstForename.value} ${res.surname.value}")
-      .map(_.toString)
 
   def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
       hc:                         HeaderCarrier,
@@ -78,6 +72,39 @@ class ChangeOfBankService @Inject() (
       formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
       childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)
     } yield childBenefitPage
+  }
+
+  def submitClaimantChangeOfBank(
+      currentBankInfo:    ClaimantBankAccountInformation,
+      newBankAccountInfo: Option[NewAccountDetails]
+  )(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[UpdateBankDetailsResponse] =
+    for {
+      newInfo <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(400)))
+      updateBankDetailsResponse <-
+        changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(currentBankInfo, newInfo))
+    } yield updateBankDetailsResponse
+
+  private def toUpdateBankAccountRequest(
+      currentBankInfo:    ClaimantBankAccountInformation,
+      newBankAccountInfo: NewAccountDetails
+  ) = {
+    UpdateBankAccountRequest(
+      currentBankInformation = BankDetails(
+        AccountHolderType.SomeoneElse,
+        currentBankInfo.accountHolderName.getOrElse(AccountHolderName("N/A")),
+        currentBankInfo.bankAccountNumber.getOrElse(BankAccountNumber("N/A")),
+        currentBankInfo.sortCode.getOrElse(SortCode("N/A"))
+      ),
+      updatedBankInformation = BankDetails(
+        AccountHolderType.SomeoneElse,
+        AccountHolderName(newBankAccountInfo.newAccountHoldersName),
+        BankAccountNumber(newBankAccountInfo.newAccountNumber),
+        SortCode(newBankAccountInfo.newSortCode)
+      )
+    )
   }
 
   private def validateToChangeOfBankPage(
