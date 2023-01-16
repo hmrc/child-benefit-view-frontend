@@ -62,10 +62,10 @@ class NewAccountDetailsController @Inject() (
           form
             .bind(
               Map(
-                "bacsError"             -> "",
                 "newSortCode"           -> value.newSortCode,
                 "newAccountHoldersName" -> value.newAccountHoldersName,
-                "newAccountNumber"      -> value.newAccountNumber
+                "newAccountNumber"      -> value.newAccountNumber,
+                "bacsError"             -> ""
               )
             )
       }
@@ -112,25 +112,34 @@ class NewAccountDetailsController @Inject() (
       .flatMap(msg => {
         val foldedResult: Future[Result] = msg.fold({
           block
-        })(x => {
-          Future.successful {
-            BadRequest(
-              view(
-                form
-                  .bind(
-                    Map(
-                      "bacsError"             -> x,
-                      "newSortCode"           -> value.newSortCode,
-                      "newAccountHoldersName" -> value.newAccountHoldersName,
-                      "newAccountNumber"      -> value.newAccountNumber
-                    )
-                  ),
-                mode
+        })(x =>
+          evaluateErrorResponse(x) {
+            Future.successful {
+              BadRequest(
+                view(
+                  form
+                    .bind(
+                      Map(
+                        "newSortCode"           -> value.newSortCode,
+                        "newAccountHoldersName" -> value.newAccountHoldersName,
+                        "newAccountNumber"      -> value.newAccountNumber,
+                        "bacsError"             -> x
+                      )
+                    ),
+                  mode
+                )
               )
-            )
+            }
           }
-        })
+        )
         EitherT(foldedResult.map(x => x.asRight[CBError]))
       })
   }
+  private def evaluateErrorResponse(message: String)(block: => Future[Result]): Future[Result] =
+    message match {
+      case "The maximum number of retries reached when calling BAR" => {
+        Future.successful(Redirect(routes.BARSLockOutController.onPageLoad))
+      }
+      case _ => block
+    }
 }

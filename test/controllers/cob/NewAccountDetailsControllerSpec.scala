@@ -173,7 +173,6 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
           val request =
             FakeRequest(POST, newAccountDetailsRoute)
               .withFormUrlEncodedBody(
-                ("bacsError", "Sort Code Not Found"),
                 ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
                 ("newSortCode", newAccountDetails.newSortCode),
                 ("newAccountNumber", newAccountDetails.newAccountNumber)
@@ -201,6 +200,42 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
           )
         }
       }
+
+      "must Redirect to Lock Out Page when backend returns 'The maximum number of retries reached when calling BAR' message" in {
+        userLoggedInChildBenefitUser(NinoUser)
+        verifyClaimantBankAccount(
+          Some("{\"status\": 400, \"description\": \"The maximum number of retries reached when calling BAR\"}")
+        )
+
+        val mockSessionRepository = mock[SessionRepository]
+
+        val application =
+          applicationBuilder(config, userAnswers = Some(userAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, newAccountDetailsRoute)
+              .withFormUrlEncodedBody(
+                ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
+                ("newSortCode", newAccountDetails.newSortCode),
+                ("newAccountNumber", newAccountDetails.newAccountNumber)
+              )
+              .withSession("authToken" -> "Bearer 123")
+
+          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+          when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+
+          val result = route(application, request).value
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustEqual Some("/child-benefit/change-bank/locked-out")
+        }
+      }
+
       "must return a Bad Request and errors when invalid data is submitted" in {
         userLoggedInChildBenefitUser(NinoUser)
 

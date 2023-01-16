@@ -34,7 +34,6 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
   def apply(): Form[NewAccountDetails] =
     Form(
       mapping(
-        "bacsError" -> bacsString(),
         "newAccountHoldersName" -> text("newAccountDetails.error.newAccountHoldersName.required")
           .verifying(
             maxLength(nameMaxLength, "newAccountDetails.error.newAccountHoldersName.length"),
@@ -57,9 +56,10 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
         ).verifying(
           minLength(accountNumberMinLength, "newAccountDetails.error.newAccountNumber.length"),
           maxLength(accountNumberMaxLength, "newAccountDetails.error.newAccountNumber.length")
-        )
-      )((_, a, b, c) => NewAccountDetails(a, b, c))(a =>
-        Some(("", a.newAccountNumber, a.newSortCode, a.newAccountHoldersName))
+        ),
+        "bacsError" -> bacsString()
+      )((a, b, c, _) => NewAccountDetails(a, b, c))(a =>
+        Some((a.newAccountNumber, a.newSortCode, a.newAccountHoldersName, ""))
       )
     )
 }
