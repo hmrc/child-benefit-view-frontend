@@ -2,6 +2,7 @@ label.back.link=Yn ôl
 
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
+site.continue = Yn eich blaen
 service.name = Child Benefit
 
 noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
@@ -98,3 +99,19 @@ service-unavailable-error-template.heading = Mae’n ddrwg gennym – mae proble
 service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes ymlaen.
 service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun ynglŷn â’ch dyfarniad Budd-dal Plant.
 service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
+
+# ------------------------- New Account Details ---------------------------
+
+confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd - Budd-dal Plant
+confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
+confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
+confirmNewAccountDetails.table.name = Yr enw sydd ar y cyfrif:
+confirmNewAccountDetails.table.sortCode = Cod didoli:
+confirmNewAccountDetails.table.accountNumber = Rhif y cyfrif:
+confirmNewAccountDetails.yes = Iawn
+confirmNewAccountDetails.no = Na, hoffwn eu newid
+confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn atom?
+confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
+confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
+
+# ------------------------------------------------------------------------------------
