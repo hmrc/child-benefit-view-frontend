@@ -135,11 +135,10 @@ class NewAccountDetailsController @Inject() (
         EitherT(foldedResult.map(x => x.asRight[CBError]))
       })
   }
-  private def evaluateErrorResponse(message: String)(block: => Future[Result]): Future[Result] =
+  private def evaluateErrorResponse(message: String)(block: => Future[Result]): Future[Result] = {
     message match {
-      case "The maximum number of retries reached when calling BAR" => {
-        Future.successful(Redirect(routes.BARSLockOutController.onPageLoad))
-      }
-      case _ => block
+      case "BAR locked" => Future.successful(Redirect(routes.BARSLockOutController.onPageLoad))
+      case _            => block
     }
+  }
 }

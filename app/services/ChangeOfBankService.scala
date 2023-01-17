@@ -35,6 +35,7 @@ import views.html.cob.ChangeAccountView
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import scala.util.matching.Regex
 
 @Singleton
 class ChangeOfBankService @Inject() (
@@ -47,10 +48,12 @@ class ChangeOfBankService @Inject() (
   ): CBEnvelope[ClaimantBankInformation] =
     changeOfBankConnector.getChangeOfBankClaimantInfo
 
+  private val mainError: Regex = """(?<=\[).+?(?=\])""".r
   def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
       hc:                         HeaderCarrier,
       ec:                         ExecutionContext
-  ): CBEnvelope[Option[String]] =
+  ): CBEnvelope[Option[String]] = {
+
     changeOfBankConnector
       .verifyClaimantBankAccount(
         VerifyBankAccountRequest(
@@ -59,8 +62,18 @@ class ChangeOfBankService @Inject() (
           bankAccountNumber
         )
       )
-      .biflatMap(c => CBEnvelope(Some(c.message)), _ => CBEnvelope(None))
+      .biflatMap(
+        c =>
+          CBEnvelope(
+            Some(extractMainError(c.message))
+          ),
+        _ => CBEnvelope(None)
+      )
+  }
 
+  private def extractMainError(message: String): String = {
+    mainError.findFirstIn(message).fold(message)(identity)
+  }
   def processClaimantInformation(view: ChangeAccountView)(implicit
       ec:                              ExecutionContext,
       hc:                              HeaderCarrier,

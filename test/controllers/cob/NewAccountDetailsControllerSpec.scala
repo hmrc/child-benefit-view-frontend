@@ -201,10 +201,12 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
         }
       }
 
-      "must Redirect to Lock Out Page when backend returns 'The maximum number of retries reached when calling BAR' message" in {
+      "must Redirect to Lock Out Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
         userLoggedInChildBenefitUser(NinoUser)
         verifyClaimantBankAccount(
-          Some("{\"status\": 400, \"description\": \"The maximum number of retries reached when calling BAR\"}")
+          Some(
+            "{\"status\": 400, \"description\": \"[BAR locked] - The maximum number of retries reached when calling BAR\"}"
+          )
         )
 
         val mockSessionRepository = mock[SessionRepository]

@@ -220,6 +220,12 @@ newAccountDetails.error.newAccountNumber.format = Enter a valid account number l
 newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 newAccountDetails.newSortCode.change.hidden = newSortCode
 newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
+newAccountDetails.error.bacs.priority1 = Sort code not found — check the sort code
+newAccountDetails.error.bacs.priority2 = Account not found — check the sort code and account number
+newAccountDetails.error.bacs.priority3 = You cannot use this service for this type of account — enter details of a personal bank account or a building society without a roll number
+newAccountDetails.error.bacs.priority4 = Account does not accept direct credit transfer — enter different account details
+newAccountDetails.error.bacs.priority5 = Account cannot be verified — check the account name, sort code and account number
+newAccountDetails.error.bacs.priority6 = Account name does not match account details — check account name
 
 accountChanged.title = Your account details have been changed
 accountChanged.heading = Your account details have been changed

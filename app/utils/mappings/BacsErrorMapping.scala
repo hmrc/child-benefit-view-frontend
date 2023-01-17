@@ -27,7 +27,10 @@ object BacsErrorMapping {
       override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
         data
           .get("bacsError")
-          .map { rawValue => if (rawValue.isEmpty) Right(rawValue) else Left(Seq(FormError(rawValue, rawValue))) }
+          .map { rawValue =>
+            if (rawValue.isEmpty) Right(rawValue)
+            else Left(Seq(FormError(key, s"newAccountDetails.error.bacs.$rawValue")))
+          }
           .getOrElse(Right(""))
       }
 
