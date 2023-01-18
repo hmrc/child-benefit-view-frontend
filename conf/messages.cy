@@ -102,6 +102,15 @@ service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arn
 
 # ------------------------- New Account Details ---------------------------
 
+accountChanged.title = Mae manylion eich cyfrif wedi’u newid
+accountChanged.heading = Mae manylion eich cyfrif wedi’u newid
+accountChanged.subHeading.1 = Yr hyn sy’n digwydd nesaf
+accountChanged.paragraph.1 = Bydd CThEF nawr yn dechrau talu Budd-dal Plant i’ch cyfrif newydd. Fodd bynnag, os yw’ch taliad nesaf yn ddyledus yn ystod y 3 diwrnod gwaith nesaf, caiff hwnnw ei dalu i’ch cyfrif blaenorol.
+accountChanged.subHeading.2 = Cyn i chi fynd
+accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau.
+accountChanged.feedback = {0}
+accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth.
+
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd - Budd-dal Plant
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
