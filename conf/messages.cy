@@ -100,6 +100,21 @@ service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes
 service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun ynglŷn â’ch dyfarniad Budd-dal Plant.
 service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
 
+# ---------------------------- Change Of Bank ----------------------------
+changeAccount.title = Caiff eich Budd-dal Plant ei dalu i’r cyfrif hwn
+changeAccount.heading = Caiff eich Budd-dal Plant ei dalu i’r cyfrif hwn
+changeAccount.subHeading = Newid y cyfrif hwn
+changeAccount.paragraph.1 = Defnyddiwch y gwasanaeth hwn i newid i gyfrif banc personol neu gyfrif cymdeithas adeiladu heb rif rôl.
+changeAccount.warning = Os byddwch yn newid cyfrif, a bod taliad yn ddyledus cyn pen 3 diwrnod gwaith, caiff hwn ei dalu i’ch cyfrif blaenorol.
+changeAccount.paragraph.2 = Mae angen i chi {0}.
+changeAccount.link.text = ddefnyddio gwasanaeth arall er mwyn newid i fath gwahanol o gyfrif.
+changeAccount.notification.text = Ni allwn ddangos y cod didoli na rhif y cyfrif oherwydd eich bod yn defnyddio cyfrif cymdeithas adeiladu sydd â rhif rôl.
+changeAccount.table.name = Yr enw sydd ar y cyfrif:
+changeAccount.table.sort.code = Cod didoli:
+changeAccount.table.account.number = Rhif y cyfrif:
+changeAccount.button.1 = Yn eich blaen
+changeAccount.button.2 = Peidio â newid
+
 # ------------------------- New Account Details ---------------------------
 
 accountChanged.title = Mae manylion eich cyfrif wedi’u newid
