@@ -3,7 +3,7 @@ label.back.link=Yn ôl
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
 site.continue = Yn eich blaen
-service.name = Child Benefit
+service.name = Budd-dal Plant
 
 noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
 noAccountFound.explanation=Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
