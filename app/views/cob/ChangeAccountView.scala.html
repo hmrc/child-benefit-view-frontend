@@ -35,11 +35,7 @@
 
 @isStandardAccount = @{accountDetails.buildingSocietyRollNumber.isEmpty}
 
-@formLink = {@link( id = "form-link",
-                    text = messages("changeAccount.link.text"),
-                    call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"),
-                    newTab = true)
-            }
+@formLink = {@link( id = "form-link", text = messages("changeAccount.link.text"), call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"), newTab = true)}
 
 @detailsTable = {@govukTable(
                     Table(
