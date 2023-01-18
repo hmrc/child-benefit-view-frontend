@@ -36,6 +36,9 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
 
 
 @layout(pageTitle = title(form, messages("confirmNewAccountDetails.title"))) {
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+    }
 
     @captionHeader(claimantName)
 
@@ -53,10 +56,6 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
     ))
 
     @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-        }
 
         @h2(messages("confirmNewAccountDetails.subHeading"), Some("confirm-details-h2"))
         @govukRadios(
