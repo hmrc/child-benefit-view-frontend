@@ -5,7 +5,7 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc"       %% "play-frontend-hmrc"            % "3.21.0-play-28",
+    "uk.gov.hmrc"       %% "play-frontend-hmrc"            % "3.29.0-play-28",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % "1.11.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % "5.24.0",
     "uk.gov.hmrc"       %% "play-language"                 % "5.3.0-play-28",
