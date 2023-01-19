@@ -75,13 +75,7 @@
         SummaryList(
             rows = Seq(
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.claimantname"))), value = Value(HtmlContent(entitlement.claimant.name.value))),
-                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(
-                    s"${entitlement.claimant.fullAddress.addressLine1.value}</br> " +
-                            s"${entitlement.claimant.fullAddress.addressLine2.value}</br> " +
-                            s"${entitlement.claimant.fullAddress.addressLine3.map(a => s"${a.value} </br>").getOrElse("")}" +
-                            s"${entitlement.claimant.fullAddress.addressLine4.map(a => s"${a.value} </br>").getOrElse("")}" +
-                            s"${entitlement.claimant.fullAddress.addressLine5.map(a => s"${a.value} </br>").getOrElse("")}" +
-                            s"${entitlement.claimant.fullAddress.addressPostcode.value}"))),
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.address"))), value = Value(HtmlContent(entitlement.claimant.fullAddress.toPageDisplayString))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.amount"))), value = Value(HtmlContent(messages("proofOfEntitlement.perweek", formatMoney(entitlement.claimant.awardValue))))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatEntitlementDate(entitlement.claimant.awardStartDate, checkForSpecialAwardStartDate = true)))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatEntitlementDate(entitlement.claimant.awardEndDate)))),

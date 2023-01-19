@@ -30,4 +30,7 @@ object StringHelper {
       str.split(delimiter).map(f => if (exceptedWords.contains(f)) f else f.capitalize).mkString(delimiter)
     )
   }
+
+  def isWhitespaceOnly(str: String): Boolean =
+    str.forall(_.isWhitespace)
 }

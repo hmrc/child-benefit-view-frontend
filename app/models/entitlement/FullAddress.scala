@@ -18,6 +18,7 @@ package models.entitlement
 
 import models.common.{AddressLine, AddressPostcode}
 import play.api.libs.json.Json
+import utils.helpers.StringHelper
 
 final case class FullAddress(
     addressLine1:    AddressLine,
@@ -34,6 +35,18 @@ final case class FullAddress(
       s"${addressLine4.fold("")(_.value)} " +
       s"${addressLine5.fold("")(_.value)} " +
       s"${addressPostcode.value}"
+
+  def toPageDisplayString: String = {
+    s"${if (!StringHelper.isWhitespaceOnly(addressLine1.value)) addressLine1.value + "</br>" else ""}" +
+      s"${if (!StringHelper.isWhitespaceOnly(addressLine2.value)) addressLine2.value + "</br>" else ""}" +
+      s"${addressLine3
+        .fold("")(address => if (!StringHelper.isWhitespaceOnly(address.value)) address.value + "</br>" else "")} " +
+      s"${addressLine4
+        .fold("")(address => if (!StringHelper.isWhitespaceOnly(address.value)) address.value + "</br>" else "")} " +
+      s"${addressLine5
+        .fold("")(address => if (!StringHelper.isWhitespaceOnly(address.value)) address.value + "</br>" else "")} " +
+      s"${if (!StringHelper.isWhitespaceOnly(addressPostcode.value)) addressPostcode.value + "</br>" else ""}"
+  }
 }
 
 object FullAddress {
