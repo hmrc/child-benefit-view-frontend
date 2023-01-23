@@ -116,6 +116,9 @@ changeAccount.button.1 = Yn eich blaen
 changeAccount.button.2 = Peidio â newid
 
 # ------------------------- New Account Details ---------------------------
+accountNotChanged.title = Nid ydych wedi newid eich cyfrif
+accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
+accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfrif.
 
 accountChanged.title = Mae manylion eich cyfrif wedi’u newid
 accountChanged.heading = Mae manylion eich cyfrif wedi’u newid
