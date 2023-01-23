@@ -1,25 +1,41 @@
 label.back.link=Yn ôl
 
+service.name = Budd-dal Plant
+
+# ---------- Site Section -----------------------
+site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
 site.continue = Yn eich blaen
-service.name = Budd-dal Plant
 
-noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
-noAccountFound.explanation=Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
-noAccountFound.reason=Gall hyn fod oherwydd:
-noAccountFound.bulletPoint1=nid ydych wedi hawlio
-noAccountFound.bulletPoint2=mae hawliad yr ydych wedi’i wneud yn dal i gael ei brosesu
-noAccountFound.bulletPoint3=cafodd yr hawliad ei wneud gan rywun arall - er enghraifft, mae’n bosibl ei fod yn enw eich partner
-noAccountFound.bulletPoint4=nid ydych yn cael Budd-dal Plant mwyach
-noAccountFound.callInfo1=Gallwch ein ffonio os oes angen gwybodaeth arnoch am hawliad sydd wedi dod i ben.
-noAccountFound.callInfo2=Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
+# ---------- Date Section -----------------------
 
-notFound.header=Heb ddod o hyd i’r dudalen
-notFound.explanation1=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
-notFound.explanation2=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+# ---------- Timeout Section --------------------
+timeout.title = Rydych ar fin cael eich allgofnodi
+timeout.message = Er eich diogelwch, byddwn yn eich allgofnodi cyn pen
+timeout.keepAlive = Parhau i fod wedi’ch mewngofnodi
+timeout.signOut = Allgofnodi
 
-# ---------------------------- Helpline Section ----------------------------
+# ---------- Error Section ----------------------
+
+# ---------- Index Section ----------------------
+
+# ---------- Check Your Answers Section ---------
+
+# ---------- Journey Recovery Section -----------
+
+# ---------- Signed Out Section -----------------
+signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
+signedOut.guidance = Ni wnaethom gadw’ch atebion.
+
+# ---------- Unauthorised Section ---------------
+unauthorised.title = Ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
+unauthorised.heading = Ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
+
+# ---------- Homepage Section -------------------
+
+# ---------- Helpline Section -------------------
 helpline.info.title = Gwasanaeth Cwsmeriaid Cymraeg CThEM
 helpline.info.telephone = Ffôn: 0300 200 1900
 helpline.info.welshTelephone = Gwasanaeth Saesneg: 0300 200 3100
@@ -29,7 +45,7 @@ helpline.info.availability = Dydd Llun - Dydd Gwener, 08:30 - 17:30
 helpline.info.charges = Gwybodaeth am gostau galwadau
 helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 
-# ---------------------------- Proof Of Entitlement ----------------------------
+# ---------- Proof of Entitlement Section -------
 proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
 proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
 proofOfEntitlement.paidDetail=Caiff Budd-dal Plant ei dalu ar y cyfraddau canlynol:
@@ -52,10 +68,8 @@ proofOfEntitlement.viewpayments=Bwrw golwg dros eich taliadau Budd-dal Plant
 proofOfEntitlement.viewrecentpayments.para = Gallwch {0} a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
 proofOfEntitlement.viewrecentpayments.link = fwrw golwg dros eich taliadau Budd-dal Plant diweddar
 proofOfEntitlement.printMessage=Argraffu’r dudalen hon
-# ------------------------------------------------------------------------------------
 
-
-# ---------------------------- View Payment History ----------------------------
+# ---------- Payment History Section ------------
 paymentHistory.pageTitle = Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
 paymentHistory.title = Hanes taliadau Budd-dal Plant
 paymentHistory.viewEntitlementProof = Bwrw golwg dros dystiolaeth o’ch hawl i Fudd-dal Plant
@@ -66,7 +80,7 @@ paymentHistory.recentCBPayments.p1 = Y 5 taliad diweddaraf a wnaed yn ystod y 2 
 paymentHistory.table.date = Dyddiad
 paymentHistory.table.amount = Swm
 
-# --------- No Payment History ---------
+# ---------- No Payment History Section ---------
 # ---- Variant 2 - In payment without payments in last 2 years
 paymentHistory.v2.noReceivedPayments=Nid ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
 
@@ -78,7 +92,7 @@ paymentHistory.v4.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw dali
 paymentHistory.v6.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
 paymentHistory.v6.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
 
-# --------- Some Payment History ---------
+# ---------- Some Payment History Section -------
 # ---- Variant 1 - In payment with payments in last 2 years
 paymentHistory.v1.header = Cael gwybod pryd y cewch eich talu nesaf
 paymentHistory.v1.p1 = Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
@@ -93,14 +107,34 @@ paymentHistory.v3.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu d
 # ---- Variant 5 - Entitlement ended but received payments in last 2 year
 paymentHistory.v5.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
 paymentHistory.v5.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
-# ------------------------------------------------------------------------------------
 
+# ---------- Service Unavailable Section --------
 service-unavailable-error-template.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 service-unavailable-error-template.paragraph.1 = Rhowch gynnig arall arni yn nes ymlaen.
 service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech siarad â rhywun ynglŷn â’ch dyfarniad Budd-dal Plant.
 service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
 
-# ---------------------------- Change Of Bank ----------------------------
+# ---------- No Account Found Section -----------
+noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
+noAccountFound.explanation=Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
+noAccountFound.reason=Gall hyn fod oherwydd:
+noAccountFound.bulletPoint1=nid ydych wedi hawlio
+noAccountFound.bulletPoint2=mae hawliad yr ydych wedi’i wneud yn dal i gael ei brosesu
+noAccountFound.bulletPoint3=cafodd yr hawliad ei wneud gan rywun arall - er enghraifft, mae’n bosibl ei fod yn enw eich partner
+noAccountFound.bulletPoint4=nid ydych yn cael Budd-dal Plant mwyach
+noAccountFound.callInfo1=Gallwch ein ffonio os oes angen gwybodaeth arnoch am hawliad sydd wedi dod i ben.
+noAccountFound.callInfo2=Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
+
+# ---------- Not Found Section ------------------
+notFound.header=Heb ddod o hyd i’r dudalen
+notFound.explanation1=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+notFound.explanation2=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+
+# ---------- Dummy Flag Section -----------------
+
+# ---------- Page Not Found Section -------------
+
+# ---------- Change Account Section -------------
 changeAccount.title = Caiff eich Budd-dal Plant ei dalu i’r cyfrif hwn
 changeAccount.heading = Caiff eich Budd-dal Plant ei dalu i’r cyfrif hwn
 changeAccount.subHeading = Newid y cyfrif hwn
@@ -115,11 +149,7 @@ changeAccount.table.account.number = Rhif y cyfrif:
 changeAccount.button.1 = Yn eich blaen
 changeAccount.button.2 = Peidio â newid
 
-# ------------------------- New Account Details ---------------------------
-accountNotChanged.title = Nid ydych wedi newid eich cyfrif
-accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
-accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfrif.
-
+# ---------- Account Changed Section ------------
 accountChanged.title = Mae manylion eich cyfrif wedi’u newid
 accountChanged.heading = Mae manylion eich cyfrif wedi’u newid
 accountChanged.subHeading.1 = Yr hyn sy’n digwydd nesaf
@@ -129,6 +159,16 @@ accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau
 accountChanged.feedback = {0}
 accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth.
 
+# ---------- Account Not Changed Section --------
+accountNotChanged.title = Nid ydych wedi newid eich cyfrif
+accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
+accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfrif.
+
+# ---------- New Account Section ----------------
+
+# ---------- BARS Lockout Section ---------------
+
+# ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd - Budd-dal Plant
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
@@ -141,4 +181,6 @@ confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn
 confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
 confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
-# ------------------------------------------------------------------------------------
+# ---------- HICBC Opted Out Section ------------
+
+# ---------- Cannot Verify Account Section ------

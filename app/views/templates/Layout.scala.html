@@ -23,7 +23,7 @@
 @this(
         appConfig: FrontendAppConfig,
         hmrcLayout: HmrcLayout,
-        hmrcTimeoutDialog: HmrcTimeoutDialog,
+        hmrcTimeoutDialog: HmrcTimeoutDialogHelper,
         govukPhaseBanner: GovukPhaseBanner,
         standardBetaBanner: StandardBetaBanner,
         dataLayerTemplate: DataLayerTemplate
@@ -38,16 +38,15 @@
 @customAdditionalHeadBlock = {
   @if(timeout) {
       @hmrcTimeoutDialog(
-      TimeoutDialog(
       timeout = Some(appConfig.timeout),
       countdown = Some(appConfig.countdown),
       keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
       keepAliveButtonText = Some(messages("timeout.keepAlive")),
-      signOutUrl = Some(controllers.auth.routes.AuthController.signOutNoSurvey.url),
+      signOutUrl = controllers.auth.routes.AuthController.signOutNoSurvey.url,
       signOutButtonText = Some(messages("timeout.signOut")),
       title = Some(messages("timeout.title")),
       message = Some(messages("timeout.message"))
-      ))
+      )
   }
   <link href='@controllers.routes.Assets.versioned("stylesheets/print.css")' media="all" rel="stylesheet" type="text/css" />
   <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />

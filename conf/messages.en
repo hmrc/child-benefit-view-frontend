@@ -1,3 +1,10 @@
+label.back.link=Back
+
+service.name = Child Benefit
+appName = "sca-apply-chb-frontend"
+sca-apply-chb-frontend=Apply CHB Frontend
+
+# ---------- Site Section -----------------------
 site.back = Back
 site.remove = Remove
 site.change = Change
@@ -10,15 +17,18 @@ site.signIn = Sign in
 site.govuk = GOV.UK
 site.technicalProblemMessage = Is this page not working properly? (opens in new tab)
 
+# ---------- Date Section -----------------------
 date.day = Day
 date.month = Month
 date.year = Year
 
+# ---------- Timeout Section --------------------
 timeout.title = You’re about to be signed out
 timeout.message = For security reasons, you will be signed out of this service in
 timeout.keepAlive = Stay signed in
 timeout.signOut = Sign out
 
+# ---------- Error Section ----------------------
 error.browser.title.prefix = Error:
 error.boolean = Please give an answer
 error.invalid_date = Give a correct date
@@ -34,14 +44,16 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-
+# ---------- Index Section ----------------------
 index.title = child-benefit-view-frontend
 index.heading = child-benefit-view-frontend
 index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
 
+# ---------- Check Your Answers Section ---------
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 
+# ---------- Journey Recovery Section -----------
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
 journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
@@ -49,20 +61,16 @@ journeyRecovery.startAgain.title = Sorry, there is a problem with the service
 journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
 journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
 
+# ---------- Signed Out Section -----------------
 signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+# ---------- Unauthorised Section ---------------
+unauthorised.title = You cannot access this service with this account
+unauthorised.heading = You cannot access this service with this account
 
-service.name = Child Benefit
-
-sca-apply-chb-frontend=Apply CHB Frontend
-appName = "sca-apply-chb-frontend"
-
-
-label.back.link=Back
+# ---------- Homepage Section -------------------
 homepage.text1=Apply for Child Benefit
 homepage.text2=You can only use this online service if:
 homepage.text3=this is your first Child Benefit application
@@ -80,7 +88,7 @@ homepage.text14=your bank or building society details
 homepage.text15=What do we mean by ’partner’?
 homepage.text16=’Partner’ means someone you’re married to and not permanently separated from, a civil partner, or someone you’re living with as if they were your civil partner.
 
-# ---------------------------- Helpline Section ----------------------------
+# ---------- Helpline Section -------------------
 helpline.info.title = Child Benefit helpline
 helpline.info.telephone = Telephone: 0300 200 3100
 helpline.info.welshTelephone = Welsh language: 0300 200 1900
@@ -90,7 +98,7 @@ helpline.info.availability = Monday to Friday, 8AM to 6PM
 helpline.info.charges = Find out about call charges
 helpline.info.callChargesUrl = https://www.gov.uk/call-charges
 
-# ---------------------------- Proof Of Entitlement ----------------------------
+# ---------- Proof of Entitlement Section -------
 proofOfEntitlement.title=Proof of entitlement to Child Benefit
 proofOfEntitlement.confirmation=This is confirmation from HMRC of the Child Benefit entitlement for {0} on {1}.
 proofOfEntitlement.paidDetail=Child Benefit is paid at:
@@ -113,10 +121,8 @@ proofOfEntitlement.viewpayments=View your Child Benefit payments
 proofOfEntitlement.viewrecentpayments.para = You can {0} and see your last 5 payment dates and how much you were paid.
 proofOfEntitlement.viewrecentpayments.link = view your recent Child Benefit payments
 proofOfEntitlement.printMessage = Print this page
-# ------------------------------------------------------------------------------------
 
-
-# ---------------------------- View Payment History ----------------------------
+# ---------- Payment History Section ------------
 paymentHistory.pageTitle = Child Benefit payment history - Child Benefit - GOV.UK
 paymentHistory.title = Child Benefit payment history
 paymentHistory.viewEntitlementProof = View proof of your entitlement to Child Benefit
@@ -127,7 +133,7 @@ paymentHistory.recentCBPayments.p1 = The 5 most recent payments made within the 
 paymentHistory.table.date = Date
 paymentHistory.table.amount = Amount
 
-# --------- No Payment History ---------
+# ---------- No Payment History Section ---------
 # ---- Variant 2 - In payment without payments in last 2 years
 paymentHistory.v2.noReceivedPayments=You have not received any payments in the last 2 years.
 
@@ -139,7 +145,7 @@ paymentHistory.v4.p2=Our records show that you have not received any payments in
 paymentHistory.v6.p1=You are no longer entitled to receive Child Benefit.
 paymentHistory.v6.p2=Our records show that you have not received any payments in the last 2 years.
 
-# --------- Some Payment History ---------
+# ---------- Some Payment History Section -------
 # ---- Variant 1 - In payment with payments in last 2 years
 paymentHistory.v1.header=Find out when you’ll be paid next
 paymentHistory.v1.p1 = If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
@@ -154,13 +160,14 @@ paymentHistory.v3.p2=Our records show that you have received a payment or paymen
 # ---- Variant 5 - Entitlement ended but received payments in last 2 year
 paymentHistory.v5.p1=You are no longer entitled to receive Child Benefit.
 paymentHistory.v5.p2=Our records show that you have received a payment or payments in the last 2 years.
-# ------------------------------------------------------------------------------------
 
+# ---------- Service Unavailable Section --------
 service-unavailable-error-template.heading = Sorry, there is a problem with the service
 service-unavailable-error-template.paragraph.1 = Try again later.
 service-unavailable-error-template.paragraph.2 = You can call us if you’d like to speak with someone about your Child Benefit award.
 service-unavailable-error-template.paragraph.3 = When you call, you’ll need your National Insurance number.
 
+# ---------- No Account Found Section -----------
 noAccountFound.header=You’re not claiming Child Benefit
 noAccountFound.explanation=We cannot find a Child Benefit claim for you.
 noAccountFound.reason=This might be because:
@@ -171,18 +178,21 @@ noAccountFound.bulletPoint4=you no longer receive Child Benefit
 noAccountFound.callInfo1=You can call us if you need information about a claim that has ended.
 noAccountFound.callInfo2=When you call, you’ll need your National Insurance number.
 
+# ---------- Not Found Section ------------------
 notFound.header=Page not found
 notFound.explanation1=If you typed the web address, check it’s correct.
 notFound.explanation2=If you pasted the web address, check you copied the entire address.
 
+# ---------- Dummy Flag Section -----------------
 dummyFlag.title=Dummy Flag
 dummyFlag.heading=This page will be removed
 
+# ---------- Page Not Found Section -------------
 pageNotFound.title=Page not found
 pageNotFound.heading=This page can’t be found
 pageNotFound.paragraph1=Please check that you have entered the correct web address.
 
-# ---------------------------- Change Of Bank ----------------------------
+# ---------- Change Account Section -------------
 changeAccount.title = Your Child Benefit is paid into this account
 changeAccount.heading = Your Child Benefit is paid into this account
 changeAccount.subHeading = Change this account
@@ -197,7 +207,22 @@ changeAccount.table.account.number = Account number:
 changeAccount.button.1 = Continue
 changeAccount.button.2 = Do not change
 
-# ------------------------- New Account Details ---------------------------
+# ---------- Account Changed Section ------------
+accountChanged.title = Your account details have been changed
+accountChanged.heading = Your account details have been changed
+accountChanged.subHeading.1 = What happens next
+accountChanged.paragraph.1 = HMRC will now start paying Child Benefit into your new account. However, if your next payment’s due within the next 3 working days, that will be paid into your previous account.
+accountChanged.subHeading.2 = Before you go
+accountChanged.paragraph.2 = We use feedback to make our services better.
+accountChanged.feedback = Please {0}.
+accountChanged.feedback.link.text = take the feedback survey
+
+# ---------- Account Not Changed Section --------
+accountNotChanged.title = You have not changed your account
+accountNotChanged.heading = You have not changed your account
+accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
+
+# ---------- New Account Section ----------------
 newAccountDetails.title = New Account Details
 newAccountDetails.heading = Tell us the new account details
 newAccountDetails.paragraph = If you want to use an account that’s not in your name, you’re responsible for making sure you get the money and that the money is used how you want.
@@ -226,25 +251,14 @@ newAccountDetails.error.bacs.priority4 = Account does not accept direct credit t
 newAccountDetails.error.bacs.priority5 = Account cannot be verified — check the account name, sort code and account number
 newAccountDetails.error.bacs.priority6 = Account name does not match account details — check account name
 
-accountChanged.title = Your account details have been changed
-accountChanged.heading = Your account details have been changed
-accountChanged.subHeading.1 = What happens next
-accountChanged.paragraph.1 = HMRC will now start paying Child Benefit into your new account. However, if your next payment’s due within the next 3 working days, that will be paid into your previous account.
-accountChanged.subHeading.2 = Before you go
-accountChanged.paragraph.2 = We use feedback to make our services better.
-accountChanged.feedback = Please {0}.
-accountChanged.feedback.link.text = take the feedback survey
-
-accountNotChanged.title = You have not changed your account
-accountNotChanged.heading = You have not changed your account
-accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
-
+# ---------- BARS Lockout Section ---------------
 bARSLockOut.title = You’re locked out of this service
 bARSLockOut.heading = You’re locked out of this service
 bARSLockOut.para.1 = You’re locked out because you entered details that could not be verified too many times within the last 24 hours.
 bARSLockOut.para.2 = You can {0} for your Child Benefit payments.
 bARSLockOut.link.text = use a different service to change the account details
 
+# ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Check and confirm your new account details
 confirmNewAccountDetails.heading = Check and confirm your new account details
 confirmNewAccountDetails.subHeading = Do you want to send us these details?
@@ -257,16 +271,16 @@ confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these de
 confirmNewAccountDetails.error.required = Select ‘Yes’ or ‘No, I want to change them’
 confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
+# ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = You cannot use this service because you do not receive Child Benefit payments
 hICBCOptedOutPayments.heading = You cannot use this service because you do not receive Child Benefit payments
 hICBCOptedOutPayments.paragraph.1 = You do not receive payments because you’ve told us you do not want to pay the High Income Child Benefit Charge.
 hICBCOptedOutPayments.paragraph.2 = You can tell us if you want to {0}.
 hICBCOptedOutPayments.guide.link.text = start receiving Child Benefit payments
 
+# ---------- Cannot Verify Account Section ------
 cannotVerifyAccount.title = We cannot verify the account details you’ve provided
 cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
 cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
 cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
 cannotVerifyAccount.link.text = use a different service to change the account details
-
-# ------------------------------------------------------------------------------------
