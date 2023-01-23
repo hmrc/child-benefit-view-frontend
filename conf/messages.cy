@@ -46,28 +46,28 @@ helpline.info.charges = Gwybodaeth am gostau galwadau
 helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 
 # ---------- Proof of Entitlement Section -------
-proofOfEntitlement.title=Tystiolaeth o hawl i Fudd-dal Plant
-proofOfEntitlement.confirmation=Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
-proofOfEntitlement.paidDetail=Caiff Budd-dal Plant ei dalu ar y cyfraddau canlynol:
-proofOfEntitlement.firstChild={0} ar gyfer y plentyn hynaf neu’r unig blentyn
-proofOfEntitlement.additionalchild={0} ar gyfer pob plentyn ychwanegol
-proofOfEntitlement.entitlementdetail.title=Manylion hawl yr hawliwr
-proofOfEntitlement.entitlementdetail.p1=Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch {0} neu am newidiadau i {1}, a byddwn yn eu diweddaru ar eich cyfer.
+proofOfEntitlement.title = Tystiolaeth o hawl i Fudd-dal Plant
+proofOfEntitlement.confirmation = Cadarnhad yw hwn gan CThEF o’r hawl i Fudd-dal Plant ar gyfer {0} ar {1}.
+proofOfEntitlement.paidDetail = Caiff Budd-dal Plant ei dalu ar y cyfraddau canlynol:
+proofOfEntitlement.firstChild = {0} ar gyfer y plentyn hynaf neu’r unig blentyn
+proofOfEntitlement.additionalchild = {0} ar gyfer pob plentyn ychwanegol
+proofOfEntitlement.entitlementdetail.title = Manylion hawl yr hawliwr
+proofOfEntitlement.entitlementdetail.p1 = Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch {0} neu am newidiadau i {1}, a byddwn yn eu diweddaru ar eich cyfer.
 proofOfEntitlement.entitlementdetail.p1.link.1 = roi gwybod i ni am newidiadau i’ch amgylchiadau
 proofOfEntitlement.entitlementdetail.p1.link.2 = amgylchiadau’ch plentyn neu’ch plant
-proofOfEntitlement.claimantname=Enw
-proofOfEntitlement.address=Cyfeiriad
-proofOfEntitlement.amount=Swm
-proofOfEntitlement.perweek={0} yr wythnos
-proofOfEntitlement.startdate=Dyddiad dechrau
-proofOfEntitlement.onorbefore=Ar neu cyn {0}
-proofOfEntitlement.enddate=Dyddiad dod i ben
-proofOfEntitlement.awardDetail=Manylion dyfarniad Budd-dal Plant ar gyfe {0}
-proofOfEntitlement.dateOfBirth=Dyddiad geni
-proofOfEntitlement.viewpayments=Bwrw golwg dros eich taliadau Budd-dal Plant
+proofOfEntitlement.claimantname = Enw
+proofOfEntitlement.address = Cyfeiriad
+proofOfEntitlement.amount = Swm
+proofOfEntitlement.perweek = {0} yr wythnos
+proofOfEntitlement.startdate = Dyddiad dechrau
+proofOfEntitlement.onorbefore = Ar neu cyn {0}
+proofOfEntitlement.enddate = Dyddiad dod i ben
+proofOfEntitlement.awardDetail = Manylion dyfarniad Budd-dal Plant ar gyfe {0}
+proofOfEntitlement.dateOfBirth = Dyddiad geni
+proofOfEntitlement.viewpayments = Bwrw golwg dros eich taliadau Budd-dal Plant
 proofOfEntitlement.viewrecentpayments.para = Gallwch {0} a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
 proofOfEntitlement.viewrecentpayments.link = fwrw golwg dros eich taliadau Budd-dal Plant diweddar
-proofOfEntitlement.printMessage=Argraffu’r dudalen hon
+proofOfEntitlement.printMessage = Argraffu’r dudalen hon
 
 # ---------- Payment History Section ------------
 paymentHistory.pageTitle = Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
@@ -82,15 +82,15 @@ paymentHistory.table.amount = Swm
 
 # ---------- No Payment History Section ---------
 # ---- Variant 2 - In payment without payments in last 2 years
-paymentHistory.v2.noReceivedPayments=Nid ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.v2.noReceivedPayments = Nid ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
 
 # ---- Variant 4 - HICBC without payments in last 2 years
-paymentHistory.v4.p1=Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
-paymentHistory.v4.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.v4.p1 = Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
+paymentHistory.v4.p2 = Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
 
 # ---- Variant 6 - Entitlement ended and no payments in last 2 years
-paymentHistory.v6.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
-paymentHistory.v6.p2=Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.v6.p1 = Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
+paymentHistory.v6.p2 = Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw daliadau yn ystod y 2 flynedd ddiwethaf.
 
 # ---------- Some Payment History Section -------
 # ---- Variant 1 - In payment with payments in last 2 years
@@ -101,12 +101,12 @@ paymentHistory.v1.link.text = yw’r taliad fod i gyrraedd ar ŵyl banc.
 paymentHistory.v1.p3 = Mae Budd-dal Plant yn cael ei dalu’n wythnosol, neu bob 4 wythnos. Nid yw’n cael ei dalu yn ôl misoedd calendr.
 
 # ---- Variant 3 - HICBC with payments in last 2 years
-paymentHistory.v3.p1=Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
-paymentHistory.v3.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.v3.p1 = Rydych wedi rhoi gwybod i ni nad ydych am gael eich talu oherwydd nid ydych eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
+paymentHistory.v3.p2 = Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
 
 # ---- Variant 5 - Entitlement ended but received payments in last 2 year
-paymentHistory.v5.p1=Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
-paymentHistory.v5.p2=Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
+paymentHistory.v5.p1 = Nid oes gennych hawl i gael Budd-dal Plant, mwyach.
+paymentHistory.v5.p2 = Mae ein cofnodion yn dangos eich bod wedi cael taliad neu daliadau yn ystod y 2 flynedd ddiwethaf.
 
 # ---------- Service Unavailable Section --------
 service-unavailable-error-template.heading = Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
@@ -115,20 +115,20 @@ service-unavailable-error-template.paragraph.2 = Gallwch ein ffonio os hoffech s
 service-unavailable-error-template.paragraph.3 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
 
 # ---------- No Account Found Section -----------
-noAccountFound.header=Nid ydych yn hawlio Budd-dal Plant
-noAccountFound.explanation=Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
-noAccountFound.reason=Gall hyn fod oherwydd:
-noAccountFound.bulletPoint1=nid ydych wedi hawlio
-noAccountFound.bulletPoint2=mae hawliad yr ydych wedi’i wneud yn dal i gael ei brosesu
-noAccountFound.bulletPoint3=cafodd yr hawliad ei wneud gan rywun arall - er enghraifft, mae’n bosibl ei fod yn enw eich partner
-noAccountFound.bulletPoint4=nid ydych yn cael Budd-dal Plant mwyach
-noAccountFound.callInfo1=Gallwch ein ffonio os oes angen gwybodaeth arnoch am hawliad sydd wedi dod i ben.
-noAccountFound.callInfo2=Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
+noAccountFound.header = Nid ydych yn hawlio Budd-dal Plant
+noAccountFound.explanation = Ni allwn ddod o hyd i hawliad am Fudd-dal Plant ar eich cyfer.
+noAccountFound.reason = Gall hyn fod oherwydd:
+noAccountFound.bulletPoint1 = nid ydych wedi hawlio
+noAccountFound.bulletPoint2 = mae hawliad yr ydych wedi’i wneud yn dal i gael ei brosesu
+noAccountFound.bulletPoint3 = cafodd yr hawliad ei wneud gan rywun arall - er enghraifft, mae’n bosibl ei fod yn enw eich partner
+noAccountFound.bulletPoint4 = nid ydych yn cael Budd-dal Plant mwyach
+noAccountFound.callInfo1 = Gallwch ein ffonio os oes angen gwybodaeth arnoch am hawliad sydd wedi dod i ben.
+noAccountFound.callInfo2 = Pan fyddwch yn ffonio, bydd arnoch angen eich rhif Yswiriant Gwladol.
 
 # ---------- Not Found Section ------------------
-notFound.header=Heb ddod o hyd i’r dudalen
-notFound.explanation1=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
-notFound.explanation2=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+notFound.header = Heb ddod o hyd i’r dudalen
+notFound.explanation1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+notFound.explanation2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 
 # ---------- Dummy Flag Section -----------------
 
