@@ -42,10 +42,10 @@ object TestData {
       |""".stripMargin
 
   val LockedOutErrorResponse: String =
-    """
+    s"""
       |{
-      |		"status": 403,
-      |		"description": "ClaimantIsLockedOut"
+      |		"status": 500,
+      |		"description": "[BAR locked] - The maximum number of retries reached when calling BAR"
       |	}
       |""".stripMargin
 

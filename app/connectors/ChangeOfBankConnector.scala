@@ -22,15 +22,16 @@ import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
-import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError}
+import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBacsVerificationError}
 import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.{JsSuccess, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import uk.gov.hmrc.http.{ForbiddenException, HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
+import scala.util.matching.Regex
 
 @Singleton
 class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
@@ -46,6 +47,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
   private val claimantUpdateBankLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
 
+  private val mainError: Regex = """(?<=\[).+?(?=\])""".r
   def getChangeOfBankClaimantInfo(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -65,6 +67,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
       )
     }
 
+  private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
+
   implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
     JsSuccess(())
   }
@@ -82,9 +86,6 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
             ec
           )
           .recover {
-            case e: ForbiddenException if e.message.contains("ClaimantIsLockedOut") =>
-              logger.debug(claimantVerificationLogMessage(e.responseCode, e.getMessage))
-              ClaimantIsLockedOutOfChangeOfBank(e.responseCode).asLeft[Unit]
             case e: HttpException =>
               logger.error(claimantVerificationLogMessage(e.responseCode, e.getMessage))
               ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
@@ -120,11 +121,17 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
       )
     }
 
-  override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError =
+  override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError = {
+    val extractedMainErrorMessage = extractMainError(upstreamError.description)
     status match {
-      case Status.FORBIDDEN if upstreamError.description.contains("ClaimantIsLockedOut") =>
-        ClaimantIsLockedOutOfChangeOfBank(Status.FORBIDDEN)
+      case Status.INTERNAL_SERVER_ERROR if extractedMainErrorMessage.toUpperCase().trim.equals("BAR LOCKED") =>
+        ClaimantIsLockedOutOfChangeOfBank(Status.FORBIDDEN, upstreamError.description)
+
+      case Status.NOT_FOUND if extractedMainErrorMessage.toUpperCase().trim.startsWith("PRIORITY") =>
+        PriorityBacsVerificationError(status, upstreamError.description)
+
       case _ => ConnectorError(status, upstreamError.description)
     }
+  }
 
 }

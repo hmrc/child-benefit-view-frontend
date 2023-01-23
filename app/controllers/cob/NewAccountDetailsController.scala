@@ -16,27 +16,30 @@
 
 package controllers.cob
 
-import cats.data.EitherT
 import controllers.actions._
 import forms.cob.NewAccountDetailsFormProvider
+
 import scala.concurrent.Future
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.cob.NewAccountDetails
-import models.errors.CBError
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, PriorityBacsVerificationError}
 import play.api.mvc.{Request, Result}
 import repositories.SessionRepository
-import services.ChangeOfBankService
+import services.{AuditService, ChangeOfBankService}
 import models.requests.OptionalDataRequest
 import models.{Mode, UserAnswers}
 import pages.cob.NewAccountDetailsPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.filters.csrf.CSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.handlers.ErrorHandler
 import utils.navigation.Navigator
 import views.html.cob.NewAccountDetailsView
-import cats.syntax.either._
+
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext}
+import scala.concurrent.ExecutionContext
 
 class NewAccountDetailsController @Inject() (
     override val messagesApi: MessagesApi,
@@ -47,31 +50,25 @@ class NewAccountDetailsController @Inject() (
     changeOfBankService:      ChangeOfBankService,
     formProvider:             NewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,
-    view:                     NewAccountDetailsView
-)(implicit ec:                ExecutionContext)
+    view:                     NewAccountDetailsView,
+    errorHandler:             ErrorHandler
+)(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] =
+  def onPageLoad(mode: Mode): Action[AnyContent] = {
     (featureActions.changeBankAction andThen getData) { implicit request =>
       val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
         case None => form
         case Some(value) =>
-          form
-            .bind(
-              Map(
-                "newSortCode"           -> value.newSortCode,
-                "newAccountHoldersName" -> value.newAccountHoldersName,
-                "newAccountNumber"      -> value.newAccountNumber,
-                "bacsError"             -> ""
-              )
-            )
+          bindForm(value, None)
       }
 
       Ok(view(preparedForm, mode))
     }
+  }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (featureActions.changeBankAction andThen getData).async { implicit request =>
@@ -88,7 +85,8 @@ class NewAccountDetailsController @Inject() (
   private def validateBankSaveSessionAndRedirect(mode: Mode, value: NewAccountDetails)(implicit
       request:                                         OptionalDataRequest[AnyContent]
   ): Future[Result] = {
-    val result: EitherT[Future, CBError, Result] = validateBank(value, mode) {
+    validateBank(value, mode) {
+      bindForm(value, None)
       for {
         updatedAnswers <- Future.fromTry(
           request.userAnswers.getOrElse(UserAnswers(request.userId)).set(NewAccountDetailsPage, value)
@@ -96,49 +94,73 @@ class NewAccountDetailsController @Inject() (
         _ <- sessionRepository.set(updatedAnswers)
       } yield Redirect(navigator.nextPage(NewAccountDetailsPage, mode, updatedAnswers))
     }
-
-    result.value.map(x => x.fold(_ => InternalServerError, r => r))
   }
 
-  private def validateBank(value: NewAccountDetails, mode: Mode)(
-      block:                      Future[Result]
-  )(implicit request:             Request[_]):             EitherT[Future, CBError, Result] = {
+  private def validateBank(value: NewAccountDetails, mode:          Mode)(
+      successBlock:               => Future[Result]
+  )(implicit request:             OptionalDataRequest[AnyContent]): Future[Result] = {
+
     changeOfBankService
       .validate(
         AccountHolderName(value.newAccountHoldersName),
         SortCode(value.newSortCode),
         BankAccountNumber(value.newAccountNumber)
       )
-      .flatMap(msg => {
-        val foldedResult: Future[Result] = msg.fold({
-          block
-        })(x =>
-          evaluateErrorResponse(x) {
-            Future.successful {
-              BadRequest(
-                view(
-                  form
-                    .bind(
-                      Map(
-                        "newSortCode"           -> value.newSortCode,
-                        "newAccountHoldersName" -> value.newAccountHoldersName,
-                        "newAccountNumber"      -> value.newAccountNumber,
-                        "bacsError"             -> x
-                      )
-                    ),
-                  mode
-                )
-              )
-            }
-          }
-        )
-        EitherT(foldedResult.map(x => x.asRight[CBError]))
-      })
+      .foldF(
+        error =>
+          evaluateErrorResponse(error)(
+            lockedOutRedirect(),
+            bacsErrorBlock(value, mode, error),
+            noBacsRelatedError
+          ),
+        _ => successBlock
+      )
+
   }
-  private def evaluateErrorResponse(message: String)(block: => Future[Result]): Future[Result] = {
-    message match {
-      case "BAR locked" => Future.successful(Redirect(routes.BARSLockOutController.onPageLoad))
-      case _            => block
+
+  private def evaluateErrorResponse(error: CBError)(
+      lockedOutRedirect:                   => Future[Result],
+      verificationError:                   => Future[Result],
+      noBacsRelatedError:                  CBError => Future[Result]
+  ): Future[Result] =
+    error match {
+      case ClaimantIsLockedOutOfChangeOfBank(_, _) => lockedOutRedirect
+      case PriorityBacsVerificationError(_, _)     => verificationError
+      case e                                       => noBacsRelatedError(e)
     }
+
+  private def lockedOutRedirect(): Future[Result] =
+    Future.successful(Redirect(routes.CannotVerifyAccountController.onPageLoad))
+
+  private def noBacsRelatedError(e: CBError)(implicit request: Request[_]) =
+    Future.successful(errorHandler.handleError(e))
+
+  private def bacsErrorBlock(value: NewAccountDetails, mode: Mode, error: CBError)(implicit
+      request:                      OptionalDataRequest[AnyContent]
+  ) = {
+    Future.successful {
+      BadRequest(
+        view(
+          bindForm(value, Some(error.message)),
+          mode
+        )
+      )
+    }
+
+  }
+
+  private def bindForm(value: NewAccountDetails, bacsError: Option[String])(implicit
+      request:                OptionalDataRequest[AnyContent]
+  ): Form[NewAccountDetails] = {
+    form
+      .bind(
+        Map(
+          "newSortCode"           -> value.newSortCode,
+          "newAccountHoldersName" -> value.newAccountHoldersName,
+          "newAccountNumber"      -> value.newAccountNumber,
+          "bacsError"             -> bacsError.getOrElse(""),
+          "csrfToken"             -> CSRF.getToken.get.value
+        )
+      )
   }
 }

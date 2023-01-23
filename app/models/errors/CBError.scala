@@ -25,7 +25,9 @@ final case class ConnectorError(statusCode: Int, message: String) extends CBErro
 final case class PaymentHistoryValidationError(statusCode: Int, message: String) extends CBError
 final case class ChangeOfBankValidationError(statusCode: Int, message: String = "change of bank validation failed")
     extends CBError
+
+final case class PriorityBacsVerificationError(statusCode: Int, message: String) extends CBError
 final case class ClaimantIsLockedOutOfChangeOfBank(
     statusCode: Int,
-    message:    String = "claimant is locked out due to BARS verification failing 3 times"
+    message:    String
 ) extends CBError

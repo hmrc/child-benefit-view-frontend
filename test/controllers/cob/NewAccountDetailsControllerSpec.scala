@@ -25,7 +25,7 @@ import pages.cob.NewAccountDetailsPage
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.FakeRequest
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import testconfig.TestConfig
@@ -33,7 +33,7 @@ import testconfig.TestConfig._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
-import utils.TestData.NinoUser
+import utils.TestData.{LockedOutErrorResponse, NinoUser}
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
 import views.html.cob.NewAccountDetailsView
@@ -84,7 +84,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
         userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(None)
+        verifyClaimantBankAccount(200, """""")
         val mockSessionRepository = mock[SessionRepository]
         val application = applicationBuilder(config, userAnswers = Some(userAnswers))
           .overrides(
@@ -124,7 +124,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
       "must redirect to the next page when valid data is submitted" in {
         userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(None)
+        verifyClaimantBankAccount(200, """""""")
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
@@ -137,14 +137,15 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
         running(application) {
           val request =
-            FakeRequest(POST, newAccountDetailsRoute)
-              .withFormUrlEncodedBody(
-                ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
-                ("newSortCode", newAccountDetails.newSortCode),
-                ("newAccountNumber", newAccountDetails.newAccountNumber)
-              )
-              .withSession("authToken" -> "Bearer 123")
-
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, newAccountDetailsRoute)
+                .withFormUrlEncodedBody(
+                  ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
+                  ("newSortCode", newAccountDetails.newSortCode),
+                  ("newAccountNumber", newAccountDetails.newAccountNumber)
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
           when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
           when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
@@ -157,7 +158,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
       "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
         userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(Some("{\"status\": 400, \"description\": \"Sort Code Not Found\"}"))
+        verifyClaimantBankAccount(404, "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}")
 
         val mockSessionRepository = mock[SessionRepository]
 
@@ -171,17 +172,19 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
         running(application) {
           val request =
-            FakeRequest(POST, newAccountDetailsRoute)
-              .withFormUrlEncodedBody(
-                ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
-                ("newSortCode", newAccountDetails.newSortCode),
-                ("newAccountNumber", newAccountDetails.newAccountNumber)
-              )
-              .withSession("authToken" -> "Bearer 123")
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, newAccountDetailsRoute)
+                .withFormUrlEncodedBody(
+                  ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
+                  ("newSortCode", newAccountDetails.newSortCode),
+                  ("newAccountNumber", newAccountDetails.newAccountNumber)
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
 
           val expectedBoundForm = form.bind(
             Map(
-              "bacsError"             -> "Sort Code Not Found",
+              "bacsError"             -> "[priority2] - Sort Code Not Found",
               "newSortCode"           -> newAccountDetails.newSortCode,
               "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
               "newAccountNumber"      -> newAccountDetails.newAccountNumber
@@ -201,12 +204,11 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
         }
       }
 
-      "must Redirect to Lock Out Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
+      "must Redirect to Can not verify account Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
         userLoggedInChildBenefitUser(NinoUser)
         verifyClaimantBankAccount(
-          Some(
-            "{\"status\": 400, \"description\": \"[BAR locked] - The maximum number of retries reached when calling BAR\"}"
-          )
+          500,
+          LockedOutErrorResponse
         )
 
         val mockSessionRepository = mock[SessionRepository]
@@ -221,20 +223,22 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
 
         running(application) {
           val request =
-            FakeRequest(POST, newAccountDetailsRoute)
-              .withFormUrlEncodedBody(
-                ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
-                ("newSortCode", newAccountDetails.newSortCode),
-                ("newAccountNumber", newAccountDetails.newAccountNumber)
-              )
-              .withSession("authToken" -> "Bearer 123")
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, newAccountDetailsRoute)
+                .withFormUrlEncodedBody(
+                  ("newAccountHoldersName", newAccountDetails.newAccountHoldersName),
+                  ("newSortCode", newAccountDetails.newSortCode),
+                  ("newAccountNumber", newAccountDetails.newAccountNumber)
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
 
           when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
           when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
           val result = route(application, request).value
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustEqual Some("/child-benefit/change-bank/locked-out")
+          redirectLocation(result) mustEqual Some("/child-benefit/change-bank/cannot-verify-account")
         }
       }
 

@@ -39,6 +39,9 @@
     @paragraph(messages("newAccountDetails.paragraph"))
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+        @if(form.errors.map(_.key).contains("bacsErrorTop")) {
+            @paragraph(messages(form.errors.find(_.key.equals("bacsErrorTop")).map(_.message).get), "govuk-error-message", Some("bacsErrorTop"))
+        }
 
         @govukInput(
             InputViewModel(
@@ -48,7 +51,9 @@
             .withWidth(Full)
             .withHint(HintViewModel(messages("newAccountDetails.newAccountHoldersNameHint")))
         )
-
+        @if(form.errors.map(_.key).contains("bacsErrorMiddle")) {
+            @paragraph(messages(form.errors.find(_.key.equals("bacsErrorMiddle")).map(_.message).get), "govuk-error-message", Some("bacsErrorMiddle"))
+        }
         @govukInput(
             InputViewModel(
                 field = form("newSortCode"),
