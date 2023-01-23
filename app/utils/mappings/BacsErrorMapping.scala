@@ -18,9 +18,15 @@ package utils.mappings
 import play.api.data.{FormError, Forms, Mapping}
 import play.api.data.format.Formatter
 
+import scala.util.matching.Regex
+
 object BacsErrorMapping {
   def bacsString(): Mapping[String] =
     Forms.of[String](bacsFormatter)
+
+  private val mainError: Regex = """(?<=\[).+?(?=\])""".r
+
+  private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
 
   def bacsFormatter(): Formatter[String] =
     new Formatter[String] {
@@ -29,11 +35,49 @@ object BacsErrorMapping {
           .get("bacsError")
           .map { rawValue =>
             if (rawValue.isEmpty) Right(rawValue)
-            else Left(Seq(FormError(key, s"newAccountDetails.error.bacs.$rawValue")))
+            else {
+              val priority = extractMainError(rawValue)
+              Left(
+                highlightErrorPerPriority(priority)
+              )
+            }
           }
           .getOrElse(Right(""))
       }
-
+      private def highlightErrorPerPriority(priority: String): List[FormError] = {
+        priority match {
+          case "priority1" => List(FormError("newSortCode", s"newAccountDetails.error.bacs.$priority"))
+          case "priority2" =>
+            List(
+              FormError("bacsErrorMiddle", s"newAccountDetails.error.bacs.$priority"),
+              FormError("newSortCode", ""),
+              FormError("newAccountNumber", "")
+            )
+          case "priority3" =>
+            List(
+              FormError("bacsErrorTop", s"newAccountDetails.error.bacs.$priority"),
+              FormError("newAccountHoldersName", ""),
+              FormError("newSortCode", ""),
+              FormError("newAccountNumber", "")
+            )
+          case "priority4" =>
+            List(
+              FormError("bacsErrorTop", s"newAccountDetails.error.bacs.$priority"),
+              FormError("newAccountHoldersName", s""),
+              FormError("newSortCode", ""),
+              FormError("newAccountNumber", "")
+            )
+          case "priority5" =>
+            List(
+              FormError("bacsErrorTop", s"newAccountDetails.error.bacs.$priority"),
+              FormError("newAccountHoldersName", s""),
+              FormError("newSortCode", ""),
+              FormError("newAccountNumber", "")
+            )
+          case "priority6"   => List(FormError("newAccountHoldersName", s"newAccountDetails.error.bacs.$priority"))
+          case anyOtherError => List(FormError("bacsErrorTop", anyOtherError))
+        }
+      }
       override def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
     }
 }

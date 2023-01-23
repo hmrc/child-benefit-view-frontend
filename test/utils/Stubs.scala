@@ -16,7 +16,6 @@
 
 package utils
 
-import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.changeofbank.ClaimantBankInformation
@@ -55,21 +54,13 @@ object Stubs {
         )
     )
 
-  def verifyClaimantBankAccount(message: Option[String]): StubMapping = {
-    val response: ResponseDefinitionBuilder = message.fold(
-      aResponse()
-        .withStatus(200)
-        .withBody("""""""")
-    )(msg =>
-      aResponse()
-        .withStatus(400)
-        .withBody(msg)
-    )
-
+  def verifyClaimantBankAccount(status: Int, message: String): StubMapping = {
     stubFor(
       put(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
         .willReturn(
-          response
+          aResponse()
+            .withStatus(status)
+            .withBody(message)
         )
     )
   }

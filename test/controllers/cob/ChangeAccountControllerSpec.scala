@@ -21,8 +21,8 @@ import controllers.cob.ChangeAccountControllerSpec.{claimantBankInformationWithB
 import models.changeofbank._
 import models.common.AdjustmentReasonCode
 import play.api.Application
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
+import play.api.mvc.{AnyContentAsEmpty, Request}
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.api.test.Helpers._
 import testconfig.TestConfig
 import testconfig.TestConfig._
@@ -102,19 +102,18 @@ class ChangeAccountControllerSpec extends BaseISpec {
         }
       }
 
-      //Todo: This should be corrected in SB-1054
-      "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" ignore {
+      "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
         val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
         userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoStub(claimantBankInformation)
-        verifyClaimantBankInfoFailureStub(result = LockedOutErrorResponse)
+        changeOfBankUserInfoFailureStub(500, LockedOutErrorResponse)
 
         running(application) {
-
-          implicit val request: FakeRequest[AnyContentAsEmpty.type] =
-            FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
-              .withSession("authToken" -> "Bearer 123")
+          implicit val request: Request[AnyContentAsEmpty.type] =
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(GET, cob.routes.ChangeAccountController.onPageLoad().url)
+                .withSession("authToken" -> "Bearer 123")
+            )
 
           val result = route(application, request).value
 
