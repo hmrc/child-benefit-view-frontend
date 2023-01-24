@@ -150,7 +150,7 @@ paymentHistory.v6.p2 = Our records show that you have not received any payments 
 paymentHistory.v1.header = Find out when you’ll be paid next
 paymentHistory.v1.p1 = If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
 paymentHistory.v1.p2 = You’ll be paid earlier if {0}
-paymentHistory.v1.link.text = the payment’s due on a bank holiday.
+paymentHistory.v1.link.text = the payment’s due on a bank holiday (opens in new tab)
 paymentHistory.v1.p3 = Child Benefit is paid weekly or every 4 weeks. It is not paid by calendar month.
 
 # ---- Variant 3 - HICBC with payments in last 2 years

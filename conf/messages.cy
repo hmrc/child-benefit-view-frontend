@@ -97,7 +97,7 @@ paymentHistory.v6.p2 = Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw da
 paymentHistory.v1.header = Cael gwybod pryd y cewch eich talu nesaf
 paymentHistory.v1.p1 = Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
 paymentHistory.v1.p2 = Cewch eich talu cyn hynny os {0}
-paymentHistory.v1.link.text = yw’r taliad fod i gyrraedd ar ŵyl banc.
+paymentHistory.v1.link.text = mae’r taliad yn ddyledus ar ŵyl banc (yn agor tab newydd)
 paymentHistory.v1.p3 = Mae Budd-dal Plant yn cael ei dalu’n wythnosol, neu bob 4 wythnos. Nid yw’n cael ei dalu yn ôl misoedd calendr.
 
 # ---- Variant 3 - HICBC with payments in last 2 years
