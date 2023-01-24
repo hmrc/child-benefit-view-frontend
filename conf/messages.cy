@@ -184,3 +184,8 @@ confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 # ---------- HICBC Opted Out Section ------------
 
 # ---------- Cannot Verify Account Section ------
+cannotVerifyAccount.title = Ni allwn ddilysu’r manylion cyfrif rydych chi wedi’u darparu
+cannotVerifyAccount.heading = Ni allwn ddilysu’r manylion cyfrif rydych chi wedi’u darparu
+cannotVerifyAccount.paragraph.1 = Am resymau diogelwch, rydym wedi’ch cloi allan o’r gwasanaeth hwn am 24 awr.
+cannotVerifyAccount.paragraph.2 = Gallwch {0} ar gyfer eich taliadau Budd-dal Plant.
+cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion cyfrif
