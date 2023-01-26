@@ -44,15 +44,6 @@ error.number = Please enter a valid number
 error.required = Please enter a value
 error.summary.title = There is a problem
 
-# ---------- Index Section ----------------------
-index.title = child-benefit-view-frontend
-index.heading = child-benefit-view-frontend
-index.guidance = Welcome to your new frontend. Please see the README file for a guide to getting started.
-
-# ---------- Check Your Answers Section ---------
-checkYourAnswers.title = Check Your Answers
-checkYourAnswers.heading = Check Your Answers
-
 # ---------- Journey Recovery Section -----------
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
@@ -69,24 +60,6 @@ signedOut.guidance = We did not save your answers.
 # ---------- Unauthorised Section ---------------
 unauthorised.title = You cannot access this service with this account
 unauthorised.heading = You cannot access this service with this account
-
-# ---------- Homepage Section -------------------
-homepage.text1 = Apply for Child Benefit
-homepage.text2 = You can only use this online service if:
-homepage.text3 = this is your first Child Benefit application
-homepage.text4 = your child’s birth was registered in England, Scotland or Wales
-homepage.text5 = you have British or Irish nationality
-homepage.text6 = You can apply when your child’s birth is registered, or a child comes to live with you. You should do this as soon as possible because Child Benefit payments can only be backdated 3 months.
-homepage.text7 = You can get Child Benefit if you’re legally responsible for a child who is:
-homepage.text8 = is under 16
-homepage.text9 = is under 20, if they are in
-homepage.text10 = approved education or training
-homepage.text11 = Before you start, you’ll need:
-homepage.text12 = your partner’s National Insurance number, if you have a partner
-homepage.text13 = the birth certificate of any child or children you’re applying for
-homepage.text14 = your bank or building society details
-homepage.text15 = What do we mean by ’partner’?
-homepage.text16 = ’Partner’ means someone you’re married to and not permanently separated from, a civil partner, or someone you’re living with as if they were your civil partner.
 
 # ---------- Helpline Section -------------------
 helpline.info.title = Child Benefit helpline

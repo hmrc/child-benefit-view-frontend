@@ -81,7 +81,7 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = {
     implicit val loginContinueUrl: Call = controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
-    (featureActions.newClaimAction andThen authorisedAsChildBenefitUser andThen getData andThen requireData) {
+    (featureActions.ftnaeAction andThen authorisedAsChildBenefitUser andThen getData andThen requireData) {
       implicit request =>
         {
           val summaryRows = for {

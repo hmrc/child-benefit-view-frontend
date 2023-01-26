@@ -40,9 +40,10 @@ import models.ftnae.{HowManyYears, WhichYoungPerson}
 import utils.pages._
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
+import play.api.Logging
 
 @Singleton
-class Navigator @Inject() () {
+class Navigator @Inject() () extends Logging {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case NewAccountDetailsPage            => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
@@ -54,7 +55,11 @@ class Navigator @Inject() () {
     case HowManyYearsPage                 => userAnswers => navigateHowManyYears(userAnswers)
     case WillCourseBeEmployerProvidedPage => userAnswers => navigateWillCourseBeEmployerProvided(userAnswers)
     case LiveWithYouInUKPage              => userAnswers => navigateLiveWithYouIntheUK(userAnswers)
-    case _                                => _ => controllers.routes.IndexController.onPageLoad
+    case _ @page =>
+      _ => {
+        logger.warn(s"reached state where page: $page is not implemented in Navigator.normalRoutes decision flow")
+        controllers.routes.ServiceUnavailableController.onPageLoad
+      }
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
