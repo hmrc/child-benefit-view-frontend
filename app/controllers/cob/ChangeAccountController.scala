@@ -32,7 +32,7 @@ class ChangeAccountController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     changeOfBankService:      ChangeOfBankService,
     errorHandler:             ErrorHandler,
-    getData:                  CobDataRetrievalAction,
+    getData:                  CBDataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     ChangeAccountView
 )(implicit ec:                ExecutionContext, auditService: AuditService)

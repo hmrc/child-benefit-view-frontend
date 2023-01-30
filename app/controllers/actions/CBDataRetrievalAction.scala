@@ -23,10 +23,10 @@ import repositories.SessionRepository
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CobDataRetrievalActionImpl @Inject() (
+class CBDataRetrievalActionImpl @Inject() (
     val sessionRepository:       SessionRepository
 )(implicit val executionContext: ExecutionContext)
-    extends CobDataRetrievalAction {
+    extends CBDataRetrievalAction {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     sessionRepository.get(request.userId).map {
@@ -35,4 +35,4 @@ class CobDataRetrievalActionImpl @Inject() (
   }
 }
 
-trait CobDataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+trait CBDataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]

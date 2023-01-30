@@ -20,6 +20,7 @@ import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformat
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
 import models.entitlement._
+import models.ftnae.{HowManyYears, WhichYoungPerson}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen}
@@ -27,6 +28,16 @@ import org.scalacheck.{Arbitrary, Gen}
 import java.time.LocalDate
 
 trait ModelGenerators {
+
+  implicit lazy val arbitraryWhichYoungPerson: Arbitrary[WhichYoungPerson] =
+    Arbitrary {
+      Gen.oneOf(WhichYoungPerson.values.toSeq)
+    }
+
+  implicit lazy val arbitraryHowManyYears: Arbitrary[HowManyYears] =
+    Arbitrary {
+      Gen.oneOf(HowManyYears.values.toSeq)
+    }
   private val ALLOWED_SORT_CODE_LENGTH = 6
   implicit lazy val arbitraryNewAccountDetails: Arbitrary[NewAccountDetails] =
     Arbitrary {

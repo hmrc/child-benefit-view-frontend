@@ -27,7 +27,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 
-trait CobSpecBase extends SpecBase {
+trait CBSpecBase extends SpecBase {
 
   val userAnswersId: String = "id"
 
@@ -40,7 +40,7 @@ trait CobSpecBase extends SpecBase {
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers))
+        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers))
       )
 
   protected def assertSameHtmlAfter(

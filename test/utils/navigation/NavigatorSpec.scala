@@ -23,7 +23,9 @@ import utils.pages._
 import models._
 import models.cob.ConfirmNewAccountDetails._
 import models.cob.NewAccountDetails
+import models.ftnae.{HowManyYears, WhichYoungPerson}
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 import play.api.libs.json.Json
 
 class NavigatorSpec extends SpecBase {
@@ -67,6 +69,130 @@ class NavigatorSpec extends SpecBase {
             .get
         ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
       }
+
+      val emptyUserAnswers = UserAnswers("id")
+      val allAnsweredForFtnae = for {
+        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
+        sa  <- fa.set(WillYoungPersonBeStayingPage, true)
+        ta  <- sa.set(SchoolOrCollegePage, true)
+        fa  <- ta.set(TwelveHoursAWeekPage, true)
+        fia <- fa.set(HowManyYearsPage, HowManyYears.Twoyears)
+        sa  <- fia.set(WillCourseBeEmployerProvidedPage, false)
+        sea <- sa.set(LiveWithYouInUKPage, true)
+      } yield sea
+
+      "must go from WhichYoungPersonPage to WillYoungPersonBeStayingPage" in {
+
+        navigator.nextPage(
+          WhichYoungPersonPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
+      }
+
+      "must go from WillYoungPersonBeStayingPage to SchoolOrCollegePage " in {
+        navigator.nextPage(
+          WillYoungPersonBeStayingPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
+      }
+
+      "must go from SchoolOrCollegePage to TwelveHoursAWeekPage " in {
+        navigator.nextPage(
+          SchoolOrCollegePage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(NormalMode)
+      }
+
+      "must go from TwelveHoursAWeekPage to HowManyYearsPage " in {
+        navigator.nextPage(
+          TwelveHoursAWeekPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.HowManyYearsController.onPageLoad(NormalMode)
+      }
+
+      "must go from HowManyYearsPage to WillCourseBeEmployerProvidedPage " in {
+        navigator.nextPage(
+          HowManyYearsPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode)
+      }
+
+      "must go from WillCourseBeEmployerProvidedPage to LiveWithYouInUKPage" in {
+        navigator.nextPage(
+          WillCourseBeEmployerProvidedPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.LiveWithYouInUKController.onPageLoad(NormalMode)
+      }
+
+      "must go from LiveWithYouInUKPage to CheckYourAnswersPage" in {
+        navigator.nextPage(
+          LiveWithYouInUKPage,
+          NormalMode,
+          allAnsweredForFtnae.success.value
+        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
+      }
+
+      "must be kicked out from WhichYoungPersonPage to WhyYoungPersonNotListedPage" in {
+        navigator.nextPage(
+          WhichYoungPersonPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, WhichYoungPerson.ChildNotListed)).success.value
+        ) mustBe controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad()
+      }
+
+      "must be kicked out from WillYoungPersonBeStayingPage to UseDifferentFormPage" in {
+        navigator.nextPage(
+          WillYoungPersonBeStayingPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(WillYoungPersonBeStayingPage, false)).success.value
+        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
+      }
+
+      "must be kicked out from SchoolOrCollegePage to UseDifferentFormPage" in {
+        navigator.nextPage(
+          SchoolOrCollegePage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(SchoolOrCollegePage, false)).success.value
+        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
+      }
+
+      "must be kicked out from TwelveHoursAWeekPage to NotEntitledPage" in {
+        navigator.nextPage(
+          TwelveHoursAWeekPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(TwelveHoursAWeekPage, false)).success.value
+        ) mustBe controllers.ftnae.routes.NotEntitledController.onPageLoad()
+      }
+
+      "must be kicked out from HowManyYearsPage to UseDifferentFormPage" in {
+        navigator.nextPage(
+          HowManyYearsPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(HowManyYearsPage, HowManyYears.Other)).success.value
+        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
+      }
+
+      "must be kicked out from LiveWithYouInUKPage to UseDifferentFormPage" in {
+        navigator.nextPage(
+          LiveWithYouInUKPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(LiveWithYouInUKPage, false)).success.value
+        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
+      }
+
+      "must be kicked out from WillCourseBeEmployerProvidedPage to " in {
+        navigator.nextPage(
+          WillCourseBeEmployerProvidedPage,
+          NormalMode,
+          allAnsweredForFtnae.flatMap(_.set(WillCourseBeEmployerProvidedPage, true)).success.value
+        ) mustBe controllers.ftnae.routes.NotEntitledCourseEmployerProvidedController.onPageLoad()
+      }
     }
 
     "in Check mode" - {
@@ -78,7 +204,7 @@ class NavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
       }
     }
   }

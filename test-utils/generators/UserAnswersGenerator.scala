@@ -21,6 +21,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.TryValues
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.ftnae.{ExtendPaymentsPage, HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 import utils.pages._
 import play.api.libs.json.{JsValue, Json}
 
@@ -28,7 +29,15 @@ trait UserAnswersGenerator extends TryValues {
   self: Generators =>
 
   val generators: Seq[Gen[(QuestionPage[_], JsValue)]] =
-    arbitrary[(ConfirmNewAccountDetailsPage.type, JsValue)] ::
+    arbitrary[(SchoolOrCollegePage.type, JsValue)] ::
+      arbitrary[(WillYoungPersonBeStayingPage.type, JsValue)] ::
+      arbitrary[(WillCourseBeEmployerProvidedPage.type, JsValue)] ::
+      arbitrary[(WhichYoungPersonPage.type, JsValue)] ::
+      arbitrary[(TwelveHoursAWeekPage.type, JsValue)] ::
+      arbitrary[(LiveWithYouInUKPage.type, JsValue)] ::
+      arbitrary[(HowManyYearsPage.type, JsValue)] ::
+      arbitrary[(ExtendPaymentsPage.type, JsValue)] ::
+      arbitrary[(ConfirmNewAccountDetailsPage.type, JsValue)] ::
       arbitrary[(NewAccountDetailsPage.type, JsValue)] ::
       Nil
 
