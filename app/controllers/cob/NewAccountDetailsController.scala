@@ -46,7 +46,7 @@ class NewAccountDetailsController @Inject() (
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
     featureActions:           FeatureFlagComposedActions,
-    getData:                  CobDataRetrievalAction,
+    getData:                  CBDataRetrievalAction,
     changeOfBankService:      ChangeOfBankService,
     formProvider:             NewAccountDetailsFormProvider,
     val controllerComponents: MessagesControllerComponents,

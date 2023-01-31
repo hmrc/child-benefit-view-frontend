@@ -38,7 +38,7 @@ class ConfirmNewAccountDetailsController @Inject() (
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
     featureActions:           FeatureFlagComposedActions,
-    getData:                  CobDataRetrievalAction,
+    getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             ConfirmNewAccountDetailsFormProvider,
     changeOfBankService:      ChangeOfBankService,

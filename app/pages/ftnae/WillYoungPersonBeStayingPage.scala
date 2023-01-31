@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package pages.ftnae
 
-@this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList,
-    heading: Heading
-)
+import play.api.libs.json.JsPath
+import utils.pages.QuestionPage
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+case object WillYoungPersonBeStayingPage extends QuestionPage[Boolean] {
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+  override def path: JsPath = JsPath \ toString
 
-    @heading(messages("checkYourAnswers.heading"))
-
-    @govukSummaryList(list)
+  override def toString: String = "willYoungPersonBeStaying"
 }

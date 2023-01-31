@@ -17,12 +17,80 @@
 package generators
 
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
+import models.ftnae.{HowManyYears, WhichYoungPerson}
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.ftnae.{ExtendPaymentsPage, HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {
+
+  implicit lazy val arbitrarySchoolOrCollegeUserAnswersEntry: Arbitrary[(SchoolOrCollegePage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[SchoolOrCollegePage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWillYoungPersonBeStayingUserAnswersEntry
+      : Arbitrary[(WillYoungPersonBeStayingPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WillYoungPersonBeStayingPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWillCourseBeEmployerProvidedUserAnswersEntry
+      : Arbitrary[(WillCourseBeEmployerProvidedPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WillCourseBeEmployerProvidedPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryWhichYoungPersonUserAnswersEntry: Arbitrary[(WhichYoungPersonPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[WhichYoungPersonPage.type]
+        value <- arbitrary[WhichYoungPerson].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryTwelveHoursAWeekUserAnswersEntry: Arbitrary[(TwelveHoursAWeekPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[TwelveHoursAWeekPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryLiveWithYouInUKUserAnswersEntry: Arbitrary[(LiveWithYouInUKPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[LiveWithYouInUKPage.type]
+        value <- arbitrary[Boolean].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryHowManyYearsUserAnswersEntry: Arbitrary[(HowManyYearsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[HowManyYearsPage.type]
+        value <- arbitrary[HowManyYears].map(Json.toJson(_))
+      } yield (page, value)
+    }
+
+  implicit lazy val arbitraryExtendPaymentsUserAnswersEntry: Arbitrary[(ExtendPaymentsPage.type, JsValue)] =
+    Arbitrary {
+      for {
+        page  <- arbitrary[ExtendPaymentsPage.type]
+        value <- arbitrary[String].suchThat(_.nonEmpty).map(Json.toJson(_))
+      } yield (page, value)
+    }
 
   implicit lazy val arbitraryConfirmNewAccountDetailsUserAnswersEntry
       : Arbitrary[(ConfirmNewAccountDetailsPage.type, JsValue)] =

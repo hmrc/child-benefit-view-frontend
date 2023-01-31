@@ -27,7 +27,7 @@ import javax.inject.Inject
 class AccountNotChangedController @Inject() (
     override val messagesApi: MessagesApi,
     featureActions:           FeatureFlagComposedActions,
-    getData:                  CobDataRetrievalAction,
+    getData:                  CBDataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     AccountNotChangedView
 ) extends FrontendBaseController

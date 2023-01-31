@@ -284,3 +284,77 @@ cannotVerifyAccount.heading = We cannot verify the account details you’ve prov
 cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
 cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
 cannotVerifyAccount.link.text = use a different service to change the account details
+
+# ------------------------------------------------------------------------------------
+cannotFindYoungPerson.title = cannotFindYoungPerson
+cannotFindYoungPerson.heading = cannotFindYoungPerson
+
+extendPayments.title = extendPayments
+extendPayments.heading = extendPayments
+extendPayments.checkYourAnswersLabel = extendPayments
+extendPayments.error.required = Enter extendPayments
+extendPayments.error.length = ExtendPayments must be 5 characters or less
+extendPayments.change.hidden = ExtendPayments
+
+howManyYears.title = How many academic years will the course last?
+howManyYears.heading = How many academic years will the course last?
+howManyYears.oneyear = 1 Year
+howManyYears.twoyears = 2 Years
+howManyYears.other = Other
+howManyYears.checkYourAnswersLabel = How many academic years will the course last?
+howManyYears.error.required = Select howManyYears
+howManyYears.change.hidden = HowManyYears
+
+liveWithYouInUK.title = liveWithYouInUK
+liveWithYouInUK.heading = liveWithYouInUK
+liveWithYouInUK.checkYourAnswersLabel = liveWithYouInUK
+liveWithYouInUK.error.required = Select yes if liveWithYouInUK
+liveWithYouInUK.change.hidden = LiveWithYouInUK
+
+notEntitled.title = notEntitled
+notEntitled.heading = notEntitled
+
+notEntitledCourseEmployerProvided.title = notEntitledCourseEmployerProvided
+notEntitledCourseEmployerProvided.heading = notEntitledCourseEmployerProvided
+
+twelveHoursAWeek.title = twelveHoursAWeek
+twelveHoursAWeek.heading = twelveHoursAWeek
+twelveHoursAWeek.checkYourAnswersLabel = twelveHoursAWeek
+twelveHoursAWeek.error.required = Select yes if twelveHoursAWeek
+twelveHoursAWeek.change.hidden = TwelveHoursAWeek
+
+useDifferentForm.title = useDifferentForm
+useDifferentForm.heading = useDifferentForm
+
+whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
+whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
+whichYoungPerson.child1 = Child 1
+whichYoungPerson.child2 = Child 2
+whichYoungPerson.childNotListed = Child Not Listed
+whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
+whichYoungPerson.error.required = Select whichYoungPerson
+whichYoungPerson.change.hidden = WhichYoungPerson
+
+whyYoungPersonNotListed.title = whyYoungPersonNotListed
+whyYoungPersonNotListed.heading = whyYoungPersonNotListed
+
+willCourseBeEmployerProvided.title = willCourseBeEmployerProvided
+willCourseBeEmployerProvided.heading = willCourseBeEmployerProvided
+willCourseBeEmployerProvided.checkYourAnswersLabel = willCourseBeEmployerProvided
+willCourseBeEmployerProvided.error.required = Select yes if willCourseBeEmployerProvided
+willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
+
+willYoungPersonBeStaying.title = willYoungPersonBeStaying
+willYoungPersonBeStaying.heading = willYoungPersonBeStaying
+willYoungPersonBeStaying.checkYourAnswersLabel = willYoungPersonBeStaying
+willYoungPersonBeStaying.error.required = Select yes if willYoungPersonBeStaying
+willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
+
+schoolOrCollege.title = schoolOrCollege
+schoolOrCollege.heading = schoolOrCollege
+schoolOrCollege.checkYourAnswersLabel = schoolOrCollege
+schoolOrCollege.error.required = Select yes if schoolOrCollege
+schoolOrCollege.change.hidden = SchoolOrCollege
+
+paymentsExtended.title = paymentsExtended
+paymentsExtended.heading = paymentsExtended

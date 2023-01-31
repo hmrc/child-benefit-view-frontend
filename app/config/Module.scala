@@ -45,7 +45,7 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
 
-    bind(classOf[CobDataRetrievalAction]).to(classOf[CobDataRetrievalActionImpl]).asEagerSingleton()
+    bind(classOf[CBDataRetrievalAction]).to(classOf[CBDataRetrievalActionImpl]).asEagerSingleton()
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
