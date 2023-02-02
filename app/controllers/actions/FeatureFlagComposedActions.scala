@@ -38,8 +38,6 @@ class FeatureFlagComposedActions @Inject() (
 
   def changeBankAction = featureAction(featureFlags.changeOfBankEnabled)
 
-  def newClaimAction = featureAction(featureFlags.newClaimEnabled)
-
   def ftnaeAction = featureAction(featureFlags.ftnaeEnabled)
 
   def addChildAction = featureAction(featureFlags.addChildEnabled)

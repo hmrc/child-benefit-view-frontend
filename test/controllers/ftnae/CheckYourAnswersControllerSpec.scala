@@ -25,12 +25,10 @@ import pages.ftnae._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testconfig.TestConfig
-import testconfig.TestConfig._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
-import views.html.ErrorTemplate
 import views.html.ftnae.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency with TableDrivenPropertyChecks {
@@ -46,168 +44,142 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
 
   "Check Your Answers Controller" - {
 
-    "when the new-claim feature is enabled" - {
-      val config = TestConfig().withFeatureFlags(featureFlags(newClaim = true))
+    val config = TestConfig()
 
-      "must return OK and the correct view for a GET" in {
-        userLoggedInChildBenefitUser(NinoUser)
+    "must return OK and the correct view for a GET" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
-          .configure(
-            "microservice.services.auth.port" -> wiremockPort
-          )
-          .build()
+      val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
+        .configure(
+          "microservice.services.auth.port" -> wiremockPort
+        )
+        .build()
 
-        running(application) {
-          val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
-            .withSession(("authToken", "Bearer 123"))
+      running(application) {
+        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+          .withSession(("authToken", "Bearer 123"))
 
-          val result = route(application, request).value
+        val result = route(application, request).value
 
-          val view          = application.injector.instanceOf[CheckYourAnswersView]
-          val userAnswers   = allAnsweredForFtnae.success.value
-          implicit val msgs = messages(application)
-          val summaryRows = for {
-            whichYoungPersonRow             <- WhichYoungPersonSummary.row(userAnswers)
-            willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(userAnswers)
-            schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(userAnswers)
-            twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(userAnswers)
-            howManyYearsRow                 <- HowManyYearsSummary.row(userAnswers)
-            willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(userAnswers)
-            liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(userAnswers)
-          } yield List(
-            whichYoungPersonRow,
-            willYoungPersonBeStayingRow,
-            schoolOrCollegeRow,
-            twelveHoursAWeekRow,
-            howManyYearsRow,
-            willCourseBeEmployerProvidedRow,
-            liveWithYouInUKRow
-          )
-          val list = SummaryListViewModel(
-            summaryRows.getOrElse(List.empty)
-          )
-
-          status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
-        }
-      }
-
-      "must redirect to Journey Recovery for a GET if no existing data is found" in {
-        userLoggedInChildBenefitUser(NinoUser)
-
-        val application = applicationBuilder(config, userAnswers = None).configure().build()
-
-        running(application) {
-          val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
-            .withSession(("authToken", "Bearer 123"))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-        }
-      }
-
-      "must redirect to first unanswered page" in {
-        val firstAnswered          = emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
-        val firstMissingTillSecond = emptyUserAnswers.set(WillYoungPersonBeStayingPage, true)
-        val secondMissingTillThird = firstAnswered.flatMap(_.set(SchoolOrCollegePage, true))
-
-        secondMissingTillThird.flatMap(
-          _.set(WillYoungPersonBeStayingPage, true).flatMap(_.set(TwelveHoursAWeekPage, true))
+        val view          = application.injector.instanceOf[CheckYourAnswersView]
+        val userAnswers   = allAnsweredForFtnae.success.value
+        implicit val msgs = messages(application)
+        val summaryRows = for {
+          whichYoungPersonRow             <- WhichYoungPersonSummary.row(userAnswers)
+          willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(userAnswers)
+          schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(userAnswers)
+          twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(userAnswers)
+          howManyYearsRow                 <- HowManyYearsSummary.row(userAnswers)
+          willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(userAnswers)
+          liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(userAnswers)
+        } yield List(
+          whichYoungPersonRow,
+          willYoungPersonBeStayingRow,
+          schoolOrCollegeRow,
+          twelveHoursAWeekRow,
+          howManyYearsRow,
+          willCourseBeEmployerProvidedRow,
+          liveWithYouInUKRow
+        )
+        val list = SummaryListViewModel(
+          summaryRows.getOrElse(List.empty)
         )
 
-        val scenarios = Table(
-          ("userAnswers", "redirectUrl"),
-          (
-            firstAnswered.success.value,
-            controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
-          ),
-          (
-            firstMissingTillSecond.success.value,
-            controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(NormalMode).url
-          ),
-          (
-            secondMissingTillThird.success.value,
-            controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
-          )
-        )
-
-        userLoggedInChildBenefitUser(NinoUser)
-
-        forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
-          {
-            val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
-
-            running(application) {
-              val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
-                .withSession(("authToken", "Bearer 123"))
-
-              val result = route(application, request).value
-
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(
-                result
-              ).value mustEqual url
-            }
-          }
-        }
+        status(result) mustEqual OK
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
       }
+    }
 
-      "must redirect to first kickout page" in {
-        val secondAnswerWrong = allAnsweredForFtnae.flatMap(_.set(WillYoungPersonBeStayingPage, false))
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
+      userLoggedInChildBenefitUser(NinoUser)
 
-        val scenarios = Table(
-          ("userAnswers", "redirectUrl"),
-          (
-            secondAnswerWrong.success.value,
-            controllers.ftnae.routes.UseDifferentFormController.onPageLoad().url
-          )
+      val application = applicationBuilder(config, userAnswers = None).configure().build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+          .withSession(("authToken", "Bearer 123"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+      }
+    }
+
+    "must redirect to first unanswered page" in {
+      val firstAnswered          = emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
+      val firstMissingTillSecond = emptyUserAnswers.set(WillYoungPersonBeStayingPage, true)
+      val secondMissingTillThird = firstAnswered.flatMap(_.set(SchoolOrCollegePage, true))
+
+      secondMissingTillThird.flatMap(
+        _.set(WillYoungPersonBeStayingPage, true).flatMap(_.set(TwelveHoursAWeekPage, true))
+      )
+
+      val scenarios = Table(
+        ("userAnswers", "redirectUrl"),
+        (
+          firstAnswered.success.value,
+          controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
+        ),
+        (
+          firstMissingTillSecond.success.value,
+          controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(NormalMode).url
+        ),
+        (
+          secondMissingTillThird.success.value,
+          controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
         )
+      )
 
-        userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(NinoUser)
 
-        forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
-          {
-            val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
+      forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
+        {
+          val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
 
-            running(application) {
-              val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
-                .withSession(("authToken", "Bearer 123"))
+          running(application) {
+            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+              .withSession(("authToken", "Bearer 123"))
 
-              val result = route(application, request).value
+            val result = route(application, request).value
 
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(
-                result
-              ).value mustEqual url
-            }
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(
+              result
+            ).value mustEqual url
           }
         }
       }
     }
 
-    "when the new-claim feature is disabled" - {
-      val config = TestConfig().withFeatureFlags(featureFlags(newClaim = false))
+    "must redirect to first kickout page" in {
+      val secondAnswerWrong = allAnsweredForFtnae.flatMap(_.set(WillYoungPersonBeStayingPage, false))
 
-      "must return Not Found and the Error view" in {
-        val application = applicationBuilder(config).build()
+      val scenarios = Table(
+        ("userAnswers", "redirectUrl"),
+        (
+          secondAnswerWrong.success.value,
+          controllers.ftnae.routes.UseDifferentFormController.onPageLoad().url
+        )
+      )
 
-        running(application) {
-          val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
-          val view    = application.injector.instanceOf[ErrorTemplate]
+      userLoggedInChildBenefitUser(NinoUser)
 
-          val result = route(application, request).value
+      forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
+        {
+          val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
 
-          status(result) mustEqual NOT_FOUND
-          assertSameHtmlAfter(removeNonce)(
-            contentAsString(result),
-            view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
-              request,
-              messages(application, request)
-            ).toString
-          )
+          running(application) {
+            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+              .withSession(("authToken", "Bearer 123"))
+
+            val result = route(application, request).value
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(
+              result
+            ).value mustEqual url
+          }
         }
       }
     }

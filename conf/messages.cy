@@ -18,10 +18,6 @@ timeout.signOut = Allgofnodi
 
 # ---------- Error Section ----------------------
 
-# ---------- Index Section ----------------------
-
-# ---------- Check Your Answers Section ---------
-
 # ---------- Journey Recovery Section -----------
 
 # ---------- Signed Out Section -----------------
@@ -32,8 +28,6 @@ signedOut.guidance = Ni wnaethom gadw’ch atebion.
 # ---------- Unauthorised Section ---------------
 unauthorised.title = Ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
 unauthorised.heading = Ni allwch gael mynediad at y gwasanaeth hwn gyda’r cyfrif hwn
-
-# ---------- Homepage Section -------------------
 
 # ---------- Helpline Section -------------------
 helpline.info.title = Gwasanaeth Cwsmeriaid Cymraeg CThEM

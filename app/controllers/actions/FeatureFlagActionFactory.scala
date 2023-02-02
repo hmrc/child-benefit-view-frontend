@@ -55,7 +55,6 @@ class FeatureFlagActionFactory @Inject() (configuration: Configuration, errorTem
 
   val dummyFlagEnabled:    FeatureFlagAction = whenEnabled("dummy-flag")
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
-  val newClaimEnabled:     FeatureFlagAction = whenEnabled("new-claim")
   val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae")
   val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")
   val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")

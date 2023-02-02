@@ -22,7 +22,6 @@ object TestConfig {
   def featureFlags(
       dummyFlag:    Boolean = true,
       changeOfBank: Boolean = true,
-      newClaim:     Boolean = true,
       ftnae:        Boolean = true,
       addChild:     Boolean = true,
       hicbc:        Boolean = true
@@ -30,7 +29,6 @@ object TestConfig {
     Map(
       ("dummy-flag", dummyFlag),
       ("change-of-bank", changeOfBank),
-      ("new-claim", newClaim),
       ("ftnae", ftnae),
       ("add-child", addChild),
       ("hicbc", hicbc)
