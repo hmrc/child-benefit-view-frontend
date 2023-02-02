@@ -16,29 +16,37 @@
 
 package controllers.actions
 
+import config.FeatureAllowlistFilter
 import play.api.Configuration
 import play.api.mvc.Results.NotFound
-import play.api.mvc.{ActionFilter, MessagesRequest, Result}
+import play.api.mvc.{ActionFunction, MessagesRequest, Result}
 import views.html.ErrorTemplate
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FeatureFlagActionFactory @Inject() (configuration: Configuration, errorTemplate: ErrorTemplate)(implicit
-    ec:                                                  ExecutionContext
+class FeatureFlagActionFactory @Inject() (
+    configuration: Configuration,
+    errorTemplate: ErrorTemplate,
+    val allowList: FeatureAllowlistFilter
+)(implicit
+    ec: ExecutionContext
 ) {
   private val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
 
   private def whenEnabled(featureFlag: String): FeatureFlagAction =
     new FeatureFlagAction {
-      override protected def filter[A](request: MessagesRequest[A]): Future[Option[Result]] = {
+      override def invokeBlock[A](
+          request: MessagesRequest[A],
+          block:   MessagesRequest[A] => Future[Result]
+      ): Future[Result] = {
         val test = featureFlags.getOrElse(featureFlag, false)
         if (test) {
-          Future.successful(None)
+          allowList(_ => block(request))(featureFlag, request)
         } else {
-          Future.successful(
-            Some(
+          allowList(_ =>
+            Future.successful(
               NotFound(
                 errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
                   request,
@@ -46,7 +54,7 @@ class FeatureFlagActionFactory @Inject() (configuration: Configuration, errorTem
                 )
               )
             )
-          )
+          )(featureFlag, request)
         }
       }
 
@@ -60,4 +68,4 @@ class FeatureFlagActionFactory @Inject() (configuration: Configuration, errorTem
   val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
 }
 
-trait FeatureFlagAction extends ActionFilter[MessagesRequest]
+trait FeatureFlagAction extends ActionFunction[MessagesRequest, MessagesRequest]

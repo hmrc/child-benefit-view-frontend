@@ -18,6 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
+import controllers.actions.AllowlistAction
 import utils.handlers.ErrorHandler
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -37,7 +38,8 @@ class ProofOfEntitlementController @Inject() (
     authConnector:                    AuthConnector,
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
-    proofOfEntitlement:               ProofOfEntitlement
+    proofOfEntitlement:               ProofOfEntitlement,
+    allowlistAction:                  AllowlistAction
 )(implicit
     config:            Configuration,
     env:               Environment,
@@ -47,7 +49,7 @@ class ProofOfEntitlementController @Inject() (
     auditor:           AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action.async { implicit request =>
+    (Action andThen allowlistAction).async { implicit request =>
       authorisedAsChildBenefitUser { authContext =>
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
           err => errorHandler.handleError(err, Some("proofOfEntitlement")),
