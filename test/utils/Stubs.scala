@@ -30,7 +30,7 @@ object Stubs {
       |	"authorise": [{
       |		"authProviders": ["GovernmentGateway"]
       |	}],
-      |	"retrieve": ["nino", "credentialRole", "internalId"]
+      |	"retrieve": ["nino", "affinityGroup", "internalId", "confidenceLevel"]
       |}
       |""".stripMargin
 
@@ -42,6 +42,15 @@ object Stubs {
           aResponse()
             .withStatus(200)
             .withBody(testUserJson)
+        )
+    )
+
+  def userNotLoggedIn(error: String): StubMapping =
+    stubFor(
+      post(urlEqualTo("/auth/authorise"))
+//        .withRequestBody(equalToJson(ChildBenefitRetrievals))
+        .willReturn(
+          serverError.withHeader("WWW-Authenticate", s"""MDTP detail="$error"""")
         )
     )
 

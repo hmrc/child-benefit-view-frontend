@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.actions.IdentifierAction
-import config.FrontendAppConfig
 import controllers.actions.AllowlistAction
 import utils.handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
