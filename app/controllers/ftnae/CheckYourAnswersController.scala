@@ -32,23 +32,20 @@
 
 package controllers.ftnae
 
+import cats.syntax.either._
 import com.google.inject.Inject
-import config.FrontendAppConfig
-import models.{NormalMode, UserAnswers}
+import controllers.ChildBenefitBaseController
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, IdentifierAction}
 import models.ftnae.{HowManyYears, WhichYoungPerson}
-import models.viewmodels.checkAnswers.{HowManyYearsSummary, LiveWithYouInUKSummary, SchoolOrCollegeSummary, TwelveHoursAWeekSummary, WhichYoungPersonSummary, WillCourseBeEmployerProvidedSummary, WillYoungPersonBeStayingSummary}
-import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
+import models.viewmodels.checkAnswers._
+import models.viewmodels.govuk.summarylist._
+import models.{NormalMode, UserAnswers}
+import pages.ftnae._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
-import models.viewmodels.govuk.summarylist._
 import views.html.ftnae.CheckYourAnswersView
-
-import scala.concurrent.ExecutionContext
-import cats.syntax.either._
-import controllers.ChildBenefitBaseController
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions}
 
 final case class UnansweredPageName(pageName: String) extends AnyVal
 final case class KickedOutPageName(pageName: String) extends AnyVal
@@ -69,50 +66,47 @@ class CheckYourAnswersController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     getData:                  DataRetrievalAction,
     requireData:              DataRequiredAction,
-    view:                     CheckYourAnswersView
+    view:                     CheckYourAnswersView,
+    identify:                 IdentifierAction
 )(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    config: Configuration,
+    env:    Environment,
+    cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = {
-    implicit val loginContinueUrl: Call = controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
-    (featureActions.ftnaeAction andThen authorisedAsChildBenefitUser andThen getData andThen requireData) {
-      implicit request =>
-        {
-          val summaryRows = for {
-            whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
-            willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
-            schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(request.userAnswers)
-            twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(request.userAnswers)
-            howManyYearsRow                 <- HowManyYearsSummary.row(request.userAnswers)
-            willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(request.userAnswers)
-            liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(request.userAnswers)
-          } yield List(
-            whichYoungPersonRow,
-            willYoungPersonBeStayingRow,
-            schoolOrCollegeRow,
-            twelveHoursAWeekRow,
-            howManyYearsRow,
-            willCourseBeEmployerProvidedRow,
-            liveWithYouInUKRow
-          )
+    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+      {
+        val summaryRows = for {
+          whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
+          willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
+          schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(request.userAnswers)
+          twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(request.userAnswers)
+          howManyYearsRow                 <- HowManyYearsSummary.row(request.userAnswers)
+          willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(request.userAnswers)
+          liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(request.userAnswers)
+        } yield List(
+          whichYoungPersonRow,
+          willYoungPersonBeStayingRow,
+          schoolOrCollegeRow,
+          twelveHoursAWeekRow,
+          howManyYearsRow,
+          willCourseBeEmployerProvidedRow,
+          liveWithYouInUKRow
+        )
 
-          firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
-            case Right(()) =>
-              summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
-                Ok(view(SummaryListViewModel(sr)))
-              )
-            case Left(Left(unansweredUrl)) =>
-              Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
-            case Left(Right(kickedOutUrl)) =>
-              Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
-          }
+        firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
+          case Right(()) =>
+            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
+              Ok(view(SummaryListViewModel(sr)))
+            )
+          case Left(Left(unansweredUrl)) =>
+            Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
+          case Left(Right(kickedOutUrl)) =>
+            Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
         }
+      }
     }
   }
 

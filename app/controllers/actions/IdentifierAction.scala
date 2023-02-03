@@ -18,14 +18,16 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.routes
+import controllers.actions.IdentifierAction._
+import models.common.NationalInsuranceNumber
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup.Individual
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{credentialRole, internalId, nino}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -38,62 +40,82 @@ trait IdentifierAction
 
 class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
-    config:                      FrontendAppConfig,
+    implicit val config:         FrontendAppConfig,
     val parser:                  BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions
     with Logging {
 
-  private val AuthPredicate          = AuthProviders(GovernmentGateway)
-  private val ChildBenefitRetrievals = nino and credentialRole and internalId
+  private val AuthPredicate          = (config: FrontendAppConfig) => AuthProviders(GovernmentGateway) and config.confidenceLevel
+  private val ChildBenefitRetrievals = nino and affinityGroup and internalId
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(AuthPredicate)
+    authorised(AuthPredicate(config))
       .retrieve(ChildBenefitRetrievals) {
-        case Some(_) ~ Some(User) ~ Some(internalId) =>
+        case Some(nino) ~ Some(Individual) ~ Some(internalId) =>
           logger.debug("user is authorised: executing action block")
-          block(IdentifierRequest(request, internalId))
+          block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
         case _ =>
           logger.warn("user could not be authorised: redirecting")
           Future successful Redirect(
             controllers.routes.UnauthorisedController.onPageLoad
           )
-      } recover {
-      case _: NoActiveSession =>
-        Redirect(
-          config.loginUrl,
-          Map("continue" -> Seq(resolveCorrectUrl(request)))
-        )
-      case _: AuthorisationException =>
-        Redirect(routes.UnauthorisedController.onPageLoad)
-    }
+      }
+      .recover {
+        handleFailure()(config, request)
+      }
   }
 
-  private def resolveCorrectUrl[A](request: Request[A]): String = {
-    val root =
-      if (request.host.contains("localhost")) s"http${if (request.secure) "s" else ""}://${request.host}" else ""
-    s"$root${request.uri}"
+  private def handleFailure(
+  )(implicit config: FrontendAppConfig, request: Request[_]): PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession =>
+      logger.debug("no active session whilst attempting to authorise user: redirecting to login")
+      Redirect(
+        config.loginUrl,
+        Map(
+          "origin"   -> Seq(config.appName),
+          "continue" -> Seq(resolveCorrectUrl(request))
+        )
+      )
+
+    case _: InsufficientConfidenceLevel =>
+      logger.warn("insufficient confidence level whilst attempting to authorise user: redirect to uplift")
+      Redirect(
+        config.ivUpliftUrl,
+        Map(
+          "origin"          -> Seq(config.appName),
+          "confidenceLevel" -> Seq(config.confidenceLevel.toString),
+          "completionURL"   -> Seq(resolveCorrectUrl(request)),
+          "failureURL"      -> Seq(toContinueUrl(controllers.routes.UnauthorisedController.onPageLoad)(request))
+        )
+      )
+
+    case IncorrectNino =>
+      logger.warn("incorrect none encountered whilst attempting to authorise user")
+      Redirect(controllers.routes.UnauthorisedController.onPageLoad)
+
+    case ex: AuthorisationException ⇒
+      logger.warn(s"could not authenticate user due to: $ex")
+      InternalServerError
   }
 }
 
-class SessionIdentifierAction @Inject() (
-    val parser:                  BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
-    extends IdentifierAction {
-
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-
-    hc.sessionId match {
-      case Some(session) =>
-        block(IdentifierRequest(request, session.value))
-      case None =>
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+object IdentifierAction {
+  def toContinueUrl(call: Call)(implicit rh: RequestHeader): String = {
+    if (call.absoluteURL.contains("://localhost")) {
+      call.absoluteURL()
+    } else {
+      call.url
     }
+  }
+
+  def resolveCorrectUrl[A](request: Request[A]): String = {
+    val root =
+      if (request.host.contains("localhost")) s"http${if (request.secure) "s" else ""}://${request.host}" else ""
+    s"$root${request.uri}"
   }
 }

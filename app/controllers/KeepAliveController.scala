@@ -32,10 +32,9 @@
 
 package controllers
 
-import config.FrontendAppConfig
-import controllers.actions.DataRetrievalAction
+import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -46,20 +45,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class KeepAliveController @Inject() (
     getData:           DataRetrievalAction,
     sessionRepository: SessionRepository,
-    authConnector:     AuthConnector
+    authConnector:     AuthConnector,
+    identify:          IdentifierAction
 )(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    config: Configuration,
+    env:    Environment,
+    ec:     ExecutionContext,
+    cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
   def keepAlive: Action[AnyContent] = {
-    implicit val loginContinueUrl: Call = routes.KeepAliveController.keepAlive
-
-    (authorisedAsChildBenefitUser andThen getData).async { implicit request =>
+    (identify andThen getData).async { implicit request =>
       request.userAnswers
         .map { answers =>
           sessionRepository.keepAlive(answers.id).map(_ => Ok)

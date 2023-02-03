@@ -18,11 +18,11 @@ package services
 
 import cats.data.EitherT
 import connectors.ChildBenefitEntitlementConnector
-import controllers.auth.AuthContext
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBError, PaymentHistoryValidationError}
+import models.requests.IdentifierRequest
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Request
@@ -46,10 +46,9 @@ class PaymentHistoryService @Inject() (
 
   def retrieveAndValidatePaymentHistory(implicit
       auditService: AuditService,
-      authContext:  AuthContext[Any],
+      identifier:   IdentifierRequest[_],
       ec:           ExecutionContext,
       hc:           HeaderCarrier,
-      request:      Request[_],
       messages:     Messages
   ): EitherT[Future, CBError, HtmlFormat.Appendable] = {
     for {
@@ -61,7 +60,7 @@ class PaymentHistoryService @Inject() (
 
   private def validateAdjustmentToPage(cbe: ChildBenefitEntitlement)(implicit
       auditService:                         AuditService,
-      authContext:                          AuthContext[Any],
+      identifier:                           IdentifierRequest[_],
       hc:                                   HeaderCarrier,
       ec:                                   ExecutionContext,
       request:                              Request[_],
@@ -111,7 +110,7 @@ class PaymentHistoryService @Inject() (
       cbe:         ChildBenefitEntitlement
   )(implicit
       auditService:     AuditService,
-      authContext:      AuthContext[Any],
+      identifier:       IdentifierRequest[_],
       headerCarrier:    HeaderCarrier,
       executionContext: ExecutionContext
   ): Unit = {
@@ -125,7 +124,7 @@ class PaymentHistoryService @Inject() (
       case PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears  => "Inactive - Payments"
       case PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears        => "Inactive - No Payments"
     }
-    auditService.auditPaymentDetails(authContext.nino.nino, status, request, Some(cbe))
+    auditService.auditPaymentDetails(identifier.nino.nino, status, request, Some(cbe))
   }
 }
 

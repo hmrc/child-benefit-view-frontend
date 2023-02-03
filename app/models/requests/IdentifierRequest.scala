@@ -32,6 +32,12 @@
 
 package models.requests
 
+import models.common.NationalInsuranceNumber
 import play.api.mvc.{Request, WrappedRequest}
 
-case class IdentifierRequest[A](request: Request[A], userId: String) extends WrappedRequest[A](request)
+case class IdentifierRequest[A](
+    request:      Request[A],
+    nino:         NationalInsuranceNumber,
+    isIndividual: Boolean,
+    internalId:   String
+) extends WrappedRequest[A](request)

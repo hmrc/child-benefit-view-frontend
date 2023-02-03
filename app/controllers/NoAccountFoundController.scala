@@ -16,33 +16,30 @@
 
 package controllers
 
-import config.FrontendAppConfig
-import play.api.{Configuration, Environment}
+import controllers.actions.IdentifierAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.NoAccountFoundView
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton
 class NoAccountFoundController @Inject() (
     authConnector: AuthConnector,
-    view:          NoAccountFoundView
+    view:          NoAccountFoundView,
+    identify:      IdentifierAction
 )(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    config: Configuration,
+    env:    Environment,
+    cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    Action.async { implicit request =>
-      authorisedAsChildBenefitUser { _ =>
-        Future successful Ok(view())
-      }(routes.NoAccountFoundController.onPageLoad)
+    identify async { implicit request =>
+      Future successful Ok(view())
     }
 }
