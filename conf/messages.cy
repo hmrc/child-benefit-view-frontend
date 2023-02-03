@@ -163,7 +163,7 @@ accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfr
 # ---------- BARS Lockout Section ---------------
 
 # ---------- Confirm Details Section ------------
-confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd - Budd-dal Plant
+confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
 confirmNewAccountDetails.table.name = Yr enw sydd ar y cyfrif:
