@@ -33,7 +33,6 @@ class FeatureFlagActionFactory @Inject() (
 )(implicit
     ec: ExecutionContext
 ) {
-  private val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
 
   private def whenEnabled(featureFlag: String): FeatureFlagAction =
     new FeatureFlagAction {
@@ -41,8 +40,9 @@ class FeatureFlagActionFactory @Inject() (
           request: MessagesRequest[A],
           block:   MessagesRequest[A] => Future[Result]
       ): Future[Result] = {
-        val test = featureFlags.getOrElse(featureFlag, false)
-        if (test) {
+        val isFeatureEnabled =
+          configuration.getOptional[Boolean](s"feature-flags.$featureFlag.enabled").getOrElse(false)
+        if (isFeatureEnabled) {
           allowList(_ => block(request))(featureFlag, request)
         } else {
           allowList(_ =>

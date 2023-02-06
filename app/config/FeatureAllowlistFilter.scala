@@ -29,32 +29,29 @@ class FeatureAllowlistFilter @Inject() (config: Configuration) {
 
   val allowlist: String => Seq[String] = (feature: String) =>
     config
-      .get[String](s"feature-allowlist.$feature.ips")
+      .get[String](s"feature-flags.$feature.allowlist.ips")
       .split(",")
       .map(_.trim)
       .filter(_.nonEmpty)
 
-  val destination: Call = {
-    val path = config.get[String]("feature-allowlist.destination")
+  val destination: String => Call = (feature: String) => {
+    val path = config.get[String](s"feature-flags.$feature.allowlist.destination")
     Call("GET", path)
   }
 
-  val noHeaderAction: Future[Result] =
-    Future.successful(Redirect(destination))
-
-  def response: Result = Redirect(destination)
+  val noHeaderAction: String => Future[Result] = (feature: String) => Future.successful(Redirect(destination(feature)))
 
   def apply(f: RequestHeader => Future[Result])(feature: String, rh: RequestHeader): Future[Result] =
-    if (config.get[Boolean](s"feature-allowlist.$feature.enabled")) {
+    if (config.get[Boolean](s"feature-flags.$feature.allowlist.enabled")) {
       rh.headers
         .get(trueClient)
-        .fold(noHeaderAction)(ip =>
+        .fold(noHeaderAction(feature))(ip =>
           if (allowlist(feature).contains(ip))
             f(rh)
-          else if (rh.uri == destination.url)
+          else if (rh.uri == destination(feature).url)
             Future.successful(Forbidden)
           else
-            Future.successful(response)
+            Future.successful(Redirect(destination(feature)))
         )
     } else {
       f(rh)

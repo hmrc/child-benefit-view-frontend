@@ -36,7 +36,7 @@ object TestConfig {
 
   implicit class TestConfigExtensions(config: Map[String, Any]) {
     def withFeatureFlags(featureFlags: Map[String, Boolean]): Map[String, Any] = {
-      val featureFlagMap = ("feature-flags", featureFlags.map(f => (f._1, f._2.toString)))
+      val featureFlagMap = ("feature-flags", featureFlags.map(f => (s"${f._1}.enabled", f._2.toString)))
       config + featureFlagMap
     }
   }

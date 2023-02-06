@@ -27,7 +27,7 @@ import views.html.{DummyFlagView, ErrorTemplate}
 class DummyFlagControllerSpec extends BaseISpec with EitherValues {
   "Dummy flag controller" - {
     "must render the correct view when flag is enabled" in {
-      val application = applicationBuilder().build()
+      val application = applicationBuilder(config = Map("feature-flags.dummy-flag.enabled" -> true)).build()
 
       running(application) {
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -46,7 +46,7 @@ class DummyFlagControllerSpec extends BaseISpec with EitherValues {
     }
 
     "must fail with 404 when flag is disabled" in {
-      val application = applicationBuilder(config = Map("feature-flags.dummy-flag" -> false)).build()
+      val application = applicationBuilder(config = Map("feature-flags.dummy-flag.enabled" -> false)).build()
 
       running(application) {
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
