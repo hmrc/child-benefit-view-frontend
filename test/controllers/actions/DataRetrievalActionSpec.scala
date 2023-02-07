@@ -16,10 +16,9 @@
 
 package controllers.actions
 
-import controllers.auth.AuthContext
 import models.UserAnswers
 import models.common.NationalInsuranceNumber
-import models.requests.OptionalDataRequest
+import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
@@ -34,7 +33,7 @@ import scala.concurrent.Future
 class DataRetrievalActionSpec extends BaseISpec with MockitoSugar {
 
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
-    def callTransform[A](request: AuthContext[A]): Future[OptionalDataRequest[A]] = transform(request)
+    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
 
   "Data Retrieval Action" - {
@@ -49,7 +48,7 @@ class DataRetrievalActionSpec extends BaseISpec with MockitoSugar {
         val action = new Harness(sessionRepository)
 
         val result = action
-          .callTransform(AuthContext(NationalInsuranceNumber("QQ123456A"), true, "id", FakeRequest()))
+          .callTransform(IdentifierRequest(FakeRequest(), NationalInsuranceNumber("QQ123456B"), true, "id"))
           .futureValue
 
         result.userAnswers must not be defined
@@ -66,7 +65,7 @@ class DataRetrievalActionSpec extends BaseISpec with MockitoSugar {
         val action = new Harness(sessionRepository)
 
         val result = action
-          .callTransform(AuthContext(NationalInsuranceNumber("QQ123456A"), true, "id", FakeRequest()))
+          .callTransform(IdentifierRequest(FakeRequest(), NationalInsuranceNumber("QQ123456C"), true, "id"))
           .futureValue
 
         result.userAnswers mustBe defined

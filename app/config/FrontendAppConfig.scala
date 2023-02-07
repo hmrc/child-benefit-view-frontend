@@ -19,19 +19,21 @@ package config
 import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  val host:       String = configuration.get[String]("host")
-  val appName:    String = configuration.get[String]("appName")
-  val loginUrl:   String = configuration.get[String]("urls.login")
-  val signOutUrl: String = configuration.get[String]("urls.signOut")
-  val timeout:    Int    = configuration.get[Int]("timeout-dialog.timeout")
-  val countdown:  Int    = configuration.get[Int]("timeout-dialog.countdown")
-  val cacheTtl:   Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  val host:        String = configuration.get[String]("host")
+  val appName:     String = configuration.get[String]("appName")
+  val loginUrl:    String = configuration.get[String]("urls.login")
+  val signOutUrl:  String = configuration.get[String]("urls.signOut")
+  val ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
+  val timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
+  val countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
+  val cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
   val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
 
@@ -53,11 +55,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/CHIB"
 
-  def feedbackUrl(): String =
-    s"$contactHost/contact/beta-feedback?service=CHIB"
+  def feedbackUrl(): String = s"$contactHost/contact/beta-feedback?service=CHIB"
+
   def reportTechnicalProblemUrl(uri: String): String =
     s"$contactHost/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${SafeRedirectUrl(contactHost + uri).encodedUrl}"
+
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 
+  val confidenceLevel: ConfidenceLevel =
+    ConfidenceLevel
+      .fromInt(configuration.get[Int]("confidenceLevel"))
+      .getOrElse(ConfidenceLevel.L200)
 }

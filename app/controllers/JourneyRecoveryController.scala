@@ -32,47 +32,45 @@
 
 package controllers
 
-import config.FrontendAppConfig
+import controllers.actions.IdentifierAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 import uk.gov.hmrc.play.bootstrap.binders._
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class JourneyRecoveryController @Inject() (
     continueView:   JourneyRecoveryContinueView,
     startAgainView: JourneyRecoveryStartAgainView,
-    authConnector:  AuthConnector
+    authConnector:  AuthConnector,
+    identify:       IdentifierAction
 )(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
+    config: Configuration,
+    env:    Environment,
+    cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
+    with Logging
     with I18nSupport {
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] =
-    Action.async { implicit request =>
-      authorisedAsChildBenefitUser { _ =>
-        val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
-          unsafeUrl.getEither(OnlyRelative) match {
-            case Right(safeUrl) =>
-              Some(safeUrl.url)
-            case Left(message) =>
-              logger.info(message)
-              None
-          }
+    identify async { implicit request =>
+      val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
+        unsafeUrl.getEither(OnlyRelative) match {
+          case Right(safeUrl) =>
+            Some(safeUrl.url)
+          case Left(message) =>
+            logger.info(message)
+            None
         }
+      }
 
-        safeUrl
-          .map(url => Future successful Ok(continueView(url)))
-          .getOrElse(Future successful Ok(startAgainView()))
-      }(routes.JourneyRecoveryController.onPageLoad(continueUrl))
+      safeUrl
+        .map(url => Future successful Ok(continueView(url)))
+        .getOrElse(Future successful Ok(startAgainView()))
     }
 }

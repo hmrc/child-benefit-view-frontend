@@ -16,7 +16,6 @@
 
 package controllers
 
-import controllers.auth.ChildBenefitAuth
 import play.api.i18n.I18nSupport
 import play.api.mvc.{MessagesControllerComponents, RequestHeader}
 import play.api.{Configuration, Environment}
@@ -33,7 +32,6 @@ class ChildBenefitBaseController @Inject() (val authConnector: AuthConnector)(im
     val env:                                                   Environment,
     cc:                                                        MessagesControllerComponents
 ) extends FrontendController(cc)
-    with ChildBenefitAuth
     with I18nSupport {
 
   override implicit def hc(implicit rh: RequestHeader): HeaderCarrier =

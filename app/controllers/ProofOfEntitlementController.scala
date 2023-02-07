@@ -16,8 +16,8 @@
 
 package controllers
 
-import config.FrontendAppConfig
 import connectors.ChildBenefitEntitlementConnector
+import controllers.actions.IdentifierAction
 import controllers.actions.AllowlistAction
 import utils.handlers.ErrorHandler
 import play.api.i18n.Messages
@@ -39,31 +39,29 @@ class ProofOfEntitlementController @Inject() (
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement,
+    identify:                         IdentifierAction,
     allowlistAction:                  AllowlistAction
 )(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig,
-    auditor:           AuditService
+    config:  Configuration,
+    env:     Environment,
+    ec:      ExecutionContext,
+    cc:      MessagesControllerComponents,
+    auditor: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    (Action andThen allowlistAction).async { implicit request =>
-      authorisedAsChildBenefitUser { authContext =>
-        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-          err => errorHandler.handleError(err, Some("proofOfEntitlement")),
-          entitlement => {
-            auditor.auditProofOfEntitlement(
-              authContext.nino.nino,
-              "Successful",
-              request,
-              Some(entitlement)
-            )
-            Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
-          }
-        )
-      }(routes.ProofOfEntitlementController.view)
+    Action andThen allowlistAction andThen identify async { implicit request =>
+      childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+        err => errorHandler.handleError(err, Some("proofOfEntitlement")),
+        entitlement => {
+          auditor.auditProofOfEntitlement(
+            request.nino.nino,
+            "Successful",
+            request,
+            Some(entitlement)
+          )
+          Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
+        }
+      )
     }
 }
 
