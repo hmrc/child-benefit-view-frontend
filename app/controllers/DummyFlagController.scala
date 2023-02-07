@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.actions.FeatureFlagActionFactory
-import play.api.{Configuration, Logging}
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -29,16 +29,12 @@ import scala.concurrent.Future
 class DummyFlagController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view:                     DummyFlagView,
-    featureFlags:             FeatureFlagActionFactory,
-    configuration:            Configuration
+    featureFlags:             FeatureFlagActionFactory
 ) extends FrontendBaseController
     with I18nSupport
     with Logging {
   val onPageLoad: Action[AnyContent] =
     (Action andThen featureFlags.dummyFlagEnabled).async { implicit request =>
-      val featureFlags: Map[String, Boolean] = configuration.get[Map[String, Boolean]]("feature-flags")
-      val log = featureFlags.mkString("Features state: ", ", ", "")
-      logger.info(log)
       Future.successful(Ok(view()))
     }
 }
