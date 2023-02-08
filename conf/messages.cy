@@ -161,6 +161,11 @@ accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfr
 # ---------- New Account Section ----------------
 
 # ---------- BARS Lockout Section ---------------
+bARSLockOut.title = Rydych chi wedi cael eich cloi allan o’r gwasanaeth hwn
+bARSLockOut.heading = Rydych chi wedi cael eich cloi allan o’r gwasanaeth hwn
+bARSLockOut.para.1 = Rydych chi wedi cael eich cloi allan oherwydd i chi nodi manylion nad oedd modd eu dilysu gormod o weithiau yn ystod y 24 awr ddiwethaf.
+bARSLockOut.para.2 = Gallwch {0} ar gyfer eich taliadau Budd-dal Plant.
+bARSLockOut.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion cyfrif
 
 # ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd
