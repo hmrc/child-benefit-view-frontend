@@ -79,4 +79,41 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  ".newAccountNumber" - {
+
+    val fieldName   = "newAccountNumber"
+    val requiredKey = "newAccountDetails.error.newAccountNumber.required"
+    val lengthKey   = "newAccountDetails.error.newAccountNumber.length"
+    val minLength   = 8
+    val maxLength   = 8
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      numericalString(maxLength)
+    )
+
+    behave like fieldWithMinLength(
+      form,
+      fieldName,
+      minLength = minLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(minLength)),
+      maxLength => numericalString(maxLength - 1)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength)),
+      maxLength => numericalString(maxLength + 1)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

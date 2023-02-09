@@ -26,10 +26,9 @@ import utils.mappings.SanitisedNumberMapping.sanitisedNumber
 import javax.inject.Inject
 
 class NewAccountDetailsFormProvider @Inject() extends Mappings {
-  val nameMaxLength          = 60
-  val sortCodeLength         = 6
-  val accountNumberMinLength = 6
-  val accountNumberMaxLength = 8
+  val nameMaxLength       = 60
+  val sortCodeLength      = 6
+  val accountNumberLength = 8
 
   def apply(): Form[NewAccountDetails] =
     Form(
@@ -54,8 +53,8 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
           "newAccountDetails.error.newAccountNumber.required",
           "newAccountDetails.error.newAccountNumber.format"
         ).verifying(
-          minLength(accountNumberMinLength, "newAccountDetails.error.newAccountNumber.length"),
-          maxLength(accountNumberMaxLength, "newAccountDetails.error.newAccountNumber.length")
+          minLength(accountNumberLength, "newAccountDetails.error.newAccountNumber.length"),
+          maxLength(accountNumberLength, "newAccountDetails.error.newAccountNumber.length")
         ),
         "bacsError" -> bacsString()
       )((a, b, c, _) => NewAccountDetails(a, b, c))(a =>
