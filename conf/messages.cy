@@ -176,6 +176,11 @@ confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn 
 confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
 # ---------- HICBC Opted Out Section ------------
+hICBCOptedOutPayments.title = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant
+hICBCOptedOutPayments.heading = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant
+hICBCOptedOutPayments.paragraph.1 = Nid ydych chi’n cael taliadau oherwydd i chi roi gwybod i ni nad ydych chi eisiau talu’r Tâl Treth Budd-dal Plant Incwm Uchel.
+hICBCOptedOutPayments.paragraph.2 = Gallwch roi gwybod i ni os ydych chi eisiau {0}.
+hICBCOptedOutPayments.guide.link.text = dechrau cael taliadau Budd-dal Plant
 
 # ---------- Cannot Verify Account Section ------
 cannotVerifyAccount.title = Ni allwn ddilysu’r manylion cyfrif rydych chi wedi’u darparu
