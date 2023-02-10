@@ -17,6 +17,7 @@
 package controllers.cob
 
 import connectors.ChangeOfBankConnector
+import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation}
@@ -26,7 +27,9 @@ import models.{CBEnvelope, NormalMode, UserAnswers}
 import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -48,7 +51,7 @@ import views.html.cob.ConfirmNewAccountDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar {
+class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -288,6 +291,49 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           status(result) mustEqual SEE_OTHER
 
           redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
+        }
+      }
+
+      "must properly be redirected to Hicbc and Barlock validation in case " in {
+        val scenarios = Table(
+          ("VerifyHICBC-VerifyBARNotLocked", "StatusAndRedirectUrl"),
+          (
+            (FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(false)),
+            (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
+          ),
+          (
+            (FakeVerifyHICBCAction(false), FakeVerifyBarNotLockedAction(true)),
+            (SEE_OTHER, Some(controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad().url))
+          ),
+          ((FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(true)), (OK, None))
+        )
+
+        forAll(scenarios) { (actions, statusAndRedirectUrl) =>
+          val (hicbcAction, verificationBarAction) = actions
+          val (resultStatus, redirectUrl)          = statusAndRedirectUrl
+
+          val userAnswers = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
+
+          val application: Application = applicationBuilderWithVerificationActions(
+            config,
+            userAnswers = userAnswers,
+            verifyHICBCAction = hicbcAction,
+            verifyBarNotLockedAction = verificationBarAction
+          ).overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[ChangeOfBankService].toInstance(cobService)
+          ).build()
+
+          running(application) {
+            val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
+            when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+
+            val result = route(application, request).value
+
+            status(result) mustEqual resultStatus
+            redirectLocation(result) mustEqual (redirectUrl)
+          }
         }
       }
     }

@@ -50,6 +50,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def verifyBankAccountUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/verify-claimant-bank-account"
 
+  def verifyBARNotLockedUrl: String =
+    s"$childBenefitServiceBaseUrl/child-benefit-service/verify-bar-not-locked"
+
   def updateBankAccountUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/update-claimant-bank-account"
 

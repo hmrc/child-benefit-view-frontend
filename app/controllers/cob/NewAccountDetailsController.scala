@@ -49,6 +49,8 @@ class NewAccountDetailsController @Inject() (
     getData:                  CBDataRetrievalAction,
     changeOfBankService:      ChangeOfBankService,
     formProvider:             NewAccountDetailsFormProvider,
+    verifyBarNotLockedAction: VerifyBarNotLockedAction,
+    verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     NewAccountDetailsView,
     errorHandler:             ErrorHandler
@@ -59,27 +61,29 @@ class NewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = {
-    (featureActions.changeBankAction andThen getData) { implicit request =>
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
-        case None => form
-        case Some(value) =>
-          bindForm(value, None)
-      }
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(NewAccountDetailsPage) match {
+          case None => form
+          case Some(value) =>
+            bindForm(value, None)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.changeBankAction andThen getData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => {
-            Future.successful(BadRequest(view(formWithErrors, mode)))
-          },
-          value => validateBankSaveSessionAndRedirect(mode, value)
-        )
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
+      implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => {
+              Future.successful(BadRequest(view(formWithErrors, mode)))
+            },
+            value => validateBankSaveSessionAndRedirect(mode, value)
+          )
     }
 
   private def validateBankSaveSessionAndRedirect(mode: Mode, value: NewAccountDetails)(implicit

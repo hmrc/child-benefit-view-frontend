@@ -34,18 +34,21 @@ class ChangeAccountController @Inject() (
     errorHandler:             ErrorHandler,
     getData:                  CBDataRetrievalAction,
     val controllerComponents: MessagesControllerComponents,
-    view:                     ChangeAccountView
+    view:                     ChangeAccountView,
+    verifyBarNotLockedAction: VerifyBarNotLockedAction,
+    verifyHICBCAction:        VerifyHICBCAction
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.changeBankAction andThen getData).async { implicit request =>
-      changeOfBankService
-        .processClaimantInformation(view)
-        .fold(
-          err => errorHandler.handleError(err),
-          result => result
-        )
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
+      implicit request =>
+        changeOfBankService
+          .processClaimantInformation(view)
+          .fold(
+            err => errorHandler.handleError(err),
+            result => result
+          )
     }
 }
