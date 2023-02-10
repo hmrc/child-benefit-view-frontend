@@ -83,7 +83,7 @@ class ChangeOfBankService @Inject() (
       hc: HeaderCarrier
   ): CBEnvelope[UpdateBankDetailsResponse] =
     for {
-      newInfo <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(400)))
+      newInfo <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(Status.BAD_REQUEST)))
       updateBankDetailsResponse <-
         changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(currentBankInfo, newInfo))
     } yield updateBankDetailsResponse
