@@ -27,13 +27,14 @@ import javax.inject.Inject
 class CannotVerifyAccountController @Inject() (
     override val messagesApi: MessagesApi,
     featureActions:           FeatureFlagComposedActions,
+    verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     CannotVerifyAccountView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    featureActions.changeBankAction { implicit request =>
+    (featureActions.changeBankAction andThen verifyHICBCAction) { implicit request =>
       Ok(view())
     }
 }

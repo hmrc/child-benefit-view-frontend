@@ -42,6 +42,8 @@ class ConfirmNewAccountDetailsController @Inject() (
     requireData:              DataRequiredAction,
     formProvider:             ConfirmNewAccountDetailsFormProvider,
     changeOfBankService:      ChangeOfBankService,
+    verifyBarNotLockedAction: VerifyBarNotLockedAction,
+    verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     ConfirmNewAccountDetailsView,
     errorHandler:             ErrorHandler
@@ -52,65 +54,67 @@ class ConfirmNewAccountDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
-      changeOfBankService.retrieveBankClaimantInfo.fold(
-        err => errorHandler.handleError(err),
-        claimantInfo => {
-          val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
-            case None        => form
-            case Some(value) => form.fill(value)
-          }
-          val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-          Ok(
-            view(
-              preparedForm,
-              mode,
-              s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
-              changeAccount.get.newAccountHoldersName,
-              changeAccount.get.newSortCode,
-              changeAccount.get.newAccountNumber
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData andThen requireData)
+      .async { implicit request =>
+        changeOfBankService.retrieveBankClaimantInfo.fold(
+          err => errorHandler.handleError(err),
+          claimantInfo => {
+            val preparedForm = request.userAnswers.get(ConfirmNewAccountDetailsPage) match {
+              case None        => form
+              case Some(value) => form.fill(value)
+            }
+            val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+            Ok(
+              view(
+                preparedForm,
+                mode,
+                s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
+                changeAccount.get.newAccountHoldersName,
+                changeAccount.get.newSortCode,
+                changeAccount.get.newAccountNumber
+              )
             )
-          )
-        }
-      )
-    }
+          }
+        )
+      }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.changeBankAction andThen getData andThen requireData).async { implicit request =>
-      changeOfBankService.retrieveBankClaimantInfo.value.flatMap {
-        case Left(err) => Future.successful(errorHandler.handleError(err))
-        case Right(claimantInfo) => {
-          val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors =>
-                Future.successful(
-                  BadRequest(
-                    view(
-                      formWithErrors,
-                      mode,
-                      s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
-                      changeAccount.get.newAccountHoldersName,
-                      changeAccount.get.newSortCode,
-                      changeAccount.get.newAccountNumber
-                    )
-                  )
-                ),
-              value =>
-                for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
-                  _              <- sessionRepository.set(updatedAnswers)
-                  _ <-
-                    changeOfBankService
-                      .submitClaimantChangeOfBank(
-                        claimantInfo.financialDetails.bankAccountInformation,
-                        changeAccount
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData andThen requireData)
+      .async { implicit request =>
+        changeOfBankService.retrieveBankClaimantInfo.value.flatMap {
+          case Left(err) => Future.successful(errorHandler.handleError(err))
+          case Right(claimantInfo) => {
+            val changeAccount: Option[NewAccountDetails] = request.userAnswers.get(NewAccountDetailsPage)
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  Future.successful(
+                    BadRequest(
+                      view(
+                        formWithErrors,
+                        mode,
+                        s"${claimantInfo.firstForename.value} ${claimantInfo.surname.value}",
+                        changeAccount.get.newAccountHoldersName,
+                        changeAccount.get.newSortCode,
+                        changeAccount.get.newAccountNumber
                       )
-                      .value
-                } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
-            )
+                    )
+                  ),
+                value =>
+                  for {
+                    updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
+                    _              <- sessionRepository.set(updatedAnswers)
+                    _ <-
+                      changeOfBankService
+                        .submitClaimantChangeOfBank(
+                          claimantInfo.financialDetails.bankAccountInformation,
+                          changeAccount
+                        )
+                        .value
+                  } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
+              )
+          }
         }
       }
-    }
 }

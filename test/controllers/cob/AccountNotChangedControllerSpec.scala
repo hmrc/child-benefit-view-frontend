@@ -16,6 +16,9 @@
 
 package controllers.cob
 
+import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.Application
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testconfig.TestConfig
@@ -27,7 +30,7 @@ import utils.TestData.NinoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountNotChangedView
 
-class AccountNotChangedControllerSpec extends BaseISpec {
+class AccountNotChangedControllerSpec extends BaseISpec with ScalaCheckPropertyChecks {
 
   "AccountNotChanged Controller" - {
 
@@ -52,6 +55,42 @@ class AccountNotChangedControllerSpec extends BaseISpec {
             contentAsString(result),
             view()(request, messages(application)).toString
           )
+        }
+      }
+
+      "must properly be redirected to Hicbc and Barlock validation in case " in {
+        val scenarios = Table(
+          ("VerifyHICBC-VerifyBARNotLocked", "StatusAndRedirectUrl"),
+          (
+            (FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(false)),
+            (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
+          ),
+          (
+            (FakeVerifyHICBCAction(false), FakeVerifyBarNotLockedAction(true)),
+            (SEE_OTHER, Some(controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad().url))
+          ),
+          ((FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(true)), (OK, None))
+        )
+        forAll(scenarios) { (actions, statusAndRedirectUrl) =>
+          val (hicbcAction, verificationBarAction) = actions
+          val (resultStatus, redirectUrl)          = statusAndRedirectUrl
+          val application: Application = applicationBuilderWithVerificationActions(
+            config,
+            userAnswers = Some(emptyUserAnswers),
+            verifyHICBCAction = hicbcAction,
+            verifyBarNotLockedAction = verificationBarAction
+          ).build()
+
+          running(application) {
+            val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
+              .withSession("authToken" -> "Bearer 123")
+
+            val result = route(application, request).value
+
+            status(result) mustEqual resultStatus
+            redirectLocation(result) mustEqual redirectUrl
+          }
+
         }
       }
     }

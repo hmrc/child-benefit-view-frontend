@@ -28,13 +28,16 @@ class AccountNotChangedController @Inject() (
     override val messagesApi: MessagesApi,
     featureActions:           FeatureFlagComposedActions,
     getData:                  CBDataRetrievalAction,
+    verifyBarNotLockedAction: VerifyBarNotLockedAction,
+    verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     AccountNotChangedView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.changeBankAction andThen getData) { implicit request =>
-      Ok(view())
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData) {
+      implicit request =>
+        Ok(view())
     }
 }

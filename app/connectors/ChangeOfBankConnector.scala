@@ -44,6 +44,9 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
   private val claimantVerificationLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank bank account verification: code=$code message=$message"
 
+  private val barNotLockedVerificationLogMessage = (code: Int, message: String) =>
+    s"unable to retrieve Child Benefit Change Of Bank verify bar not locked verification: code=$code message=$message"
+
   private val claimantUpdateBankLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
 
@@ -91,6 +94,30 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
               ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
             case e: UpstreamErrorResponse =>
               logger.error(claimantVerificationLogMessage(e.statusCode, e.getMessage))
+              ConnectorError(e.statusCode, e.getMessage).asLeft[Unit]
+          }
+      )
+    }
+  }
+
+  def verifyBARNotLocked()(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[Unit] = {
+    withHttpReads { implicit httpReads =>
+      EitherT(
+        httpClient
+          .GET(appConfig.verifyBARNotLockedUrl)(
+            httpReads,
+            hc,
+            ec
+          )
+          .recover {
+            case e: HttpException =>
+              logger.error(barNotLockedVerificationLogMessage(e.responseCode, e.getMessage))
+              ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
+            case e: UpstreamErrorResponse =>
+              logger.error(barNotLockedVerificationLogMessage(e.statusCode, e.getMessage))
               ConnectorError(e.statusCode, e.getMessage).asLeft[Unit]
           }
       )
