@@ -22,7 +22,7 @@ import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{AnyContent, MessagesRequest, Request, Result}
+import play.api.mvc.{Request, Result}
 import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -37,7 +37,7 @@ class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
     notFoundView:    NotFoundView,
     error:           ErrorTemplate
-)() extends FrontendErrorHandler
+) extends FrontendErrorHandler
     with I18nSupport
     with Logging {
 
@@ -83,19 +83,20 @@ class ErrorHandler @Inject() (
       hc:                                 HeaderCarrier,
       ec:                                 ExecutionContext
   ): Unit = {
-    if (auditOrigin.contains("proofOfEntitlement"))
+    if (auditOrigin.contains("proofOfEntitlement")) {
       auditService.auditProofOfEntitlement(
         "Unknown",
         "No Accounts Found",
-        request.asInstanceOf[MessagesRequest[AnyContent]],
+        request,
         None
       )
-    else if (auditOrigin.contains("paymentDetails"))
+    } else if (auditOrigin.contains("paymentDetails")) {
       auditService.auditPaymentDetails(
         "nino",
         "No Accounts Found",
         request,
         None
       )
+    }
   }
 }
