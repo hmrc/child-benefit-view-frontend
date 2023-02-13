@@ -16,57 +16,122 @@
 
 package utils.handlers
 
+import controllers.cob.{routes => cobRoutes}
 import controllers.routes
-import models.errors.ConnectorError
+import models.errors.{ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PaymentHistoryValidationError}
+import org.mockito.Mockito.verify
 import org.mockito.MockitoSugar.mock
 import org.scalatest.EitherValues
-import play.api.http.Status
-import play.api.mvc.AnyContentAsEmpty
-import play.api.mvc.Results.SeeOther
+import play.api.i18n.MessagesApi
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AuditService
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
-import views.html.NotFoundView
-import utils.HtmlMatcherUtils.removeNonce
-import scala.concurrent.ExecutionContext
+import utils.handlers.ErrorHandlerSpec.expectedUrl
+import views.html.{ErrorTemplate, NotFoundView}
 
 class ErrorHandlerSpec extends BaseISpec with EitherValues {
   "Error handler" - {
-    "handling client error must render redirect to not found page for status 404" in {
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+    implicit val auditServiceMock = mock[AuditService]
+    implicit val fakeRequest      = FakeRequest(GET, "/")
+    implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-      running(application) {
-        val request = FakeRequest(GET, "non-existing-page")
-        val result  = route(application, request).value
+    val messagesApiMock   = mock[MessagesApi]
+    val notFoundViewMock  = mock[NotFoundView]
+    val errorTemplateMock = mock[ErrorTemplate]
 
-        val view = application.injector.instanceOf[NotFoundView]
+    val sut = new ErrorHandler(messagesApiMock, notFoundViewMock, errorTemplateMock)
 
-        status(result) mustEqual NOT_FOUND
-        assertSameHtmlAfter(removeNonce)(
-          contentAsString(result),
-          view()(request, messages(application)).toString
-        )
+    val noAccountMessage = "NOT_FOUND_CB_ACCOUNT"
+    s"GIVEN a Not Found ($noAccountMessage) ConnectorError" - {
+      val error = ConnectorError(NOT_FOUND, noAccountMessage)
+
+      "THEN the result is a Redirect to No Account Found" in {
+        val result = sut.handleError(error, None)
+
+        result.header.status mustEqual SEE_OTHER
+        expectedUrl(result) mustEqual routes.NoAccountFoundController.onPageLoad.url
+      }
+
+      val pOEAuditOrigin = "proofOfEntitlement"
+      s"AND the auditOrigin is $pOEAuditOrigin" - {
+        "THEN auditProofOfEntitlement is called" in {
+          sut.handleError(error, Some(pOEAuditOrigin))
+
+          verify(auditServiceMock).auditProofOfEntitlement(
+            "Unknown",
+            "No Accounts Found",
+            _,
+            None
+          )
+        }
+      }
+
+      val pDAuditOrigin = "paymentDetails"
+      s"AND the auditOrigin is $pDAuditOrigin" - {
+        "THEN auditPaymentDetails is called" in {
+          sut.handleError(error, Some(pDAuditOrigin))
+
+          verify(auditServiceMock).auditPaymentDetails(
+            "nino",
+            "No Accounts Found",
+            _,
+            None
+          )
+        }
       }
     }
 
-    "handling error must render redirect to service unavailable page for status 503" in {
-      val application = applicationBuilder().build()
+    "GIVEN an ConnectorError with an Internal Server Error status code" - {
+      val error = ConnectorError(INTERNAL_SERVER_ERROR, "")
 
-      running(application) {
-        implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
-        implicit val auditor: AuditService                        = mock[AuditService]
-        implicit val ec:      ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
-        implicit val hc:      HeaderCarrier                       = HeaderCarrier()
+      "THE result is a Redirect to Service Unavailable" in {
+        val result = sut.handleError(error, None)
 
-        val errorHandler = application.injector.instanceOf[ErrorHandler]
-
-        val result = errorHandler.handleError(ConnectorError(Status.SERVICE_UNAVAILABLE, "test"))
-
-        result mustEqual SeeOther(routes.ServiceUnavailableController.onPageLoad.url)
+        result.header.status mustEqual SEE_OTHER
+        expectedUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
       }
     }
 
+    "GIVEN any other ConnectorError" - {
+      val error = ConnectorError(0, "")
+
+      "THE result is a Redirect to Service Unavailable" in {
+        val result = sut.handleError(error, None)
+
+        result.header.status mustEqual SEE_OTHER
+        expectedUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+      }
+    }
+
+    "GIVEN a ClaimantIsLockedOutOfChangeOfBank error" - {
+      val error = ClaimantIsLockedOutOfChangeOfBank(0, "")
+
+      "THE result is a Redirect to BARS Lock Out" in {
+        val result = sut.handleError(error, None)
+
+        result.header.status mustEqual SEE_OTHER
+        expectedUrl(result) mustEqual cobRoutes.BARSLockOutController.onPageLoad.url
+      }
+    }
+
+    "GIVEN a PaymentHistoryValidationError error" - {
+      val error = PaymentHistoryValidationError(0, "")
+
+      "THE result is a Redirect to Service Unavailable" in {
+        val result = sut.handleError(error, None)
+
+        result.header.status mustEqual SEE_OTHER
+        expectedUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+      }
+    }
   }
+}
+
+object ErrorHandlerSpec {
+  val baseChBUrl = "/child-benefit"
+  def expectedUrl(result: Result): String =
+    s"${result.header.headers.getOrElse("Location", "[location not found]")}"
+
 }
