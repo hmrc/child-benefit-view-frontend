@@ -159,6 +159,30 @@ accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
 accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfrif.
 
 # ---------- New Account Section ----------------
+newAccountDetails.title = Beth yw manylion y cyfrif newydd?
+newAccountDetails.heading = Beth yw manylion y cyfrif newydd?
+newAccountDetails.paragraph = Os byddwch yn newid i gyfrif sydd yn enw rhywun arall, chi sy’n gyfrifol am sicrhau eich bod yn cael yr arian a bod yr arian yn cael ei ddefnyddio yn unol â’ch dymuniadau.
+newAccountDetails.newAccountHoldersName = Yr enw sydd ar y cyfrif
+newAccountDetails.newAccountHoldersNameHint = Nodwch enwau cyntaf ac olaf yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs. Os yw’r cyfrif yn gyfrif ar y cyd rydych yn ei rannu gyda rhywun, nodwch enwau’r person arall. Os yw’n gyfrif ar y cyd a ddelir gan bobl eraill, nodwch enwau un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.newSortCode = Cod didoli
+newAccountDetails.newSortCodeHint = Mae’n rhaid i hyn fod yn 6 digid o hyd
+newAccountDetails.newAccountNumber = Account Number
+newAccountDetails.newAccountNumberHint = Mae’n rhaid i hyn fod yn 8 digid o hyd
+newAccountDetails.checkYourAnswersLabel = Beth yw manylion y cyfrif newydd
+newAccountDetails.error.newAccountHoldersName.required = Nodwch yr enw sydd ar y cyfrif
+newAccountDetails.error.newAccountHoldersName.length = Mae’n rhaid i’r enw fod yn {0} o gymeriadau neu’n llai
+newAccountDetails.error.newAccountHoldersName.format = Gall yr enw gynnwys llythrennau, bylchau, cysylltnodau a chollnodau yn unig
+newAccountDetails.error.newSortCode.required = Nodwch god didoli
+newAccountDetails.error.newSortCode.format = Nodwch god didoli dilys, megis 309430
+newAccountDetails.error.newAccountNumber.required = Nodwch rif cyfrif
+newAccountDetails.error.newAccountNumber.length = Mae’n rhaid i rif y cyfrif fod 8 digid
+newAccountDetails.error.newAccountNumber.format = Nodwch rif cyfrif dilys, megis 00733445
+newAccountDetails.error.bacs.priority1 = Heb ddod o hyd i’r cod didoli — gwiriwch y cod didoli
+newAccountDetails.error.bacs.priority2 = Heb ddod o hyd i’r cyfrif — gwiriwch y cod didoli a rhif y cyfrif
+newAccountDetails.error.bacs.priority3 = Ni allwch ddefnyddio’r gwasanaeth hwn ar gyfer y math hwn o gyfrif — nodwch fanylion cyfrif banc personol neu gymdeithas adeiladu heb rif rôl
+newAccountDetails.error.bacs.priority4 = Nid yw’r cyfrif yn derbyn trosglwyddiadau credyd uniongyrchol — nodwch fanylion cyfrif gwahanol
+newAccountDetails.error.bacs.priority5 = Ni ellir dilysu’r cyfrif — gwiriwch enw’r cyfrif, y cod didoli, a rhif y cyfrif
+newAccountDetails.error.bacs.priority6 = Nid yw enw’r cyfrif yn cyd-fynd â manylion y cyfrif — gwiriwch enw’r cyfrif
 
 # ---------- BARS Lockout Section ---------------
 bARSLockOut.title = Rydych chi wedi cael eich cloi allan o’r gwasanaeth hwn

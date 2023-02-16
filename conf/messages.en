@@ -196,7 +196,7 @@ accountNotChanged.heading = You have not changed your account
 accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same account.
 
 # ---------- New Account Section ----------------
-newAccountDetails.title = New Account Details
+newAccountDetails.title = What are the new account details?
 newAccountDetails.heading = What are the new account details?
 newAccountDetails.paragraph = If you change to an account in someone else’s name, you’re responsible for making sure you get the money and that it’s used how you want.
 newAccountDetails.newAccountHoldersName = Name on the account
@@ -214,9 +214,6 @@ newAccountDetails.error.newSortCode.format = Enter a valid sort code like 309430
 newAccountDetails.error.newAccountNumber.required = Enter an account number
 newAccountDetails.error.newAccountNumber.length = Account number must be 8 digits
 newAccountDetails.error.newAccountNumber.format = Enter a valid account number like 00733445
-newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
-newAccountDetails.newSortCode.change.hidden = newSortCode
-newAccountDetails.newAccountHoldersName.change.hidden = newAccountHoldersName
 newAccountDetails.error.bacs.priority1 = Sort code not found — check the sort code
 newAccountDetails.error.bacs.priority2 = Account not found — check the sort code and account number
 newAccountDetails.error.bacs.priority3 = You cannot use this service for this type of account — enter details of a personal bank account or a building society without a roll number
