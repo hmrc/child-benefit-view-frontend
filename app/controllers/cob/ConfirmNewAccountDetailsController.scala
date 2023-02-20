@@ -105,14 +105,21 @@ class ConfirmNewAccountDetailsController @Inject() (
                   for {
                     updatedAnswers <- Future.fromTry(request.userAnswers.set(ConfirmNewAccountDetailsPage, value))
                     _              <- sessionRepository.set(updatedAnswers)
-                    _ <-
+                    submitClaimant <-
                       changeOfBankService
                         .submitClaimantChangeOfBank(
                           claimantInfo.financialDetails.bankAccountInformation,
                           changeAccount
                         )
                         .value
-                  } yield Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
+                  } yield {
+                    submitClaimant match {
+                      case Left(error) =>
+                        errorHandler.handleError(error)
+                      case Right(_) =>
+                        Redirect(navigator.nextPage(ConfirmNewAccountDetailsPage, mode, updatedAnswers))
+                    }
+                  }
               )
           }
         }
