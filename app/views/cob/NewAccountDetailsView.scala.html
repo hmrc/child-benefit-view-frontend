@@ -35,8 +35,9 @@
     }
 
     @heading(messages("newAccountDetails.heading"), classes = "govuk-heading-l")
-
-    @paragraph(messages("newAccountDetails.paragraph"))
+    @if(form.errors.isEmpty) {
+        @paragraph(messages("newAccountDetails.paragraph"))
+    }
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
         @if(form.errors.map(_.key).contains("bacsErrorTop")) {
