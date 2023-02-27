@@ -60,7 +60,7 @@
     pageTitle = Option(pageTitle),
     nonce = CSPNonce.get,
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
-    backLinkUrl = if(showBackLink) Some("javascript:history.back();") else None,
+    backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
