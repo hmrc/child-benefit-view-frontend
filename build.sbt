@@ -70,7 +70,8 @@ lazy val root = (project in file("."))
       "javascripts/application.js" ->
         group(
           Seq(
-            "javascripts/app.js"
+            "javascripts/app.js",
+            "javascripts/print.js"
           )
         )
     ),
