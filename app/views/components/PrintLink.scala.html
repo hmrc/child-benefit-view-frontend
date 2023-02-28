@@ -14,11 +14,15 @@
  * limitations under the License.
  *@
 
+@import views.html.helper.CSPNonce
+
 @this()
 
-@(text: String)(implicit messages: Messages)
+@(text: String)(implicit messages: Messages, request: Request[_])
+
+<script src='@controllers.routes.Assets.versioned("javascripts/print.js")' @CSPNonce.attr></script>
 
 <div>
-    <a class="govuk-list govuk-link print-link govuk-!-display-none-print" href="" onclick="window.print();return;">@messages(text)</a>
+    <a class="govuk-list govuk-link print-link govuk-!-display-none-print" href="">@messages(text)</a>
 </div>
 
