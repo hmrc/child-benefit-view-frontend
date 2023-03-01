@@ -223,6 +223,19 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 
+# ----------  Confirm average 12 hours per week ------------
+twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.heading = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.checkYourAnswersLabel = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.p1 = Mae hyn golygu treulio, ar gyfartaledd, fwy na 12 awr yr wythnos yn ystod y tymor yn gwneud pethau fel:
+twelveHoursAWeek.bulletPoint1 = astudio dan oruchwyliaeth
+twelveHoursAWeek.bulletPoint2 = cael gwersi
+twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
+twelveHoursAWeek.bulletPoint4 = arholiadau
+twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
+twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+twelveHoursAWeek.change.hidden = TwelveHoursAWeek
+
 # ----------  Confirm Non-Advanced Education ------------
 willYoungPersonBeStaying.title = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
 willYoungPersonBeStaying.heading = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
