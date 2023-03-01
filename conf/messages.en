@@ -256,6 +256,8 @@ cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
 cannotVerifyAccount.link.text = use a different service to change the account details
 
 # ------------------------------------------------------------------------------------
+
+# ------------------------------ FTNAE Messages Section ------------------------------
 cannotFindYoungPerson.title = cannotFindYoungPerson
 cannotFindYoungPerson.heading = cannotFindYoungPerson
 
@@ -314,10 +316,17 @@ willCourseBeEmployerProvided.checkYourAnswersLabel = willCourseBeEmployerProvide
 willCourseBeEmployerProvided.error.required = Select yes if willCourseBeEmployerProvided
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
-willYoungPersonBeStaying.title = willYoungPersonBeStaying
-willYoungPersonBeStaying.heading = willYoungPersonBeStaying
-willYoungPersonBeStaying.checkYourAnswersLabel = willYoungPersonBeStaying
-willYoungPersonBeStaying.error.required = Select yes if willYoungPersonBeStaying
+# ----------  Confirm Non-Advanced Education ------------
+willYoungPersonBeStaying.title = Will the young person be studying one of these non-advanced courses?
+willYoungPersonBeStaying.heading = Will the young person be studying one of these non-advanced courses?
+willYoungPersonBeStaying.bulletPoint1 = GCSEs or A levels
+willYoungPersonBeStaying.bulletPoint2 = BTECs, level 1, 2 or 3
+willYoungPersonBeStaying.bulletPoint3 = T levels
+willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
+willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
+willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
+willYoungPersonBeStaying.checkYourAnswersLabel = Will the young person be studying one of these non-advanced courses?
+willYoungPersonBeStaying.error.required = Select Yes or No
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 schoolOrCollege.title = schoolOrCollege

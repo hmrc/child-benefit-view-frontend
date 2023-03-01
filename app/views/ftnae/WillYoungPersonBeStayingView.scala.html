@@ -14,17 +14,35 @@
  * limitations under the License.
  *@
 
+@import components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        list: BulletList,
+        heading: Heading
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("willYoungPersonBeStaying.title"))) {
+
+    @heading(messages("willYoungPersonBeStaying.heading"), classes = "govuk-heading-l")
+
+    @list(elements = Seq(
+        Html(messages("willYoungPersonBeStaying.bulletPoint1")),
+        Html(messages("willYoungPersonBeStaying.bulletPoint2")),
+        Html(messages("willYoungPersonBeStaying.bulletPoint3")),
+        Html(messages("willYoungPersonBeStaying.bulletPoint4")),
+        Html(messages("willYoungPersonBeStaying.bulletPoint5")),
+        Html(messages("willYoungPersonBeStaying.bulletPoint6"))
+    ))
+
+    <br>
 
     @formHelper(action = controllers.ftnae.routes.WillYoungPersonBeStayingController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -35,7 +53,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("willYoungPersonBeStaying.heading")).asPageHeading()
+                legend = defaultObject
             )
         )
 
