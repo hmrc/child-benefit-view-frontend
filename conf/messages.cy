@@ -7,6 +7,8 @@ site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
 site.continue = Yn eich blaen
+site.no = Na
+site.yes = Iawn
 
 # ---------- Date Section -----------------------
 
@@ -217,3 +219,19 @@ cannotVerifyAccount.heading = Ni allwn ddilysu’r manylion cyfrif rydych chi we
 cannotVerifyAccount.paragraph.1 = Am resymau diogelwch, rydym wedi’ch cloi allan o’r gwasanaeth hwn am 24 awr.
 cannotVerifyAccount.paragraph.2 = Gallwch {0} ar gyfer eich taliadau Budd-dal Plant.
 cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion cyfrif
+# ------------------------------------------------------------------------------------
+
+# ------------------------------ FTNAE Messages Section ------------------------------
+
+# ----------  Confirm Non-Advanced Education ------------
+willYoungPersonBeStaying.title = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
+willYoungPersonBeStaying.heading = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
+willYoungPersonBeStaying.bulletPoint1 = TGAU neu Lefelau A
+willYoungPersonBeStaying.bulletPoint2 = BTEC, lefel 1, 2 neu 3
+willYoungPersonBeStaying.bulletPoint3 = Lefelau T
+willYoungPersonBeStaying.bulletPoint4 = NVQ, lefel 1, 2 neu 3
+willYoungPersonBeStaying.bulletPoint5 = Bagloriaeth Ryngwladol
+willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
+willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
+willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying

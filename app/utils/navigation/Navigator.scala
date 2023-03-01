@@ -89,7 +89,7 @@ class Navigator @Inject() () extends Logging {
     }
   private def navigateWillYoungPersonBeStaying(userAnswers: UserAnswers): Call =
     userAnswers.get(WillYoungPersonBeStayingPage) match {
-      case Some(false) => controllers.ftnae.routes.UseDifferentFormController.onPageLoad
+      case Some(false) => controllers.ftnae.routes.NotEntitledController.onPageLoad()
       case Some(true)  => controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
       case _           => controllers.routes.JourneyRecoveryController.onPageLoad()
     }

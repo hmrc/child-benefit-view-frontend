@@ -155,7 +155,7 @@ class NavigatorSpec extends SpecBase {
           WillYoungPersonBeStayingPage,
           NormalMode,
           allAnsweredForFtnae.flatMap(_.set(WillYoungPersonBeStayingPage, false)).success.value
-        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
+        ) mustBe controllers.ftnae.routes.NotEntitledController.onPageLoad()
       }
 
       "must be kicked out from SchoolOrCollegePage to UseDifferentFormPage" in {
