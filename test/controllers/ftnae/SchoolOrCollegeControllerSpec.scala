@@ -35,7 +35,8 @@ import scala.concurrent.Future
 
 class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardYesRoute = Call("GET", "/foo")
+  def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new SchoolOrCollegeFormProvider()
   val form         = formProvider()
@@ -84,7 +85,7 @@ class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the correct page when user submits yes" in {
 
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, true).success.value
@@ -94,7 +95,7 @@ class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[Navigator].toInstance(new FakeNavigator(onwardYesRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
           .build()
@@ -107,7 +108,34 @@ class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual onwardYesRoute.url
+      }
+    }
+
+    "must redirect to the correct page when user submits no" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+      val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, false).success.value
+
+      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(false)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardNoRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, schoolOrCollegeRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardNoRoute.url
       }
     }
 
