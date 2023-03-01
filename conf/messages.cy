@@ -235,3 +235,11 @@ willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnw
 willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
 willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ neu ‘Na’
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
+
+# ----------  Confirm School Or College ------------
+schoolOrCollege.title = A fydd ysgol neu goleg yn darparu’r cwrs?
+schoolOrCollege.heading = A fydd ysgol neu goleg yn darparu’r cwrs?
+schoolOrCollege.p1 = Gallwch ddewis ‘Iawn’ os bydd y person ifanc ar gwrs a ddarperir gan ysgol neu goleg yn y DU ond yn astudio gartref.
+schoolOrCollege.checkYourAnswersLabel = A fydd ysgol neu goleg yn darparu’r cwrs?
+schoolOrCollege.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+schoolOrCollege.change.hidden = SchoolOrCollege

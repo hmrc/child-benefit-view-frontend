@@ -14,17 +14,26 @@
  * limitations under the License.
  *@
 
+@import components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("schoolOrCollege.title"))) {
+
+    @heading(messages("schoolOrCollege.heading"), classes = "govuk-heading-l")
+
+    @para(messages("schoolOrCollege.p1"))
 
     @formHelper(action = controllers.ftnae.routes.SchoolOrCollegeController.onSubmit(mode), 'autoComplete -> "off") {
 
@@ -35,7 +44,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("schoolOrCollege.heading")).asPageHeading()
+                legend = defaultObject
             )
         )
 
