@@ -30,7 +30,7 @@ class CBDataRetrievalActionImpl @Inject() (
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
     sessionRepository.get(request.internalId).map {
-      OptionalDataRequest(request.request, request.internalId, _)
+      OptionalDataRequest(request.request, request.internalId, request.nino, _)
     }
   }
 }

@@ -53,6 +53,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
     ClaimantBankInformation(
       FirstForename("FirstForename"),
       Surname("Surname"),
+      LocalDate.of(1955, 1, 26),
       true,
       ClaimantFinancialDetails(
         LocalDate.now(),

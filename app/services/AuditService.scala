@@ -16,8 +16,10 @@
 
 package services
 
-import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.audit.{BankDetails, ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, PersonalInformation, ViewDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
+import models.requests.OptionalDataRequest
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -74,6 +76,60 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     )
 
     auditConnector.sendExplicitAudit(ViewProofOfEntitlementModel.EventType, payload)
+  }
+
+  def auditChangeOfBankAccountDetails(
+      nino:                  String,
+      status:                String,
+      request:               OptionalDataRequest[_],
+      formattedClaimantInfo: ClaimantBankInformation
+  )(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+  ): Unit = {
+
+    val referrer = request.headers
+      .get("referer") //MDTP header
+      .getOrElse(
+        request.headers
+          .get("Referer") //common browser header
+          .getOrElse("Referrer not found")
+      )
+
+    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
+
+    val personalInformation = PersonalInformation(
+      s"${formattedClaimantInfo.firstForename.value} ${formattedClaimantInfo.surname.value}",
+      formattedClaimantInfo.dateOfBirth,
+      nino
+    )
+
+    val bankDetails = BankDetails(
+      formattedClaimantInfo.firstForename.value,
+      formattedClaimantInfo.surname.value,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.buildingSocietyRollNumber
+    )
+
+    val viewDetails = ViewDetails(
+      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber,
+      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode
+    )
+
+    val payload = ChangeOfBankAccountDetailsModel(
+      nino,
+      status,
+      referrer,
+      deviceFingerprint,
+      personalInformation,
+      bankDetails,
+      viewDetails
+    )
+
+    auditConnector.sendExplicitAudit(ChangeOfBankAccountDetailsModel.EventType, payload)
   }
 
   def auditPaymentDetails(

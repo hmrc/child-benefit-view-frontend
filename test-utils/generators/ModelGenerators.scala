@@ -157,9 +157,10 @@ trait ModelGenerators {
       for {
         firstForename    <- arbitrary[FirstForename]
         surname          <- arbitrary[Surname]
+        dateOfBirth      <- arbitrary[LocalDate]
         activeClaim      <- arbitrary[Boolean]
         financialDetails <- arbitrary[ClaimantFinancialDetails]
-      } yield ClaimantBankInformation(firstForename, surname, activeClaim, financialDetails)
+      } yield ClaimantBankInformation(firstForename, surname, dateOfBirth, activeClaim, financialDetails)
     }
   implicit lazy val arbitraryFirstForename: Arbitrary[FirstForename] =
     Arbitrary {

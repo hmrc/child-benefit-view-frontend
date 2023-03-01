@@ -16,8 +16,11 @@
 
 package services
 
-import models.audit.{ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.audit.{ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
+import models.common.NationalInsuranceNumber
 import models.entitlement.Child
+import models.requests.OptionalDataRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
@@ -28,7 +31,7 @@ import play.api.mvc.{Headers, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TestData.entitlementResult
+import utils.TestData.{claimantBankInformation, entitlementResult}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
@@ -40,6 +43,8 @@ class AuditServiceSpec extends PlaySpec {
 
   protected val request: Request[_] =
     FakeRequest().withHeaders(Headers(("referer", "/foo")))
+  protected val optionalDataRequest: OptionalDataRequest[_] =
+    OptionalDataRequest(request, "123", NationalInsuranceNumber("CA123456A"), None)
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
 
@@ -99,6 +104,58 @@ class AuditServiceSpec extends PlaySpec {
       capturedChild.relationshipStartDate.toString mustBe "2013-01-01"
       capturedChild.relationshipEndDate.get.toString mustBe "2016-01-01"
 
+    }
+  }
+  "changeOfBankAccountDetails" should {
+    "fire event" in {
+
+      Mockito.reset(auditConnector)
+
+      val captor: ArgumentCaptor[ChangeOfBankAccountDetailsModel] =
+        ArgumentCaptor.forClass(classOf[ChangeOfBankAccountDetailsModel])
+
+      auditor.auditChangeOfBankAccountDetails("CA123456A", "testStatus", optionalDataRequest, claimantBankInformation)
+
+      verify(auditConnector, times(1))
+        .sendExplicitAudit(eqTo(ChangeOfBankAccountDetailsModel.EventType), captor.capture())(
+          any[HeaderCarrier](),
+          any[ExecutionContext](),
+          any[Writes[ChangeOfBankAccountDetailsModel]]()
+        )
+
+      val capturedEvent = captor.getValue
+
+      val capturedPersonalInformation = capturedEvent.personalInformation
+      val capturedBankDetails         = capturedEvent.bankDetails
+      val capturedViewDetails         = capturedEvent.viewDetails
+
+      capturedEvent.nino mustBe "CA123456A"
+      capturedEvent.status mustBe "testStatus"
+      capturedEvent.referrer mustBe "/foo"
+      capturedEvent.deviceFingerprint mustBe "-"
+
+      capturedPersonalInformation.name mustBe "John Doe"
+      capturedPersonalInformation.dateOfBirth mustBe LocalDate.of(1955, 1, 26)
+      capturedPersonalInformation.nino mustBe "CA123456A"
+
+      capturedBankDetails.firstname mustBe "John"
+      capturedBankDetails.surname mustBe "Doe"
+      capturedBankDetails.accountHolderName mustBe Some(
+        AccountHolderName("Mr J Doe")
+      )
+      capturedBankDetails.accountNumber mustBe Some(
+        BankAccountNumber("12345678")
+      )
+      capturedBankDetails.sortCode mustBe Some(SortCode("112233"))
+      capturedBankDetails.buildingSocietyRollNumber mustBe None
+
+      capturedViewDetails.accountHolderName mustBe Some(
+        AccountHolderName("Mr J Doe")
+      )
+      capturedViewDetails.accountNumber mustBe Some(
+        BankAccountNumber("12345678")
+      )
+      capturedViewDetails.sortCode mustBe Some(SortCode("112233"))
     }
   }
   "viewPaymentDetails" should {
