@@ -289,10 +289,17 @@ notEntitled.heading = notEntitled
 notEntitledCourseEmployerProvided.title = notEntitledCourseEmployerProvided
 notEntitledCourseEmployerProvided.heading = notEntitledCourseEmployerProvided
 
-twelveHoursAWeek.title = twelveHoursAWeek
-twelveHoursAWeek.heading = twelveHoursAWeek
-twelveHoursAWeek.checkYourAnswersLabel = twelveHoursAWeek
-twelveHoursAWeek.error.required = Select yes if twelveHoursAWeek
+# ----------  Confirm average 12 hours per week ------------
+twelveHoursAWeek.title = Will the young person study full-time?
+twelveHoursAWeek.heading = Will the young person study full-time?
+twelveHoursAWeek.checkYourAnswersLabel = Will the young person study full-time?
+twelveHoursAWeek.p1 = This means an average of more than 12 hours a week in term time doing things like:
+twelveHoursAWeek.bulletPoint1 = supervised study
+twelveHoursAWeek.bulletPoint2 = receiving tuition
+twelveHoursAWeek.bulletPoint3 = practical work
+twelveHoursAWeek.bulletPoint4 = exams
+twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
+twelveHoursAWeek.error.required = Select Yes or No
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 useDifferentForm.title = useDifferentForm
