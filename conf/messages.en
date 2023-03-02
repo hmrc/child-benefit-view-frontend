@@ -288,8 +288,10 @@ liveWithYouInUK.change.hidden = LiveWithYouInUK
 notEntitled.title = notEntitled
 notEntitled.heading = notEntitled
 
-notEntitledCourseEmployerProvided.title = notEntitledCourseEmployerProvided
-notEntitledCourseEmployerProvided.heading = notEntitledCourseEmployerProvided
+# ----------  QYP not eligible for FTNAE extension (employer provided) ------------
+notEntitledCourseEmployerProvided.title = You’re not entitled to continuing Child Benefit
+notEntitledCourseEmployerProvided.heading = You’re not entitled to continuing Child Benefit
+notEntitledCourseEmployerProvided.p1 = The Child Benefit office will not extend payments if a young person’s course is provided by their employer.
 
 # ----------  Confirm average 12 hours per week ------------
 twelveHoursAWeek.title = Will the young person study full-time?
