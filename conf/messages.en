@@ -319,10 +319,12 @@ whichYoungPerson.change.hidden = WhichYoungPerson
 whyYoungPersonNotListed.title = whyYoungPersonNotListed
 whyYoungPersonNotListed.heading = whyYoungPersonNotListed
 
-willCourseBeEmployerProvided.title = willCourseBeEmployerProvided
-willCourseBeEmployerProvided.heading = willCourseBeEmployerProvided
-willCourseBeEmployerProvided.checkYourAnswersLabel = willCourseBeEmployerProvided
-willCourseBeEmployerProvided.error.required = Select yes if willCourseBeEmployerProvided
+# ----------  Check if course is provided by employer ------------
+willCourseBeEmployerProvided.title = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
+willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.error.required = Select Yes or No
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  Confirm Non-Advanced Education ------------

@@ -36,7 +36,8 @@ import scala.concurrent.Future
 
 class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardYesRoute = Call("GET", "/foo")
+  def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillCourseBeEmployerProvidedFormProvider()
   val form         = formProvider()
@@ -85,7 +86,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
 
       val application = applicationBuilder(Some(userAnswers))
         .overrides(
-          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[Navigator].toInstance(new FakeNavigator(onwardYesRoute)),
           bind[SessionRepository].toInstance(mockSessionRepository)
         )
         .build()
@@ -104,7 +105,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
       }
     }
 
-    "must redirect to the next page when valid data is submitted" in {
+    "must redirect to the correct page when yes is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -115,7 +116,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
-            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[Navigator].toInstance(new FakeNavigator(onwardYesRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
           .build()
@@ -128,7 +129,35 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual onwardRoute.url
+        redirectLocation(result).value mustEqual onwardYesRoute.url
+      }
+    }
+
+    "must redirect to the correct page when no is submitted" in {
+
+      val mockSessionRepository = mock[SessionRepository]
+
+      val userAnswers = UserAnswers(userAnswersId).set(WillCourseBeEmployerProvidedPage, false).success.value
+
+      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(false)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardNoRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, willCourseBeEmployerProvidedRoute)
+            .withFormUrlEncodedBody(("value", "false"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardNoRoute.url
       }
     }
 

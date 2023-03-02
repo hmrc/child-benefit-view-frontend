@@ -14,33 +14,40 @@
  * limitations under the License.
  *@
 
+@import components._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("willCourseBeEmployerProvided.title"))) {
+    @layout(pageTitle = title(form, messages("willCourseBeEmployerProvided.title"))) {
+        @heading(messages("willCourseBeEmployerProvided.heading"), classes = "govuk-heading-l")
+        @para(messages("willCourseBeEmployerProvided.p1"))
 
-    @formHelper(action = controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form))
-        }
+            @if(form.errors.nonEmpty) {
+                @govukErrorSummary(ErrorSummaryViewModel(form))
+            }
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = LegendViewModel(messages("willCourseBeEmployerProvided.heading")).asPageHeading()
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = defaultObject
+                )
             )
-        )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+            @govukButton(
+                ButtonViewModel(messages("site.continue"))
+            )
+        }
     }
-}
