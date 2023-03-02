@@ -268,13 +268,15 @@ extendPayments.error.required = Enter extendPayments
 extendPayments.error.length = ExtendPayments must be 5 characters or less
 extendPayments.change.hidden = ExtendPayments
 
+# ----------  Confirm course duration ------------
 howManyYears.title = How many academic years will the course last?
 howManyYears.heading = How many academic years will the course last?
-howManyYears.oneyear = 1 Year
-howManyYears.twoyears = 2 Years
+howManyYears.p1 = An academic year lasts up to 12 months and usually starts in September.
+howManyYears.oneyear = 1 year
+howManyYears.twoyears = 2 years
 howManyYears.other = Other
 howManyYears.checkYourAnswersLabel = How many academic years will the course last?
-howManyYears.error.required = Select howManyYears
+howManyYears.error.required = Select 1 year, 2 years or Other
 howManyYears.change.hidden = HowManyYears
 
 liveWithYouInUK.title = liveWithYouInUK

@@ -223,6 +223,17 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 
+# ----------  Confirm course duration ------------
+howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.p1 = Mae blwyddyn academaidd yn para hyd at 12 mis ac mae fel arfer yn dechrau ym mis Medi.
+howManyYears.oneyear = 1 flwyddyn
+howManyYears.twoyears = 2 flynedd
+howManyYears.other = Arall
+howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.error.required = Dewiswch 1 flwyddyn, 2 flynedd neu Arall
+howManyYears.change.hidden = HowManyYears
+
 # ----------  Confirm average 12 hours per week ------------
 twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
 twelveHoursAWeek.heading = A fydd y person ifanc yn astudio’n llawn amser?
