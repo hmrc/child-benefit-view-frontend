@@ -223,6 +223,14 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 
+# ----------  Check if course is provided by employer ------------
+willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
+willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
+
 # ----------  Confirm course duration ------------
 howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
 howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
