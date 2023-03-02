@@ -58,7 +58,7 @@ class ErrorHandler @Inject() (
 
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
-        logger.error(logMessage("cb account not found", Some(NOT_FOUND)))
+        logger.info(logMessage("cb account not found", Some(NOT_FOUND)))
         fireAuditEvent(auditOrigin, auditService, request)
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case e if e.statusCode == INTERNAL_SERVER_ERROR =>
@@ -68,7 +68,7 @@ class ErrorHandler @Inject() (
         logger.error(logMessage(s"connector error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case ClaimantIsLockedOutOfChangeOfBank(code, message) =>
-        logger.error(logMessage(s"claimant is locked out due to bars failure: $message", Some(code)))
+        logger.info(logMessage(s"claimant is locked out due to bars failure: $message", Some(code)))
         Redirect(cob.routes.BARSLockOutController.onPageLoad())
       case PaymentHistoryValidationError(code, message) =>
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
