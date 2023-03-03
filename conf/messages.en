@@ -279,10 +279,12 @@ howManyYears.checkYourAnswersLabel = How many academic years will the course las
 howManyYears.error.required = Select 1 year, 2 years or Other
 howManyYears.change.hidden = HowManyYears
 
-liveWithYouInUK.title = liveWithYouInUK
-liveWithYouInUK.heading = liveWithYouInUK
-liveWithYouInUK.checkYourAnswersLabel = liveWithYouInUK
-liveWithYouInUK.error.required = Select yes if liveWithYouInUK
+# ----------  Confirm QYP lives with claimant ------------
+liveWithYouInUK.title = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.heading = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.p1 = This includes during term time.
+liveWithYouInUK.error.required = Select Yes or No
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 notEntitled.title = notEntitled
