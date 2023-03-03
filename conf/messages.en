@@ -308,8 +308,15 @@ twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised st
 twelveHoursAWeek.error.required = Select Yes or No
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
-useDifferentForm.title = useDifferentForm
-useDifferentForm.heading = useDifferentForm
+# ----------  Redirect to existing FTNAE iform ------------
+useDifferentForm.title = Use a different form to extend your Child Benefit
+useDifferentForm.heading = Use a different form to extend your Child Benefit
+useDifferentForm.p1 = You can still apply to extend your payments but you need to <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> use a different Child Benefit form</a>.
+useDifferentForm.p2 = This is because the Child Benefit office needs more information about things like:
+useDifferentForm.bulletPoint1 = the young person’s course
+useDifferentForm.bulletPoint2 = where the young person will be educated
+useDifferentForm.bulletPoint3 = how long the education will last
+useDifferentForm.bulletPoint4 = where the young person will live when they’re in education
 
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?

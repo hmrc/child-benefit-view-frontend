@@ -223,6 +223,16 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 
+# ----------  Redirect to existing FTNAE iform ------------
+useDifferentForm.title = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
+useDifferentForm.heading = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
+useDifferentForm.p1 = Rydych yn dal i allu gwneud cais i estyn eich taliadau, ond mae angen i chi <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> ddefnyddio ffurflen Budd-dal Plant wahanol</a>.
+useDifferentForm.p2 = Mae hyn oherwydd bod angen rhagor o wybodaeth ar y swyddfa Budd-dal Plant am bethau fel:
+useDifferentForm.bulletPoint1 = cwrs y person ifanc
+useDifferentForm.bulletPoint2 = ble bydd y person ifanc yn cael ei addysgu
+useDifferentForm.bulletPoint3 = am faint y bydd yr addysg yn para
+useDifferentForm.bulletPoint4 = ble bydd y person ifanc yn byw pan fydd yn derbyn addysg
+
 # ----------  Check if course is provided by employer ------------
 willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
 willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?

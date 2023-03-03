@@ -14,14 +14,28 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        list: BulletList,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("useDifferentForm.title"))) {
+    @layout(pageTitle = titleNoForm(messages("useDifferentForm.title"))) {
+        <h1 class="govuk-heading-xl">@messages("useDifferentForm.heading")</h1>
+        <p class="govuk-body">@Html(messages("useDifferentForm.p1"))</p>
+        @para(messages("useDifferentForm.p2"))
 
-    <h1 class="govuk-heading-xl">@messages("useDifferentForm.heading")</h1>
-}
+        @list(elements = Seq(
+            Html(messages("useDifferentForm.bulletPoint1")),
+            Html(messages("useDifferentForm.bulletPoint2")),
+            Html(messages("useDifferentForm.bulletPoint3")),
+            Html(messages("useDifferentForm.bulletPoint4"))
+        ))
+
+    }
