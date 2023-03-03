@@ -242,6 +242,14 @@ howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn 
 howManyYears.error.required = Dewiswch 1 flwyddyn, 2 flynedd neu Arall
 howManyYears.change.hidden = HowManyYears
 
+# ----------  Confirm QYP lives with claimant ------------
+liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
+liveWithYouInUK.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+liveWithYouInUK.change.hidden = LiveWithYouInUK
+
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
