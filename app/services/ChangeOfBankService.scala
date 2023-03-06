@@ -23,6 +23,7 @@ import models.CBEnvelope.CBEnvelope
 import models.changeofbank._
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.ChangeOfBankValidationError
+import models.requests.OptionalDataRequest
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Results.{Ok, Redirect}
@@ -39,7 +40,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ChangeOfBankService @Inject() (
     changeOfBankConnector: ChangeOfBankConnector
-) {
+)(implicit auditService:   AuditService) {
 
   def retrieveBankClaimantInfo(implicit
       ec: ExecutionContext,
@@ -65,14 +66,22 @@ class ChangeOfBankService @Inject() (
   def processClaimantInformation(view: ChangeAccountView)(implicit
       ec:                              ExecutionContext,
       hc:                              HeaderCarrier,
-      request:                         Request[_],
+      request:                         OptionalDataRequest[_],
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
       claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
       formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
       childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)
-    } yield childBenefitPage
+    } yield {
+      auditService.auditChangeOfBankAccountDetails(
+        request.nino.nino,
+        "Successful",
+        request,
+        formattedClaimantInfo
+      )
+      childBenefitPage
+    }
   }
 
   def submitClaimantChangeOfBank(

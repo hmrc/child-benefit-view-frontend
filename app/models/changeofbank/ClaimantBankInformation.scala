@@ -19,9 +19,12 @@ package models.changeofbank
 import models.common.{FirstForename, Surname}
 import play.api.libs.json.Json
 
+import java.time.LocalDate
+
 final case class ClaimantBankInformation(
     firstForename:           FirstForename,
     surname:                 Surname,
+    dateOfBirth:             LocalDate,
     activeChildBenefitClaim: Boolean,
     financialDetails:        ClaimantFinancialDetails
 )
