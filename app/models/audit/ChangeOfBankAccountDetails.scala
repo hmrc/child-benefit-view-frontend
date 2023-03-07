@@ -41,9 +41,9 @@ object BankDetails {
 }
 
 final case class ViewDetails(
-    accountHolderName: Option[AccountHolderName],
-    accountNumber:     Option[BankAccountNumber],
-    sortCode:          Option[SortCode]
+    accountHolderName: String,
+    accountNumber:     String,
+    sortCode:          String
 )
 
 object ViewDetails {

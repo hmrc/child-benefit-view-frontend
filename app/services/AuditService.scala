@@ -24,6 +24,7 @@ import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
+import views.ViewUtils.{formatSensitiveAccNumber, formatSensitiveSort}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -98,8 +99,10 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
 
     val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
 
+    val claimantName: String = s"${formattedClaimantInfo.firstForename.value} ${formattedClaimantInfo.surname.value}"
+
     val personalInformation = PersonalInformation(
-      s"${formattedClaimantInfo.firstForename.value} ${formattedClaimantInfo.surname.value}",
+      claimantName,
       formattedClaimantInfo.dateOfBirth,
       nino
     )
@@ -114,9 +117,14 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     )
 
     val viewDetails = ViewDetails(
-      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName,
-      formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber,
-      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode
+      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName.fold(claimantName)(_.value),
+      formatSensitiveAccNumber(
+        formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber
+          .fold("Account not found")(_.number)
+      ),
+      formatSensitiveSort(
+        formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode.fold("Sort not found")(_.value)
+      )
     )
 
     val payload = ChangeOfBankAccountDetailsModel(

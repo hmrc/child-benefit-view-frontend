@@ -149,13 +149,9 @@ class AuditServiceSpec extends PlaySpec {
       capturedBankDetails.sortCode mustBe Some(SortCode("112233"))
       capturedBankDetails.buildingSocietyRollNumber mustBe None
 
-      capturedViewDetails.accountHolderName mustBe Some(
-        AccountHolderName("Mr J Doe")
-      )
-      capturedViewDetails.accountNumber mustBe Some(
-        BankAccountNumber("12345678")
-      )
-      capturedViewDetails.sortCode mustBe Some(SortCode("112233"))
+      capturedViewDetails.accountHolderName mustBe "Mr J Doe"
+      capturedViewDetails.accountNumber mustBe "****5678"
+      capturedViewDetails.sortCode mustBe "**-**-33"
     }
   }
   "viewPaymentDetails" should {
