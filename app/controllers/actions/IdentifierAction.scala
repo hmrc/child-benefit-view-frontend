@@ -24,10 +24,10 @@ import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AffinityGroup.Individual
+import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{affinityGroup, internalId, nino}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
@@ -47,8 +47,9 @@ class AuthenticatedIdentifierAction @Inject() (
     with AuthorisedFunctions
     with Logging {
 
-  private val AuthPredicate          = (config: FrontendAppConfig) => AuthProviders(GovernmentGateway) and config.confidenceLevel
-  private val ChildBenefitRetrievals = nino and affinityGroup and internalId
+  private val AuthPredicate = (config: FrontendAppConfig) =>
+    Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel
+  private val ChildBenefitRetrievals = nino and internalId
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -56,7 +57,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
     authorised(AuthPredicate(config))
       .retrieve(ChildBenefitRetrievals) {
-        case Some(nino) ~ Some(Individual) ~ Some(internalId) =>
+        case Some(nino) ~ Some(internalId) =>
           logger.debug("user is authorised: executing action block")
           block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
         case _ =>
