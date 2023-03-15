@@ -19,7 +19,7 @@ package models.cob
 import models.changeofbank.BankDetails
 import play.api.libs.json.Json
 
-final case class UpdateBankAccountRequest(currentBankInformation: BankDetails, updatedBankInformation: BankDetails)
+final case class UpdateBankAccountRequest(updatedBankInformation: BankDetails)
 
 object UpdateBankAccountRequest {
   implicit val format = Json.format[UpdateBankAccountRequest]

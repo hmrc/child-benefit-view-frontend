@@ -20,7 +20,7 @@ import connectors.ChangeOfBankConnector
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import forms.cob.ConfirmNewAccountDetailsFormProvider
 import models.CBEnvelope.CBEnvelope
-import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation}
+import models.changeofbank.ClaimantBankInformation
 import models.cob.ConfirmNewAccountDetails.Yes
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankDetailsResponse}
 import models.{CBEnvelope, NormalMode, UserAnswers}
@@ -75,7 +75,6 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
     ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(claimantBankInformation)
 
     override def submitClaimantChangeOfBank(
-        currentBankInfo:    ClaimantBankAccountInformation,
         newBankAccountInfo: Option[NewAccountDetails]
     )(implicit
         ec: ExecutionContext,
