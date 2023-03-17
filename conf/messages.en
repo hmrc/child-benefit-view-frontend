@@ -258,8 +258,15 @@ cannotVerifyAccount.link.text = use a different service to change the account de
 # ------------------------------------------------------------------------------------
 
 # ------------------------------ FTNAE Messages Section ------------------------------
-cannotFindYoungPerson.title = cannotFindYoungPerson
-cannotFindYoungPerson.heading = cannotFindYoungPerson
+# ----------  Cannot find Young Person ------------
+cannotFindYoungPerson.title = The Child Benefit office cannot find the young person you want to claim for
+cannotFindYoungPerson.heading = The Child Benefit office cannot find the young person you want to claim for
+cannotFindYoungPerson.p1 = This might be because:
+cannotFindYoungPerson.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
+cannotFindYoungPerson.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
+cannotFindYoungPerson.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, <a href={0} target="_self">use a different form to extend your Child Benefit</a>
+cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href={0} target="_self">use a different form if you want to change what you sent</a>
+cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, <a href="{0}" target="_self">view your proof of entitlement to Child Benefit</a>.
 
 extendPayments.title = extendPayments
 extendPayments.heading = extendPayments
