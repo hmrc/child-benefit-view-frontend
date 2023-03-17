@@ -14,14 +14,30 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        list: BulletList,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("cannotFindYoungPerson.title"))) {
+    @layout(pageTitle = titleNoForm(messages("cannotFindYoungPerson.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("cannotFindYoungPerson.heading")</h1>
-}
+        <h1 class="govuk-heading-xl">@messages("cannotFindYoungPerson.heading")</h1>
+
+        @para(messages("cannotFindYoungPerson.p1"))
+
+        @list(elements = Seq(
+            Html(messages("cannotFindYoungPerson.bulletPoint1")),
+            Html(messages("cannotFindYoungPerson.bulletPoint2")),
+            Html(messages("cannotFindYoungPerson.bulletPoint3", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297")),
+            Html(messages("cannotFindYoungPerson.bulletPoint4", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"))
+        ))
+
+        @para(messages("cannotFindYoungPerson.p2", routes.ProofOfEntitlementController.view))
+    }
