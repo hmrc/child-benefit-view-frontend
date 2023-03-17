@@ -14,14 +14,30 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        list: BulletList,
+        heading: Heading,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("whyYoungPersonNotListed.title"))) {
+    @layout(pageTitle = titleNoForm(messages("whyYoungPersonNotListed.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("whyYoungPersonNotListed.heading")</h1>
-}
+        <h1 class="govuk-heading-xl">@messages("whyYoungPersonNotListed.heading")</h1>
+
+        @para(messages("whyYoungPersonNotListed.p1"))
+
+        @list(elements = Seq(
+            Html(messages("whyYoungPersonNotListed.bulletPoint1")),
+            Html(messages("whyYoungPersonNotListed.bulletPoint2")),
+            Html(messages("whyYoungPersonNotListed.bulletPoint3")),
+            Html(messages("whyYoungPersonNotListed.bulletPoint4"))
+        ))
+
+        @para(messages("whyYoungPersonNotListed.p2", routes.ProofOfEntitlementController.view))
+    }
