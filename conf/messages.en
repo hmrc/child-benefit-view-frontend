@@ -333,8 +333,8 @@ whyYoungPersonNotListed.heading = Why the young person is not listed
 whyYoungPersonNotListed.p1 = This might be because:
 whyYoungPersonNotListed.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
-whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self">use a different form to extend your Child Benefit</a>
-whyYoungPersonNotListed.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self">use a different form if you want to change what you sent</a>
+whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, <a href={0} target="_self">use a different form to extend your Child Benefit</a>
+whyYoungPersonNotListed.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href={0} target="_self">use a different form if you want to change what you sent</a>
 whyYoungPersonNotListed.p2 = To check who you get payments for, how much you get and when payments will stop, <a href="{0}" target="_self">view your proof of entitlement to Child Benefit</a>.
 
 # ----------  Check if course is provided by employer ------------
