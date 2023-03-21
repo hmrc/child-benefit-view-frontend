@@ -268,12 +268,25 @@ cannotFindYoungPerson.bulletPoint3 = they’ll be 18 or older on 1 September 202
 cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href={0} target="_self">use a different form if you want to change what you sent</a>
 cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, <a href="{0}" target="_self">view your proof of entitlement to Child Benefit</a>.
 
-extendPayments.title = extendPayments
-extendPayments.heading = extendPayments
+# ----------  FTNAE start page ------------
+extendPayments.title = Extend your Child Benefit payments while a young person stays in education
+extendPayments.heading = Extend your Child Benefit payments while a young person stays in education
+extendPayments.p1 = Use this form if they will be studying:
+extendPayments.bulletPoint1 = GCSEs or A levels
+extendPayments.bulletPoint2 = BTECs, level 1, 2 or 3
+extendPayments.bulletPoint3 = T levels
+extendPayments.bulletPoint4 = NVQs, level 1, 2 or 3
+extendPayments.bulletPoint5 = International Baccalaureate
+extendPayments.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
+extendPayments.p2 = Use another form <a href={0} target="_self">if they’ll be studying something else</a>.
+extendPayments.p3 = The young person will need to be:
+extendPayments.bulletPoint7 = 16 or 17 on 1 September 2023
+extendPayments.bulletPoint8 = on their course for 1 or 2 academic years
+extendPayments.bulletPoint9 = studying full-time, which means more than 12 hours a week
+extendPayments.bulletPoint10 = on a course provided by a school or college
+extendPayments.bulletPoint11 = living with you in the UK
+extendPayments.p4 = Use another form <a href={0} target="_self">if their circumstances will be different</a>.
 extendPayments.checkYourAnswersLabel = extendPayments
-extendPayments.error.required = Enter extendPayments
-extendPayments.error.length = ExtendPayments must be 5 characters or less
-extendPayments.change.hidden = ExtendPayments
 
 # ----------  Confirm course duration ------------
 howManyYears.title = How many academic years will the course last?

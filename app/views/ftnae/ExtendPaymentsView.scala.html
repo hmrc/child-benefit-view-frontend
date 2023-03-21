@@ -1,34 +1,64 @@
 @*
- * Copyright 2023 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *@
+* Copyright 2023 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+@import components._
 
 @this(
-layout: templates.Layout,
-govukButton: GovukButton
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        heading: Heading,
+        h2: HeadingH2,
+        para: ParagraphBody,
+        link: Link,
+        list: BulletList,
+        caption: CaptionHeader
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("extendPayments.title"))) {
+    @layout(pageTitle = titleNoForm(messages("extendPayments.title"))) {
+        @caption("John Doe")
 
-<h1 class="govuk-heading-xl">@messages("extendPayments.heading")</h1>
+        @heading(messages("extendPayments.heading"), classes = "govuk-heading-xl")
+        @para(messages("extendPayments.p1"))
 
-<div class="govuk-button-group">
-    <a class="govuk-button" href="@controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(NormalMode)" data-module="govuk-button">
-        Continue
-    </a>
+        @list(elements = Seq(
+            Html(messages("extendPayments.bulletPoint1")),
+            Html(messages("extendPayments.bulletPoint2")),
+            Html(messages("extendPayments.bulletPoint3")),
+            Html(messages("extendPayments.bulletPoint4")),
+            Html(messages("extendPayments.bulletPoint5")),
+            Html(messages("extendPayments.bulletPoint6"))
+        ))
 
-</div>
-}
+        <p class="govuk-body">@Html(messages("extendPayments.p2", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"))</p>
+        @para(messages("extendPayments.p3"))
+
+        @list(elements = Seq(
+            Html(messages("extendPayments.bulletPoint7")),
+            Html(messages("extendPayments.bulletPoint8")),
+            Html(messages("extendPayments.bulletPoint9")),
+            Html(messages("extendPayments.bulletPoint10")),
+            Html(messages("extendPayments.bulletPoint11"))
+        ))
+
+        <p class="govuk-body">@Html(messages("extendPayments.p4", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"))</p>
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+                    .asLink(controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(NormalMode).url)
+                    .withAttribute("id", "continue-button")
+        )
+    }
