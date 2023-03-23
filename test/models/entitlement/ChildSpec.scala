@@ -31,12 +31,19 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
     """{
       | "nino": "TE12345",
       | "dateOfBirth": "2021-01-01",
-      | "fullName": "Test Name",
+      | "name": "Test Name",
       | "relationshipStartDate": "2021-01-01",
       | "ninoSuffix": "ST"
       |}
       |""".stripMargin
 
+  val missingChildJson =
+    """{
+      | "dateOfBirth": "2021-01-01",
+      | "name": "Test Name",
+      | "relationshipStartDate": "2021-01-01"
+      |}
+      |""".stripMargin
   "Child" - {
 
     "must deserialise valid values" in {
@@ -44,6 +51,23 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
         LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("TE12345")), Some(NinoSuffix("ST")))
 
       Json.parse(childJson).as[Child] mustEqual expectedChild
+    }
+
+    "must deserialise missing values" in {
+      val expectedChild = Child(FullName("Test Name"), LocalDate.of(2021, 1, 1),
+        LocalDate.of(2021, 1, 1), None, None, None)
+
+      Json.parse(missingChildJson).as[Child] mustEqual expectedChild
+    }
+
+    "must correctly calculate age" in {
+      val olderChild = Child(FullName("Test Name"), LocalDate.of(1995, 1, 1),
+        LocalDate.of(2021, 1, 1), None, None, None)
+      val youngerChild = Child(FullName("Test Name"), LocalDate.of(2023, 1, 1),
+        LocalDate.of(2021, 1, 1), None, None, None)
+
+      olderChild.determineAgeLimit mustEqual true
+      youngerChild.determineAgeLimit mustEqual false
     }
 
   }

@@ -26,12 +26,21 @@ final case class Child(
     dateOfBirth:           LocalDate,
     relationshipStartDate: LocalDate,
     relationshipEndDate:   Option[LocalDate],
-    nino: Option[NationalInsuranceNumber],
-    ninoSuffix: Option[NinoSuffix]
-)
+    nino:                  Option[NationalInsuranceNumber],
+    ninoSuffix:            Option[NinoSuffix]
+) {
+  def determineAgeLimit: Boolean = {
+    val today = LocalDate.now()
+    val ageLimit = today.minusYears(15).minusMonths(9)
+    if (dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)) {
+      true
+    } else {
+      false
+    }
+  }
+}
 
 object Child {
   implicit val format: Format[Child] = Json.format[Child]
-
 
 }
