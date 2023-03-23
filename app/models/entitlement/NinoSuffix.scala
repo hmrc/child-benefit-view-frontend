@@ -16,20 +16,10 @@
 
 package models.entitlement
 
-import models.common.NationalInsuranceNumber
 import play.api.libs.json.{Format, Json}
 
-import java.time.LocalDate
+final case class NinoSuffix(value: String) extends AnyVal
 
-final case class Child(
-    name:                  FullName,
-    dateOfBirth:           LocalDate,
-    relationshipStartDate: LocalDate,
-    relationshipEndDate:   Option[LocalDate],
-    nino: Option[NationalInsuranceNumber],
-    ninoSuffix: Option[NinoSuffix]
-)
-
-object Child {
-  implicit val format: Format[Child] = Json.format[Child]
+object NinoSuffix {
+  implicit val format: Format[NinoSuffix] = Json.valueFormat[NinoSuffix]
 }
