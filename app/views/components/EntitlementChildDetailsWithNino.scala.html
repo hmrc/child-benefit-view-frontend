@@ -27,13 +27,10 @@
 
 @if(child.relationshipStartDate.isBefore(child.relationshipEndDate.get)) {
     @h2(messages("proofOfEntitlement.awardDetail", child.name.value))
-
-    <blink>NINO</blink>
-
-
     @summaryList(
         SummaryList(
             rows = Seq(
+                SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.nino"))), value = Value(HtmlContent(child.nino.get.nino.get))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipStartDate, checkForSpecialAwardStartDate = true)))),
                 SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipEndDate.get))))
