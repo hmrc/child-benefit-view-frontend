@@ -23,12 +23,12 @@ import views.html.components.{EntitlementChildDetailsWithNino, EntitlementChildD
 
 import javax.inject.Inject
 
-class ChildDetailsViewPicker @Inject()(
-                                        withNino:EntitlementChildDetailsWithNino,
-                                        withoutNino: EntitlementChildDetailsWithoutNino,
-                                        conf: FrontendAppConfig
-                                      ) {
-  def apply(child:Child)(implicit messages: Messages) = {
+class ChildDetailsViewPicker @Inject() (
+    withNino:    EntitlementChildDetailsWithNino,
+    withoutNino: EntitlementChildDetailsWithoutNino,
+    conf:        FrontendAppConfig
+) {
+  def apply(child: Child)(implicit messages: Messages) = {
     if (conf.showYoungPersonsNinoInEntitlement) {
       withNino(child)
     } else {
