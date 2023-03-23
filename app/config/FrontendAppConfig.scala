@@ -25,7 +25,6 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
-
   val host:        String = configuration.get[String]("host")
   val appName:     String = configuration.get[String]("appName")
   val loginUrl:    String = configuration.get[String]("urls.login")
@@ -65,6 +64,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
+
+  val showYoungPersonsNinoInEntitlement: Boolean =
+    configuration.getOptional[Boolean]("features.showYoungPersonsNinoInEntitlement").getOrElse(false)
 
   val confidenceLevel: ConfidenceLevel =
     ConfidenceLevel
