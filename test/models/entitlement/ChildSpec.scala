@@ -17,41 +17,34 @@
 package models.entitlement
 
 import models.common.NationalInsuranceNumber
-import models.ftnae.WhichYoungPerson
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json.Json
 
 import java.time.LocalDate
 
 class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  val expectedChildJson =
-    """
-      |"nino": "TE12345",
-      |"dateOfBirth": "2021-01-01",
-      |"fullName": "Test Name",
-      |"relationshipStartDate": "2021-01-01",
-      |"ninoSuffix": "ST"
+  val childJson =
+    """{
+      | "nino": "TE12345",
+      | "dateOfBirth": "2021-01-01",
+      | "fullName": "Test Name",
+      | "relationshipStartDate": "2021-01-01",
+      | "ninoSuffix": "ST"
+      |}
       |""".stripMargin
 
   "Child" - {
 
     "must deserialise valid values" in {
-
       val expectedChild = Child(FullName("Test Name"), LocalDate.of(2021, 1, 1),
         LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("TE12345")), Some(NinoSuffix("ST")))
 
-      Json.parse(expectedChildJson).as[Child] mustEqual expectedChild
+      Json.parse(childJson).as[Child] mustEqual expectedChild
     }
-
-//    "must fail to deserialise missing values" in {
-//
-//    }
 
   }
 }
