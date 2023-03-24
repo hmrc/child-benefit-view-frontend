@@ -27,7 +27,8 @@ final case class Child(
     relationshipStartDate: LocalDate,
     relationshipEndDate:   Option[LocalDate],
     nino:                  Option[NationalInsuranceNumber],
-    ninoSuffix:            Option[NinoSuffix]
+    ninoSuffix:            Option[NinoSuffix],
+    crnIndicator:          Option[Int]
 ) {
   def determineAgeLimit: Boolean = {
     val today = LocalDate.now()
@@ -38,9 +39,15 @@ final case class Child(
       false
     }
   }
+
+  def crnIndicatorAsBoolean: Option[Boolean] = {
+    crnIndicator.flatMap {
+      case 0 => Some(false)
+      case 1 => Some(true)
+    }
+  }
 }
 
 object Child {
   implicit val format: Format[Child] = Json.format[Child]
-
 }

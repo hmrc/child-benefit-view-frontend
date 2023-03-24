@@ -160,8 +160,8 @@ trait ModelGenerators {
         relationshipEndDate   <- arbitrary[Option[LocalDate]]
         nationalInsuranceNumber <- arbitrary[Option[NationalInsuranceNumber]]
         ninoSuffix <- arbitrary[Option[NinoSuffix]]
-
-      } yield Child(fullName, dateOfBirth, relationshipStartDate, relationshipEndDate, nationalInsuranceNumber, ninoSuffix)
+        crnIndicator <- arbitrary[Option[Int]]
+      } yield Child(fullName, dateOfBirth, relationshipStartDate, relationshipEndDate, nationalInsuranceNumber, ninoSuffix, crnIndicator)
     }
 
   // Claimant Bank Information and associated models

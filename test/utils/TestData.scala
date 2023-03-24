@@ -85,6 +85,7 @@ object TestData {
         relationshipStartDate = LocalDate.of(2013, 1, 1),
         relationshipEndDate = Some(LocalDate.of(2016, 1, 1)),
         None,
+        None,
         None
       )
     )

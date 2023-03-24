@@ -64,6 +64,7 @@ class AuditServiceSpec extends PlaySpec {
               relationshipStartDate = LocalDate.of(2022, 1, 1),
               relationshipEndDate = Some(LocalDate.of(2038, 1, 1)),
               None,
+              None,
               None
             )
       )
