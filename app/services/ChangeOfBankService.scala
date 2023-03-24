@@ -85,29 +85,20 @@ class ChangeOfBankService @Inject() (
   }
 
   def submitClaimantChangeOfBank(
-      currentBankInfo:    ClaimantBankAccountInformation,
       newBankAccountInfo: Option[NewAccountDetails]
   )(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
   ): CBEnvelope[UpdateBankDetailsResponse] =
     for {
-      newInfo <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(Status.BAD_REQUEST)))
-      updateBankDetailsResponse <-
-        changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(currentBankInfo, newInfo))
+      newInfo                   <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(Status.BAD_REQUEST)))
+      updateBankDetailsResponse <- changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(newInfo))
     } yield updateBankDetailsResponse
 
   private def toUpdateBankAccountRequest(
-      currentBankInfo:    ClaimantBankAccountInformation,
       newBankAccountInfo: NewAccountDetails
   ) = {
     UpdateBankAccountRequest(
-      currentBankInformation = BankDetails(
-        AccountHolderType.SomeoneElse,
-        currentBankInfo.accountHolderName.getOrElse(AccountHolderName("N/A")),
-        currentBankInfo.bankAccountNumber.getOrElse(BankAccountNumber("N/A")),
-        currentBankInfo.sortCode.getOrElse(SortCode("N/A"))
-      ),
       updatedBankInformation = BankDetails(
         AccountHolderType.SomeoneElse,
         AccountHolderName(newBankAccountInfo.newAccountHoldersName),

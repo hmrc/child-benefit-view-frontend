@@ -33,7 +33,10 @@ class ConfirmNewAccountDetailsViewSpec extends ViewSpecBase {
   val form = new ConfirmNewAccountDetailsFormProvider()()
 
   private def createView: Html =
-    page(form, NormalMode, name, deets("accountHolder"), deets("sortCode"), deets("accountNum"))(request, messages)
+    page(form, NormalMode, name, deets("accountHolder"), deets("sortCode"), deets("accountNum"))(
+      request,
+      messages
+    )
 
   val view: Document = Jsoup.parse(createView.toString)
 
