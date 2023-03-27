@@ -141,7 +141,7 @@ trait ModelGenerators {
     Arbitrary {
       None
     }
-  implicit lazy val arbitraryNationalInsuranceNumber: Arbitrary[NationalInsuranceNumber]=
+  implicit lazy val arbitraryNationalInsuranceNumber: Arbitrary[NationalInsuranceNumber] =
     Arbitrary {
       arbitrary[String].map(NationalInsuranceNumber(_))
     }
@@ -154,14 +154,22 @@ trait ModelGenerators {
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
       for {
-        fullName              <- arbitrary[FullName]
-        dateOfBirth           <- arbitrary[LocalDate]
-        relationshipStartDate <- arbitrary[LocalDate]
-        relationshipEndDate   <- arbitrary[Option[LocalDate]]
+        fullName                <- arbitrary[FullName]
+        dateOfBirth             <- arbitrary[LocalDate]
+        relationshipStartDate   <- arbitrary[LocalDate]
+        relationshipEndDate     <- arbitrary[Option[LocalDate]]
         nationalInsuranceNumber <- arbitrary[Option[NationalInsuranceNumber]]
-        ninoSuffix <- arbitrary[Option[NinoSuffix]]
-        crnIndicator <- arbitrary[Option[Int]]
-      } yield Child(fullName, dateOfBirth, relationshipStartDate, relationshipEndDate, nationalInsuranceNumber, ninoSuffix, crnIndicator)
+        ninoSuffix              <- arbitrary[Option[NinoSuffix]]
+        crnIndicator            <- arbitrary[Option[Int]]
+      } yield Child(
+        fullName,
+        dateOfBirth,
+        relationshipStartDate,
+        relationshipEndDate,
+        nationalInsuranceNumber,
+        ninoSuffix,
+        crnIndicator
+      )
     }
 
   // Claimant Bank Information and associated models

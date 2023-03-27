@@ -31,13 +31,9 @@ final case class Child(
     crnIndicator:          Option[Int]
 ) {
   def determineAgeLimit: Boolean = {
-    val today = LocalDate.now()
+    val today    = LocalDate.now()
     val ageLimit = today.minusYears(15).minusMonths(9)
-    if (dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)) {
-      true
-    } else {
-      false
-    }
+    dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)
   }
 
   def crnIndicatorAsBoolean: Option[Boolean] = {
