@@ -26,7 +26,7 @@ final case class Child(
     dateOfBirth:           LocalDate,
     relationshipStartDate: LocalDate,
     relationshipEndDate:   Option[LocalDate],
-    nino:                  Option[NationalInsuranceNumber],
+    ninoWithoutSuffix:     Option[NationalInsuranceNumber],
     ninoSuffix:            Option[NinoSuffix],
     crnIndicator:          Option[Int]
 ) {

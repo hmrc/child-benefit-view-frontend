@@ -29,7 +29,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
 
   val childJson =
     """{
-      | "nino": "TE12345",
+      | "ninoWithoutSuffix": "TE12345",
       | "dateOfBirth": "2021-01-01",
       | "name": "Test Name",
       | "relationshipStartDate": "2021-01-01",

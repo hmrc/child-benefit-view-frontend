@@ -64,6 +64,7 @@ proofOfEntitlement.viewpayments = Bwrw golwg dros eich taliadau Budd-dal Plant
 proofOfEntitlement.viewrecentpayments.para = Gallwch {0} a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
 proofOfEntitlement.viewrecentpayments.link = fwrw golwg dros eich taliadau Budd-dal Plant diweddar
 proofOfEntitlement.printMessage = Argraffu’r dudalen hon
+proofOfEntitlement.nino = National Insurance number
 
 # ---------- Payment History Section ------------
 paymentHistory.pageTitle = Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK
