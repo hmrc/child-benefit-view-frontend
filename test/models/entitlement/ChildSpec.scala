@@ -70,7 +70,15 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
 
     "must correctly display Nino if age and nino meet requirements" in {
       val olderChild =
-        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("test123")), None, None)
+        Child(
+          FullName("Test Name"),
+          LocalDate.of(1995, 1, 1),
+          LocalDate.of(2021, 1, 1),
+          None,
+          Some(NationalInsuranceNumber("test123")),
+          None,
+          None
+        )
       val youngerChild =
         Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
 
@@ -82,7 +90,15 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
       val olderChild =
         Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
       val youngerChild =
-        Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("test123")), None, None)
+        Child(
+          FullName("Test Name"),
+          LocalDate.of(2023, 1, 1),
+          LocalDate.of(2021, 1, 1),
+          None,
+          Some(NationalInsuranceNumber("test123")),
+          None,
+          None
+        )
 
       olderChild.shouldShowNino mustEqual false
       youngerChild.shouldShowNino mustEqual false
