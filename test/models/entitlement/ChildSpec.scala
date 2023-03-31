@@ -68,14 +68,24 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
       Json.parse(missingChildJson).as[Child] mustEqual expectedChild
     }
 
-    "must correctly calculate age" in {
+    "must correctly display Nino if age and nino meet requirements" in {
       val olderChild =
-        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
+        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("test123")), None, None)
       val youngerChild =
         Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
 
-      olderChild.determineAgeLimit mustEqual true
-      youngerChild.determineAgeLimit mustEqual false
+      olderChild.shouldShowNino mustEqual true
+      youngerChild.shouldShowNino mustEqual false
+    }
+
+    "must not display Nino if age and nino do not meet requirements" in {
+      val olderChild =
+        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
+      val youngerChild =
+        Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, Some(NationalInsuranceNumber("test123")), None, None)
+
+      olderChild.shouldShowNino mustEqual false
+      youngerChild.shouldShowNino mustEqual false
     }
 
     "must correctly convert crnIndicator" in {

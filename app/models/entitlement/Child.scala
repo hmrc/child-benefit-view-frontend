@@ -30,10 +30,12 @@ final case class Child(
     ninoSuffix:            Option[NinoSuffix],
     crnIndicator:          Option[Int]
 ) {
-  def determineAgeLimit: Boolean = {
-    val today    = LocalDate.now()
-    val ageLimit = today.minusYears(15).minusMonths(9)
-    dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)
+  def shouldShowNino: Boolean = {
+    val today      = LocalDate.now()
+    val ageLimit   = today.minusYears(15).minusMonths(9)
+    val ageReached = dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)
+
+    ageReached && ninoWithoutSuffix.nonEmpty
   }
 
   def crnIndicatorAsBoolean: Option[Boolean] = {

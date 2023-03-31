@@ -28,7 +28,7 @@
 @if(child.relationshipStartDate.isBefore(child.relationshipEndDate.get)) {
     @h2(messages("proofOfEntitlement.awardDetail", child.name.value))
     @summaryList(
-        if(child.determineAgeLimit){
+        if(child.shouldShowNino){
             SummaryList(
                 rows = Seq(
                     SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.nino"))), value = Value(HtmlContent(child.ninoWithoutSuffix.get.nino))),
