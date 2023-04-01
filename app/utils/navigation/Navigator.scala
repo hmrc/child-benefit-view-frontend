@@ -80,19 +80,19 @@ class Navigator @Inject() () extends Logging {
       case Some(WhichYoungPerson.ChildNotListed) =>
         controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad
       case Some(_) => controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
-      case _ => controllers.routes.JourneyRecoveryController.onPageLoad()
+      case _       => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
   private def navigateWillYoungPersonBeStaying(userAnswers: UserAnswers): Call =
     userAnswers.get(WillYoungPersonBeStayingPage) match {
       case Some(false) => controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
-      case Some(true) => controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
-      case _ => controllers.routes.JourneyRecoveryController.onPageLoad()
+      case Some(true)  => controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
+      case _           => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
   private def navigateSchoolOrCollege(userAnswers: UserAnswers): Call =
     userAnswers.get(SchoolOrCollegePage) match {
       case Some(false) => controllers.ftnae.routes.UseDifferentFormController.onPageLoad
-      case Some(true) => controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(NormalMode)
-      case _ => controllers.routes.JourneyRecoveryController.onPageLoad()
+      case Some(true)  => controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(NormalMode)
+      case _           => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
   private def navigateTwelveHoursAWeek(userAnswers: UserAnswers): Call =
     userAnswers.get(TwelveHoursAWeekPage) match {
