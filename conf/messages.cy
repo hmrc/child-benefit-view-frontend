@@ -222,6 +222,14 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
+cannotFindYoungPerson.title = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
+cannotFindYoungPerson.heading = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
+cannotFindYoungPerson.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
+cannotFindYoungPerson.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
+cannotFindYoungPerson.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
+cannotFindYoungPerson.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, <a href={0} target="_self">defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant</a>
+cannotFindYoungPerson.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – <a href={0} target="_self">defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno</a>
+cannotFindYoungPerson.p2 = Gallwch <a href="{0}" target="_self">fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant</a> er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
@@ -256,7 +264,7 @@ extendPayments.checkYourAnswersLabel = extendPayments
 # ----------  Which Young Person ----------------
 
 # ----------  Young person not listed for FTNAE ------------
-whyYoungPersonNotListed.title = 
+whyYoungPersonNotListed.title =
 whyYoungPersonNotListed.heading =
 whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
 whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
