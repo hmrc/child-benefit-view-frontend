@@ -237,7 +237,8 @@ cannotFindYoungPerson.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fu
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
 useDifferentForm.heading = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
-useDifferentForm.p1 = Rydych yn dal i allu gwneud cais i estyn eich taliadau, ond mae angen i chi <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> ddefnyddio ffurflen Budd-dal Plant wahanol</a>.
+useDifferentForm.p1 = Rydych yn dal i allu gwneud cais i estyn eich taliadau, ond mae angen i chi {0}.
+useDifferentForm.p1.linkText = ddefnyddio ffurflen Budd-dal Plant wahanol
 useDifferentForm.p2 = Mae hyn oherwydd bod angen rhagor o wybodaeth ar y swyddfa Budd-dal Plant am bethau fel:
 useDifferentForm.bulletPoint1 = cwrs y person ifanc
 useDifferentForm.bulletPoint2 = ble bydd y person ifanc yn cael ei addysgu

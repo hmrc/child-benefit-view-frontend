@@ -272,7 +272,8 @@ cannotFindYoungPerson.p2.linkText = view your proof of entitlement to Child Bene
 # ----------  Redirect to existing FTNAE iForm ------------
 useDifferentForm.title = Use a different form to extend your Child Benefit
 useDifferentForm.heading = Use a different form to extend your Child Benefit
-useDifferentForm.p1 = You can still apply to extend your payments but you need to <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> use a different Child Benefit form</a>.
+useDifferentForm.p1 = You can still apply to extend your payments but you need to {0}.
+useDifferentForm.p1.linkText = use a different Child Benefit form
 useDifferentForm.p2 = This is because the Child Benefit office needs more information about things like:
 useDifferentForm.bulletPoint1 = the young person’s course
 useDifferentForm.bulletPoint2 = where the young person will be educated

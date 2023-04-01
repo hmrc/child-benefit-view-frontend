@@ -19,6 +19,7 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        link: Link,
         list: BulletList,
         heading: Heading,
         para: ParagraphBody
@@ -26,9 +27,15 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
+    @continuingLink = @{link( id = "continuing",
+        text = messages("useDifferentForm.p1.linkText"),
+        call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
+        newTab = false
+    )}
+
     @layout(pageTitle = titleNoForm(messages("useDifferentForm.title"))) {
         <h1 class="govuk-heading-xl">@messages("useDifferentForm.heading")</h1>
-        <p class="govuk-body">@Html(messages("useDifferentForm.p1"))</p>
+        <p class="govuk-body">@Html(messages("useDifferentForm.p1", continuingLink))</p>
         @para(messages("useDifferentForm.p2"))
 
         @list(elements = Seq(
