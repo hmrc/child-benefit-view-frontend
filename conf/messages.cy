@@ -255,14 +255,16 @@ extendPayments.bulletPoint3 = Lefelau T
 extendPayments.bulletPoint4 = NVQ, lefel 1, 2 neu 3
 extendPayments.bulletPoint5 = Bagloriaeth Ryngwladol
 extendPayments.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
-extendPayments.p2 = Defnyddiwch ffurflen wahanol <a href={0} target="_self">os bydd y person ifanc yn astudio rhywbeth arall</a>.
+extendPayments.p2 = Defnyddiwch ffurflen wahanol {0}.
+extendPayments.p2.linkText = os bydd y person ifanc yn astudio rhywbeth arall
 extendPayments.p3 = Bydd yn rhaid i’r person ifanc fod:
 extendPayments.bulletPoint7 = yn 16 neu’n 17 oed ar 1 Medi 2023
 extendPayments.bulletPoint8 = ar ei gwrs am 1 neu 2 flwyddyn academaidd
 extendPayments.bulletPoint9 = yn astudio ar sail amser llawn, sy’n golygu dros 12 awr yr wythnos
 extendPayments.bulletPoint10 = ar gwrs sy’n cael ei ddarparu gan ysgol neu goleg
 extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
-extendPayments.p4 = Defnyddiwch ffurflen wahanol <a href={0} target="_self">os bydd ei amgylchiadau’n wahanol</a>.
+extendPayments.p4 = Defnyddiwch ffurflen wahanol {0}.
+extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
 extendPayments.checkYourAnswersLabel = extendPayments
 
 # ----------  Which Young Person ----------------
