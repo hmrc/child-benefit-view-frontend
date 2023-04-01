@@ -307,8 +307,15 @@ liveWithYouInUK.p1 = This includes during term time.
 liveWithYouInUK.error.required = Select Yes or No
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
-notEntitled.title = notEntitled
-notEntitled.heading = notEntitled
+# ---------- QYP not eligible for FTNAE extension (general) ------------
+notEntitled.title = You’re not entitled to continuing Child Benefit
+notEntitled.heading = You’re not entitled to continuing Child Benefit
+notEntitled.p1 = You’re only entitled to continued payments if the young person will be:
+notEntitled.bulletPoint1 = staying in {0}
+notEntitled.bulletPoint1.linkText = full-time non-advanced education or approved training
+notEntitled.bulletPoint2 = studying for more than an average of 12 hours a week in term time
+notEntitled.p2 = Use a different Child Benefit form to {0}.
+notEntitled.p2.linkText = tell us that the young person is staying in approved training
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = You’re not entitled to continuing Child Benefit

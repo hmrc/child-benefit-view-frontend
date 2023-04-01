@@ -14,14 +14,38 @@
  * limitations under the License.
  *@
 
+@import components._
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        link: Link,
+        list: BulletList,
+        para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@fullTimeEducationLink = @{link( id = "full-time-education-link",
+    text = messages("notEntitled.bulletPoint1.linkText"),
+    call = Call("GET", "https://www.gov.uk/child-benefit-16-19")
+)}
+
+ @approvedTrainingLink = @{link( id = "approved-training-link",
+    text = messages("notEntitled.p2.linkText"),
+    call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297")
+ )}
+
 @layout(pageTitle = titleNoForm(messages("notEntitled.title"))) {
 
     <h1 class="govuk-heading-xl">@messages("notEntitled.heading")</h1>
+
+    @para(messages("notEntitled.p1"))
+
+    @list(elements = Seq(
+        Html(messages("notEntitled.bulletPoint1", fullTimeEducationLink)),
+        Html(messages("notEntitled.bulletPoint2"))
+    ))
+
+    @para(messages("notEntitled.p2", approvedTrainingLink))
 }

@@ -260,6 +260,16 @@ liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
 liveWithYouInUK.error.required = Dewiswch ‘Iawn’ neu ‘Na’
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
+# ---------- QYP not eligible for FTNAE extension (general) ------------
+notEntitled.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitled.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitled.p1 = Dim ond os yw’r canlynol yn wir am y person ifanc y bydd gennych hawl i daliadau parhaus:
+notEntitled.bulletPoint1 = bydd yn parhau mewn {0}
+notEntitled.bulletPoint1.linkText = addysg amser llawn nad yw’n addysg uwch neu hyfforddiant cymeradwy
+notEntitled.bulletPoint2 = bydd yn astudio am fwy na 12 awr yr wythnos ar gyfartaledd yn ystod y tymor
+notEntitled.p2 = Defnyddiwch ffurflen Budd-dal Plant wahanol i {0}.
+notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyfforddiant cymeradwy
+
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
