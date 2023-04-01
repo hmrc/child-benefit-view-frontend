@@ -88,7 +88,6 @@ class Navigator @Inject() () extends Logging {
       case Some(true) => controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
       case _ => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
-
   private def navigateSchoolOrCollege(userAnswers: UserAnswers): Call =
     userAnswers.get(SchoolOrCollegePage) match {
       case Some(false) => controllers.ftnae.routes.UseDifferentFormController.onPageLoad
