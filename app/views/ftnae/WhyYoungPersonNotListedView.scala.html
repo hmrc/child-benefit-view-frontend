@@ -19,12 +19,29 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
+        link: Link,
         list: BulletList,
         heading: Heading,
         para: ParagraphBody
 )
 
 @()(implicit request: Request[_], messages: Messages)
+
+    @continuing3 = @{link( id = "continuing-3",
+        text = messages("whyYoungPersonNotListed.bulletPoint3.linkText"),
+        call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
+        newTab = false
+    )}
+    @continuing4 = @{link( id = "continuing-4",
+        text = messages("whyYoungPersonNotListed.bulletPoint4.linkText"),
+        call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
+        newTab = false
+    )}
+    @viewEntitlementLink = @{link( id = "continuing-4",
+        text = messages("whyYoungPersonNotListed.p2.linkText"),
+        call = Call("GET", routes.ProofOfEntitlementController.view.url),
+        newTab = false
+    )}
 
     @layout(pageTitle = titleNoForm(messages("whyYoungPersonNotListed.title"))) {
 
@@ -35,9 +52,9 @@
         @list(elements = Seq(
             Html(messages("whyYoungPersonNotListed.bulletPoint1")),
             Html(messages("whyYoungPersonNotListed.bulletPoint2")),
-            Html(messages("whyYoungPersonNotListed.bulletPoint3", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297")),
-            Html(messages("whyYoungPersonNotListed.bulletPoint4", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"))
+            Html(messages("whyYoungPersonNotListed.bulletPoint3", continuing3)),
+            Html(messages("whyYoungPersonNotListed.bulletPoint4", continuing4))
         ))
 
-        @para(messages("whyYoungPersonNotListed.p2", routes.ProofOfEntitlementController.view))
+        @para(messages("whyYoungPersonNotListed.p2", viewEntitlementLink))
     }
