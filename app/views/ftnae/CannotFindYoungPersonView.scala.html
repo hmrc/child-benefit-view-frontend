@@ -27,12 +27,12 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @continuing3 = @{link( id = "continuing-3",
+    @bullet3Link = @{link( id = "continuing-3",
         text = messages("cannotFindYoungPerson.bulletPoint3.linkText"),
         call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
         newTab = false
     )}
-    @continuing4 = @{link( id = "continuing-4",
+    @bullet4Link = @{link( id = "continuing-4",
         text = messages("cannotFindYoungPerson.bulletPoint4.linkText"),
         call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
         newTab = false
@@ -52,8 +52,8 @@
         @list(elements = Seq(
             Html(messages("cannotFindYoungPerson.bulletPoint1")),
             Html(messages("cannotFindYoungPerson.bulletPoint2")),
-            Html(messages("cannotFindYoungPerson.bulletPoint3", continuing3)),
-            Html(messages("cannotFindYoungPerson.bulletPoint4", continuing4))
+            Html(messages("cannotFindYoungPerson.bulletPoint3", bullet3Link)),
+            Html(messages("cannotFindYoungPerson.bulletPoint4", bullet4Link))
         ))
 
         @para(messages("cannotFindYoungPerson.p2", viewEntitlementLink))

@@ -29,12 +29,12 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @continuing2 = @{link( id = "continuing-2",
+    @para2Link = @{link( id = "continuing-2",
         text = messages("extendPayments.p2.linkText"),
         call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
         newTab = false
     )}
-    @continuing4 = @{link( id = "continuing-4",
+    @para4Link = @{link( id = "continuing-4",
         text = messages("extendPayments.p4.linkText"),
         call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
         newTab = false
@@ -55,7 +55,7 @@
             Html(messages("extendPayments.bulletPoint6"))
         ))
 
-        <p class="govuk-body">@Html(messages("extendPayments.p2", continuing2))</p>
+        <p class="govuk-body">@Html(messages("extendPayments.p2", para2Link))</p>
         @para(messages("extendPayments.p3"))
 
         @list(elements = Seq(
@@ -66,7 +66,7 @@
             Html(messages("extendPayments.bulletPoint11"))
         ))
 
-        <p class="govuk-body">@Html(messages("extendPayments.p4", continuing4))</p>
+        <p class="govuk-body">@Html(messages("extendPayments.p4", para4Link))</p>
 
         @govukButton(
             ButtonViewModel(messages("site.continue"))
