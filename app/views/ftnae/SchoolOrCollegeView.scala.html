@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+@import models.viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -35,17 +35,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @heading(messages("schoolOrCollege.heading"), classes = "govuk-heading-l")
-
-        @para(messages("schoolOrCollege.p1"))
-
         @formHelper(action = controllers.ftnae.routes.SchoolOrCollegeController.onSubmit(mode), 'autoComplete -> "off") {
 
             @govukRadios(
                 RadiosViewModel.yesNo(
                     field = form("value"),
-                    legend = defaultObject
-                )
+                    legend = LegendViewModel(messages("schoolOrCollege.heading")).asPageHeading(LegendSize.Large)
+                ).withHint(HintViewModel(HtmlContent(para(messages("schoolOrCollege.p1")))))
             )
 
             @govukButton(

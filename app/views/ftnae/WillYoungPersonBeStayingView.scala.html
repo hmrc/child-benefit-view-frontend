@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+@import models.viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -28,37 +28,31 @@
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
-
-@layout(pageTitle = title(form, messages("willYoungPersonBeStaying.title"))) {
-
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form))
-    }
-
-    @heading(messages("willYoungPersonBeStaying.heading"), classes = "govuk-heading-l")
-
-    @list(elements = Seq(
+    @bulletPoints = @{list(elements = Seq(
         Html(messages("willYoungPersonBeStaying.bulletPoint1")),
         Html(messages("willYoungPersonBeStaying.bulletPoint2")),
         Html(messages("willYoungPersonBeStaying.bulletPoint3")),
         Html(messages("willYoungPersonBeStaying.bulletPoint4")),
         Html(messages("willYoungPersonBeStaying.bulletPoint5")),
         Html(messages("willYoungPersonBeStaying.bulletPoint6"))
-    ))
+    ))}
 
-    <br>
+    @layout(pageTitle = title(form, messages("willYoungPersonBeStaying.title"))) {
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
 
-    @formHelper(action = controllers.ftnae.routes.WillYoungPersonBeStayingController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = controllers.ftnae.routes.WillYoungPersonBeStayingController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @govukRadios(
-            RadiosViewModel.yesNo(
-                field = form("value"),
-                legend = defaultObject
+            @govukRadios(
+                RadiosViewModel.yesNo(
+                    field = form("value"),
+                    legend = LegendViewModel(messages("willYoungPersonBeStaying.heading")).asPageHeading(LegendSize.Large)
+                ).withHint(HintViewModel(HtmlContent(bulletPoints)))
             )
-        )
 
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
+            @govukButton(
+                ButtonViewModel(messages("site.continue"))
+            )
+        }
     }
-}

@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+@import models.viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -35,16 +35,13 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @heading(messages("liveWithYouInUK.heading"), classes = "govuk-heading-l")
-        @para(messages("liveWithYouInUK.p1"))
-
         @formHelper(action = controllers.ftnae.routes.LiveWithYouInUKController.onSubmit(mode), 'autoComplete -> "off") {
 
             @govukRadios(
                 RadiosViewModel.yesNo(
                     field = form("value"),
-                    legend = defaultObject
-                )
+                    legend = LegendViewModel(messages("liveWithYouInUK.heading")).asPageHeading(LegendSize.Large)
+                ).withHint(HintViewModel(HtmlContent(para(messages("liveWithYouInUK.p1")))))
             )
 
             @govukButton(
