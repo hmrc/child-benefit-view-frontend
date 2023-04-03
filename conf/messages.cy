@@ -270,8 +270,8 @@ extendPayments.checkYourAnswersLabel = extendPayments
 # ----------  Which Young Person ----------------
 
 # ----------  Young person not listed for FTNAE ------------
-whyYoungPersonNotListed.title =
-whyYoungPersonNotListed.heading =
+whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru
+whyYoungPersonNotListed.heading = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
 whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
 whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
