@@ -255,8 +255,6 @@ cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this s
 cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
 cannotVerifyAccount.link.text = use a different service to change the account details
 
-# ------------------------------------------------------------------------------------
-
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
 cannotFindYoungPerson.title = The Child Benefit office cannot find the young person you want to claim for
@@ -264,11 +262,25 @@ cannotFindYoungPerson.heading = The Child Benefit office cannot find the young p
 cannotFindYoungPerson.p1 = This might be because:
 cannotFindYoungPerson.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
 cannotFindYoungPerson.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
-cannotFindYoungPerson.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, <a href={0} target="_self">use a different form to extend your Child Benefit</a>
-cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href={0} target="_self">use a different form if you want to change what you sent</a>
-cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, <a href="{0}" target="_self">view your proof of entitlement to Child Benefit</a>.
+cannotFindYoungPerson.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, {0}
+cannotFindYoungPerson.bulletPoint3.linkText = use a different form to extend your Child Benefit
+cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — {0}
+cannotFindYoungPerson.bulletPoint4.linkText = use a different form if you want to change what you sent
+cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, {0}.
+cannotFindYoungPerson.p2.linkText = view your proof of entitlement to Child Benefit
 
-# ----------  FTNAE start page ------------
+# ----------  Redirect to existing FTNAE iForm ------------
+useDifferentForm.title = Use a different form to extend your Child Benefit
+useDifferentForm.heading = Use a different form to extend your Child Benefit
+useDifferentForm.p1 = You can still apply to extend your payments but you need to {0}.
+useDifferentForm.p1.linkText = use a different Child Benefit form
+useDifferentForm.p2 = This is because the Child Benefit office needs more information about things like:
+useDifferentForm.bulletPoint1 = the young person’s course
+useDifferentForm.bulletPoint2 = where the young person will be educated
+useDifferentForm.bulletPoint3 = how long the education will last
+useDifferentForm.bulletPoint4 = where the young person will live when they’re in education
+
+# ----------  FTNAE start page ------------------
 extendPayments.title = Extend your Child Benefit payments while a young person stays in education
 extendPayments.heading = Extend your Child Benefit payments while a young person stays in education
 extendPayments.p1 = Use this form if they will be studying:
@@ -278,73 +290,19 @@ extendPayments.bulletPoint3 = T levels
 extendPayments.bulletPoint4 = NVQs, level 1, 2 or 3
 extendPayments.bulletPoint5 = International Baccalaureate
 extendPayments.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
-extendPayments.p2 = Use another form <a href={0} target="_self">if they’ll be studying something else</a>.
+extendPayments.p2 = Use another form {0}.
+extendPayments.p2.linkText = if they’ll be studying something else
 extendPayments.p3 = The young person will need to be:
 extendPayments.bulletPoint7 = 16 or 17 on 1 September 2023
 extendPayments.bulletPoint8 = on their course for 1 or 2 academic years
 extendPayments.bulletPoint9 = studying full-time, which means more than 12 hours a week
 extendPayments.bulletPoint10 = on a course provided by a school or college
 extendPayments.bulletPoint11 = living with you in the UK
-extendPayments.p4 = Use another form <a href={0} target="_self">if their circumstances will be different</a>.
+extendPayments.p4 = Use another form {0}.
+extendPayments.p4.linkText = if their circumstances will be different
 extendPayments.checkYourAnswersLabel = extendPayments
 
-# ----------  Confirm course duration ------------
-howManyYears.title = How many academic years will the course last?
-howManyYears.heading = How many academic years will the course last?
-howManyYears.p1 = An academic year lasts up to 12 months and usually starts in September.
-howManyYears.oneyear = 1 year
-howManyYears.twoyears = 2 years
-howManyYears.other = Other
-howManyYears.checkYourAnswersLabel = How many academic years will the course last?
-howManyYears.error.required = Select 1 year, 2 years or Other
-howManyYears.change.hidden = HowManyYears
-
-# ----------  Confirm QYP lives with claimant ------------
-liveWithYouInUK.title = Will the young person live with you in the UK when they’re in education?
-liveWithYouInUK.heading = Will the young person live with you in the UK when they’re in education?
-liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
-liveWithYouInUK.p1 = This includes during term time.
-liveWithYouInUK.error.required = Select Yes or No
-liveWithYouInUK.change.hidden = LiveWithYouInUK
-
-# ---------- QYP not eligible for FTNAE extension (general) ------------
-notEntitled.title = You’re not entitled to continuing Child Benefit
-notEntitled.heading = You’re not entitled to continuing Child Benefit
-notEntitled.p1 = You’re only entitled to continued payments if the young person will be:
-notEntitled.bulletPoint1 = staying in {0}
-notEntitled.bulletPoint1.linkText = full-time non-advanced education or approved training
-notEntitled.bulletPoint2 = studying for more than an average of 12 hours a week in term time
-notEntitled.p2 = Use a different Child Benefit form to {0}.
-notEntitled.p2.linkText = tell us that the young person is staying in approved training
-
-# ----------  QYP not eligible for FTNAE extension (employer provided) ------------
-notEntitledCourseEmployerProvided.title = You’re not entitled to continuing Child Benefit
-notEntitledCourseEmployerProvided.heading = You’re not entitled to continuing Child Benefit
-notEntitledCourseEmployerProvided.p1 = The Child Benefit office will not extend payments if a young person’s course is provided by their employer.
-
-# ----------  Confirm average 12 hours per week ------------
-twelveHoursAWeek.title = Will the young person study full-time?
-twelveHoursAWeek.heading = Will the young person study full-time?
-twelveHoursAWeek.checkYourAnswersLabel = Will the young person study full-time?
-twelveHoursAWeek.p1 = This means an average of more than 12 hours a week in term time doing things like:
-twelveHoursAWeek.bulletPoint1 = supervised study
-twelveHoursAWeek.bulletPoint2 = receiving tuition
-twelveHoursAWeek.bulletPoint3 = practical work
-twelveHoursAWeek.bulletPoint4 = exams
-twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
-twelveHoursAWeek.error.required = Select Yes or No
-twelveHoursAWeek.change.hidden = TwelveHoursAWeek
-
-# ----------  Redirect to existing FTNAE iform ------------
-useDifferentForm.title = Use a different form to extend your Child Benefit
-useDifferentForm.heading = Use a different form to extend your Child Benefit
-useDifferentForm.p1 = You can still apply to extend your payments but you need to <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> use a different Child Benefit form</a>.
-useDifferentForm.p2 = This is because the Child Benefit office needs more information about things like:
-useDifferentForm.bulletPoint1 = the young person’s course
-useDifferentForm.bulletPoint2 = where the young person will be educated
-useDifferentForm.bulletPoint3 = how long the education will last
-useDifferentForm.bulletPoint4 = where the young person will live when they’re in education
-
+# ----------  Which Young Person ----------------
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.child1 = Child 1
@@ -360,19 +318,14 @@ whyYoungPersonNotListed.heading = Why the young person is not listed
 whyYoungPersonNotListed.p1 = This might be because:
 whyYoungPersonNotListed.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
-whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, <a href={0} target="_self">use a different form to extend your Child Benefit</a>
-whyYoungPersonNotListed.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — <a href={0} target="_self">use a different form if you want to change what you sent</a>
-whyYoungPersonNotListed.p2 = To check who you get payments for, how much you get and when payments will stop, <a href="{0}" target="_self">view your proof of entitlement to Child Benefit</a>.
+whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, {0}
+whyYoungPersonNotListed.bulletPoint3.linkText = use a different form to extend your Child Benefit
+whyYoungPersonNotListed.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — {0}
+whyYoungPersonNotListed.bulletPoint4.linkText = use a different form if you want to change what you sent
+whyYoungPersonNotListed.p2 = To check who you get payments for, how much you get and when payments will stop, {0}.
+whyYoungPersonNotListed.p2.linkText = view your proof of entitlement to Child Benefit
 
-# ----------  Check if course is provided by employer ------------
-willCourseBeEmployerProvided.title = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
-willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.error.required = Select Yes or No
-willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
-
-# ----------  Confirm Non-Advanced Education ------------
+# ----------  Confirm Course ------------
 willYoungPersonBeStaying.title = Will the young person be studying one of these non-advanced courses?
 willYoungPersonBeStaying.heading = Will the young person be studying one of these non-advanced courses?
 willYoungPersonBeStaying.bulletPoint1 = GCSEs or A levels
@@ -393,5 +346,61 @@ schoolOrCollege.checkYourAnswersLabel = Will the course be provided by a school 
 schoolOrCollege.error.required = Select Yes or No
 schoolOrCollege.change.hidden = SchoolOrCollege
 
+# ----------  Confirm average 12 hours per week ------------
+twelveHoursAWeek.title = Will the young person study full-time?
+twelveHoursAWeek.heading = Will the young person study full-time?
+twelveHoursAWeek.checkYourAnswersLabel = Will the young person study full-time?
+twelveHoursAWeek.p1 = This means an average of more than 12 hours a week in term time doing things like:
+twelveHoursAWeek.bulletPoint1 = supervised study
+twelveHoursAWeek.bulletPoint2 = receiving tuition
+twelveHoursAWeek.bulletPoint3 = practical work
+twelveHoursAWeek.bulletPoint4 = exams
+twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
+twelveHoursAWeek.error.required = Select Yes or No
+twelveHoursAWeek.change.hidden = TwelveHoursAWeek
+
+# ----------  QYP not eligible for FTNAE extension (general)  ------------
+notEntitled.title = You’re not entitled to continuing Child Benefit
+notEntitled.heading = You’re not entitled to continuing Child Benefit
+notEntitled.p1 = You’re only entitled to continued payments if the young person will be:
+notEntitled.bulletPoint1 = staying in {0}
+notEntitled.bulletPoint1.linkText = full-time non-advanced education or approved training
+notEntitled.bulletPoint2 = studying for more than an average of 12 hours a week in term time
+notEntitled.p2 = Use a different Child Benefit form to {0}.
+notEntitled.p2.linkText = tell us that the young person is staying in approved training
+
+# ----------  Confirm course duration ------------
+howManyYears.title = How many academic years will the course last?
+howManyYears.heading = How many academic years will the course last?
+howManyYears.p1 = An academic year lasts up to 12 months and usually starts in September.
+howManyYears.oneyear = 1 year
+howManyYears.twoyears = 2 years
+howManyYears.other = Other
+howManyYears.checkYourAnswersLabel = How many academic years will the course last?
+howManyYears.error.required = Select 1 year, 2 years or Other
+howManyYears.change.hidden = HowManyYears
+
+# ----------  Check if course is provided by employer ------------
+willCourseBeEmployerProvided.title = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
+willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
+willCourseBeEmployerProvided.error.required = Select Yes or No
+willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
+
+# ----------  QYP not eligible for FTNAE extension (employer provided) ------------
+notEntitledCourseEmployerProvided.title = You’re not entitled to continuing Child Benefit
+notEntitledCourseEmployerProvided.heading = You’re not entitled to continuing Child Benefit
+notEntitledCourseEmployerProvided.p1 = The Child Benefit office will not extend payments if a young person’s course is provided by their employer.
+
+# ----------  Confirm QYP lives with claimant ------------
+liveWithYouInUK.title = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.heading = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
+liveWithYouInUK.p1 = This includes during term time.
+liveWithYouInUK.error.required = Select Yes or No
+liveWithYouInUK.change.hidden = LiveWithYouInUK
+
+# ----------  Payments Extended ------------
 paymentsExtended.title = paymentsExtended
 paymentsExtended.heading = paymentsExtended

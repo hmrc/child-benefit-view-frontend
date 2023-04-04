@@ -28,7 +28,6 @@ class CannotFindYoungPersonController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
     getData:                  CBDataRetrievalAction,
-    requireData:              DataRequiredAction,
     featureActions:           FeatureFlagComposedActions,
     val controllerComponents: MessagesControllerComponents,
     view:                     CannotFindYoungPersonView
@@ -36,7 +35,7 @@ class CannotFindYoungPersonController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (featureActions.ftnaeAction andThen identify andThen getData) { implicit request =>
       Ok(view())
     }
 }

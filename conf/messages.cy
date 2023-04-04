@@ -219,76 +219,70 @@ cannotVerifyAccount.heading = Ni allwn ddilysu’r manylion cyfrif rydych chi we
 cannotVerifyAccount.paragraph.1 = Am resymau diogelwch, rydym wedi’ch cloi allan o’r gwasanaeth hwn am 24 awr.
 cannotVerifyAccount.paragraph.2 = Gallwch {0} ar gyfer eich taliadau Budd-dal Plant.
 cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion cyfrif
-# ------------------------------------------------------------------------------------
 
 # ------------------------------ FTNAE Messages Section ------------------------------
+# ----------  Cannot find Young Person ------------
+cannotFindYoungPerson.title = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
+cannotFindYoungPerson.heading = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
+cannotFindYoungPerson.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
+cannotFindYoungPerson.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
+cannotFindYoungPerson.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
+cannotFindYoungPerson.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
+cannotFindYoungPerson.bulletPoint3.linkText = defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
+cannotFindYoungPerson.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}
+cannotFindYoungPerson.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
+cannotFindYoungPerson.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
+cannotFindYoungPerson.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
 useDifferentForm.heading = Defnyddiwch ffurflen wahanol i estyn eich Budd-dal Plant
-useDifferentForm.p1 = Rydych yn dal i allu gwneud cais i estyn eich taliadau, ond mae angen i chi <a href="https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297" target="_self"> ddefnyddio ffurflen Budd-dal Plant wahanol</a>.
+useDifferentForm.p1 = Rydych yn dal i allu gwneud cais i estyn eich taliadau, ond mae angen i chi {0}.
+useDifferentForm.p1.linkText = ddefnyddio ffurflen Budd-dal Plant wahanol
 useDifferentForm.p2 = Mae hyn oherwydd bod angen rhagor o wybodaeth ar y swyddfa Budd-dal Plant am bethau fel:
 useDifferentForm.bulletPoint1 = cwrs y person ifanc
 useDifferentForm.bulletPoint2 = ble bydd y person ifanc yn cael ei addysgu
 useDifferentForm.bulletPoint3 = am faint y bydd yr addysg yn para
 useDifferentForm.bulletPoint4 = ble bydd y person ifanc yn byw pan fydd yn derbyn addysg
 
-# ----------  Check if course is provided by employer ------------
-willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
-willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
-willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
-willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
-willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ neu ‘Na’
-willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
+# ----------  FTNAE start page ------------
+extendPayments.title = Ymestyn eich taliadau Budd-dal Plant tra bod person ifanc yn parhau â’i addysg
+extendPayments.heading = Ymestyn eich taliadau Budd-dal Plant tra bod person ifanc yn parhau â’i addysg
+extendPayments.p1 = Defnyddiwch y ffurflen hon os bydd y person ifanc yn astudio:
+extendPayments.bulletPoint1 = TGAU neu Lefelau A
+extendPayments.bulletPoint2 = BTEC, lefel 1, 2 neu 3
+extendPayments.bulletPoint3 = Lefelau T
+extendPayments.bulletPoint4 = NVQ, lefel 1, 2 neu 3
+extendPayments.bulletPoint5 = Bagloriaeth Ryngwladol
+extendPayments.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
+extendPayments.p2 = Defnyddiwch ffurflen wahanol {0}.
+extendPayments.p2.linkText = os bydd y person ifanc yn astudio rhywbeth arall
+extendPayments.p3 = Bydd yn rhaid i’r person ifanc fod:
+extendPayments.bulletPoint7 = yn 16 neu’n 17 oed ar 1 Medi 2023
+extendPayments.bulletPoint8 = ar ei gwrs am 1 neu 2 flwyddyn academaidd
+extendPayments.bulletPoint9 = yn astudio ar sail amser llawn, sy’n golygu dros 12 awr yr wythnos
+extendPayments.bulletPoint10 = ar gwrs sy’n cael ei ddarparu gan ysgol neu goleg
+extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
+extendPayments.p4 = Defnyddiwch ffurflen wahanol {0}.
+extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
+extendPayments.checkYourAnswersLabel = extendPayments
 
-# ----------  Confirm course duration ------------
-howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.p1 = Mae blwyddyn academaidd yn para hyd at 12 mis ac mae fel arfer yn dechrau ym mis Medi.
-howManyYears.oneyear = 1 flwyddyn
-howManyYears.twoyears = 2 flynedd
-howManyYears.other = Arall
-howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.error.required = Dewiswch 1 flwyddyn, 2 flynedd neu Arall
-howManyYears.change.hidden = HowManyYears
+# ----------  Which Young Person ----------------
 
-# ----------  Confirm QYP lives with claimant ------------
-liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
-liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
-liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
-liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
-liveWithYouInUK.error.required = Dewiswch ‘Iawn’ neu ‘Na’
-liveWithYouInUK.change.hidden = LiveWithYouInUK
+# ----------  Young person not listed for FTNAE ------------
+whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru
+whyYoungPersonNotListed.heading = Pam nad yw’r person ifanc wedi’i restru
+whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
+whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
+whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
+whyYoungPersonNotListed.bulletPoint3 = bydd y peson ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
+whyYoungPersonNotListed.bulletPoint3.linkText = defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
+whyYoungPersonNotListed.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}
+whyYoungPersonNotListed.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
+whyYoungPersonNotListed.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben..
+whyYoungPersonNotListed.p2 = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
 
-# ---------- QYP not eligible for FTNAE extension (general) ------------
-notEntitled.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
-notEntitled.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
-notEntitled.p1 = Dim ond os yw’r canlynol yn wir am y person ifanc y bydd gennych hawl i daliadau parhaus:
-notEntitled.bulletPoint1 = bydd yn parhau mewn {0}
-notEntitled.bulletPoint1.linkText = addysg amser llawn nad yw’n addysg uwch neu hyfforddiant cymeradwy
-notEntitled.bulletPoint2 = bydd yn astudio am fwy na 12 awr yr wythnos ar gyfartaledd yn ystod y tymor
-notEntitled.p2 = Defnyddiwch ffurflen Budd-dal Plant wahanol i {0}.
-notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyfforddiant cymeradwy
-
-# ----------  QYP not eligible for FTNAE extension (employer provided) ------------
-notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
-notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
-notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn estyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
-
-# ----------  Confirm average 12 hours per week ------------
-twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
-twelveHoursAWeek.heading = A fydd y person ifanc yn astudio’n llawn amser?
-twelveHoursAWeek.checkYourAnswersLabel = A fydd y person ifanc yn astudio’n llawn amser?
-twelveHoursAWeek.p1 = Mae hyn golygu treulio, ar gyfartaledd, fwy na 12 awr yr wythnos yn ystod y tymor yn gwneud pethau fel:
-twelveHoursAWeek.bulletPoint1 = astudio dan oruchwyliaeth
-twelveHoursAWeek.bulletPoint2 = cael gwersi
-twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
-twelveHoursAWeek.bulletPoint4 = arholiadau
-twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
-twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ neu ‘Na’
-twelveHoursAWeek.change.hidden = TwelveHoursAWeek
-
-# ----------  Confirm Non-Advanced Education ------------
+# ----------  Confirm Course ------------
 willYoungPersonBeStaying.title = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
 willYoungPersonBeStaying.heading = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
 willYoungPersonBeStaying.bulletPoint1 = TGAU neu Lefelau A
@@ -308,3 +302,60 @@ schoolOrCollege.p1 = Gallwch ddewis ‘Iawn’ os bydd y person ifanc ar gwrs a 
 schoolOrCollege.checkYourAnswersLabel = A fydd ysgol neu goleg yn darparu’r cwrs?
 schoolOrCollege.error.required = Dewiswch ‘Iawn’ neu ‘Na’
 schoolOrCollege.change.hidden = SchoolOrCollege
+
+# ----------  Confirm average 12 hours per week ------------
+twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.heading = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.checkYourAnswersLabel = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.p1 = Mae hyn golygu treulio, ar gyfartaledd, fwy na 12 awr yr wythnos yn ystod y tymor yn gwneud pethau fel:
+twelveHoursAWeek.bulletPoint1 = astudio dan oruchwyliaeth
+twelveHoursAWeek.bulletPoint2 = cael gwersi
+twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
+twelveHoursAWeek.bulletPoint4 = arholiadau
+twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
+twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+twelveHoursAWeek.change.hidden = TwelveHoursAWeek
+
+# ---------- QYP not eligible for FTNAE extension (general) ------------
+notEntitled.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitled.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitled.p1 = Dim ond os yw’r canlynol yn wir am y person ifanc y bydd gennych hawl i daliadau parhaus:
+notEntitled.bulletPoint1 = bydd yn parhau mewn {0}
+notEntitled.bulletPoint1.linkText = addysg amser llawn nad yw’n addysg uwch neu hyfforddiant cymeradwy
+notEntitled.bulletPoint2 = bydd yn astudio am fwy na 12 awr yr wythnos ar gyfartaledd yn ystod y tymor
+notEntitled.p2 = Defnyddiwch ffurflen Budd-dal Plant wahanol i {0}.
+notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyfforddiant cymeradwy
+
+# ----------  Confirm course duration ------------
+howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.p1 = Mae blwyddyn academaidd yn para hyd at 12 mis ac mae fel arfer yn dechrau ym mis Medi.
+howManyYears.oneyear = 1 flwyddyn
+howManyYears.twoyears = 2 flynedd
+howManyYears.other = Arall
+howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn para?
+howManyYears.error.required = Dewiswch 1 flwyddyn, 2 flynedd neu Arall
+howManyYears.change.hidden = HowManyYears
+
+# ----------  Check if course is provided by employer ------------
+willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
+willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
+willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
+
+# ----------  Confirm QYP lives with claimant ------------
+liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
+liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
+liveWithYouInUK.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+liveWithYouInUK.change.hidden = LiveWithYouInUK
+
+# ----------  QYP not eligible for FTNAE extension (employer provided) ------------
+notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
+notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn estyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
+
+# ----------  Payments Extended ------------
