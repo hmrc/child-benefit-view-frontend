@@ -16,7 +16,6 @@
 
 package controllers.actions
 
-import connectors.ChangeOfBankConnector
 import models.CBEnvelope
 import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
 import models.common.{AdjustmentReasonCode, FirstForename, NationalInsuranceNumber, Surname}
@@ -32,7 +31,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
-import services.AuditService
+import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
 import utils.BaseISpec
@@ -44,8 +43,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
-  class Harness(cobConnector: ChangeOfBankConnector, errorHandler: ErrorHandler, auditService: AuditService)
-      extends VerifyHICBCActionImpl(cobConnector, errorHandler, auditService) {
+  class Harness(cobService: ChangeOfBankService, errorHandler: ErrorHandler, auditService: AuditService)
+      extends VerifyHICBCActionImpl(cobService, errorHandler, auditService) {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = this.filter(request)
   }
 
@@ -68,12 +67,12 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
     "must move on with the request (open the gate) and return None" in {
 
       userLoggedInChildBenefitUser(NinoUser)
-      val cobConnector          = mock[ChangeOfBankConnector]
+      val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
 
       val someOtherReasonCodeThanHicbc = AdjustmentReasonCode("8")
-      when(cobConnector.getChangeOfBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
+      when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
         generateCobClaimantInfo(someOtherReasonCodeThanHicbc, LocalDate.now().plusDays(2))
       )
       when(
@@ -87,7 +86,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
         controllers.routes.ServiceUnavailableController.onPageLoad
       )
 
-      val action      = new Harness(cobConnector, errorHandler, auditService)
+      val action      = new Harness(cobService, errorHandler, auditService)
       val fakeRequest = request
       val result: Option[Result] = action.callFilter(fakeRequest).futureValue
 
@@ -99,12 +98,12 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
     "must move on with the request (open the gate) and return None" in {
 
       userLoggedInChildBenefitUser(NinoUser)
-      val cobConnector          = mock[ChangeOfBankConnector]
+      val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
 
       val hicbcReasonCode = AdjustmentReasonCode("28")
-      when(cobConnector.getChangeOfBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
+      when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
         generateCobClaimantInfo(hicbcReasonCode, LocalDate.now().minusDays(2))
       )
       when(
@@ -118,7 +117,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
         controllers.routes.ServiceUnavailableController.onPageLoad
       )
 
-      val action      = new Harness(cobConnector, errorHandler, auditService)
+      val action      = new Harness(cobService, errorHandler, auditService)
       val fakeRequest = request
       val result: Option[Result] = action.callFilter(fakeRequest).futureValue
 
@@ -129,11 +128,11 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
     "must NOT move on with the request (close the gate) and redirect to Hicbc opted out page" in {
 
       userLoggedInChildBenefitUser(NinoUser)
-      val cobConnector          = mock[ChangeOfBankConnector]
+      val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
       val hicbcReasonCode       = AdjustmentReasonCode("28")
-      when(cobConnector.getChangeOfBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
+      when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
         generateCobClaimantInfo(hicbcReasonCode, LocalDate.now().plusDays(2))
       )
       when(
@@ -147,7 +146,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
         controllers.routes.ServiceUnavailableController.onPageLoad
       )
 
-      val action      = new Harness(cobConnector, errorHandler, auditService)
+      val action      = new Harness(cobService, errorHandler, auditService)
       val fakeRequest = request
       val result: Option[Result] = action.callFilter(fakeRequest).futureValue
 
