@@ -16,7 +16,6 @@
 
 package controllers.actions
 
-import connectors.ChangeOfBankConnector
 import models.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.requests.IdentifierRequest
@@ -24,6 +23,7 @@ import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionFilter, Result}
 import services.AuditService
+import services.ChangeOfBankService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.handlers.ErrorHandler
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait VerifyHICBCAction extends ActionFilter[IdentifierRequest]
 
 class VerifyHICBCActionImpl @Inject() (
-    changeOfBankConnector:       ChangeOfBankConnector,
+    changeOfBankService:         ChangeOfBankService,
     errorHandler:                ErrorHandler,
     auditService:                AuditService
 )(implicit val executionContext: ExecutionContext)
@@ -48,7 +48,7 @@ class VerifyHICBCActionImpl @Inject() (
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     val r = for {
-      claimantInfo <- changeOfBankConnector.getChangeOfBankClaimantInfo
+      claimantInfo <- changeOfBankService.retrieveBankClaimantInfo
       cbi          <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
     } yield cbi
 

@@ -46,7 +46,10 @@ class ChangeOfBankService @Inject() (
       ec: ExecutionContext,
       hc: HeaderCarrier
   ): CBEnvelope[ClaimantBankInformation] =
-    changeOfBankConnector.getChangeOfBankClaimantInfo
+    for {
+      claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
+      formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
+    } yield formattedClaimantInfo
 
   def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
       hc:                         HeaderCarrier,
@@ -70,15 +73,14 @@ class ChangeOfBankService @Inject() (
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {
-      claimantInfo          <- changeOfBankConnector.getChangeOfBankClaimantInfo
-      formattedClaimantInfo <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
-      childBenefitPage      <- validateToChangeOfBankPage(formattedClaimantInfo, view)
+      claimantInfo     <- retrieveBankClaimantInfo
+      childBenefitPage <- validateToChangeOfBankPage(claimantInfo, view)
     } yield {
       auditService.auditChangeOfBankAccountDetails(
         request.nino.nino,
         "Successful",
         request,
-        formattedClaimantInfo
+        claimantInfo
       )
       childBenefitPage
     }
