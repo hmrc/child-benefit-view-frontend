@@ -18,7 +18,7 @@ package generators
 
 import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
-import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
+import models.common.{AddressLine, AddressPostcode, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement._
 import models.ftnae.{HowManyYears, WhichYoungPerson}
 import org.scalacheck.Arbitrary.arbitrary
@@ -141,14 +141,35 @@ trait ModelGenerators {
     Arbitrary {
       None
     }
+  implicit lazy val arbitraryNationalInsuranceNumber: Arbitrary[NationalInsuranceNumber] =
+    Arbitrary {
+      arbitrary[String].map(NationalInsuranceNumber(_))
+    }
+
+  implicit lazy val arbitraryNinoSuffix: Arbitrary[NinoSuffix] =
+    Arbitrary {
+      arbitrary[String].map(NinoSuffix(_))
+    }
+
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
       for {
-        fullName              <- arbitrary[FullName]
-        dateOfBirth           <- arbitrary[LocalDate]
-        relationshipStartDate <- arbitrary[LocalDate]
-        relationshipEndDate   <- arbitrary[Option[LocalDate]]
-      } yield Child(fullName, dateOfBirth, relationshipStartDate, relationshipEndDate)
+        fullName                <- arbitrary[FullName]
+        dateOfBirth             <- arbitrary[LocalDate]
+        relationshipStartDate   <- arbitrary[LocalDate]
+        relationshipEndDate     <- arbitrary[Option[LocalDate]]
+        nationalInsuranceNumber <- arbitrary[Option[NationalInsuranceNumber]]
+        ninoSuffix              <- arbitrary[Option[NinoSuffix]]
+        crnIndicator            <- arbitrary[Option[Int]]
+      } yield Child(
+        fullName,
+        dateOfBirth,
+        relationshipStartDate,
+        relationshipEndDate,
+        nationalInsuranceNumber,
+        ninoSuffix,
+        crnIndicator
+      )
     }
 
   // Claimant Bank Information and associated models
