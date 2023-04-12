@@ -34,7 +34,8 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
       | "name": "Test Name",
       | "relationshipStartDate": "2021-01-01",
       | "ninoSuffix": "ST",
-      | "crnIndicator": 0
+      | "crnIndicator": 0,
+      | "accountStatus": 0
       |}
       |""".stripMargin
 
@@ -55,6 +56,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
         None,
         Some(NationalInsuranceNumber("TE12345")),
         Some(NinoSuffix("ST")),
+        Some(0),
         Some(0)
       )
 
@@ -63,7 +65,7 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
 
     "must deserialise missing values" in {
       val expectedChild =
-        Child(FullName("Test Name"), LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
+        Child(FullName("Test Name"), LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None, None)
 
       Json.parse(missingChildJson).as[Child] mustEqual expectedChild
     }
@@ -77,10 +79,11 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
           None,
           Some(NationalInsuranceNumber("test123")),
           None,
-          None
+          Some(0),
+          Some(0)
         )
       val youngerChild =
-        Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
+        Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None, None)
 
       olderChild.shouldShowNino mustEqual true
       youngerChild.shouldShowNino mustEqual false
@@ -88,7 +91,16 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
 
     "must not display Nino if age and nino do not meet requirements" in {
       val olderChild =
-        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, None)
+        Child(
+          FullName("Test Name"),
+          LocalDate.of(1995, 1, 1),
+          LocalDate.of(2021, 1, 1),
+          None,
+          None,
+          None,
+          Some(1),
+          Some(12)
+        )
       val youngerChild =
         Child(
           FullName("Test Name"),
@@ -97,7 +109,8 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
           None,
           Some(NationalInsuranceNumber("test123")),
           None,
-          None
+          Some(1),
+          Some(12)
         )
 
       olderChild.shouldShowNino mustEqual false
@@ -106,9 +119,27 @@ class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks 
 
     "must correctly convert crnIndicator" in {
       val noCrnChild =
-        Child(FullName("Test Name"), LocalDate.of(1995, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, Some(0))
+        Child(
+          FullName("Test Name"),
+          LocalDate.of(1995, 1, 1),
+          LocalDate.of(2021, 1, 1),
+          None,
+          None,
+          None,
+          Some(0),
+          None
+        )
       val crnChild =
-        Child(FullName("Test Name"), LocalDate.of(2023, 1, 1), LocalDate.of(2021, 1, 1), None, None, None, Some(1))
+        Child(
+          FullName("Test Name"),
+          LocalDate.of(2023, 1, 1),
+          LocalDate.of(2021, 1, 1),
+          None,
+          None,
+          None,
+          Some(1),
+          None
+        )
 
       crnChild.crnIndicatorAsBoolean mustEqual Some(true)
       noCrnChild.crnIndicatorAsBoolean mustEqual Some(false)

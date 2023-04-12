@@ -28,14 +28,19 @@ final case class Child(
     relationshipEndDate:   Option[LocalDate],
     ninoWithoutSuffix:     Option[NationalInsuranceNumber],
     ninoSuffix:            Option[NinoSuffix],
-    crnIndicator:          Option[Int]
+    crnIndicator:          Option[Int],
+    accountStatus:         Option[Int]
 ) {
   def shouldShowNino: Boolean = {
     val today      = LocalDate.now()
     val ageLimit   = today.minusYears(15).minusMonths(9)
     val ageReached = dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)
+    val fullLive = accountStatus match {
+      case Some(value) => value == 0
+      case None        => false
+    }
 
-    ageReached && ninoWithoutSuffix.nonEmpty
+    ageReached && ninoWithoutSuffix.nonEmpty && fullLive && !crnIndicatorAsBoolean.get
   }
 
   def crnIndicatorAsBoolean: Option[Boolean] = {

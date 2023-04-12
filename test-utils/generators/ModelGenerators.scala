@@ -161,6 +161,7 @@ trait ModelGenerators {
         nationalInsuranceNumber <- arbitrary[Option[NationalInsuranceNumber]]
         ninoSuffix              <- arbitrary[Option[NinoSuffix]]
         crnIndicator            <- arbitrary[Option[Int]]
+        accountStatus           <- arbitrary[Option[Int]]
       } yield Child(
         fullName,
         dateOfBirth,
@@ -168,7 +169,8 @@ trait ModelGenerators {
         relationshipEndDate,
         nationalInsuranceNumber,
         ninoSuffix,
-        crnIndicator
+        crnIndicator,
+        accountStatus
       )
     }
 
