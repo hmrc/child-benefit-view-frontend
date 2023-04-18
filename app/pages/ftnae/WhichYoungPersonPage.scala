@@ -16,11 +16,10 @@
 
 package pages.ftnae
 
-import models.ftnae.WhichYoungPerson
 import play.api.libs.json.JsPath
 import utils.pages.QuestionPage
 
-case object WhichYoungPersonPage extends QuestionPage[WhichYoungPerson] {
+case object WhichYoungPersonPage extends QuestionPage[Int] {
 
   override def path: JsPath = JsPath \ toString
 

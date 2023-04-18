@@ -36,7 +36,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import models.cob.ConfirmNewAccountDetails.{No, Yes}
-import models.ftnae.{HowManyYears, WhichYoungPerson}
+import models.ftnae.{HowManyYears}
 import utils.pages._
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
@@ -74,10 +74,11 @@ class Navigator @Inject() () extends Logging {
         checkRouteMap(page)(userAnswers)
     }
   }
+  private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = 0
 
   private def navigateWhichYoungPerson(userAnswers: UserAnswers): Call =
     userAnswers.get(WhichYoungPersonPage) match {
-      case Some(WhichYoungPerson.ChildNotListed) =>
+      case Some(YOUNG_PERSON_NOT_DISPLAYED_INDEX) =>
         controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad
       case Some(_) => controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
       case _       => controllers.routes.JourneyRecoveryController.onPageLoad()

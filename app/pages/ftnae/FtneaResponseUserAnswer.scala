@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package utils.pages
+package pages.ftnae
 
-import pages.ftnae.WhichYoungPersonPage
-import utils.pages.behaviours.PageBehaviours
+import models.ftnae.FtneaResponse
+import play.api.libs.json.JsPath
+import utils.queries.{Gettable, Settable}
+case object FtneaResponseUserAnswer extends Gettable[FtneaResponse] with Settable[FtneaResponse] {
 
-class WhichYoungPersonSpec extends PageBehaviours {
+  override def path: JsPath = JsPath \ toString
 
-  "WhichYoungPersonPage" - {
-
-    beRetrievable[Int](WhichYoungPersonPage)
-
-    beSettable[Int](WhichYoungPersonPage)
-
-    beRemovable[Int](WhichYoungPersonPage)
-  }
+  override def toString: String = "ftneaResponseUserAnswer"
 }

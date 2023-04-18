@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package utils.pages
+package models.ftnae
 
-import pages.ftnae.WhichYoungPersonPage
-import utils.pages.behaviours.PageBehaviours
+import play.api.libs.json.Json
 
-class WhichYoungPersonSpec extends PageBehaviours {
+final case class Crn(value: String) extends AnyVal
 
-  "WhichYoungPersonPage" - {
-
-    beRetrievable[Int](WhichYoungPersonPage)
-
-    beSettable[Int](WhichYoungPersonPage)
-
-    beRemovable[Int](WhichYoungPersonPage)
-  }
+object Crn {
+  implicit val format = Json.valueFormat[Crn]
 }

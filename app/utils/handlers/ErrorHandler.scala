@@ -17,7 +17,7 @@
 package utils.handlers
 
 import controllers.cob
-import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PaymentHistoryValidationError}
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtneaCannotFindYoungPersonError, FtneaNoCHBAccountError, PaymentHistoryValidationError}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -73,6 +73,22 @@ class ErrorHandler @Inject() (
       case PaymentHistoryValidationError(code, message) =>
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case FtneaNoCHBAccountError =>
+        logger.error(
+          logMessage(
+            s"Ftnea No Chb Account error: ${FtneaNoCHBAccountError.message}",
+            Some(FtneaNoCHBAccountError.statusCode)
+          )
+        )
+        Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
+      case FtneaCannotFindYoungPersonError =>
+        logger.error(
+          logMessage(
+            s"Ftnea can not find young person error: ${FtneaCannotFindYoungPersonError.message}",
+            Some(FtneaCannotFindYoungPersonError.statusCode)
+          )
+        )
+        Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad)
       case _ =>
         logger.error(logMessage("unknown error occurred", None))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)

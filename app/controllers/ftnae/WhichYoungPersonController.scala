@@ -18,11 +18,14 @@ package controllers.ftnae
 
 import controllers.actions._
 import forms.ftnae.WhichYoungPersonFormProvider
+import models.ftnae.FtneaResponse
 import models.{Mode, UserAnswers}
-import pages.ftnae.WhichYoungPersonPage
+import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.ftnae.WhichYoungPersonView
@@ -48,27 +51,74 @@ class WhichYoungPersonController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData) { implicit request =>
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(WhichYoungPersonPage) match {
+      val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+
+      val preparedForm = userAnswers.get(WhichYoungPersonPage) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      userAnswers.get(FtneaResponseUserAnswer) match {
+        case Some(ftneaResponseUserAnswer) =>
+          Ok(
+            view(
+              preparedForm,
+              mode,
+              arrangeRadioButtons(ftneaResponseUserAnswer),
+              ftneaResponseUserAnswer
+            )
+          )
+        case None =>
+          Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+
+      }
+
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(
-                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhichYoungPersonPage, value)
-              )
-              _ <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WhichYoungPersonPage, mode, updatedAnswers))
-        )
+      {
+        val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+
+        val ftneaResponseUserAnswer: Option[FtneaResponse] =
+          userAnswers.get(FtneaResponseUserAnswer)
+
+        ftneaResponseUserAnswer.fold(
+          Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
+        )(answer => {
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(
+                  BadRequest(
+                    view(formWithErrors, mode, arrangeRadioButtons(answer), answer)
+                  )
+                ),
+              value =>
+                for {
+                  updatedAnswers <- Future.fromTry(
+                    request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhichYoungPersonPage, value)
+                  )
+                  _ <- sessionRepository.set(updatedAnswers)
+
+                } yield Redirect(navigator.nextPage(WhichYoungPersonPage, mode, updatedAnswers))
+            )
+        })
+      }
     }
+
+  private def arrangeRadioButtons(ftneaResponseUserAnswer: FtneaResponse): List[RadioItem] = {
+    val initialOrder: List[(String, Int)] = ("Child Not Listed" :: (
+      ftneaResponseUserAnswer.children
+        .map(c => s"${c.name.value} ${c.lastName.value}")
+      )).zipWithIndex.toList
+
+    val (childNotListedMessage :: restOfTheList) = initialOrder
+
+    val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
+    orderedWithIndex0InTheEnd.map(x =>
+      RadioItem(content = Text(x._1), value = Some(x._2.toString), id = Some(s"value_${x._2}"))
+    )
+  }
 }

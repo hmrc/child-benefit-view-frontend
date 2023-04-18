@@ -269,6 +269,7 @@ cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office abou
 cannotFindYoungPerson.bulletPoint4.linkText = use a different form if you want to change what you sent
 cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, {0}.
 cannotFindYoungPerson.p2.linkText = view your proof of entitlement to Child Benefit
+whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
 
 # ----------  Redirect to existing FTNAE iForm ------------
 useDifferentForm.title = Use a different form to extend your Child Benefit
