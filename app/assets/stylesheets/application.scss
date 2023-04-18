@@ -11,3 +11,24 @@ body:not(.js-enabled) {
         height: 0;
     }
 }
+
+.govuk-fieldset {
+    .govuk-fieldset__legend-as-header {
+        margin-bottom: 30px;
+    }
+    .govuk-hint {
+        margin-bottom: 20px;
+    }
+}
+
+.govuk-main-wrapper {
+    padding-top: 20px;
+}
+
+.govuk-back-link {
+    margin-top: 40px;
+}
+
+.hmrc-language-select {
+    float: right;
+}

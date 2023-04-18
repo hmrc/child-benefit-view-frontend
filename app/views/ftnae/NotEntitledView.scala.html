@@ -33,7 +33,8 @@
 
  @approvedTrainingLink = @{link( id = "approved-training-link",
     text = messages("notEntitled.p2.linkText"),
-    call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297")
+    call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
+    newTab = false
  )}
 
 @layout(pageTitle = titleNoForm(messages("notEntitled.title"))) {

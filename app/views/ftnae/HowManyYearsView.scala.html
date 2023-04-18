@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import uk.gov.hmrc.govukfrontend.views.viewmodels.fieldset.Legend.defaultObject
+@import models.viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -35,17 +35,14 @@
         @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
     }
 
-    @heading(messages("howManyYears.heading"), classes = "govuk-heading-l")
-    @para(messages("howManyYears.p1"))
-
     @formHelper(action = controllers.ftnae.routes.HowManyYearsController.onSubmit(mode), 'autoComplete -> "off") {
 
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = defaultObject,
+                legend = LegendViewModel(messages("howManyYears.heading")).asPageHeading(LegendSize.Large),
                 items = models.ftnae.HowManyYears.options
-            )
+            ).withHint(HintViewModel(HtmlContent(para(messages("howManyYears.p1")))))
         )
 
         @govukButton(
