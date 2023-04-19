@@ -17,7 +17,6 @@
 package controllers
 
 import controllers.actions.IdentifierAction
-import controllers.actions.AllowlistAction
 import utils.handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -31,8 +30,7 @@ class PaymentHistoryController @Inject() (
     authConnector:         AuthConnector,
     paymentHistoryService: PaymentHistoryService,
     errorHandler:          ErrorHandler,
-    identify:              IdentifierAction,
-    allowlistAction:       AllowlistAction
+    identify:              IdentifierAction
 )(implicit
     config:       Configuration,
     env:          Environment,
@@ -41,7 +39,7 @@ class PaymentHistoryController @Inject() (
     auditService: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action andThen allowlistAction andThen identify async { implicit request =>
+    Action andThen identify async { implicit request =>
       paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
         err => errorHandler.handleError(err, Some("paymentDetails")),
         result => {
