@@ -19,15 +19,14 @@ package connectors
 import cats.data.EitherT
 import cats.syntax.either._
 import config.FrontendAppConfig
+import connectors.FtneaConnector.{claimantInfoLogMessage, mainError}
 import models.CBEnvelope.CBEnvelope
 import models.errors._
 import models.ftnae.FtneaResponse
 import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import play.api.libs.json.{JsSuccess, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
@@ -37,10 +36,6 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     extends HttpReadsWrapper[CBErrorResponse]
     with Logging {
 
-  private val claimantInfoLogMessage = (code: Int, message: String) =>
-    s"unable to retrieve Ftnea Response: code=$code message=$message"
-
-  private val mainError: Regex = """(?<=\[).+?(?=\])""".r
   def getFtneaAccountDetails()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -62,10 +57,6 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
 
   private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
 
-  implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
-    JsSuccess(())
-  }
-
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError = {
     val extractedMainErrorMessage = extractMainError(upstreamError.description)
     status match {
@@ -79,4 +70,11 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     }
   }
 
+}
+
+object FtneaConnector {
+  private val claimantInfoLogMessage = (code: Int, message: String) =>
+    s"unable to retrieve Ftnea Response: code=$code message=$message"
+
+  private val mainError: Regex = """(?<=\[).+?(?=\])""".r
 }
