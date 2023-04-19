@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package utils.pages
+package services
 
-import pages.ftnae.WhichYoungPersonPage
-import utils.pages.behaviours.PageBehaviours
+import connectors.FtneaConnector
+import models.CBEnvelope.CBEnvelope
+import models.ftnae.FtneaResponse
+import uk.gov.hmrc.http.HeaderCarrier
 
-class WhichYoungPersonSpec extends PageBehaviours {
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.ExecutionContext
 
-  "WhichYoungPersonPage" - {
-
-    beRetrievable[Int](WhichYoungPersonPage)
-
-    beSettable[Int](WhichYoungPersonPage)
-
-    beRemovable[Int](WhichYoungPersonPage)
-  }
+@Singleton
+class FtneaService @Inject() (
+    ftneaConnector: FtneaConnector
+) {
+  def getFtneaInformation()(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
 }

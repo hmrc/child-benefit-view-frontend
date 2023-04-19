@@ -23,7 +23,7 @@ import utils.pages._
 import models._
 import models.cob.ConfirmNewAccountDetails._
 import models.cob.NewAccountDetails
-import models.ftnae.{HowManyYears, WhichYoungPerson}
+import models.ftnae.HowManyYears
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 import play.api.libs.json.Json
@@ -76,7 +76,7 @@ class NavigatorSpec extends SpecBase {
 
       val emptyUserAnswers = UserAnswers("id")
       val allAnsweredForFtnae = for {
-        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
+        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, 1)
         sa  <- fa.set(WillYoungPersonBeStayingPage, true)
         ta  <- sa.set(SchoolOrCollegePage, true)
         fa  <- ta.set(TwelveHoursAWeekPage, true)
@@ -146,7 +146,7 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           WhichYoungPersonPage,
           NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, WhichYoungPerson.ChildNotListed)).success.value
+          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, 0)).success.value
         ) mustBe controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad()
       }
 

@@ -18,7 +18,6 @@ package forms
 
 import forms.behaviours.OptionFieldBehaviours
 import forms.ftnae.WhichYoungPersonFormProvider
-import models.ftnae.WhichYoungPerson
 import play.api.data.FormError
 
 class WhichYoungPersonFormProviderSpec extends OptionFieldBehaviours {
@@ -30,11 +29,11 @@ class WhichYoungPersonFormProviderSpec extends OptionFieldBehaviours {
     val fieldName   = "value"
     val requiredKey = "whichYoungPerson.error.required"
 
-    behave like optionsField[WhichYoungPerson](
+    behave like optionsField[Int](
       form,
       fieldName,
-      validValues = WhichYoungPerson.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      validValues = (0 to 1000).toList,
+      invalidError = FormError(fieldName, "error.nonNumeric")
     )
 
     behave like mandatoryField(

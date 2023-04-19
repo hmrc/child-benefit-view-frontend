@@ -14,33 +14,55 @@
  * limitations under the License.
  *@
 
+@import components._
+@import models.ftnae.FtneaResponse
+@import controllers.ProofOfEntitlementController._
+
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
+        heading: Heading,
+        h2: HeadingH2,
+        summaryList: GovukSummaryList,
         govukRadios: GovukRadios,
         govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, list: List[RadioItem], ftneaResponse: FtneaResponse)(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = title(form, messages("whichYoungPerson.title"))) {
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
-        }
-
-        @formHelper(action = controllers.ftnae.routes.WhichYoungPersonController.onSubmit(mode), 'autoComplete -> "off") {
-
-            @govukRadios(
-                RadiosViewModel(
-                    field = form("value"),
-                    legend = LegendViewModel(messages("whichYoungPerson.heading")).asPageHeading(),
-                    items = models.ftnae.WhichYoungPerson.options
-                )
-            )
-
-            @govukButton(
-                ButtonViewModel(messages("site.continue"))
-            )
-        }
+@layout(pageTitle = title(form, messages("whichYoungPerson.title"))) {
+    @heading(messages("whichYoungPerson.heading"))
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
     }
+
+    @for(child <- ftneaResponse.children) {
+
+        @h2(s"${child.name.value} ${child.lastName.value}")
+        @summaryList(
+            SummaryList(
+                rows = Seq(
+                    SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("whichYoungPerson.ftneaChild.currentClaimEndDate"))), value = Value(HtmlContent(formatEntitlementDate(child.currentClaimEndDate))))
+                ),
+                classes = "govuk-!-margin-bottom-9"
+            )
+        )
+    }
+
+    @formHelper(action = controllers.ftnae.routes.WhichYoungPersonController.onSubmit(mode), 'autoComplete -> "off") {
+
+        @govukRadios(
+            RadiosViewModel(
+                field = form("value"),
+                legend = LegendViewModel("").asPageHeading(),
+                items = list
+            )
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
+}

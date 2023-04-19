@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import models.ftnae.{HowManyYears, WhichYoungPerson}
+import models.ftnae.HowManyYears
 import models.viewmodels.checkAnswers._
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
@@ -33,7 +33,7 @@ import views.html.ftnae.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency with TableDrivenPropertyChecks {
   private val allAnsweredForFtnae = for {
-    fa  <- emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
+    fa  <- emptyUserAnswers.set(WhichYoungPersonPage, 1)
     sa  <- fa.set(WillYoungPersonBeStayingPage, true)
     ta  <- sa.set(SchoolOrCollegePage, true)
     fa  <- ta.set(TwelveHoursAWeekPage, true)
@@ -107,7 +107,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
     }
 
     "must redirect to first unanswered page" in {
-      val firstAnswered          = emptyUserAnswers.set(WhichYoungPersonPage, WhichYoungPerson.values.head)
+      val firstAnswered          = emptyUserAnswers.set(WhichYoungPersonPage, 1)
       val firstMissingTillSecond = emptyUserAnswers.set(WillYoungPersonBeStayingPage, true)
       val secondMissingTillThird = firstAnswered.flatMap(_.set(SchoolOrCollegePage, true))
 

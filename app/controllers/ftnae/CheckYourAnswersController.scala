@@ -36,7 +36,7 @@ import cats.syntax.either._
 import com.google.inject.Inject
 import controllers.ChildBenefitBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, IdentifierAction}
-import models.ftnae.{HowManyYears, WhichYoungPerson}
+import models.ftnae.{HowManyYears}
 import models.viewmodels.checkAnswers._
 import models.viewmodels.govuk.summarylist._
 import models.{NormalMode, UserAnswers}
@@ -74,6 +74,8 @@ class CheckYourAnswersController @Inject() (
     cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
+
+  private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = 0
 
   def onPageLoad(): Action[AnyContent] = {
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
@@ -154,8 +156,9 @@ class CheckYourAnswersController @Inject() (
         userAnswers
           .get(WhichYoungPersonPage)
           .fold(ThreePin.unansweredPageName(WhichYoungPersonPage.toString))(answer =>
-            if (answer == WhichYoungPerson.ChildNotListed) { ThreePin.kickedOutPageName(WhichYoungPersonPage.toString) }
-            else { ThreePin.successUrl() }
+            if (answer == YOUNG_PERSON_NOT_DISPLAYED_INDEX) {
+              ThreePin.kickedOutPageName(WhichYoungPersonPage.toString)
+            } else { ThreePin.successUrl() }
           )
       _ <-
         userAnswers

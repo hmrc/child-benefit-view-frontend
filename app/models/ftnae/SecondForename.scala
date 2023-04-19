@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package utils.pages
+package models.ftnae
 
-import pages.ftnae.WhichYoungPersonPage
-import utils.pages.behaviours.PageBehaviours
+import play.api.libs.json.Json
 
-class WhichYoungPersonSpec extends PageBehaviours {
-
-  "WhichYoungPersonPage" - {
-
-    beRetrievable[Int](WhichYoungPersonPage)
-
-    beSettable[Int](WhichYoungPersonPage)
-
-    beRemovable[Int](WhichYoungPersonPage)
-  }
+final case class SecondForename(value: String) extends AnyVal
+object SecondForename {
+  implicit val format = Json.valueFormat[SecondForename]
 }

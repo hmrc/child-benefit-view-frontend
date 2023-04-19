@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package utils.pages
+package models.ftnae
 
-import pages.ftnae.WhichYoungPersonPage
-import utils.pages.behaviours.PageBehaviours
+import models.common.{FirstForename, Surname}
+import play.api.libs.json.Json
 
-class WhichYoungPersonSpec extends PageBehaviours {
+import java.time.LocalDate
 
-  "WhichYoungPersonPage" - {
+final case class FtneaChildInfo(
+    crn:                 Crn,
+    name:                FirstForename,
+    midName:             Option[SecondForename],
+    lastName:            Surname,
+    dateOfBirth:         LocalDate,
+    currentClaimEndDate: LocalDate
+)
 
-    beRetrievable[Int](WhichYoungPersonPage)
-
-    beSettable[Int](WhichYoungPersonPage)
-
-    beRemovable[Int](WhichYoungPersonPage)
-  }
+object FtneaChildInfo {
+  implicit val format = Json.format[FtneaChildInfo]
 }

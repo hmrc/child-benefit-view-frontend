@@ -16,41 +16,92 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
 import forms.ftnae.WhichYoungPersonFormProvider
-import models.ftnae.WhichYoungPerson
+import models.common.{FirstForename, Surname}
+import models.ftnae.{Crn, FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.WhichYoungPersonPage
+import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
+import utils.Stubs.userLoggedInChildBenefitUser
+import utils.TestData.NinoUser
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
 
-class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
+class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val whichYoungPersonRoute = controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(CheckMode).url
 
-  val formProvider = new WhichYoungPersonFormProvider()
-  val form         = formProvider()
+  val formProvider             = new WhichYoungPersonFormProvider()
+  val form                     = formProvider()
+  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad.url
 
+  private def arrangeRadioButtons(
+      ftneaResponseUserAnswer: FtneaResponse
+  ): List[RadioItem] = {
+    val initialOrder: List[(String, Int)] = ("Child Not Listed" :: (
+      ftneaResponseUserAnswer.children
+        .map(c => s"${c.name.value} ${c.lastName.value}")
+      )).zipWithIndex.toList
+
+    val (childNotListedMessage :: restOfTheList) = initialOrder
+
+    val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
+    orderedWithIndex0InTheEnd.map(x =>
+      RadioItem(content = Text(x._1), value = Some(x._2.toString), id = Some(s"value_${x._2}"))
+    )
+
+  }
+
+  val ftneaResponse = FtneaResponse(
+    FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+    List(
+      FtneaChildInfo(
+        Crn("crn1234"),
+        FirstForename("First Name"),
+        None,
+        Surname("Surname"),
+        sixteenBy1stOfSeptemberThisYear,
+        getFirstMondayOfSeptemberThisYear()
+      )
+    )
+  )
+
+  val mockSessionRepository = mock[SessionRepository]
   "WhichYoungPerson Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .success
+        .value
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .build()
+
+      userLoggedInChildBenefitUser(NinoUser)
 
       running(application) {
         val request = FakeRequest(GET, whichYoungPersonRoute)
+          .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
 
@@ -59,16 +110,28 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form, CheckMode)(request, messages(application)).toString
+          view(form, CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
+            request,
+            messages(application)
+          ).toString
         )
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(WhichYoungPersonPage, WhichYoungPerson.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhichYoungPersonPage, 1)
+        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .build()
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
       running(application) {
         val request = FakeRequest(GET, whichYoungPersonRoute)
@@ -80,7 +143,7 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form.fill(WhichYoungPerson.values.head), CheckMode)(
+          view(form.fill(1), CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
             request,
             messages(application)
           ).toString
@@ -91,8 +154,13 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = UserAnswers(userAnswersId).set(WhichYoungPersonPage, WhichYoungPerson.values.head).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhichYoungPersonPage, 1)
+        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
+        .success
+        .value
 
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
       when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
       val application =
@@ -106,7 +174,7 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, whichYoungPersonRoute)
-            .withFormUrlEncodedBody(("value", WhichYoungPerson.values.head.toString))
+            .withFormUrlEncodedBody(("value", "1"))
 
         val result = route(application, request).value
 
@@ -116,9 +184,18 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
 
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository)
+        )
+        .build()
       running(application) {
         val request =
           FakeRequest(POST, whichYoungPersonRoute)
@@ -133,7 +210,10 @@ class WhichYoungPersonControllerSpec extends CBSpecBase with MockitoSugar {
         status(result) mustEqual BAD_REQUEST
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(boundForm, CheckMode)(request, messages(application)).toString
+          view(boundForm, CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
+            request,
+            messages(application)
+          ).toString
         )
       }
     }

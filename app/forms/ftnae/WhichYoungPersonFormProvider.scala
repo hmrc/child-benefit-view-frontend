@@ -16,7 +16,6 @@
 
 package forms.ftnae
 
-import models.ftnae.WhichYoungPerson
 import play.api.data.Form
 import utils.mappings.Mappings
 
@@ -24,8 +23,8 @@ import javax.inject.Inject
 
 class WhichYoungPersonFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[WhichYoungPerson] =
+  def apply(): Form[Int] =
     Form(
-      "value" -> enumerable[WhichYoungPerson]("whichYoungPerson.error.required")
+      "value" -> int("whichYoungPerson.error.required")
     )
 }
