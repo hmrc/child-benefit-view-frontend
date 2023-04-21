@@ -24,22 +24,24 @@
         govukErrorSummary: GovukErrorSummary,
         heading: Heading,
         h2: HeadingH2,
+        para: ParagraphBody,
         summaryList: GovukSummaryList,
         govukRadios: GovukRadios,
         govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, list: List[RadioItem], ftneaResponse: FtneaResponse)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, getRadioItems: String => List[RadioItem], ftneaResponse: FtneaResponse)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("whichYoungPerson.title"))) {
-    @heading(messages("whichYoungPerson.heading"))
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
     }
+    @heading(messages("whichYoungPerson.heading"))
+    @para(messages("whichYoungPerson.p1"))
 
     @for(child <- ftneaResponse.children) {
+        @h2(s"${child.name.value} ${child.midName.map(mn => s"${mn.value} ").getOrElse("")}${child.lastName.value}")
 
-        @h2(s"${child.name.value} ${child.lastName.value}")
         @summaryList(
             SummaryList(
                 rows = Seq(
@@ -57,7 +59,7 @@
             RadiosViewModel(
                 field = form("value"),
                 legend = LegendViewModel("").asPageHeading(),
-                items = list
+                items = getRadioItems(messages("whichYoungPerson.childNotListed"))
             )
         )
 

@@ -307,11 +307,10 @@ extendPayments.checkYourAnswersLabel = extendPayments
 # ----------  Which Young Person ----------------
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
-whichYoungPerson.child1 = Child 1
-whichYoungPerson.child2 = Child 2
-whichYoungPerson.childNotListed = Child Not Listed
+whichYoungPerson.p1 = If you want to tell us about more than one young person, complete a separate declaration for each one.
+whichYoungPerson.childNotListed = Young person not listed
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
-whichYoungPerson.error.required = Select whichYoungPerson
+whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.change.hidden = WhichYoungPerson
 
 # ----------  Young person not listed for FTNAE ------------
