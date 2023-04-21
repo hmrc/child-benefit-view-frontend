@@ -108,8 +108,10 @@ class WhichYoungPersonController @Inject() (
       }
     }
 
-  private def arrangeRadioButtons(ftneaResponseUserAnswer: FtneaResponse): List[RadioItem] = {
-    val initialOrder: List[(String, Int)] = ("Child Not Listed" :: (
+  private def arrangeRadioButtons(
+      ftneaResponseUserAnswer:   FtneaResponse
+  )(youngPersonNotListedMessage: String): List[RadioItem] = {
+    val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
       ftneaResponseUserAnswer.children
         .map(c => {
           val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
