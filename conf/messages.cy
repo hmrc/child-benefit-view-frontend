@@ -19,6 +19,7 @@ timeout.keepAlive = Parhau i fod wedi’ch mewngofnodi
 timeout.signOut = Allgofnodi
 
 # ---------- Error Section ----------------------
+error.browser.title.prefix = Gwall:
 
 # ---------- Journey Recovery Section -----------
 
