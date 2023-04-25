@@ -25,8 +25,7 @@
         heading: Heading,
         h2: HeadingH2,
         para: ParagraphBody,
-        bulletList: BulletList,
-        govukTable : GovukTable,
+        govukSummaryList: GovukSummaryList,
         link: Link,
         note: Notification
 )
@@ -37,51 +36,50 @@
 
 @formLink = {@link( id = "form-link", text = messages("changeAccount.link.text"), call = Call("GET" ,"https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide"), newTab = true)}
 
-@detailsTable = {@govukTable(
-                    Table(
-                        rows = Seq(
-                            Seq(
-                                TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
-                                TableRow(content =  Text(accountDetails.accountHolderName.fold(claimantName)(_.value)),format = Some("text"))
-                            ),
-                            Seq(
-                                TableRow(content = Text(messages("changeAccount.table.sort.code")),format = Some("text")),
-                                TableRow(content =  Text(formatSensitiveSort(
-                                                            accountDetails.sortCode.fold("Sort not found")(_.value))
-                                                        ),format = Some("text"))
-                            ),
-                            Seq(
-                                TableRow(content = Text(messages("changeAccount.table.account.number")),format = Some("text")),
-                                TableRow(content =  Text(formatSensitiveAccNumber(
-                                                            accountDetails.bankAccountNumber.fold("Account not found")(_.number))
-                                                        ),format = Some("text"))
-                            )
-                        ),
-                        firstCellIsHeader = true,
-                        attributes = Map("id" -> "account-details-table")
+@detailsTableAsSummaryList = {@govukSummaryList(
+    SummaryList(
+        rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("changeAccount.table.name"))),
+                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))
+                ),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("changeAccount.table.sort.code"))),
+                value = Value(content = Text(formatSensitiveSort(accountDetails.sortCode.fold("Sort not found")(_.value)))
+                ),
+                actions = None
+            ),
+            SummaryListRow(
+                key = Key(content = Text(messages("changeAccount.table.account.number"))),
+                value = Value(content = Text(formatSensitiveAccNumber(accountDetails.bankAccountNumber.fold("Account not found")(_.number)))
+            ),
+                actions = None
+            )
+        )
+    ).withAttribute("id" -> "account-details-table")
 )
-                            )
-                        }
-
-@altDetailsTable = {@govukTable(
-                        Table(
-                            rows = Seq(
-                                Seq(
-                                    TableRow(content = Text(messages("changeAccount.table.name")),format = Some("text")),
-                                    TableRow(content =  Text(accountDetails.accountHolderName.fold(claimantName)(_.value)),format = Some("text"))
-                                )
-                            ),
-                            firstCellIsHeader = true,
-                            attributes = Map("id" -> "account-details-table")
-                        )
-                    )
-
-                    @note(content = messages("changeAccount.notification.text"),
-                          id = Some("info-notice")
-                    )
 }
 
+@altDetailsTableAsSummaryList ={@govukSummaryList(
+        SummaryList(
+            rows = Seq(
+            SummaryListRow(
+                key = Key(content = Text(messages("changeAccount.table.name"))),
+                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))
+            ),
+                actions = None
+            )
+        )
+    ).withAttribute("id" -> "account-details-table")
+)
 
+@note(content = messages("changeAccount.notification.text"),
+    id = Some("info-notice")
+)
+
+}
 
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
@@ -89,8 +87,8 @@
 
     @heading(messages("changeAccount.heading"))
 
-<!--Account details table-->
-    @{if(isStandardAccount) detailsTable else altDetailsTable}
+    <!--Account details table-->
+    @{if(isStandardAccount) detailsTableAsSummaryList else altDetailsTableAsSummaryList}
 
     @h2(messages("changeAccount.subHeading"), id = Some("change-account-h2"))
 
