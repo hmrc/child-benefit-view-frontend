@@ -19,10 +19,13 @@ package controllers.cob
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.handlers.ErrorHandler
 import views.html.cob.AccountChangedView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class AccountChangedController @Inject() (
     override val messagesApi: MessagesApi,
@@ -30,13 +33,20 @@ class AccountChangedController @Inject() (
     verifyBarNotLockedAction: VerifyBarNotLockedAction,
     verifyHICBCActionImpl:    VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
+    changeOfBankService:      ChangeOfBankService,
+    errorHandler:             ErrorHandler,
     view:                     AccountChangedView
-) extends FrontendBaseController
+)(implicit ec:                ExecutionContext, auditService: AuditService)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCActionImpl) {
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCActionImpl).async {
       implicit request =>
-        Ok(view())
+        {
+          changeOfBankService
+            .dropChangeOfBankCache()
+            .fold(err => errorHandler.handleError(err), _ => Ok(view()))
+        }
     }
 }

@@ -50,6 +50,9 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
   private val claimantUpdateBankLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
 
+  private val claimantDropBankCacheLogMessage = (code: Int, message: String) =>
+    s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
+
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r
   def getChangeOfBankClaimantInfo(implicit
       ec: ExecutionContext,
@@ -147,6 +150,26 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
           }
       )
     }
+
+  def dropChangeOfBankCache()(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[Unit] = {
+    withHttpReads { implicit httpReads =>
+      EitherT(
+        httpClient
+          .DELETE(appConfig.dropChangeOfBankCacheUrl)
+          .recover {
+            case e: HttpException =>
+              logger.error(claimantDropBankCacheLogMessage(e.responseCode, e.getMessage))
+              ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
+            case e: UpstreamErrorResponse =>
+              logger.error(claimantDropBankCacheLogMessage(e.statusCode, e.getMessage))
+              ConnectorError(e.statusCode, e.getMessage).asLeft[Unit]
+          }
+      )
+    }
+  }
 
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError = {
     val extractedMainErrorMessage = extractMainError(upstreamError.description)

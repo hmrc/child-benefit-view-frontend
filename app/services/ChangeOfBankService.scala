@@ -97,6 +97,13 @@ class ChangeOfBankService @Inject() (
       updateBankDetailsResponse <- changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(newInfo))
     } yield updateBankDetailsResponse
 
+  def dropChangeOfBankCache()(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[Unit] = {
+    changeOfBankConnector.dropChangeOfBankCache()
+  }
+
   private def toUpdateBankAccountRequest(
       newBankAccountInfo: NewAccountDetails
   ) = {
