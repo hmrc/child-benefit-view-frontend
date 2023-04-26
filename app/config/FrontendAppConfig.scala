@@ -58,6 +58,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def updateBankAccountUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/update-claimant-bank-account"
 
+  def dropChangeOfBankCacheUrl: String =
+    s"$childBenefitServiceBaseUrl/child-benefit-service/drop-change-bank-cache"
+
   def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/CHIB"
 
   def feedbackUrl(): String = s"$contactHost/contact/beta-feedback?service=CHIB"

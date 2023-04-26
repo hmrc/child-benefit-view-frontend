@@ -16,13 +16,20 @@
 
 package controllers.cob
 
+import connectors.ChangeOfBankConnector
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
+import models.CBEnvelope
+import models.CBEnvelope.CBEnvelope
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.{AuditService, ChangeOfBankService}
 import testconfig.TestConfig
 import testconfig.TestConfig._
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
@@ -30,7 +37,19 @@ import utils.TestData.NinoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountChangedView
 
-class AccountChangedControllerSpec extends BaseISpec with ScalaCheckPropertyChecks {
+import scala.concurrent.ExecutionContext
+
+class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+
+  val mockCobConnector          = mock[ChangeOfBankConnector]
+  implicit val mockAuditService = mock[AuditService]
+
+  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector) {
+
+    override def dropChangeOfBankCache()(implicit ec: ExecutionContext, hc: HeaderCarrier): CBEnvelope[Unit] = {
+      CBEnvelope(())
+    }
+  }
 
   "AccountChanged Controller" - {
 
@@ -40,7 +59,11 @@ class AccountChangedControllerSpec extends BaseISpec with ScalaCheckPropertyChec
       "must return OK and the correct view for a GET" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[ChangeOfBankService].toInstance(cobService)
+          )
+          .build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
@@ -80,6 +103,8 @@ class AccountChangedControllerSpec extends BaseISpec with ScalaCheckPropertyChec
             userAnswers = Some(emptyUserAnswers),
             verifyHICBCAction = hicbcAction,
             verifyBarNotLockedAction = verificationBarAction
+          ).overrides(
+            bind[ChangeOfBankService].toInstance(cobService)
           ).build()
 
           running(application) {
