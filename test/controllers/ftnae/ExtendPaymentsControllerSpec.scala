@@ -85,7 +85,7 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftne
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view()(request, messages(application)).toString
+          view(ftneaResponse.claimant)(request, messages(application)).toString
         )
       }
     }
