@@ -19,10 +19,19 @@
 @this(
     layout: templates.Layout,
     govukSummaryList: GovukSummaryList,
-    heading: Heading
+    heading: Heading,
+    h2: HeadingH2,
+    warningText: Warning,
+    para: ParagraphBody,
+    link: Link
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
+
+@paraLink = @{link(id = "report-changes-child-benefit-form-link",
+    text = messages("checkYourAnswers.p1.link"),
+    call = Call("GET", "https://www.gov.uk/report-changes-child-benefit")
+)}
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -30,10 +39,15 @@
 
     @govukSummaryList(list)
 
+  @h2(messages("checkYourAnswers.h2"))
+
+  @warningText(Html(messages("checkYourAnswers.warning")))
+
+    @para(messages("checkYourAnswers.p1", paraLink))
+
     <div class="govuk-button-group">
         <a class="govuk-button" href="@controllers.ftnae.routes.PaymentsExtendedController.onPageLoad" data-module="govuk-button">
-            Send
+            @messages("checkYourAnswers.submit")
         </a>
-
     </div>
 }

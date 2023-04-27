@@ -29,13 +29,6 @@ class WhichYoungPersonFormProviderSpec extends OptionFieldBehaviours {
     val fieldName   = "value"
     val requiredKey = "whichYoungPerson.error.required"
 
-    behave like optionsField[Int](
-      form,
-      fieldName,
-      validValues = (0 to 1000).toList,
-      invalidError = FormError(fieldName, "error.nonNumeric")
-    )
-
     behave like mandatoryField(
       form,
       fieldName,

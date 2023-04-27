@@ -76,7 +76,7 @@ class NavigatorSpec extends SpecBase {
 
       val emptyUserAnswers = UserAnswers("id")
       val allAnsweredForFtnae = for {
-        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, 1)
+        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
         sa  <- fa.set(WillYoungPersonBeStayingPage, true)
         ta  <- sa.set(SchoolOrCollegePage, true)
         fa  <- ta.set(TwelveHoursAWeekPage, true)
@@ -146,7 +146,7 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           WhichYoungPersonPage,
           NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, 0)).success.value
+          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, "0")).success.value
         ) mustBe controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad()
       }
 

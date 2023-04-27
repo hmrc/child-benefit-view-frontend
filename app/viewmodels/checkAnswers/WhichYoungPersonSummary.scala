@@ -32,7 +32,7 @@ object WhichYoungPersonSummary {
     answers.get(WhichYoungPersonPage).map { answer =>
       val value = ValueViewModel(
         HtmlContent(
-          HtmlFormat.escape(messages(s"whichYoungPerson.$answer"))
+          HtmlFormat.escape(answer)
         )
       )
 

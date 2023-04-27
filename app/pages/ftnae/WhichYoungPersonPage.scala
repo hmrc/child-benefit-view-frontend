@@ -19,7 +19,7 @@ package pages.ftnae
 import play.api.libs.json.JsPath
 import utils.pages.QuestionPage
 
-case object WhichYoungPersonPage extends QuestionPage[Int] {
+case object WhichYoungPersonPage extends QuestionPage[String] {
 
   override def path: JsPath = JsPath \ toString
 
