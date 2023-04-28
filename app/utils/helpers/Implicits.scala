@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package models.ftnae
+package utils.helpers
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsString, JsSuccess, Reads, Writes}
 
-final case class Crn(value: String) extends AnyVal
+object Implicits {
 
-object Crn {
-  implicit val format = Json.valueFormat[Crn]
+  implicit val writes: Writes[Unit] = Writes[Unit] { _ =>
+    JsString("")
+  }
+  implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
+    JsSuccess(())
+  }
 }

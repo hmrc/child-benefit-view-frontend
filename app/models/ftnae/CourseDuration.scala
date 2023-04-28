@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package services
+package models.ftnae
 
-import connectors.FtneaConnector
-import models.CBEnvelope.CBEnvelope
-import models.ftnae.FtneaResponse
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.libs.json.{JsPath, Reads, Writes}
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+sealed trait CourseDuration
 
-@Singleton
-class FtneaService @Inject() (
-    ftneaConnector: FtneaConnector
-) {
-  def getFtneaInformation()(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier
-  ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
+object CourseDuration {
+
+  object OneYear extends CourseDuration
+  object TwoYear extends CourseDuration
+
+  implicit val reads: Reads[CourseDuration] = JsPath
+    .read[String]
+    .map {
+      case "ONE_YEAR" => OneYear
+      case "TWO_YEAR" => TwoYear
+    }
+
+  implicit val writes: Writes[CourseDuration] = implicitly[Writes[String]].contramap[CourseDuration] {
+    case OneYear => "ONE_YEAR"
+    case TwoYear => "TWO_YEAR"
+  }
 }

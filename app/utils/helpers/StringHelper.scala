@@ -16,6 +16,8 @@
 
 package utils.helpers
 
+import models.ftnae.FtneaChildInfo
+
 object StringHelper {
   val defaultDelimiters    = List(" ", "-", "'")
   val defaultExceptedWords = List("and")
@@ -33,4 +35,9 @@ object StringHelper {
 
   def isWhitespaceOnly(str: String): Boolean =
     str.forall(_.isWhitespace)
+
+  def toFtnaeChildNameTitleCase(child: FtneaChildInfo): String = {
+    val midName = child.midName.map(mn => s"${mn.value} ").getOrElse("")
+    toTitleCase(s"${child.name.value} $midName${child.lastName.value}")
+  }
 }

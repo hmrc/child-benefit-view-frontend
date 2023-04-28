@@ -19,24 +19,35 @@ package controllers.ftnae
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.handlers.ErrorHandler
 import views.html.ftnae.PaymentsExtendedView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class PaymentsExtendedController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
+    ftneaService:             FtnaeService,
     val controllerComponents: MessagesControllerComponents,
     featureActions:           FeatureFlagComposedActions,
-    view:                     PaymentsExtendedView
-) extends FrontendBaseController
+    view:                     PaymentsExtendedView,
+    errorHandler:             ErrorHandler
+)(implicit ec:                ExecutionContext, auditService: AuditService)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
-      Ok(view())
+    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+      ftneaService
+        .submitFtnaeInformation()
+        .fold(
+          error => errorHandler.handleError(error),
+          _ => Ok(view())
+        )
     }
 }

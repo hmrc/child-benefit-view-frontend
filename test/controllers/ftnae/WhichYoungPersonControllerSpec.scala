@@ -17,8 +17,8 @@
 package controllers.ftnae
 
 import forms.ftnae.WhichYoungPersonFormProvider
-import models.common.{FirstForename, Surname}
-import models.ftnae.{Crn, FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -73,7 +73,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
       FtneaChildInfo(
-        Crn("crn1234"),
+        ChildReferenceNumber("crn1234"),
         FirstForename("First Name"),
         None,
         Surname("Surname"),

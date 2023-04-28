@@ -27,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 import utils.navigation.Navigator
 import views.html.ftnae.WhichYoungPersonView
 
@@ -114,8 +115,7 @@ class WhichYoungPersonController @Inject() (
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
       ftneaResponseUserAnswer.children
         .map(c => {
-          val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
-          s"${c.name.value} $midName${c.lastName.value}"
+          toFtnaeChildNameTitleCase(c)
         })
       )).zipWithIndex.toList
 
