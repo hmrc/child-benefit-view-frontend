@@ -122,8 +122,9 @@ class WhichYoungPersonController @Inject() (
     val (childNotListedMessage :: restOfTheList) = initialOrder
 
     val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
-    orderedWithIndex0InTheEnd.map(x =>
-      RadioItem(content = Text(x._1), value = Some(x._2.toString), id = Some(s"value_${x._2}"))
-    )
+    orderedWithIndex0InTheEnd.map(x => {
+      val value = if (x._1 == youngPersonNotListedMessage) x._2.toString else x._1
+      RadioItem(content = Text(x._1), value = Some(value), id = Some(s"value_${x._2}"))
+    })
   }
 }

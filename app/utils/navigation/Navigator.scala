@@ -74,15 +74,17 @@ class Navigator @Inject() () extends Logging {
         checkRouteMap(page)(userAnswers)
     }
   }
-  private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = 0
 
-  private def navigateWhichYoungPerson(userAnswers: UserAnswers): Call =
+  private def navigateWhichYoungPerson(userAnswers: UserAnswers): Call = {
+    val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
+
     userAnswers.get(WhichYoungPersonPage) match {
       case Some(YOUNG_PERSON_NOT_DISPLAYED_INDEX) =>
         controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad
       case Some(_) => controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
       case _       => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
+  }
   private def navigateWillYoungPersonBeStaying(userAnswers: UserAnswers): Call =
     userAnswers.get(WillYoungPersonBeStayingPage) match {
       case Some(false) => controllers.ftnae.routes.UseDifferentFormController.onPageLoad()

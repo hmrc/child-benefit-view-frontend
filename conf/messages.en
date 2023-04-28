@@ -335,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint3 = T levels
 willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
 willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
-willYoungPersonBeStaying.checkYourAnswersLabel = Will the young person be studying one of these non-advanced courses?
+willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
 willYoungPersonBeStaying.error.required = Select Yes or No
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
@@ -405,3 +405,12 @@ liveWithYouInUK.change.hidden = LiveWithYouInUK
 # ----------  Payments Extended ------------
 paymentsExtended.title = paymentsExtended
 paymentsExtended.heading = paymentsExtended
+
+# ----------  FTNAE check your answers ------------
+checkYourAnswers.title = Check your answers before sending them
+checkYourAnswers.heading = Check your answers before sending them
+checkYourAnswers.h2 = Now send your answers
+checkYourAnswers.warning = The information must be correct of your knowledge.
+checkYourAnswers.p1 = You must {0}.
+checkYourAnswers.p1.link = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
+checkYourAnswers.submit = Send

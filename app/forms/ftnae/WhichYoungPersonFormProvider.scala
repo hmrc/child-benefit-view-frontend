@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class WhichYoungPersonFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Int] =
+  def apply(): Form[String] =
     Form(
-      "value" -> int("whichYoungPerson.error.required")
+      "value" -> text("whichYoungPerson.error.required")
     )
 }

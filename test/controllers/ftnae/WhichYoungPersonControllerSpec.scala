@@ -63,9 +63,10 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     val (childNotListedMessage :: restOfTheList) = initialOrder
 
     val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
-    orderedWithIndex0InTheEnd.map(x =>
-      RadioItem(content = Text(x._1), value = Some(x._2.toString), id = Some(s"value_${x._2}"))
-    )
+    orderedWithIndex0InTheEnd.map { x =>
+      val value = if (x._1 == youngPersonNotListedMessage) x._2.toString else x._1
+      RadioItem(content = Text(x._1), value = Some(value), id = Some(s"value_${x._2}"))
+    }
   }
 
   val ftneaResponse = FtneaResponse(
@@ -123,7 +124,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(WhichYoungPersonPage, 1)
+        .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
         .success
         .value
@@ -136,7 +137,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
       running(application) {
-        val request = FakeRequest(GET, whichYoungPersonRoute)
+        val request = FakeRequest(GET, whichYoungPersonRoute).withFormUrlEncodedBody(("value", "First Name Surname"))
 
         val view = application.injector.instanceOf[WhichYoungPersonView]
 
@@ -145,7 +146,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form.fill(1), CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
+          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
             request,
             messages(application)
           ).toString
@@ -157,7 +158,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers = UserAnswers(userAnswersId)
-        .set(WhichYoungPersonPage, 1)
+        .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
         .success
         .value
@@ -176,47 +177,12 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       running(application) {
         val request =
           FakeRequest(POST, whichYoungPersonRoute)
-            .withFormUrlEncodedBody(("value", "1"))
+            .withFormUrlEncodedBody(("value", "First Name Surname"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
-      }
-    }
-
-    "must return a Bad Request and errors when invalid data is submitted" in {
-      val userAnswers = UserAnswers(userAnswersId)
-        .set(FtneaResponseUserAnswer, ftneaResponse)
-        .success
-        .value
-
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-        .overrides(
-          bind[SessionRepository].toInstance(mockSessionRepository)
-        )
-        .build()
-      running(application) {
-        val request =
-          FakeRequest(POST, whichYoungPersonRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
-
-        val boundForm = form.bind(Map("value" -> "invalid value"))
-
-        val view = application.injector.instanceOf[WhichYoungPersonView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        assertSameHtmlAfter(removeCsrfAndNonce)(
-          contentAsString(result),
-          view(boundForm, CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
-            request,
-            messages(application)
-          ).toString
-        )
       }
     }
 
