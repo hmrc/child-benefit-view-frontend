@@ -60,7 +60,7 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = LegendViewModel(messages("confirmNewAccountDetails.subHeading")).asPageHeading(),
+                legend = LegendViewModel(messages("confirmNewAccountDetails.subHeading")).asPageHeading(LegendSize.Medium),
                 items  = ConfirmNewAccountDetails.options
             )
         )
