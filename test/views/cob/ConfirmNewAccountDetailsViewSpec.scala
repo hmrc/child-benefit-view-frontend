@@ -48,7 +48,7 @@ class ConfirmNewAccountDetailsViewSpec extends ViewSpecBase {
     }
 
     "have a heading" in {
-      view.getElementsByTag("h1").text mustBe messages("confirmNewAccountDetails.heading")
+      view.getElementsByClass("govuk-heading-xl").text mustBe messages("confirmNewAccountDetails.heading")
     }
 
     "have a list" that {
@@ -71,7 +71,7 @@ class ConfirmNewAccountDetailsViewSpec extends ViewSpecBase {
     }
 
     "have a sub heading" in {
-      view.getElementById("confirm-details-h2").text() mustBe messages("confirmNewAccountDetails.subHeading")
+      view.getElementsByClass("govuk-fieldset__heading").text() mustBe messages("confirmNewAccountDetails.subHeading")
     }
 
     "have a continue button" in {

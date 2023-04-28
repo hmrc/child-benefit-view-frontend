@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.viewmodels.LegendSize._
+@import models.viewmodels.LegendSize
 @import models.cob.ConfirmNewAccountDetails
 @import components._
 
@@ -42,7 +42,7 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
 
     @captionHeader(claimantName)
 
-    @heading(messages("confirmNewAccountDetails.title"))
+    @heading(messages("confirmNewAccountDetails.heading"))
 
     @summaryList(
     SummaryList(
@@ -57,11 +57,10 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
 
     @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @h2(messages("confirmNewAccountDetails.subHeading"), Some("confirm-details-h2"))
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),
-                legend = Legend(),
+                legend = LegendViewModel(messages("confirmNewAccountDetails.subHeading")).asPageHeading(LegendSize.Medium),
                 items  = ConfirmNewAccountDetails.options
             )
         )
