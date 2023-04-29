@@ -18,7 +18,6 @@ package connectors
 
 import cats.Show
 import cats.syntax.all._
-import connectors.HttpReadsWrapper._
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, ConnectorError}
 import play.api.Logging
@@ -50,7 +49,7 @@ trait HttpReadsWrapper[E] extends Logging {
                 .validate[T]
                 .fold(
                   error => {
-                    val errorMessage = s"Couldn't parse body from upstream: error=${error.show}"
+                    val errorMessage = s"Couldn't parse body from upstream: error=${error.mkString(", ")}"
                     logger.error(errorMessage)
                     ConnectorError(Status.SERVICE_UNAVAILABLE, errorMessage).asLeft[T]
                   },
@@ -69,7 +68,7 @@ trait HttpReadsWrapper[E] extends Logging {
                 .validate[E]
                 .fold(
                   e => {
-                    val errorMessage = s"Couldn't parse error body from upstream, error=${e.show}"
+                    val errorMessage = s"Couldn't parse error body from upstream, error=${e.mkString(", ")}"
                     ConnectorError(Status.SERVICE_UNAVAILABLE, errorMessage)
                   },
                   error => fromUpstreamErrorToCBError(status, error)

@@ -31,6 +31,7 @@ class FeatureAllowlistFilter @Inject() (config: Configuration) {
     config
       .get[String](s"feature-flags.$feature.allowlist.ips")
       .split(",")
+      .toIndexedSeq
       .map(_.trim)
       .filter(_.nonEmpty)
 

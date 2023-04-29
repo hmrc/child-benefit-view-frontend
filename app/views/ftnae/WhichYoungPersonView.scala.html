@@ -54,7 +54,7 @@
         )
     }
 
-    @formHelper(action = controllers.ftnae.routes.WhichYoungPersonController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.ftnae.routes.WhichYoungPersonController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel(

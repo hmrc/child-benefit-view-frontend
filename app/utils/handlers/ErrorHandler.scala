@@ -88,7 +88,7 @@ class ErrorHandler @Inject() (
             Some(FtneaCannotFindYoungPersonError.statusCode)
           )
         )
-        Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad)
+        Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad())
       case FtnaeChildUserAnswersNotRetrieved =>
         logger.error(
           logMessage(

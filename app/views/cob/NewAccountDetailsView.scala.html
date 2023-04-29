@@ -39,7 +39,7 @@
         @paragraph(messages("newAccountDetails.paragraph"))
     }
 
-    @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
         @if(form.errors.map(_.key).contains("bacsErrorTop")) {
             @paragraph(messages(form.errors.find(_.key.equals("bacsErrorTop")).map(_.message).get), "govuk-error-message", Some("bacsErrorTop"))
         }

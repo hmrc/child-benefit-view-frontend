@@ -134,7 +134,7 @@ class NewAccountDetailsController @Inject() (
     }
 
   private def lockedOutRedirect(): Future[Result] =
-    Future.successful(Redirect(routes.CannotVerifyAccountController.onPageLoad))
+    Future.successful(Redirect(routes.CannotVerifyAccountController.onPageLoad()))
 
   private def noBacsRelatedError(e: CBError)(implicit request: Request[_]) =
     Future.successful(errorHandler.handleError(e))

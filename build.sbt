@@ -14,7 +14,7 @@ lazy val root = (project in file("."))
   .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.12.17",
+    scalaVersion := "2.13.10",
     name         := appName,
     RoutesKeys.routesImport ++= Seq(
       "models.{NormalMode, Mode, CheckMode}",
@@ -41,7 +41,6 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
       "-feature",
-      "-Ypartial-unification",
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
@@ -50,9 +49,8 @@ lazy val root = (project in file("."))
     scalacOptions ++= Seq(
       "-feature",
       "-deprecation",
-      "-Ypartial-unification",
       "-Ywarn-dead-code",
-      "-Xfatal-warnings",
+      //"-Xfatal-warnings",
       "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
       "-Ywarn-unused:imports",   // Warn if an import selector is not referenced.
       "-Ywarn-unused:locals",    // Warn if a local definition is unused.

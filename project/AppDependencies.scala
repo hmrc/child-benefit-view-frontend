@@ -12,7 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % "1.13.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % HMRCBoostrapPlayVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HMRCMongoPlayVersion,
-    "org.typelevel"     %% "cats-core"                     % "2.7.0"
+    "org.typelevel"     %% "cats-core"                     % "2.9.0"
   )
 
   val test: Seq[ModuleID] = Seq(

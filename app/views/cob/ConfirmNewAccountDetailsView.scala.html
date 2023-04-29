@@ -55,7 +55,7 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
         attributes = Map("id" -> "account-details-list")
     ))
 
-    @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @govukRadios(
             RadiosViewModel(

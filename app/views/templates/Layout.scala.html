@@ -46,7 +46,7 @@
       countdown = Some(appConfig.countdown),
       keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
       keepAliveButtonText = Some(messages("timeout.keepAlive")),
-      signOutUrl = controllers.auth.routes.AuthController.signOutNoSurvey.url,
+      signOutUrl = controllers.auth.routes.AuthController.signOutNoSurvey().url,
       signOutButtonText = Some(messages("timeout.signOut")),
       title = Some(messages("timeout.title")),
       message = Some(messages("timeout.message"))
@@ -64,8 +64,8 @@
     pageTitle = Option(pageTitle),
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
-    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
+    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
+    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl())),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
 )(new Html(List(contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))
