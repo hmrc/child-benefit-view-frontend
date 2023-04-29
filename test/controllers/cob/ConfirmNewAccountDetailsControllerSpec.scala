@@ -87,7 +87,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(
+    reset[Object](
       mockCobConnector,
       mockSessionRepository,
       mockErrorHandler,

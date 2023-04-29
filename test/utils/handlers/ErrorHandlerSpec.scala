@@ -112,7 +112,7 @@ class ErrorHandlerSpec extends BaseISpec with EitherValues {
         val result = sut.handleError(error, None)
 
         result.header.status mustEqual SEE_OTHER
-        expectedUrl(result) mustEqual cobRoutes.BARSLockOutController.onPageLoad.url
+        expectedUrl(result) mustEqual cobRoutes.BARSLockOutController.onPageLoad().url
       }
     }
 

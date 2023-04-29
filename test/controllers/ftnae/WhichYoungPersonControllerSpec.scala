@@ -47,7 +47,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
   val formProvider             = new WhichYoungPersonFormProvider()
   val form                     = formProvider()
-  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad.url
+  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
 
   private def arrangeRadioButtons(
       ftneaResponseUserAnswer:   FtneaResponse
@@ -60,7 +60,8 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         })
       )).zipWithIndex.toList
 
-    val (childNotListedMessage :: restOfTheList) = initialOrder
+    val childNotListedMessage = initialOrder.head
+    val restOfTheList         = initialOrder.tail
 
     val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
     orderedWithIndex0InTheEnd.map { x =>
