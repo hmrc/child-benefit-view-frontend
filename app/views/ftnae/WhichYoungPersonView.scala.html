@@ -17,6 +17,7 @@
 @import components._
 @import models.ftnae.FtneaResponse
 @import controllers.ProofOfEntitlementController._
+@import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
 @this(
         layout: templates.Layout,
@@ -40,7 +41,7 @@
     @para(messages("whichYoungPerson.p1"))
 
     @for(child <- ftneaResponse.children) {
-        @h2(s"${child.name.value} ${child.midName.map(mn => s"${mn.value} ").getOrElse("")}${child.lastName.value}")
+        @h2(toFtnaeChildNameTitleCase(child))
 
         @summaryList(
             SummaryList(

@@ -17,18 +17,18 @@
 package controllers.ftnae
 
 import connectors.FtneaConnector
-import models.{CBEnvelope, UserAnswers}
-import models.common.{FirstForename, Surname}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.errors.{CBError, FtneaCannotFindYoungPersonError, FtneaNoCHBAccountError}
-import models.ftnae.{Crn, FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.FtneaResponseUserAnswer
+import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.inject.bind
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
@@ -46,7 +46,7 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftne
     FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
       FtneaChildInfo(
-        Crn("crn1234"),
+        ChildReferenceNumber("crn1234"),
         FirstForename("First Name"),
         None,
         Surname("Surname"),

@@ -49,6 +49,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def getFtneaAccountInfoUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/retrieve-ftnae-account-information"
 
+  def updateFtneaInfoUrl: String =
+    s"$childBenefitServiceBaseUrl/child-benefit-service/update-child-information/ftnae"
+
   def verifyBankAccountUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/verify-claimant-bank-account"
 

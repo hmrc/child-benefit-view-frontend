@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package models.ftnae
+package models.common
 
-import models.common.{ChildReferenceNumber, FirstForename, Surname}
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
-import java.time.LocalDate
+final case class ChildReferenceNumber(value: String) extends AnyVal
 
-final case class FtneaChildInfo(
-    crn:                 ChildReferenceNumber,
-    name:                FirstForename,
-    midName:             Option[SecondForename],
-    lastName:            Surname,
-    dateOfBirth:         LocalDate,
-    currentClaimEndDate: LocalDate
-)
-
-object FtneaChildInfo {
-  implicit val format = Json.format[FtneaChildInfo]
+object ChildReferenceNumber {
+  implicit val format: Format[ChildReferenceNumber] = Json.valueFormat[ChildReferenceNumber]
 }

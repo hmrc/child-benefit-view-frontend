@@ -16,19 +16,53 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import connectors.FtneaConnector
+import models.CBEnvelope
+import models.errors.{CBError, ConnectorError}
+import models.ftnae.ChildDetails
+import models.requests.DataRequest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject.bind
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.SessionRepository
+import services.FtnaeService
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import views.html.ftnae.PaymentsExtendedView
 
-class PaymentsExtendedControllerSpec extends CBSpecBase {
+import scala.concurrent.{ExecutionContext, Future}
+
+class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
+
+  val mockFtnaeService      = mock[FtnaeService]
+  val mockFtneaConnector    = mock[FtneaConnector]
+  val mockSessionRepository = mock[SessionRepository]
 
   "PaymentsExtended Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .overrides(bind[FtnaeService].toInstance(mockFtnaeService))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
+        .build()
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
+
+      when(
+        mockFtnaeService
+          .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
+      ) thenReturn CBEnvelope(())
+
+      when(
+        mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn CBEnvelope(())
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
@@ -41,5 +75,35 @@ class PaymentsExtendedControllerSpec extends CBSpecBase {
         assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
       }
     }
+
+    "must redirect to service unavailable page if failure occurs" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .overrides(bind[FtnaeService].toInstance(mockFtnaeService))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
+        .build()
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
+
+      when(
+        mockFtnaeService
+          .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
+      ) thenReturn CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error"))
+
+      when(
+        mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error"))
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some(controllers.routes.ServiceUnavailableController.onPageLoad.url)
+      }
+    }
+
   }
 }

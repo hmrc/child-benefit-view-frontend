@@ -25,7 +25,7 @@ import pages.ftnae.FtneaResponseUserAnswer
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
-import services.{AuditService, FtneaService}
+import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
 import views.html.ftnae.ExtendPaymentsView
@@ -41,7 +41,7 @@ class ExtendPaymentsController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     sessionRepository:        SessionRepository,
     view:                     ExtendPaymentsView,
-    ftneaService:             FtneaService,
+    ftneaService:             FtnaeService,
     errorHandler:             ErrorHandler
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
@@ -50,7 +50,7 @@ class ExtendPaymentsController @Inject() (
   def onPageLoad(): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
       val result: EitherT[Future, CBError, FtneaClaimantInfo] = for {
-        ftneaResponse <- ftneaService.getFtneaInformation()
+        ftneaResponse <- ftneaService.getFtnaeInformation()
         updatedAnswers <- CBEnvelope.fromF(
           Future.fromTry(
             request.userAnswers

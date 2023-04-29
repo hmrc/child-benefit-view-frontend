@@ -41,3 +41,8 @@ final case object FtneaCannotFindYoungPersonError extends CBError {
   override val statusCode = 404
   override val message    = "Can not find young person"
 }
+
+final case object FtnaeChildUserAnswersNotRetrieved extends CBError {
+  override val statusCode = 500
+  override val message    = "Unable to retrieve required user answers"
+}

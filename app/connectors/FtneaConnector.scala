@@ -22,11 +22,13 @@ import config.FrontendAppConfig
 import connectors.FtneaConnector.{claimantInfoLogMessage, mainError}
 import models.CBEnvelope.CBEnvelope
 import models.errors._
-import models.ftnae.FtneaResponse
+import models.ftnae.{ChildDetails, FtneaResponse}
 import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import utils.helpers.Implicits._
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
@@ -51,6 +53,25 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
             case e: UpstreamErrorResponse =>
               logger.error(claimantInfoLogMessage(e.statusCode, e.getMessage))
               ConnectorError(e.statusCode, e.getMessage).asLeft[FtneaResponse]
+          }
+      )
+    }
+
+  def uploadFtnaeDetails(childDetails: ChildDetails)(implicit
+      ec:                              ExecutionContext,
+      hc:                              HeaderCarrier
+  ): CBEnvelope[Unit] =
+    withHttpReads { implicit httpReads =>
+      EitherT(
+        httpClient
+          .PUT(appConfig.updateFtneaInfoUrl, childDetails)(ChildDetails.format, httpReads, hc, ec)
+          .recover {
+            case e: HttpException =>
+              logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
+              ConnectorError(e.responseCode, e.getMessage).asLeft[Unit]
+            case e: UpstreamErrorResponse =>
+              logger.error(claimantInfoLogMessage(e.statusCode, e.getMessage))
+              ConnectorError(e.statusCode, e.getMessage).asLeft[Unit]
           }
       )
     }
