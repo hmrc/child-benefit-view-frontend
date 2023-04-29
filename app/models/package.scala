@@ -160,6 +160,8 @@ package object models {
                   }
                 }
             }
+        case (path2, _) =>
+          JsError(s"Unable to remove ${path}, Reach unexpected state with path : ${path2.mkString(", ")} ")
       }
     }
   }

@@ -119,8 +119,8 @@ class WhichYoungPersonController @Inject() (
         })
       )).zipWithIndex.toList
 
-    val  childNotListedMessage = initialOrder.head
-    val  restOfTheList = initialOrder.tail
+    val childNotListedMessage = initialOrder.head
+    val restOfTheList         = initialOrder.tail
 
     val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
     orderedWithIndex0InTheEnd.map(x => {

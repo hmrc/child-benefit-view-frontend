@@ -40,17 +40,17 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageFailOnMinimum    := false,
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
-      "-feature",
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     scalacOptions ++= Seq(
+      "-Ypatmat-exhaust-depth", "40",
       "-feature",
       "-deprecation",
       "-Ywarn-dead-code",
-      //"-Xfatal-warnings",
+      //"-Xfatal-warnings",      // Commented until somebody will resolve `models.Enumerable.Implicits.writes` warning
       "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
       "-Ywarn-unused:imports",   // Warn if an import selector is not referenced.
       "-Ywarn-unused:locals",    // Warn if a local definition is unused.
@@ -59,8 +59,6 @@ lazy val root = (project in file("."))
       "-Ywarn-unused:privates"   // Warn if a private member is unused.
     ),
     retrieveManaged := true,
-    update / evictionWarningOptions :=
-      EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     resolvers ++= Seq(Resolver.jcenterRepo),
     // concatenate js
     Concat.groups := Seq(
