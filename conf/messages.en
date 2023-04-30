@@ -403,8 +403,20 @@ liveWithYouInUK.error.required = Select Yes or No
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 # ----------  Payments Extended ------------
-paymentsExtended.title = paymentsExtended
-paymentsExtended.heading = paymentsExtended
+paymentsExtended.title = Your Child Benefit payments have been extended
+paymentsExtended.heading = Your Child Benefit payments have been extended
+paymentsExtended.whatHappensNext.h2 = What happens next
+paymentsExtended.p1 = The Child Benefit payments for {0} will now be paid while they stay in full-time non-advanced education. You’ll receive the payments for {1}.
+paymentsExtended.startPage.p1 = Tell us about another young person staying in education
+paymentsExtended.ifYouReceive.h3 = If you receive Child Tax Credit
+paymentsExtended.p2 = You also need to {0}.
+paymentsExtended.p2.link = tell the Child Tax Credit office that the young person will be staying in education
+paymentsExtended.beforeYouGo.h3 = Before you go
+paymentsExtended.p3 = We use feedback to make our services better.
+paymentsExtended.p4 = Please {0}.
+paymentsExtended.p4.link = take the feedback survey
+paymentsExtended.courseDuration.oneYear = 1 year
+paymentsExtended.courseDuration.twoYears = 2 years
 
 # ----------  FTNAE check your answers ------------
 checkYourAnswers.title = Check your answers before sending them

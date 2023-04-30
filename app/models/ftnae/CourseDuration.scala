@@ -16,6 +16,7 @@
 
 package models.ftnae
 
+import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, Reads, Writes}
 
 sealed trait CourseDuration
@@ -36,4 +37,13 @@ object CourseDuration {
     case OneYear => "ONE_YEAR"
     case TwoYear => "TWO_YEAR"
   }
+
+  implicit class ImplicitCourseDuration(courseDuration: CourseDuration) {
+    implicit def toMessage(implicit messages: Messages): String =
+      courseDuration match {
+        case OneYear => messages("paymentsExtended.courseDuration.oneYear")
+        case TwoYear => messages("paymentsExtended.courseDuration.twoYears")
+      }
+  }
+
 }
