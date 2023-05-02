@@ -17,8 +17,9 @@
 package services
 
 import connectors.FtneaConnector
+import models.common.ChildReferenceNumber
 import models.errors.FtnaeChildUserAnswersNotRetrieved
-import models.ftnae.ChildDetails
+import models.ftnae.{ChildDetails, CourseDuration}
 import models.requests.DataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -32,6 +33,7 @@ import play.api.test.FakeRequest
 import services.FtnaeServiceSpec.{userAnswer, userAnswerWithIncorrectCourseDuration, userAnswerWithMultipleSameCRN, userAnswerWithMultipleSameName}
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
 class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
@@ -40,6 +42,9 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   implicit val hc: HeaderCarrier    = HeaderCarrier()
 
   val ftnaeConnector = mock[FtneaConnector]
+
+  val childName    = "Lauren Sam Smith"
+  val childDetails = ChildDetails(CourseDuration.TwoYear, ChildReferenceNumber("AC654321C"), LocalDate.of(2007, 2, 10))
 
   "submitFtnaeInformation" should {
     "submit a user account information if the data recorded in user answers are valid, " +
@@ -57,7 +62,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       val service = new FtnaeService(ftnaeConnector)
 
       whenReady(service.submitFtnaeInformation()(ec, hc, request).value) { result =>
-        result mustBe Right(())
+        result mustBe Right((childName, childDetails))
       }
     }
 

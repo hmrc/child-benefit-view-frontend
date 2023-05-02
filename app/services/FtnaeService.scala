@@ -16,11 +16,12 @@
 
 package services
 
+import cats.data.EitherT
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import connectors.FtneaConnector
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
-import models.errors.FtnaeChildUserAnswersNotRetrieved
+import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
 import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae.{ChildDetails, CourseDuration, FtneaChildInfo, FtneaResponse}
 import models.requests.DataRequest
@@ -30,7 +31,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
@@ -45,7 +46,7 @@ class FtnaeService @Inject() (
       ec:      ExecutionContext,
       hc:      HeaderCarrier,
       request: DataRequest[AnyContent]
-  ): CBEnvelope[Unit] = {
+  ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
     val maybeMatchedChild = for {
       ftnaeResp        <- request.userAnswers.get(FtneaResponseUserAnswer)
@@ -59,11 +60,16 @@ class FtnaeService @Inject() (
       case _              => None
     }
 
-    val childDetails = (maybeMatchedChild, maybeCourseDuration)
-      .mapN((child, courseDuration) => ChildDetails(courseDuration, child.crn, child.dateOfBirth))
+    val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
+      .mapN((child, courseDuration) =>
+        (toFtnaeChildNameTitleCase(child), ChildDetails(courseDuration, child.crn, child.dateOfBirth))
+      )
       .toRight(FtnaeChildUserAnswersNotRetrieved)
 
-    CBEnvelope(childDetails).map(details => ftneaConnector.uploadFtnaeDetails(details))
+    for {
+      childDetails <- CBEnvelope(childDetails)
+      _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
+    } yield childDetails
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {

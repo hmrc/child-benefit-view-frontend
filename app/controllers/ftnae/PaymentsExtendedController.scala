@@ -47,7 +47,7 @@ class PaymentsExtendedController @Inject() (
         .submitFtnaeInformation()
         .fold(
           error => errorHandler.handleError(error),
-          _ => Ok(view())
+          details => Ok(view(details._1, details._2.courseDuration))
         )
     }
 }

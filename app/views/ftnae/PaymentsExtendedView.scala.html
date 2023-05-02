@@ -14,14 +14,59 @@
  * limitations under the License.
  *@
 
+@import components._
+@import models.ftnae.CourseDuration
+@import config.FrontendAppConfig
+
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        h2: HeadingH2,
+        h3: HeadingH3,
+        para: ParagraphBody,
+        link: Link,
+        panel: ConfirmationPanel,
+        config: FrontendAppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(childName: String, courseDuration: CourseDuration)(implicit request: Request[_], messages: Messages)
+
+@startFtnaeJourneyLink = @{
+    link(id = "start-ftnae-journey-link",
+        text = messages("paymentsExtended.startPage.p1"),
+        call = Call("GET", controllers.ftnae.routes.ExtendPaymentsController.onPageLoad.url),
+        newTab = false
+    )
+}
+
+@taxCreditChangesLink = @{
+    link(id = "tax-credit-changes-link",
+        text = messages("paymentsExtended.p2.link"),
+        call = Call("GET", "https://www.gov.uk/changes-affect-tax-credits"),
+        newTab = false
+    )
+}
+
+@feedbackLink = @{
+    link(id = "feedback-link",
+        text = messages("accountChanged.feedback.link.text"),
+        call = Call("GET", config.exitSurveyUrl),
+        newTab = false
+    )
+}
+
 
 @layout(pageTitle = titleNoForm(messages("paymentsExtended.title"))) {
 
-    <h1 class="govuk-heading-xl">@messages("paymentsExtended.heading")</h1>
+    @panel(messages("paymentsExtended.heading"))
+    @h2(messages("paymentsExtended.whatHappensNext.h2"))
+    @para(messages("paymentsExtended.p1", childName, courseDuration.toMessage))
+    <p class="govuk-body">@Html(startFtnaeJourneyLink + ".")</p>
+    @h3(messages("paymentsExtended.ifYouReceive.h3"))
+    @para(messages("paymentsExtended.p2", taxCreditChangesLink))
+    @h3(messages("paymentsExtended.beforeYouGo.h3"))
+    @para(messages("paymentsExtended.p3"))
+    @para(messages("paymentsExtended.p4", feedbackLink))
+  
+    <br>
 }

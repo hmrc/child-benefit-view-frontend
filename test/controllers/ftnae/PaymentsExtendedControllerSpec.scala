@@ -18,8 +18,9 @@ package controllers.ftnae
 
 import connectors.FtneaConnector
 import models.CBEnvelope
+import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
-import models.ftnae.ChildDetails
+import models.ftnae.{ChildDetails, CourseDuration}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -35,6 +36,7 @@ import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import views.html.ftnae.PaymentsExtendedView
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
@@ -46,6 +48,9 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
   "PaymentsExtended Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      val childName = "John Doe"
+      val childDetails =
+        ChildDetails(CourseDuration.OneYear, ChildReferenceNumber("AA123456"), LocalDate.of(2001, 1, 1))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -58,7 +63,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
       when(
         mockFtnaeService
           .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
-      ) thenReturn CBEnvelope(())
+      ) thenReturn CBEnvelope(Right((childName, childDetails)))
 
       when(
         mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
@@ -72,7 +77,10 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
         val view = application.injector.instanceOf[PaymentsExtendedView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(
+          contentAsString(result),
+          view(childName, childDetails.courseDuration)(request, messages(application)).toString
+        )
       }
     }
 
@@ -89,7 +97,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
       when(
         mockFtnaeService
           .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
-      ) thenReturn CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error"))
+      ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
 
       when(
         mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
