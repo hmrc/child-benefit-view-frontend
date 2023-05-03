@@ -99,7 +99,7 @@ class AuthenticatedIdentifierAction @Inject() (
       logger.warn("incorrect none encountered whilst attempting to authorise user")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad)
 
-    case ex: AuthorisationException ⇒
+    case ex: AuthorisationException =>
       logger.warn(s"could not authenticate user due to: $ex")
       InternalServerError
   }
@@ -107,7 +107,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
 object IdentifierAction {
   def toContinueUrl(call: Call)(implicit rh: RequestHeader): String = {
-    if (call.absoluteURL.contains("://localhost")) {
+    if (call.absoluteURL().contains("://localhost")) {
       call.absoluteURL()
     } else {
       call.url

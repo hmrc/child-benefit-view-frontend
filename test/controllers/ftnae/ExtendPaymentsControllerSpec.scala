@@ -41,7 +41,7 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftne
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad.url
+  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
   val ftneaResponse = FtneaResponse(
     FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
@@ -129,7 +129,9 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftne
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustEqual Some(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad.url)
+        redirectLocation(result) mustEqual Some(
+          controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad().url
+        )
       }
     }
   }

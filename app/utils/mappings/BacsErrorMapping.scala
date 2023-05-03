@@ -22,7 +22,7 @@ import scala.util.matching.Regex
 
 object BacsErrorMapping {
   def bacsString(): Mapping[String] =
-    Forms.of[String](bacsFormatter)
+    Forms.of[String](bacsFormatter())
 
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r
 

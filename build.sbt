@@ -5,17 +5,18 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "child-benefit-view-frontend"
 
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always // Resolves versions conflict
+
 lazy val root = (project in file("."))
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
+  .enablePlugins(PlayScala, SbtAutoBuildPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
-  .settings(SbtDistributablesPlugin.publishingSettings: _*)
   .settings(inConfig(Test)(testSettings): _*)
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(itSettings): _*)
   .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.12.15",
+    scalaVersion := "2.13.10",
     name         := appName,
     RoutesKeys.routesImport ++= Seq(
       "models.{NormalMode, Mode, CheckMode}",
@@ -41,19 +42,17 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageFailOnMinimum    := false,
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
-      "-feature",
-      "-Ypartial-unification",
       "-rootdir",
       baseDirectory.value.getCanonicalPath,
       "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
     ),
     libraryDependencies ++= AppDependencies(),
     scalacOptions ++= Seq(
+      "-Ypatmat-exhaust-depth", "40",
       "-feature",
       "-deprecation",
-      "-Ypartial-unification",
       "-Ywarn-dead-code",
-      "-Xfatal-warnings",
+      //"-Xfatal-warnings",      // Commented until somebody will resolve `models.Enumerable.Implicits.writes` warning
       "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
       "-Ywarn-unused:imports",   // Warn if an import selector is not referenced.
       "-Ywarn-unused:locals",    // Warn if a local definition is unused.
@@ -62,8 +61,6 @@ lazy val root = (project in file("."))
       "-Ywarn-unused:privates"   // Warn if a private member is unused.
     ),
     retrieveManaged := true,
-    update / evictionWarningOptions :=
-      EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     resolvers ++= Seq(Resolver.jcenterRepo),
     // concatenate js
     Concat.groups := Seq(

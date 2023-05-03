@@ -98,14 +98,14 @@ class VerifyBarNotLockedActionSpec extends BaseISpec with MockitoSugar {
           any[ExecutionContext]
         )
       ) thenReturn Redirect(
-        controllers.cob.routes.BARSLockOutController.onPageLoad
+        controllers.cob.routes.BARSLockOutController.onPageLoad()
       )
 
       val action      = new Harness(cobConnector, errorHandler, auditService)
       val fakeRequest = request
       val result: Option[Result] = action.callFilter(fakeRequest).futureValue
 
-      result must equal(Some(Redirect(controllers.cob.routes.BARSLockOutController.onPageLoad)))
+      result must equal(Some(Redirect(controllers.cob.routes.BARSLockOutController.onPageLoad())))
     }
   }
 }

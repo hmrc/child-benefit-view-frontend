@@ -56,7 +56,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad().url)
           .withSession(("authToken", "Bearer 123"))
 
         val result = route(application, request).value
@@ -96,7 +96,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
       val application = applicationBuilder(config, userAnswers = None).configure().build()
 
       running(application) {
-        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+        val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad().url)
           .withSession(("authToken", "Bearer 123"))
 
         val result = route(application, request).value
@@ -138,7 +138,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
           val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
 
           running(application) {
-            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad().url)
               .withSession(("authToken", "Bearer 123"))
 
             val result = route(application, request).value
@@ -170,7 +170,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
           val application = applicationBuilder(config, userAnswers = Some(userAnswers)).configure().build()
 
           running(application) {
-            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad.url)
+            val request = FakeRequest(GET, controllers.ftnae.routes.CheckYourAnswersController.onPageLoad().url)
               .withSession(("authToken", "Bearer 123"))
 
             val result = route(application, request).value

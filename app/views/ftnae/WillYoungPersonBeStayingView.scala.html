@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @formHelper(action = controllers.ftnae.routes.WillYoungPersonBeStayingController.onSubmit(mode), 'autoComplete -> "off") {
+        @formHelper(action = controllers.ftnae.routes.WillYoungPersonBeStayingController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
             @govukRadios(
                 RadiosViewModel.yesNo(

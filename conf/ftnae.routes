@@ -18,7 +18,7 @@ POST       /staying-in-education/will-course-be-employer-provided           cont
 GET        /staying-in-education/not-entitled-course-employer-provided      controllers.ftnae.NotEntitledCourseEmployerProvidedController.onPageLoad()
 GET        /staying-in-education/live-with-you-in-uk                        controllers.ftnae.LiveWithYouInUKController.onPageLoad(mode: Mode = NormalMode)
 POST       /staying-in-education/live-with-you-in-uk                        controllers.ftnae.LiveWithYouInUKController.onSubmit(mode: Mode = NormalMode)
-GET        /staying-in-education/check-answers                              controllers.ftnae.CheckYourAnswersController.onPageLoad
+GET        /staying-in-education/check-answers                              controllers.ftnae.CheckYourAnswersController.onPageLoad()
 GET        /staying-in-education/change-which-young-person                  controllers.ftnae.WhichYoungPersonController.onPageLoad(mode: Mode = CheckMode)
 POST       /staying-in-education/change-which-young-person                  controllers.ftnae.WhichYoungPersonController.onSubmit(mode: Mode = CheckMode)
 GET        /staying-in-education/change-confirm-course                      controllers.ftnae.WillYoungPersonBeStayingController.onPageLoad(mode: Mode = CheckMode)

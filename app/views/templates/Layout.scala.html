@@ -15,7 +15,6 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.helper.CSPNonce
 @import views.html.templates.DataLayerTemplate
 @import viewmodels.govuk.DataLayer
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
@@ -28,6 +27,7 @@
         standardBetaBanner: StandardBetaBanner,
         dataLayerTemplate: DataLayerTemplate
 )
+
 
 @(pageTitle: String,
         showBackLink: Boolean = true,
@@ -46,7 +46,7 @@
       countdown = Some(appConfig.countdown),
       keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
       keepAliveButtonText = Some(messages("timeout.keepAlive")),
-      signOutUrl = controllers.auth.routes.AuthController.signOutNoSurvey.url,
+      signOutUrl = controllers.auth.routes.AuthController.signOutNoSurvey().url,
       signOutButtonText = Some(messages("timeout.signOut")),
       title = Some(messages("timeout.title")),
       message = Some(messages("timeout.message"))
@@ -62,11 +62,10 @@
 
 @hmrcLayout(
     pageTitle = Option(pageTitle),
-    nonce = CSPNonce.get,
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
-    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
+    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
+    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl())),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
 )(new Html(List(contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))

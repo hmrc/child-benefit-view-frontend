@@ -34,7 +34,7 @@ class AuthControllerSpec extends BaseISpec {
     "redirect to /gg/sign-out with continue to the feedback survey" in {
       userLoggedInChildBenefitUser(NinoUser)
 
-      val request = FakeRequest(GET, routes.AuthController.signOut.url)
+      val request = FakeRequest(GET, routes.AuthController.signOut().url)
         .withSession(("authToken", "Bearer 123"))
 
       val result = controller.signOut()(request)

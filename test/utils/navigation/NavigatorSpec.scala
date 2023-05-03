@@ -139,7 +139,7 @@ class NavigatorSpec extends SpecBase {
           LiveWithYouInUKPage,
           NormalMode,
           allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
       }
 
       "must be kicked out from WhichYoungPersonPage to WhyYoungPersonNotListedPage" in {
@@ -208,7 +208,7 @@ class NavigatorSpec extends SpecBase {
           UnknownPage,
           CheckMode,
           UserAnswers("id")
-        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad
+        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }
