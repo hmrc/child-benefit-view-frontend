@@ -283,12 +283,12 @@ whyYoungPersonNotListed.heading = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
 whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
 whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
-whyYoungPersonNotListed.bulletPoint3 = bydd y peson ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
+whyYoungPersonNotListed.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
 whyYoungPersonNotListed.bulletPoint3.linkText = defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
 whyYoungPersonNotListed.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}
 whyYoungPersonNotListed.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
-whyYoungPersonNotListed.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben..
-whyYoungPersonNotListed.p2 = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
+whyYoungPersonNotListed.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
+whyYoungPersonNotListed.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
 
 # ----------  Confirm Course ------------
 willYoungPersonBeStaying.title = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
