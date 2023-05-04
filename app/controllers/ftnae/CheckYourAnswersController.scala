@@ -20,7 +20,7 @@ import cats.syntax.either._
 import com.google.inject.Inject
 import controllers.ChildBenefitBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, IdentifierAction}
-import models.ftnae.{HowManyYears}
+import models.ftnae.HowManyYears
 import models.viewmodels.checkAnswers._
 import models.viewmodels.govuk.summarylist._
 import models.{NormalMode, UserAnswers}
@@ -28,6 +28,7 @@ import pages.ftnae._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import services.FtneaSummaryRowBuilder
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.ftnae.CheckYourAnswersView
 
@@ -57,30 +58,15 @@ class CheckYourAnswersController @Inject() (
     env:    Environment,
     cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
-    with I18nSupport {
+    with I18nSupport with FtneaSummaryRowBuilder {
 
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 
   def onPageLoad(): Action[AnyContent] = {
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
       {
-        val summaryRows = for {
-          whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
-          willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
-          schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(request.userAnswers)
-          twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(request.userAnswers)
-          howManyYearsRow                 <- HowManyYearsSummary.row(request.userAnswers)
-          willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(request.userAnswers)
-          liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(request.userAnswers)
-        } yield List(
-          whichYoungPersonRow,
-          willYoungPersonBeStayingRow,
-          schoolOrCollegeRow,
-          twelveHoursAWeekRow,
-          howManyYearsRow,
-          willCourseBeEmployerProvidedRow,
-          liveWithYouInUKRow
-        )
+
+        val summaryRows = buildSummaryRows(request)
 
         firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
           case Right(()) =>

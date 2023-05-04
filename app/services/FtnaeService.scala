@@ -23,10 +23,12 @@ import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
 import models.ftnae.HowManyYears.{Oneyear, Twoyears}
-import models.ftnae.{ChildDetails, CourseDuration, FtneaChildInfo, FtneaResponse}
+import models.ftnae._
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.mvc.AnyContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
@@ -42,7 +44,7 @@ class FtnaeService @Inject() (
       hc: HeaderCarrier
   ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
 
-  def submitFtnaeInformation()(implicit
+  def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow])(implicit
       ec:      ExecutionContext,
       hc:      HeaderCarrier,
       request: DataRequest[AnyContent]
@@ -61,8 +63,11 @@ class FtnaeService @Inject() (
     }
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
-      .mapN((child, courseDuration) =>
-        (toFtnaeChildNameTitleCase(child), ChildDetails(courseDuration, child.crn, child.dateOfBirth))
+      .mapN((child, courseDuration) => {
+        val auditData = buildAuditData(summaryListRows, request.acceptLanguages.head.code)
+        val childDetailsWithAuditInfo = ChildDetails(courseDuration, child.crn, child.dateOfBirth, auditData)
+        (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
+      }
       )
       .toRight(FtnaeChildUserAnswersNotRetrieved)
 
@@ -70,6 +75,19 @@ class FtnaeService @Inject() (
       childDetails <- CBEnvelope(childDetails)
       _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
     } yield childDetails
+  }
+
+  private def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguage: String): FtneaAuditData = {
+
+    def convertRowElement(content: Content): String = content.asHtml.body
+
+    val answers = summaryListRows match {
+      case Some(rows) => rows.map(row => FtneaAuditAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
+      case _ => List.empty[FtneaAuditAnswer]
+    }
+
+    FtneaAuditData(answers, selectedLanguage)
+
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {

@@ -19,7 +19,7 @@ package controllers.ftnae
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{AuditService, FtnaeService}
+import services.{AuditService, FtnaeService, FtneaSummaryRowBuilder}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
 import views.html.ftnae.PaymentsExtendedView
@@ -39,12 +39,15 @@ class PaymentsExtendedController @Inject() (
     errorHandler:             ErrorHandler
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport with FtneaSummaryRowBuilder {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+
+      val summaryListRows = buildSummaryRows(request)
+
       ftneaService
-        .submitFtnaeInformation()
+        .submitFtnaeInformation(summaryListRows)
         .fold(
           error => errorHandler.handleError(error),
           details => Ok(view(details._1, details._2.courseDuration))
