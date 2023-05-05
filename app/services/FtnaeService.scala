@@ -40,6 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FtnaeService @Inject() (
     ftneaConnector: FtneaConnector
 ) {
+
   def getFtnaeInformation()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -65,7 +66,7 @@ class FtnaeService @Inject() (
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
       .mapN((child, courseDuration) => {
-        val auditData = buildAuditData(summaryListRows, request.acceptLanguages.headOption)
+        val auditData = buildAuditData(summaryListRows, request.acceptLanguages)
         val childDetailsWithAuditInfo = ChildDetails(courseDuration, child.crn, child.dateOfBirth, auditData)
         (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
       }
@@ -89,9 +90,7 @@ class FtnaeService @Inject() (
     } else None
   }
 
-  def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguage: Option[Lang]): List[FtneaAuditAnswer] = {
-
-    val SelectedUserLanguage = "selected-user-language"
+  def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguages: Seq[Lang]): List[FtneaAuditAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
@@ -100,8 +99,7 @@ class FtnaeService @Inject() (
       case _ => List.empty[FtneaAuditAnswer]
     }
 
-    auditAnswers :+ FtneaAuditAnswer(SelectedUserLanguage, selectedLanguage.map(_.code).getOrElse("language not available"))
-
+    auditAnswers :+ FtneaAuditAnswer("selected-languages", selectedLanguages.map(_.code).mkString(","))
   }
 
 }
