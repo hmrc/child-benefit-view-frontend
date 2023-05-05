@@ -19,7 +19,7 @@ package services
 import connectors.FtneaConnector
 import models.common.ChildReferenceNumber
 import models.errors.FtnaeChildUserAnswersNotRetrieved
-import models.ftnae.{ChildDetails, CourseDuration}
+import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
 import models.requests.DataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -27,10 +27,13 @@ import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.i18n.Lang
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
-import play.api.mvc.AnyContent
+import play.api.mvc.{AnyContent, Headers}
 import play.api.test.FakeRequest
 import services.FtnaeServiceSpec.{userAnswer, userAnswerWithIncorrectCourseDuration, userAnswerWithMultipleSameCRN, userAnswerWithMultipleSameName}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
@@ -44,24 +47,30 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val ftnaeConnector = mock[FtneaConnector]
 
   val childName    = "Lauren Sam Smith"
-  val childDetails = ChildDetails(CourseDuration.TwoYear, ChildReferenceNumber("AC654321C"), LocalDate.of(2007, 2, 10))
+  val summaryListRows: List[SummaryListRow] = SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1"))) :: Nil
+  val expectedAuditAnswers = List(FtneaAuditAnswer("user-question-1", "user-answer-1"))
+  val childDetails = ChildDetails(CourseDuration.TwoYear, ChildReferenceNumber("AC654321C"), LocalDate.of(2007, 2, 10),
+    expectedAuditAnswers :+ FtneaAuditAnswer("selected-user-language", "language not available"))
 
   "submitFtnaeInformation" should {
     "submit a user account information if the data recorded in user answers are valid, " +
       "one child has the same name that the user selected, " +
       "all crns are unique, " +
-      "course duration is valid" in {
+      "course duration is valid" +
+      "and users answers supplied" in {
 
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
+      val fakeRequest = FakeRequest("GET", "/nothing")
+
       val request: DataRequest[AnyContent] =
-        DataRequest(FakeRequest("GET", "/nothing"), "id", UserAnswers("id", data = userAnswer))
+        DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
 
       val service = new FtnaeService(ftnaeConnector)
 
-      whenReady(service.submitFtnaeInformation()(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request).value) { result =>
         result mustBe Right((childName, childDetails))
       }
     }
@@ -80,7 +89,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector)
 
-      whenReady(service.submitFtnaeInformation()(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -99,7 +108,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector)
 
-      whenReady(service.submitFtnaeInformation()(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -118,10 +127,31 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector)
 
-      whenReady(service.submitFtnaeInformation()(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
+
+    "submitFtnaeAuditInformation" should {
+      "return list of audit items from user selected questions and answers" in {
+        val service = new FtnaeService(ftnaeConnector)
+        val auditData = service.buildAuditData(Some(summaryListRows), Some(Lang.apply("cy")))
+        auditData mustBe (expectedAuditAnswers :+ FtneaAuditAnswer("selected-user-language", "cy"))
+      }
+
+      "return list of chosen language only, if there are no questions answered" in {
+        val service = new FtnaeService(ftnaeConnector)
+        val auditData = service.buildAuditData(None,  Some(Lang.apply("cy")))
+        auditData mustBe List(FtneaAuditAnswer("selected-user-language", "cy"))
+      }
+
+      "return list of chosen language only, if there are no questions answered or language support provided" in {
+        val service = new FtnaeService(ftnaeConnector)
+        val auditData = service.buildAuditData(None, None)
+        auditData mustBe List(FtneaAuditAnswer("selected-user-language", "language not available"))
+      }
+    }
+
   }
 }
 

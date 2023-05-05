@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 final case class ChildDetails(courseDuration: CourseDuration, crn: ChildReferenceNumber,
-                              dateOfBirth: LocalDate, auditData: FtneaAuditData)
+                              dateOfBirth: LocalDate, auditAnswers: List[FtneaAuditAnswer])
 
 object ChildDetails {
   implicit val format = Json.format[ChildDetails]
