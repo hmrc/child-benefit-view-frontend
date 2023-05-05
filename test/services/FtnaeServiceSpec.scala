@@ -51,7 +51,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val summaryListRows: List[SummaryListRow] = SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1"))) :: Nil
   val expectedAuditAnswers = List(FtneaAuditAnswer("user-question-1", "user-answer-1"))
   val childDetails = ChildDetails(CourseDuration.TwoYear, ChildReferenceNumber("AC654321C"), LocalDate.of(2007, 2, 10),
-    expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, ""))
+    expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "en"))
 
   "submitFtnaeInformation" should {
     "submit a user account information if the data recorded in user answers are valid, " +
@@ -136,19 +136,19 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     "submitFtnaeAuditInformation" should {
       "return list of audit items from user selected questions and answers" in {
         val service = new FtnaeService(ftnaeConnector)
-        val auditData = service.buildAuditData(Some(summaryListRows),  Seq(Lang.apply("cy")))
+        val auditData = service.buildAuditData(Some(summaryListRows),  "cy")
         auditData mustBe (expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered" in {
         val service = new FtnaeService(ftnaeConnector)
-        val auditData = service.buildAuditData(None,  Seq(Lang.apply("cy")))
+        val auditData = service.buildAuditData(None,  "cy")
         auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered or language support provided" in {
         val service = new FtnaeService(ftnaeConnector)
-        val auditData = service.buildAuditData(None, Seq.empty[Lang])
+        val auditData = service.buildAuditData(None, "")
         auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, ""))
       }
     }

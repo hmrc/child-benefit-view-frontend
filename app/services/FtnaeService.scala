@@ -66,7 +66,8 @@ class FtnaeService @Inject() (
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
       .mapN((child, courseDuration) => {
-        val auditData = buildAuditData(summaryListRows, request.acceptLanguages)
+        val currentLanguage = request.cookies.get("PLAY_LANG").fold("en")(cookie => cookie.value)
+        val auditData = buildAuditData(summaryListRows, currentLanguage)
         val childDetailsWithAuditInfo = ChildDetails(courseDuration, child.crn, child.dateOfBirth, auditData)
         (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
       }
@@ -90,7 +91,7 @@ class FtnaeService @Inject() (
     } else None
   }
 
-  def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguages: Seq[Lang]): List[FtneaAuditAnswer] = {
+  def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguage: String): List[FtneaAuditAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
@@ -99,7 +100,7 @@ class FtnaeService @Inject() (
       case _ => List.empty[FtneaAuditAnswer]
     }
 
-    auditAnswers :+ FtneaAuditAnswer("selected-languages", selectedLanguages.map(_.code).mkString(","))
+    auditAnswers :+ FtneaAuditAnswer("selected-languages", selectedLanguage)
   }
 
 }
