@@ -36,51 +36,50 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FtnaeService @Inject()(
-                              ftneaConnector: FtneaConnector
-                            ) {
+class FtnaeService @Inject() (
+    ftneaConnector: FtneaConnector
+) {
 
   def getFtnaeInformation()(implicit
-                            ec: ExecutionContext,
-                            hc: HeaderCarrier
+      ec: ExecutionContext,
+      hc: HeaderCarrier
   ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
 
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
-                                                                            ec: ExecutionContext,
-                                                                            hc: HeaderCarrier,
-                                                                            request: DataRequest[AnyContent]
+      ec:                                     ExecutionContext,
+      hc:                                     HeaderCarrier,
+      request:                                DataRequest[AnyContent]
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
     val maybeMatchedChild = for {
-      ftnaeResp <- request.userAnswers.get(FtneaResponseUserAnswer)
-      selectedChild <- request.userAnswers.get(WhichYoungPersonPage)
+      ftnaeResp        <- request.userAnswers.get(FtneaResponseUserAnswer)
+      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
       matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
     } yield matchedChildInfo
 
     val maybeCourseDuration = request.userAnswers.get(HowManyYearsPage) match {
-      case Some(Oneyear) => Some(CourseDuration.OneYear)
+      case Some(Oneyear)  => Some(CourseDuration.OneYear)
       case Some(Twoyears) => Some(CourseDuration.TwoYear)
-      case _ => None
+      case _              => None
     }
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
       .mapN((child, courseDuration) => {
-        val currentLanguage = request.cookies.get("PLAY_LANG").fold("en")(cookie => cookie.value)
-        val auditData = buildAuditData(summaryListRows, currentLanguage)
+        val currentLanguage           = request.cookies.get("PLAY_LANG").fold("en")(cookie => cookie.value)
+        val auditData                 = buildAuditData(summaryListRows, currentLanguage)
         val childDetailsWithAuditInfo = ChildDetails(courseDuration, child.crn, child.dateOfBirth, auditData)
         (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
-      }
-      )
+      })
       .toRight(FtnaeChildUserAnswersNotRetrieved)
 
     for {
       childDetails <- CBEnvelope(childDetails)
-      _ <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
+      _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
     } yield childDetails
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {
-    val childCrns = children.map(_.crn.value)
+    val childCrns       = children.map(_.crn.value)
     val noDuplicateCrns = childCrns.distinct.size == childCrns.size
     val onlyOneChildHasTheSelectedName =
       children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
@@ -90,12 +89,16 @@ class FtnaeService @Inject()(
     } else None
   }
 
-  def buildAuditData(summaryListRows: Option[List[SummaryListRow]], selectedLanguage: String): List[FtneaAuditAnswer] = {
+  def buildAuditData(
+      summaryListRows:  Option[List[SummaryListRow]],
+      selectedLanguage: String
+  ): List[FtneaAuditAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
     val auditAnswers = summaryListRows match {
-      case Some(rows) => rows.map(row => FtneaAuditAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
+      case Some(rows) =>
+        rows.map(row => FtneaAuditAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
       case _ => List.empty[FtneaAuditAnswer]
     }
 

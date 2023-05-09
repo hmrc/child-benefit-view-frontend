@@ -49,39 +49,41 @@ object ThreePin {
   def successUrl(): ThreePin = ().asRight[Either[UnansweredPageName, KickedOutPageName]]
 }
 
-class CheckYourAnswersController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            authConnector: AuthConnector,
-                                            featureActions: FeatureFlagComposedActions,
-                                            getData: DataRetrievalAction,
-                                            requireData: DataRequiredAction,
-                                            view: CheckYourAnswersView,
-                                            identify: IdentifierAction
-                                          )(implicit
-                                            config: Configuration,
-                                            env: Environment,
-                                            cc: MessagesControllerComponents
-                                          ) extends ChildBenefitBaseController(authConnector)
-  with I18nSupport with FtneaSummaryRowBuilder {
+class CheckYourAnswersController @Inject() (
+    override val messagesApi: MessagesApi,
+    authConnector:            AuthConnector,
+    featureActions:           FeatureFlagComposedActions,
+    getData:                  DataRetrievalAction,
+    requireData:              DataRequiredAction,
+    view:                     CheckYourAnswersView,
+    identify:                 IdentifierAction
+)(implicit
+    config: Configuration,
+    env:    Environment,
+    cc:     MessagesControllerComponents
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport
+    with FtneaSummaryRowBuilder {
 
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 
   def onPageLoad(): Action[AnyContent] = {
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request => {
+    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+      {
 
-      val summaryRows = buildSummaryRows(request)
+        val summaryRows = buildSummaryRows(request)
 
-      firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
-        case Right(()) =>
-          summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
-            Ok(view(SummaryListViewModel(sr)))
-          )
-        case Left(Left(unansweredUrl)) =>
-          Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
-        case Left(Right(kickedOutUrl)) =>
-          Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
+        firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
+          case Right(()) =>
+            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
+              Ok(view(SummaryListViewModel(sr)))
+            )
+          case Left(Left(unansweredUrl)) =>
+            Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
+          case Left(Right(kickedOutUrl)) =>
+            Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
+        }
       }
-    }
     }
   }
 
@@ -122,8 +124,8 @@ class CheckYourAnswersController @Inject()(
     )
 
   private def firstKickedOutOrUnansweredOtherwiseSuccess(
-                                                          userAnswers: UserAnswers
-                                                        ): ThreePin.ThreePin =
+      userAnswers: UserAnswers
+  ): ThreePin.ThreePin =
     for {
       _ <-
         userAnswers
@@ -166,8 +168,7 @@ class CheckYourAnswersController @Inject()(
           .fold(ThreePin.unansweredPageName(WillCourseBeEmployerProvidedPage.toString))(answer =>
             if (!answer) {
               ThreePin.successUrl()
-            }
-            else {
+            } else {
               ThreePin.kickedOutPageName(WillCourseBeEmployerProvidedPage.toString)
             }
           )

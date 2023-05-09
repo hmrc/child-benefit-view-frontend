@@ -28,23 +28,23 @@ import views.html.ftnae.PaymentsExtendedView
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class PaymentsExtendedController @Inject()(
-                                            override val messagesApi: MessagesApi,
-                                            identify: IdentifierAction,
-                                            getData: CBDataRetrievalAction,
-                                            requireData: DataRequiredAction,
-                                            ftneaService: FtnaeService,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            featureActions: FeatureFlagComposedActions,
-                                            view: PaymentsExtendedView,
-                                            errorHandler: ErrorHandler
-                                          )(implicit ec: ExecutionContext, auditService: AuditService)
-  extends FrontendBaseController
-    with I18nSupport with FtneaSummaryRowBuilder {
+class PaymentsExtendedController @Inject() (
+    override val messagesApi: MessagesApi,
+    identify:                 IdentifierAction,
+    getData:                  CBDataRetrievalAction,
+    requireData:              DataRequiredAction,
+    ftneaService:             FtnaeService,
+    val controllerComponents: MessagesControllerComponents,
+    featureActions:           FeatureFlagComposedActions,
+    view:                     PaymentsExtendedView,
+    errorHandler:             ErrorHandler
+)(implicit ec:                ExecutionContext, auditService: AuditService)
+    extends FrontendBaseController
+    with I18nSupport
+    with FtneaSummaryRowBuilder {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
-
       val summaryListRows: Option[List[SummaryListRow]] = buildSummaryRows(request)
 
       ftneaService

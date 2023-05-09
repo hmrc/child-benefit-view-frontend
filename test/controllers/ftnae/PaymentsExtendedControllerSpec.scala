@@ -51,8 +51,12 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
     "must return OK and the correct view for a GET" in {
       val childName = "John Doe"
       val childDetails =
-        ChildDetails(CourseDuration.OneYear, ChildReferenceNumber("AA123456"),
-          LocalDate.of(2001, 1, 1), List.empty[FtneaAuditAnswer])
+        ChildDetails(
+          CourseDuration.OneYear,
+          ChildReferenceNumber("AA123456"),
+          LocalDate.of(2001, 1, 1),
+          List.empty[FtneaAuditAnswer]
+        )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -64,8 +68,11 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       when(
         mockFtnaeService
-          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(any[ExecutionContext](), any[HeaderCarrier](),
-            any[DataRequest[AnyContent]]())
+          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
+            any[ExecutionContext](),
+            any[HeaderCarrier](),
+            any[DataRequest[AnyContent]]()
+          )
       ) thenReturn CBEnvelope(Right((childName, childDetails)))
 
       when(
@@ -99,7 +106,11 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       when(
         mockFtnaeService
-          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
+          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
+            any[ExecutionContext](),
+            any[HeaderCarrier](),
+            any[DataRequest[AnyContent]]()
+          )
       ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
 
       when(

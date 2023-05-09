@@ -26,13 +26,13 @@ trait FtneaSummaryRowBuilder {
 
   def buildSummaryRows(request: DataRequest[AnyContent])(implicit messages: Messages): Option[List[SummaryListRow]] = {
     for {
-      whichYoungPersonRow <- WhichYoungPersonSummary.row(request.userAnswers)
-      willYoungPersonBeStayingRow <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
-      schoolOrCollegeRow <- SchoolOrCollegeSummary.row(request.userAnswers)
-      twelveHoursAWeekRow <- TwelveHoursAWeekSummary.row(request.userAnswers)
-      howManyYearsRow <- HowManyYearsSummary.row(request.userAnswers)
+      whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
+      willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
+      schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(request.userAnswers)
+      twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(request.userAnswers)
+      howManyYearsRow                 <- HowManyYearsSummary.row(request.userAnswers)
       willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(request.userAnswers)
-      liveWithYouInUKRow <- LiveWithYouInUKSummary.row(request.userAnswers)
+      liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(request.userAnswers)
     } yield List(
       whichYoungPersonRow,
       willYoungPersonBeStayingRow,
