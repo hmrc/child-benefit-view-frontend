@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package services
+package utils.pages
 
 import models.requests.DataRequest
 import models.viewmodels.checkAnswers._
@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-trait FtneaSummaryRowBuilder {
+trait FtnaeHelper {
 
   def buildSummaryRows(request: DataRequest[AnyContent])(implicit messages: Messages): Option[List[SummaryListRow]] = {
     for {

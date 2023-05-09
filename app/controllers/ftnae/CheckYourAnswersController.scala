@@ -27,8 +27,8 @@ import pages.ftnae._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
-import services.FtneaSummaryRowBuilder
 import uk.gov.hmrc.auth.core.AuthConnector
+import utils.pages.FtnaeHelper
 import views.html.ftnae.CheckYourAnswersView
 
 final case class UnansweredPageName(pageName: String) extends AnyVal
@@ -63,7 +63,7 @@ class CheckYourAnswersController @Inject() (
     cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport
-    with FtneaSummaryRowBuilder {
+    with FtnaeHelper {
 
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 

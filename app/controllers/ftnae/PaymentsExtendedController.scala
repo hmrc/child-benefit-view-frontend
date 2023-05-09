@@ -19,10 +19,11 @@ package controllers.ftnae
 import controllers.actions._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{AuditService, FtnaeService, FtneaSummaryRowBuilder}
+import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
+import utils.pages.FtnaeHelper
 import views.html.ftnae.PaymentsExtendedView
 
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class PaymentsExtendedController @Inject() (
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport
-    with FtneaSummaryRowBuilder {
+    with FtnaeHelper {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
