@@ -20,7 +20,7 @@ import connectors.FtneaConnector
 import models.CBEnvelope
 import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
-import models.ftnae.{ChildDetails, CourseDuration}
+import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import services.FtnaeService
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
@@ -50,7 +51,12 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
     "must return OK and the correct view for a GET" in {
       val childName = "John Doe"
       val childDetails =
-        ChildDetails(CourseDuration.OneYear, ChildReferenceNumber("AA123456"), LocalDate.of(2001, 1, 1))
+        ChildDetails(
+          CourseDuration.OneYear,
+          ChildReferenceNumber("AA123456"),
+          LocalDate.of(2001, 1, 1),
+          List.empty[FtneaAuditAnswer]
+        )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -62,7 +68,11 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       when(
         mockFtnaeService
-          .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
+          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
+            any[ExecutionContext](),
+            any[HeaderCarrier](),
+            any[DataRequest[AnyContent]]()
+          )
       ) thenReturn CBEnvelope(Right((childName, childDetails)))
 
       when(
@@ -96,7 +106,11 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       when(
         mockFtnaeService
-          .submitFtnaeInformation()(any[ExecutionContext](), any[HeaderCarrier](), any[DataRequest[AnyContent]]())
+          .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
+            any[ExecutionContext](),
+            any[HeaderCarrier](),
+            any[DataRequest[AnyContent]]()
+          )
       ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
 
       when(

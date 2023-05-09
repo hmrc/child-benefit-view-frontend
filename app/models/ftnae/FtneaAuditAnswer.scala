@@ -16,18 +16,10 @@
 
 package models.ftnae
 
-import models.common.ChildReferenceNumber
 import play.api.libs.json.Json
 
-import java.time.LocalDate
+final case class FtneaAuditAnswer(userPresentedText: String, answer: String)
 
-final case class ChildDetails(
-    courseDuration: CourseDuration,
-    crn:            ChildReferenceNumber,
-    dateOfBirth:    LocalDate,
-    auditAnswers:   List[FtneaAuditAnswer]
-)
-
-object ChildDetails {
-  implicit val format = Json.format[ChildDetails]
+object FtneaAuditAnswer {
+  implicit val format = Json.format[FtneaAuditAnswer]
 }
