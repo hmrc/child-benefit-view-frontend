@@ -18,13 +18,18 @@ package utils.pages
 
 import models.requests.DataRequest
 import models.viewmodels.checkAnswers._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
 trait FtnaeHelper {
 
+  def messagesWithFixedLangSupport(messagesApi: MessagesApi): Messages = {
+    messagesApi.preferred(Seq(Lang.apply("en"))).messages
+  }
+
   def buildSummaryRows(request: DataRequest[AnyContent])(implicit messages: Messages): Option[List[SummaryListRow]] = {
+
     for {
       whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
       willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
