@@ -21,7 +21,6 @@ import com.google.inject.Inject
 import controllers.ChildBenefitBaseController
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, IdentifierAction}
 import models.ftnae.HowManyYears
-import models.viewmodels.checkAnswers._
 import models.viewmodels.govuk.summarylist._
 import models.{NormalMode, UserAnswers}
 import pages.ftnae._
@@ -33,52 +32,56 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import views.html.ftnae.CheckYourAnswersView
 
 final case class UnansweredPageName(pageName: String) extends AnyVal
+
 final case class KickedOutPageName(pageName: String) extends AnyVal
+
 final case class PageDirections(pageUrlCall: Call, kickoutCall: Call)
 
 object ThreePin {
   type ThreePin = Either[Either[UnansweredPageName, KickedOutPageName], Unit]
+
   def unansweredPageName(pageName: String): ThreePin =
     UnansweredPageName(pageName).asLeft[KickedOutPageName].asLeft[Unit]
+
   def kickedOutPageName(pageName: String): ThreePin =
     KickedOutPageName(pageName).asRight[UnansweredPageName].asLeft[Unit]
+
   def successUrl(): ThreePin = ().asRight[Either[UnansweredPageName, KickedOutPageName]]
 }
 
-class CheckYourAnswersController @Inject() (
-    override val messagesApi: MessagesApi,
-    authConnector:            AuthConnector,
-    featureActions:           FeatureFlagComposedActions,
-    getData:                  DataRetrievalAction,
-    requireData:              DataRequiredAction,
-    view:                     CheckYourAnswersView,
-    identify:                 IdentifierAction
-)(implicit
-    config: Configuration,
-    env:    Environment,
-    cc:     MessagesControllerComponents
-) extends ChildBenefitBaseController(authConnector)
-    with I18nSupport with FtneaSummaryRowBuilder {
+class CheckYourAnswersController @Inject()(
+                                            override val messagesApi: MessagesApi,
+                                            authConnector: AuthConnector,
+                                            featureActions: FeatureFlagComposedActions,
+                                            getData: DataRetrievalAction,
+                                            requireData: DataRequiredAction,
+                                            view: CheckYourAnswersView,
+                                            identify: IdentifierAction
+                                          )(implicit
+                                            config: Configuration,
+                                            env: Environment,
+                                            cc: MessagesControllerComponents
+                                          ) extends ChildBenefitBaseController(authConnector)
+  with I18nSupport with FtneaSummaryRowBuilder {
 
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 
   def onPageLoad(): Action[AnyContent] = {
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
-      {
+    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request => {
 
-        val summaryRows = buildSummaryRows(request)
+      val summaryRows = buildSummaryRows(request)
 
-        firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
-          case Right(()) =>
-            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
-              Ok(view(SummaryListViewModel(sr)))
-            )
-          case Left(Left(unansweredUrl)) =>
-            Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
-          case Left(Right(kickedOutUrl)) =>
-            Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
-        }
+      firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
+        case Right(()) =>
+          summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
+            Ok(view(SummaryListViewModel(sr)))
+          )
+        case Left(Left(unansweredUrl)) =>
+          Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
+        case Left(Right(kickedOutUrl)) =>
+          Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
       }
+    }
     }
   }
 
@@ -119,8 +122,8 @@ class CheckYourAnswersController @Inject() (
     )
 
   private def firstKickedOutOrUnansweredOtherwiseSuccess(
-      userAnswers: UserAnswers
-  ): ThreePin.ThreePin =
+                                                          userAnswers: UserAnswers
+                                                        ): ThreePin.ThreePin =
     for {
       _ <-
         userAnswers
@@ -128,7 +131,9 @@ class CheckYourAnswersController @Inject() (
           .fold(ThreePin.unansweredPageName(WhichYoungPersonPage.toString))(answer =>
             if (answer == YOUNG_PERSON_NOT_DISPLAYED_INDEX) {
               ThreePin.kickedOutPageName(WhichYoungPersonPage.toString)
-            } else { ThreePin.successUrl() }
+            } else {
+              ThreePin.successUrl()
+            }
           )
       _ <-
         userAnswers
@@ -159,8 +164,12 @@ class CheckYourAnswersController @Inject() (
         userAnswers
           .get(WillCourseBeEmployerProvidedPage)
           .fold(ThreePin.unansweredPageName(WillCourseBeEmployerProvidedPage.toString))(answer =>
-            if (!answer) { ThreePin.successUrl() }
-            else { ThreePin.kickedOutPageName(WillCourseBeEmployerProvidedPage.toString) }
+            if (!answer) {
+              ThreePin.successUrl()
+            }
+            else {
+              ThreePin.kickedOutPageName(WillCourseBeEmployerProvidedPage.toString)
+            }
           )
       _ <-
         userAnswers

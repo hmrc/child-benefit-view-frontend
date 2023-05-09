@@ -26,7 +26,6 @@ import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae._
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
-import play.api.i18n.Lang
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -37,31 +36,31 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FtnaeService @Inject() (
-    ftneaConnector: FtneaConnector
-) {
+class FtnaeService @Inject()(
+                              ftneaConnector: FtneaConnector
+                            ) {
 
   def getFtnaeInformation()(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier
+                            ec: ExecutionContext,
+                            hc: HeaderCarrier
   ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
 
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
-      ec:      ExecutionContext,
-      hc:      HeaderCarrier,
-      request: DataRequest[AnyContent]
+                                                                            ec: ExecutionContext,
+                                                                            hc: HeaderCarrier,
+                                                                            request: DataRequest[AnyContent]
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
     val maybeMatchedChild = for {
-      ftnaeResp        <- request.userAnswers.get(FtneaResponseUserAnswer)
-      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
+      ftnaeResp <- request.userAnswers.get(FtneaResponseUserAnswer)
+      selectedChild <- request.userAnswers.get(WhichYoungPersonPage)
       matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
     } yield matchedChildInfo
 
     val maybeCourseDuration = request.userAnswers.get(HowManyYearsPage) match {
-      case Some(Oneyear)  => Some(CourseDuration.OneYear)
+      case Some(Oneyear) => Some(CourseDuration.OneYear)
       case Some(Twoyears) => Some(CourseDuration.TwoYear)
-      case _              => None
+      case _ => None
     }
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
@@ -76,12 +75,12 @@ class FtnaeService @Inject() (
 
     for {
       childDetails <- CBEnvelope(childDetails)
-      _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
+      _ <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
     } yield childDetails
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {
-    val childCrns       = children.map(_.crn.value)
+    val childCrns = children.map(_.crn.value)
     val noDuplicateCrns = childCrns.distinct.size == childCrns.size
     val onlyOneChildHasTheSelectedName =
       children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
