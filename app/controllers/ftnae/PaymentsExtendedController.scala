@@ -17,7 +17,7 @@
 package controllers.ftnae
 
 import controllers.actions._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -46,7 +46,7 @@ class PaymentsExtendedController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
-      val summaryListRows: Option[List[SummaryListRow]] = buildSummaryRows(request)
+      val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
 
       ftneaService
         .submitFtnaeInformation(summaryListRows)
@@ -55,4 +55,5 @@ class PaymentsExtendedController @Inject() (
           details => Ok(view(details._1, details._2.courseDuration))
         )
     }
+
 }
