@@ -81,4 +81,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
+
 }

@@ -235,7 +235,7 @@ cannotFindYoungPerson.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-
 cannotFindYoungPerson.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
 cannotFindYoungPerson.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
 cannotFindYoungPerson.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
-whichYoungPerson.title = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano? - Budd-dal Plant - GOV.UK
+whichYoungPerson.title = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
 whichYoungPerson.heading = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
 whichYoungPerson.p1 = Os hoffech roi gwybod i ni am fwy nag un person ifanc, bydd yn rhaid i chi lenwi datganiad ar wahân ar gyfer pob un.
 whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
@@ -274,6 +274,7 @@ extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
 extendPayments.p4 = Defnyddiwch ffurflen wahanol {0}.
 extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
 extendPayments.checkYourAnswersLabel = extendPayments
+extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 
 # ----------  Which Young Person ----------------
 
