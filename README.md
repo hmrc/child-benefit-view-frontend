@@ -8,7 +8,7 @@ end visualises the data. The current journeys implemented and deployed are:
 - Proof of entitlement - for a child benefit user to view their entitlements for their children
 - Payment history - for a child benefit user to view their payment history for their children
 - Change of bank - for a child benefit user to change the bank account they wish to be paid into
-
+- Ftnea - for a child benefit user to update information about non-advanced education of their children
 ## Relevant endpoints for frontend service 
 
 - https://www.development.tax.service.gov.uk/child-benefit-service/view-proof-entitlement
@@ -22,12 +22,13 @@ sm --start CHILD-BENEFIT-SERVICE-ALL
 - <environment-host:environment-port>/child-benefit-service/view-proof-entitlement
 - <environment-host:environment-port>/child-benefit/view-payment-history
 - <environment-host:environment-port>/child-benefit/change-bank/change-account
+- <environment-host:environment-port>/child-benefit/staying-in-education/extend-payments
 eg: 
 
 - https://www.development.tax.service.gov.uk/child-benefit-service/view-proof-entitlement
 - https://www.development.tax.service.gov.uk/child-benefit/view-payment-history
 - https://www.development.tax.service.gov.uk/child-benefit/change-bank/change-account
-
+- https://www.development.tax.service.gov.uk/child-benefit/staying-in-education/extend-payments
 ## Team channel and who owns the service
 \#team-sca-child-benefit
 ## Link to confluence page
