@@ -81,4 +81,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
+
+  def extendPaymentsGovUrlLink(lang: Lang): String =
+    urlDecorator(
+      lang,
+      "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"
+    )
+  private def urlDecorator(lang: Lang, baseUrl: String) = {
+    lang.code match {
+      case "cy" => s"${baseUrl}.cy"
+      case _    => baseUrl
+    }
+  }
 }
