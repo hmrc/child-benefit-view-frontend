@@ -303,6 +303,7 @@ extendPayments.bulletPoint11 = living with you in the UK
 extendPayments.p4 = Use another form {0}.
 extendPayments.p4.linkText = if their circumstances will be different
 extendPayments.checkYourAnswersLabel = extendPayments
+extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 
 # ----------  Which Young Person ----------------
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?

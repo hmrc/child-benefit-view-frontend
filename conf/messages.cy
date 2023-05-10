@@ -274,6 +274,7 @@ extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
 extendPayments.p4 = Defnyddiwch ffurflen wahanol {0}.
 extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
 extendPayments.checkYourAnswersLabel = extendPayments
+extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 
 # ----------  Which Young Person ----------------
 

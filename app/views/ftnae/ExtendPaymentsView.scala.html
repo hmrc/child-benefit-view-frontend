@@ -16,7 +16,6 @@
 
 @import components._
 @import models.ftnae.FtneaClaimantInfo
-@import config.FrontendAppConfig
 @import utils.helpers.StringHelper.toTitleCase
 
 @this(
@@ -27,20 +26,18 @@
         para: ParagraphBody,
         link: Link,
         list: BulletList,
-        caption: CaptionHeader,
-        appConfig: FrontendAppConfig
+        caption: CaptionHeader
 )
-
 @(claimant: FtneaClaimantInfo)(implicit request: Request[_], messages: Messages)
 
-@para2Link = @{link( id = "continuing-2",
+    @para2Link = @{link( id = "continuing-2",
         text = messages("extendPayments.p2.linkText"),
-        call = Call("GET", appConfig.extendPaymentsGovUrlLink(messages.lang)),
+        call = Call("GET", messages("extendPayments.govuk.link")),
         newTab = false
     )}
     @para4Link = @{link( id = "continuing-4",
         text = messages("extendPayments.p4.linkText"),
-        call = Call("GET", appConfig.extendPaymentsGovUrlLink(messages.lang)),
+        call = Call("GET", messages("extendPayments.govuk.link")),
         newTab = false
     )}
 
