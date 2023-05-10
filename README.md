@@ -8,7 +8,7 @@ end visualises the data. The current journeys implemented and deployed are:
 - Proof of entitlement - for a child benefit user to view their entitlements for their children
 - Payment history - for a child benefit user to view their payment history for their children
 - Change of bank - for a child benefit user to change the bank account they wish to be paid into
-- Ftnea - for a child benefit user to update information about non-advanced education of their children
+- Ftnae - for a child benefit user to update information about non-advanced education of their children
 ## Relevant endpoints for frontend service 
 
 - https://www.development.tax.service.gov.uk/child-benefit-service/view-proof-entitlement
