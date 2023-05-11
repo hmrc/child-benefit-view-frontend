@@ -74,12 +74,10 @@ class FtnaeService @Inject() (
       })
       .toRight(FtnaeChildUserAnswersNotRetrieved)
 
-    val internalId = request.userAnswers.id
-
     for {
       childDetails <- CBEnvelope(childDetails)
       _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
-      _            <- CBEnvelope(sessionRepository.clear(internalId))
+      _            <- CBEnvelope(sessionRepository.clear(request.userAnswers.id))
     } yield childDetails
 
   }
