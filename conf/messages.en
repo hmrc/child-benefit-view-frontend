@@ -258,19 +258,21 @@ cannotVerifyAccount.link.text = use a different service to change the account de
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
-cannotFindYoungPerson.title = The Child Benefit office cannot find the young person you want to claim for
-cannotFindYoungPerson.heading = The Child Benefit office cannot find the young person you want to claim for
-cannotFindYoungPerson.p1 = This might be because:
-cannotFindYoungPerson.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
-cannotFindYoungPerson.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
-cannotFindYoungPerson.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, {0}
+cannotFindYoungPerson.title = You cannot use this service to extend your payments
+cannotFindYoungPerson.heading = You cannot use this service to extend your payments
+cannotFindYoungPerson.p1 = This might be because the young person you want to tell the Child Benefit office about:
+cannotFindYoungPerson.bulletPoint1 = is under 16 — we’ll contact you when you should tell us if they’re staying in full-time non-advanced education
+cannotFindYoungPerson.bulletPoint2 = is over 19, so you’re no longer eligible for continued Child Benefit
+cannotFindYoungPerson.bulletPoint3 = will be 18 or older on 1 September 2023 — if so, {0}
 cannotFindYoungPerson.bulletPoint3.linkText = use a different form to extend your Child Benefit
-cannotFindYoungPerson.bulletPoint4 = you’ve told the Child Benefit office about them staying in education — {0}
-cannotFindYoungPerson.bulletPoint4.linkText = use a different form if you want to change what you sent
-cannotFindYoungPerson.p2 = To check who you get payments for, how much you get and when payments will stop, {0}.
-cannotFindYoungPerson.p2.linkText = view your proof of entitlement to Child Benefit
+cannotFindYoungPerson.p2 = It might also be because you’ve already told the Child Benefit office about them staying in education — {0}.
+cannotFindYoungPerson.p2.linkText = use a different form if you want to change what you sent.
+cannotFindYoungPerson.p3 = To check who you get payments for, how much you get and when payments will stop, {0}.
+cannotFindYoungPerson.p3.linkText = view your proof of entitlement to Child Benefit.
 whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
 whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
+whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
+
 # ----------  Redirect to existing FTNAE iForm ------------
 useDifferentForm.title = Use a different form to extend your Child Benefit
 useDifferentForm.heading = Use a different form to extend your Child Benefit
