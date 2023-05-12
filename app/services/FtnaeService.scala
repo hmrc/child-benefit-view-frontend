@@ -27,6 +27,7 @@ import models.ftnae._
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.mvc.AnyContent
+import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.http.HeaderCarrier
@@ -37,7 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-    ftneaConnector: FtneaConnector
+    ftneaConnector:    FtneaConnector,
+    sessionRepository: SessionRepository
 ) {
 
   def getFtnaeInformation()(implicit
@@ -75,7 +77,9 @@ class FtnaeService @Inject() (
     for {
       childDetails <- CBEnvelope(childDetails)
       _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
+      _            <- CBEnvelope(sessionRepository.clear(request.userAnswers.id))
     } yield childDetails
+
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {

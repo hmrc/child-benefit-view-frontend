@@ -22,28 +22,30 @@ import models.errors.FtnaeChildUserAnswersNotRetrieved
 import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
 import models.requests.DataRequest
 import models.{CBEnvelope, UserAnswers}
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.ArgumentMatchers.{any, anyString}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
+import repositories.SessionRepository
 import services.FtnaeServiceSpec.{userAnswer, userAnswerWithIncorrectCourseDuration, userAnswerWithMultipleSameCRN, userAnswerWithMultipleSameName}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val hc: HeaderCarrier    = HeaderCarrier()
 
-  val ftnaeConnector = mock[FtneaConnector]
+  val ftnaeConnector    = mock[FtneaConnector]
+  val sessionRepository = mock[SessionRepository]
 
   val childName                       = "Lauren Sam Smith"
   val SelectedUserLanguageRefForAudit = "selected-languages"
@@ -73,7 +75,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       val request: DataRequest[AnyContent] =
         DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
 
-      val service = new FtnaeService(ftnaeConnector)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
       whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request).value) { result =>
         result mustBe Right((childName, childDetails))
@@ -92,7 +94,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithIncorrectCourseDuration)
         )
 
-      val service = new FtnaeService(ftnaeConnector)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
@@ -111,7 +113,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithMultipleSameCRN)
         )
 
-      val service = new FtnaeService(ftnaeConnector)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
@@ -130,28 +132,54 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithMultipleSameName)
         )
 
-      val service = new FtnaeService(ftnaeConnector)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
 
+    "submit a user account information if the data" +
+      "recorded in user answers are valid and confirm that cleaning database is performed" in {
+
+      reset(sessionRepository)
+
+      when(
+        ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn CBEnvelope(())
+
+      when(sessionRepository.clear(anyString())).thenReturn(Future.successful(true))
+
+      val fakeRequest = FakeRequest("GET", "/nothing")
+
+      val request: DataRequest[AnyContent] =
+        DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
+
+      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+
+      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request).value) { result =>
+        result mustBe Right((childName, childDetails))
+      }
+
+      verify(sessionRepository, times(1)).clear(anyString())
+
+    }
+
     "submitFtnaeAuditInformation" should {
       "return list of audit items from user selected questions and answers" in {
-        val service   = new FtnaeService(ftnaeConnector)
+        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(Some(summaryListRows), "cy")
         auditData mustBe (expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered" in {
-        val service   = new FtnaeService(ftnaeConnector)
+        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(None, "cy")
         auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered or language support provided" in {
-        val service   = new FtnaeService(ftnaeConnector)
+        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(None, "")
         auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, ""))
       }
