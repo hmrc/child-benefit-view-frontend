@@ -23,7 +23,7 @@ import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
 import models.requests.DataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, anyString}
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -141,6 +141,8 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
     "submit a user account information if the data" +
       "recorded in user answers are valid and confirm that cleaning database is performed" in {
+
+      reset(sessionRepository)
 
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
