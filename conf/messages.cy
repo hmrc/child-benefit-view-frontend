@@ -224,23 +224,20 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y m
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
-cannotFindYoungPerson.title = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
-cannotFindYoungPerson.heading = Ni all y swyddfa Budd-dal Plant ddod o hyd i’r person ifanc rydych am hawlio ar ei gyfer
-cannotFindYoungPerson.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
-cannotFindYoungPerson.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
-cannotFindYoungPerson.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
-cannotFindYoungPerson.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
+cannotFindYoungPerson.title = Ni allwch ddefnyddio’r gwasanaeth hwn i ymestyn eich taliadau
+cannotFindYoungPerson.heading = Ni allwch ddefnyddio’r gwasanaeth hwn i ymestyn eich taliadau
+cannotFindYoungPerson.p1 = Gall hyn fod oherwydd bod y canlynol yn wir am y person ifanc rydych am roi gwybod i’r swyddfa Budd-dal Plant amdano:
+cannotFindYoungPerson.bulletPoint1 = mae o dan 16 oed – byddwn yn cysylltu â chi pan ddylech roi gwybod i ni os bydd y person ifanc yn parhau ag addysg amser llawn nad yw’n addysg uwch
+cannotFindYoungPerson.bulletPoint2 = mae’n hŷn na 19 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
+cannotFindYoungPerson.bulletPoint3 = wbydd yn troi’n 18 oed neu’n hŷn ar 1 Medi 2023 – os felly, {0}
 cannotFindYoungPerson.bulletPoint3.linkText = defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
-cannotFindYoungPerson.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}
-cannotFindYoungPerson.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
-cannotFindYoungPerson.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
-cannotFindYoungPerson.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
-whichYoungPerson.title = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
-whichYoungPerson.heading = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
-whichYoungPerson.p1 = Os hoffech roi gwybod i ni am fwy nag un person ifanc, bydd yn rhaid i chi lenwi datganiad ar wahân ar gyfer pob un.
-whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
-whichYoungPerson.ftneaChild.dateOfBirth = Dyddiad geni
-whichYoungPerson.childNotListed = Person ifanc heb ei restru
+cannotFindYoungPerson.p2 = Gall hyn hefyd fod oherwydd eich bod eisoes wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}.
+cannotFindYoungPerson.p2.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i gyflwyno.
+cannotFindYoungPerson.p3 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
+cannotFindYoungPerson.p3.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
+whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
+whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
+whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
