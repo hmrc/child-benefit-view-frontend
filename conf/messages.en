@@ -269,9 +269,6 @@ cannotFindYoungPerson.p2 = It might also be because you’ve already told the Ch
 cannotFindYoungPerson.p2.linkText = use a different form if you want to change what you sent
 cannotFindYoungPerson.p3 = To check who you get payments for, how much you get and when payments will stop, {0}.
 cannotFindYoungPerson.p3.linkText = view your proof of entitlement to Child Benefit
-whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
-whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
-whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 
 # ----------  Redirect to existing FTNAE iForm ------------
 useDifferentForm.title = Use a different form to extend your Child Benefit
@@ -312,9 +309,11 @@ whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.p1 = If you want to tell us about more than one young person, complete a separate declaration for each one.
 whichYoungPerson.childNotListed = Young person not listed
-whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.change.hidden = WhichYoungPerson
+whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
+whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
+whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 
 # ----------  Young person not listed for FTNAE ------------
 whyYoungPersonNotListed.title = Why the young person is not listed
