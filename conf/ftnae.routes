@@ -1,4 +1,4 @@
-GET        /staying-in-education/cannot-find-young-person                   controllers.ftnae.CannotFindYoungPersonController.onPageLoad()
+GET        /staying-in-education/you-cannot-use-this-service                controllers.ftnae.CannotFindYoungPersonController.onPageLoad()
 GET        /staying-in-education/use-different-form                         controllers.ftnae.UseDifferentFormController.onPageLoad()
 GET        /staying-in-education/extend-payments                            controllers.ftnae.ExtendPaymentsController.onPageLoad()
 GET        /staying-in-education/which-young-person                         controllers.ftnae.WhichYoungPersonController.onPageLoad(mode: Mode = NormalMode)
