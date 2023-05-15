@@ -235,9 +235,17 @@ cannotFindYoungPerson.p2 = Gall hyn hefyd fod oherwydd eich bod eisoes wedi rhoi
 cannotFindYoungPerson.p2.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i gyflwyno
 cannotFindYoungPerson.p3 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
 cannotFindYoungPerson.p3.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
+
+# ----------  Which Young Person ----------------
+whichYoungPerson.title = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
+whichYoungPerson.heading = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
+whichYoungPerson.p1 = Os hoffech roi gwybod i ni am fwy nag un person ifanc, bydd yn rhaid i chi lenwi datganiad ar wahân ar gyfer pob un.
+whichYoungPerson.childNotListed = Person ifanc heb ei restru
 whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
 whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
 whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
+whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
+
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
@@ -272,8 +280,6 @@ extendPayments.p4 = Defnyddiwch ffurflen wahanol {0}.
 extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
 extendPayments.checkYourAnswersLabel = extendPayments
 extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
-
-# ----------  Which Young Person ----------------
 
 # ----------  Young person not listed for FTNAE ------------
 whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru
