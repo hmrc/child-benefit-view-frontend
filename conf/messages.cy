@@ -290,7 +290,7 @@ whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly
 whyYoungPersonNotListed.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
 whyYoungPersonNotListed.bulletPoint3.linkText = defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
 whyYoungPersonNotListed.bulletPoint4 = rydych wedi rhoi gwybod i’r swyddfa Budd-dal Plant bod y person ifanc yn parhau â’i addysg – {0}
-whyYoungPersonNotListed.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i cyflwyno
+whyYoungPersonNotListed.bulletPoint4.linkText = defnyddiwch ffurflen wahanol os hoffech newid yr hyn rydych wedi’i gyflwyno
 whyYoungPersonNotListed.p2 = Gallwch {0} er mwyn gweld ar gyfer pwy rydych yn cael taliadau, faint rydych yn ei gael, a phryd bydd y taliadau yn dod i ben.
 whyYoungPersonNotListed.p2.linkText = fwrw golwg dros eich tystiolaeth o hawl i Fudd-dal Plant
 
