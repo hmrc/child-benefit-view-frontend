@@ -368,6 +368,6 @@ liveWithYouInUK.change.hidden = LiveWithYouInUK
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
-notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn estyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
+notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn ymestyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
 
 # ----------  Payments Extended ------------
