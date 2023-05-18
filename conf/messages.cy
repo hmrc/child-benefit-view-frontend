@@ -241,10 +241,11 @@ whichYoungPerson.title = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant am
 whichYoungPerson.heading = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
 whichYoungPerson.p1 = Os hoffech roi gwybod i ni am fwy nag un person ifanc, bydd yn rhaid i chi lenwi datganiad ar wahân ar gyfer pob un.
 whichYoungPerson.childNotListed = Person ifanc heb ei restru
-whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
-whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
+whichYoungPerson.error.required = Dewiswch enw’r person ifanc neu ‘Person ifanc heb ei restru’.
+whichYoungPerson.checkYourAnswersLabel = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
+whichYoungPerson.ftneaChild.dateOfBirth = Dyddiad geni
+whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
 whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
-whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 
 
 # ----------  Redirect to existing FTNAE iform ------------

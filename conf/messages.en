@@ -311,10 +311,10 @@ whichYoungPerson.p1 = If you want to tell us about more than one young person, c
 whichYoungPerson.childNotListed = Young person not listed
 whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
-whichYoungPerson.change.hidden = WhichYoungPerson
-whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
 whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
+whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
 whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
+whichYoungPerson.change.hidden = WhichYoungPerson
 
 # ----------  Young person not listed for FTNAE ------------
 whyYoungPersonNotListed.title = Why the young person is not listed
