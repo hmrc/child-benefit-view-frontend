@@ -405,6 +405,15 @@ liveWithYouInUK.p1 = This includes during term time.
 liveWithYouInUK.error.required = Select Yes or No
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
+# ----------  FTNAE check your answers ------------
+checkYourAnswers.title = Check your answers before sending them
+checkYourAnswers.heading = Check your answers before sending them
+checkYourAnswers.h2 = Now send your answers
+checkYourAnswers.warning = The information must be correct to the best of your knowledge.
+checkYourAnswers.p1 = You must {0}.
+checkYourAnswers.p1.link = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
+checkYourAnswers.submit = Send
+
 # ----------  Payments Extended ------------
 paymentsExtended.title = Your Child Benefit payments have been extended
 paymentsExtended.heading = Your Child Benefit payments have been extended
@@ -417,15 +426,6 @@ paymentsExtended.p2.link = tell the Child Tax Credit office that the young perso
 paymentsExtended.beforeYouGo.h3 = Before you go
 paymentsExtended.p3 = We use feedback to make our services better.
 paymentsExtended.p4 = Please {0}.
-paymentsExtended.p4.link = take the feedback survey
+paymentsExtended.feedback.link.text = take the feedback survey
 paymentsExtended.courseDuration.oneYear = 1 year
 paymentsExtended.courseDuration.twoYears = 2 years
-
-# ----------  FTNAE check your answers ------------
-checkYourAnswers.title = Check your answers before sending them
-checkYourAnswers.heading = Check your answers before sending them
-checkYourAnswers.h2 = Now send your answers
-checkYourAnswers.warning = The information must be correct to the best of your knowledge.
-checkYourAnswers.p1 = You must {0}.
-checkYourAnswers.p1.link = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
-checkYourAnswers.submit = Send

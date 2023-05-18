@@ -370,4 +370,20 @@ notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael B
 notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn ymestyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
 
+# ----------  FTNAE check your answers ------------
+
 # ----------  Payments Extended ------------
+paymentsExtended.title = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
+paymentsExtended.heading = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
+paymentsExtended.whatHappensNext.h2 = Yr hyn sy’n digwydd nesaf
+paymentsExtended.p1 = Bydd y taliadau Budd-dal Plant ar gyfer {0} yn cael eu talu tra’i fod yn parhau ag addysg amser llawn nad yw’n addysg uwch. Byddwch yn cael y taliadau hyn am {1}.
+paymentsExtended.startPage.p1 = Rhowch wybod i ni am berson ifanc arall sy’n parhau â’i addysg
+paymentsExtended.ifYouReceive.h3 = Os ydych yn cael Credyd Treth Plant
+paymentsExtended.p2 = Mae hefyd angen i chi {0}.
+paymentsExtended.p2.link = roi gwybod i’r swyddfa Credyd Treth Plant bod y person ifanc dan sylw yn parhau â’i addysg
+paymentsExtended.beforeYouGo.h3 = Cyn i chi fynd
+paymentsExtended.p3 = Rydym yn defnyddio adborth i wella ein gwasanaethau.
+paymentsExtended.p4 = Plîs {0}.
+paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
+paymentsExtended.courseDuration.oneYear = 1 flwyddyn
+paymentsExtended.courseDuration.twoYears = 2 flynedd
