@@ -388,3 +388,12 @@ paymentsExtended.p4 = Plîs {0}.
 paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
 paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
+
+# ----------  FTNAE check your answers ------------
+checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon - Budd-dal Plant
+checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
+checkYourAnswers.h2 = Anfonwch eich atebion nawr
+checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
+checkYourAnswers.p1 = Mae’n rhaid i chi {0}.
+checkYourAnswers.p1.link = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd amgylchiadau’r person ifanc yn newid (yn agor tab newydd)
+checkYourAnswers.submit = Anfon
