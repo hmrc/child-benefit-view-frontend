@@ -410,8 +410,6 @@ checkYourAnswers.title = Check your answers before sending them
 checkYourAnswers.heading = Check your answers before sending them
 checkYourAnswers.h2 = Now send your answers
 checkYourAnswers.warning = The information must be correct to the best of your knowledge.
-checkYourAnswers.p1 = You must {0}.
-checkYourAnswers.p1.link = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
 checkYourAnswers.submit = Send
 
 # ----------  Payments Extended ------------
@@ -419,6 +417,9 @@ paymentsExtended.title = Your Child Benefit payments have been extended
 paymentsExtended.heading = Your Child Benefit payments have been extended
 paymentsExtended.whatHappensNext.h2 = What happens next
 paymentsExtended.p1 = The Child Benefit payments for {0} will now be paid while they stay in full-time non-advanced education. You’ll receive the payments for {1}.
+paymentsExtended.changeOfCircumstances = You must {0}.
+paymentsExtended.changeOfCircumstances.linkText = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
+paymentsExtended.changeOfCircumstances.link = https://www.gov.uk/report-changes-child-benefit
 paymentsExtended.startPage.p1 = Tell us about another young person staying in education
 paymentsExtended.ifYouReceive.h3 = If you receive Child Tax Credit
 paymentsExtended.p2 = You also need to {0}.

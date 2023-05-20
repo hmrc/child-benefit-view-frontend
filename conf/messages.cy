@@ -372,12 +372,20 @@ notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael
 notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn ymestyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
 
 # ----------  FTNAE check your answers ------------
+checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon - Budd-dal Plant
+checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
+checkYourAnswers.h2 = Anfonwch eich atebion nawr
+checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
+checkYourAnswers.submit = Anfon
 
 # ----------  Payments Extended ------------
 paymentsExtended.title = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
 paymentsExtended.heading = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
 paymentsExtended.whatHappensNext.h2 = Yr hyn sy’n digwydd nesaf
 paymentsExtended.p1 = Bydd y taliadau Budd-dal Plant ar gyfer {0} yn cael eu talu tra’i fod yn parhau ag addysg amser llawn nad yw’n addysg uwch. Byddwch yn cael y taliadau hyn am {1}.
+paymentsExtended.changeOfCircumstances = Mae’n rhaid i chi {0}.
+paymentsExtended.changeOfCircumstances.linkText = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd amgylchiadau yn newid (yn agor tab newydd)
+paymentsExtended.changeOfCircumstances.link = https://www.gov.uk/rhoi-gwybod-am-newidiadau-budd-dal-plant
 paymentsExtended.startPage.p1 = Rhowch wybod i ni am berson ifanc arall sy’n parhau â’i addysg
 paymentsExtended.ifYouReceive.h3 = Os ydych yn cael Credyd Treth Plant
 paymentsExtended.p2 = Mae hefyd angen i chi {0}.
@@ -388,12 +396,3 @@ paymentsExtended.p4 = Plîs {0}.
 paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
 paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
-
-# ----------  FTNAE check your answers ------------
-checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon - Budd-dal Plant
-checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
-checkYourAnswers.h2 = Anfonwch eich atebion nawr
-checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
-checkYourAnswers.p1 = Mae’n rhaid i chi {0}.
-checkYourAnswers.p1.link = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd amgylchiadau’r person ifanc yn newid (yn agor tab newydd)
-checkYourAnswers.submit = Anfon

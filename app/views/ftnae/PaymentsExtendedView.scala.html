@@ -31,6 +31,11 @@
 
 @(childName: String, courseDuration: CourseDuration)(implicit request: Request[_], messages: Messages)
 
+@changeOfCircumstancesLink = @{link(id = "report-changes-child-benefit-form-link",
+    text = messages("paymentsExtended.changeOfCircumstances.linkText"),
+    call = Call("GET", messages("paymentsExtended.changeOfCircumstances.link"))
+)}
+
 @startFtnaeJourneyLink = @{
     link(id = "start-ftnae-journey-link",
         text = messages("paymentsExtended.startPage.p1"),
@@ -61,6 +66,7 @@
     @panel(messages("paymentsExtended.heading"))
     @h2(messages("paymentsExtended.whatHappensNext.h2"))
     @para(messages("paymentsExtended.p1", childName, courseDuration.toMessage))
+    @para(messages("paymentsExtended.changeOfCircumstances", changeOfCircumstancesLink))
     <p class="govuk-body">@Html(startFtnaeJourneyLink + ".")</p>
     @h3(messages("paymentsExtended.ifYouReceive.h3"))
     @para(messages("paymentsExtended.p2", taxCreditChangesLink))
