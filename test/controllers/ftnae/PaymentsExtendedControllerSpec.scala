@@ -20,11 +20,12 @@ import connectors.FtneaConnector
 import models.CBEnvelope
 import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
-import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
+import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
@@ -55,7 +56,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           CourseDuration.OneYear,
           ChildReferenceNumber("AA123456"),
           LocalDate.of(2001, 1, 1),
-          List.empty[FtneaAuditAnswer]
+          List.empty[FtneaQuestionAndAnswer]
         )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -71,7 +72,8 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
             any[ExecutionContext](),
             any[HeaderCarrier](),
-            any[DataRequest[AnyContent]]()
+            any[DataRequest[AnyContent]](),
+            any[Messages]
           )
       ) thenReturn CBEnvelope(Right((childName, childDetails)))
 
@@ -109,7 +111,8 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           .submitFtnaeInformation(any[Option[List[SummaryListRow]]])(
             any[ExecutionContext](),
             any[HeaderCarrier](),
-            any[DataRequest[AnyContent]]()
+            any[DataRequest[AnyContent]](),
+            any[Messages]
           )
       ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
 

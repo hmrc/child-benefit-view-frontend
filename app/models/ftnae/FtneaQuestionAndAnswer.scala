@@ -18,8 +18,8 @@ package models.ftnae
 
 import play.api.libs.json.Json
 
-final case class FtneaAuditAnswer(userPresentedText: String, answer: String)
+final case class FtneaQuestionAndAnswer(userPresentedText: String, answer: String)
 
-object FtneaAuditAnswer {
-  implicit val format = Json.format[FtneaAuditAnswer]
+object FtneaQuestionAndAnswer {
+  implicit val format = Json.format[FtneaQuestionAndAnswer]
 }

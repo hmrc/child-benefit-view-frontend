@@ -19,7 +19,7 @@ package services
 import connectors.FtneaConnector
 import models.common.ChildReferenceNumber
 import models.errors.FtnaeChildUserAnswersNotRetrieved
-import models.ftnae.{ChildDetails, CourseDuration, FtneaAuditAnswer}
+import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
 import models.requests.DataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, anyString}
@@ -27,6 +27,8 @@ import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.Application
+import play.api.i18n.{DefaultMessagesApi, Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
@@ -43,6 +45,11 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val hc: HeaderCarrier    = HeaderCarrier()
+  val testMessages = Map(
+    "default" -> Map("title" -> "foo bar")
+  )
+  val messagesApi       = new DefaultMessagesApi(testMessages)
+  implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
   val ftnaeConnector    = mock[FtneaConnector]
   val sessionRepository = mock[SessionRepository]
@@ -51,12 +58,12 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val SelectedUserLanguageRefForAudit = "selected-languages"
   val summaryListRows: List[SummaryListRow] =
     SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1"))) :: Nil
-  val expectedAuditAnswers = List(FtneaAuditAnswer("user-question-1", "user-answer-1"))
+  val expectedAuditAnswers = List(FtneaQuestionAndAnswer("user-question-1", "user-answer-1"))
   val childDetails = ChildDetails(
     CourseDuration.TwoYear,
     ChildReferenceNumber("AC654321C"),
     LocalDate.of(2007, 2, 10),
-    expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "en")
+    expectedAuditAnswers :+ FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "en")
   )
 
   "submitFtnaeInformation" should {
@@ -77,7 +84,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
-      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
         result mustBe Right((childName, childDetails))
       }
     }
@@ -96,7 +103,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -115,7 +122,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -134,7 +141,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -157,7 +164,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       val service = new FtnaeService(ftnaeConnector, sessionRepository)
 
-      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request).value) { result =>
+      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
         result mustBe Right((childName, childDetails))
       }
 
@@ -169,19 +176,19 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       "return list of audit items from user selected questions and answers" in {
         val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(Some(summaryListRows), "cy")
-        auditData mustBe (expectedAuditAnswers :+ FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
+        auditData mustBe (expectedAuditAnswers :+ FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered" in {
         val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(None, "cy")
-        auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, "cy"))
+        auditData mustBe List(FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "cy"))
       }
 
       "return list of chosen language only, if there are no questions answered or language support provided" in {
         val service   = new FtnaeService(ftnaeConnector, sessionRepository)
         val auditData = service.buildAuditData(None, "")
-        auditData mustBe List(FtneaAuditAnswer(SelectedUserLanguageRefForAudit, ""))
+        auditData mustBe List(FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, ""))
       }
     }
   }

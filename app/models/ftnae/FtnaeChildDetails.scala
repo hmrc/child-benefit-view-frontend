@@ -22,10 +22,10 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 final case class ChildDetails(
-    courseDuration: CourseDuration,
-    crn:            ChildReferenceNumber,
-    dateOfBirth:    LocalDate,
-    auditAnswers:   List[FtneaAuditAnswer]
+    courseDuration:           CourseDuration,
+    crn:                      ChildReferenceNumber,
+    dateOfBirth:              LocalDate,
+    ftneaQuestionsAndAnswers: List[FtneaQuestionAndAnswer]
 )
 
 object ChildDetails {

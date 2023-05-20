@@ -25,11 +25,13 @@ import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
 import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae._
 import models.requests.DataRequest
+import models.viewmodels.checkAnswers.WhichYoungPersonSummary
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import repositories.SessionRepository
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
@@ -50,7 +52,8 @@ class FtnaeService @Inject() (
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
       ec:                                     ExecutionContext,
       hc:                                     HeaderCarrier,
-      request:                                DataRequest[AnyContent]
+      request:                                DataRequest[AnyContent],
+      messages:                               Messages
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
     val maybeMatchedChild = for {
@@ -96,17 +99,19 @@ class FtnaeService @Inject() (
   def buildAuditData(
       summaryListRows:  Option[List[SummaryListRow]],
       selectedLanguage: String
-  ): List[FtneaAuditAnswer] = {
+  )(implicit messages:  Messages): List[FtneaQuestionAndAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
     val auditAnswers = summaryListRows match {
       case Some(rows) =>
-        rows.map(row => FtneaAuditAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
-      case _ => List.empty[FtneaAuditAnswer]
+        rows
+          .dropWhile(_.key == Key(Text(messages(WhichYoungPersonSummary.keyName)), ""))
+          .map(row => FtneaQuestionAndAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
+      case _ => List.empty[FtneaQuestionAndAnswer]
     }
 
-    auditAnswers :+ FtneaAuditAnswer("selected-languages", selectedLanguage)
+    auditAnswers :+ FtneaQuestionAndAnswer("selected-languages", selectedLanguage)
   }
 
 }
