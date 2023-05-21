@@ -3,12 +3,13 @@ label.back.link=Yn ôl
 service.name = Budd-dal Plant
 
 # ---------- Site Section -----------------------
+site.change = Newid
+site.no = Na
+site.yes = Iawn
+site.continue = Yn eich blaen
 site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
-site.continue = Yn eich blaen
-site.no = Na
-site.yes = Iawn
 
 # ---------- Date Section -----------------------
 
@@ -279,7 +280,6 @@ extendPayments.bulletPoint10 = ar gwrs sy’n cael ei ddarparu gan ysgol neu gol
 extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
 extendPayments.p4 = Defnyddiwch ffurflen wahanol i wneud cais {0}.
 extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
-extendPayments.checkYourAnswersLabel = extendPayments
 extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 
 # ----------  Young person not listed for FTNAE ------------
@@ -304,7 +304,7 @@ willYoungPersonBeStaying.bulletPoint3 = Lefelau T
 willYoungPersonBeStaying.bulletPoint4 = NVQ, lefel 1, 2 neu 3
 willYoungPersonBeStaying.bulletPoint5 = Bagloriaeth Ryngwladol
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
-willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y person ifanc yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch?
+willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y cwrs yn un nad yw’n addysg uwch?
 willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ neu ‘Na’
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
@@ -319,7 +319,7 @@ schoolOrCollege.change.hidden = SchoolOrCollege
 # ----------  Confirm average 12 hours per week ------------
 twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
 twelveHoursAWeek.heading = A fydd y person ifanc yn astudio’n llawn amser?
-twelveHoursAWeek.checkYourAnswersLabel = A fydd y person ifanc yn astudio’n llawn amser?
+twelveHoursAWeek.checkYourAnswersLabel = A fydd y person ifanc yn astudio ar sail amser llawn?
 twelveHoursAWeek.p1 = Mae hyn golygu treulio, ar gyfartaledd, fwy na 12 awr yr wythnos yn ystod y tymor yn gwneud pethau fel:
 twelveHoursAWeek.bulletPoint1 = astudio dan oruchwyliaeth
 twelveHoursAWeek.bulletPoint2 = cael gwersi
