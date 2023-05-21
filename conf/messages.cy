@@ -372,7 +372,7 @@ notEntitledCourseEmployerProvided.heading = Nid oes gennych hawl i barhau i gael
 notEntitledCourseEmployerProvided.p1 = Ni fydd y swyddfa Budd-dal Plant yn ymestyn taliadau os yw cwrs person ifanc yn cael ei ddarparu gan ei gyflogwr.
 
 # ----------  FTNAE check your answers ------------
-checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon - Budd-dal Plant
+checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.h2 = Anfonwch eich atebion nawr
 checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
