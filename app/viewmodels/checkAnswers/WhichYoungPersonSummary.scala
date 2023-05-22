@@ -27,7 +27,7 @@ import models.viewmodels.implicits._
 import pages.ftnae.WhichYoungPersonPage
 
 object WhichYoungPersonSummary {
-
+  val keyName = "whichYoungPerson.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(WhichYoungPersonPage).map { answer =>
       val value = ValueViewModel(
@@ -37,7 +37,7 @@ object WhichYoungPersonSummary {
       )
 
       SummaryListRowViewModel(
-        key = "whichYoungPerson.checkYourAnswersLabel",
+        key = keyName,
         value = value,
         actions = Seq(
           ActionItemViewModel("site.change", routes.WhichYoungPersonController.onPageLoad(CheckMode).url)
