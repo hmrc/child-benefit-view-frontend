@@ -33,13 +33,13 @@
         newTab = false
     )}
 
-    @viewAlreadyInformedLink = @{link( id = "view-entitlement",
+    @viewAlreadyInformedLink = @{link( id = "view-entitlement-already-informed",
         text = messages("cannotFindYoungPerson.p2.linkText"),
         call = Call("GET", messages("whichYoungPerson.formlink.ch297")),
         newTab = false
     )}
 
-    @viewEntitlementsToStopLink = @{link( id = "view-entitlement",
+    @viewEntitlementsToStopLink = @{link( id = "view-entitlement-to-stop",
         text = messages("cannotFindYoungPerson.p3.linkText"),
         call = Call("GET", routes.ProofOfEntitlementController.view.url),
         newTab = false
