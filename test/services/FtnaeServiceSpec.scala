@@ -20,7 +20,7 @@ import connectors.FtneaConnector
 import models.common.ChildReferenceNumber
 import models.errors.FtnaeChildUserAnswersNotRetrieved
 import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
-import models.requests.DataRequest
+import models.requests.{DataRequest, FtnaePaymentsExtendedPageDataRequest}
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.{reset, times, verify, when}
@@ -31,7 +31,7 @@ import play.api.i18n.DefaultMessagesApi
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import repositories.SessionRepository
+import repositories.{SessionRepository, FtnaePaymentsExtendedPageSessionRepository}
 import services.FtnaeServiceSpec.{userAnswer, userAnswerWithIncorrectCourseDuration, userAnswerWithMultipleSameCRN, userAnswerWithMultipleSameName}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
@@ -50,8 +50,9 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val messagesApi       = new DefaultMessagesApi(testMessages)
   implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
-  val ftnaeConnector    = mock[FtneaConnector]
-  val sessionRepository = mock[SessionRepository]
+  val ftnaeConnector                             = mock[FtneaConnector]
+  val sessionRepository                          = mock[SessionRepository]
+  val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
   val childName = "Lauren Sam Smith"
   val summaryListRows: List[SummaryListRow] =
@@ -70,7 +71,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       "all crns are unique, " +
       "course duration is valid" +
       "and users answers supplied" in {
-
+      reset(ftnaeConnector)
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
@@ -80,9 +81,29 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       val request: DataRequest[AnyContent] =
         DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
       whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
+        verify(ftnaeConnector, times(1))
+          .uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+
+        result mustBe Right((childName, childDetails))
+      }
+    }
+
+    "should NOT call uploadFtnaeDetails if it is a FtnaePaymentsExtended session" in {
+      reset(ftnaeConnector)
+      val fakeRequest = FakeRequest("GET", "/nothing")
+
+      val request: FtnaePaymentsExtendedPageDataRequest[AnyContent] =
+        FtnaePaymentsExtendedPageDataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
+
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
+
+      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
+        verify(ftnaeConnector, times(0))
+          .uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+
         result mustBe Right((childName, childDetails))
       }
     }
@@ -99,7 +120,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithIncorrectCourseDuration)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
@@ -118,7 +139,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithMultipleSameCRN)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
@@ -137,7 +158,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
           UserAnswers("id", data = userAnswerWithMultipleSameName)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
       whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
@@ -160,7 +181,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       val request: DataRequest[AnyContent] =
         DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository)
+      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
       whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
         result mustBe Right((childName, childDetails))
@@ -172,7 +193,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
     "submitFtnaeAuditInformation" should {
       "return list of audit items from user selected questions and answers" in {
-        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
+        val service   = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
         val auditData = service.buildAuditData(Some(summaryListRows))
         auditData mustBe expectedAuditAnswers
       }
