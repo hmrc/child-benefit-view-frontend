@@ -27,8 +27,7 @@ import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.Application
-import play.api.i18n.{DefaultMessagesApi, Messages, MessagesApi}
+import play.api.i18n.DefaultMessagesApi
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
@@ -54,8 +53,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val ftnaeConnector    = mock[FtneaConnector]
   val sessionRepository = mock[SessionRepository]
 
-  val childName                       = "Lauren Sam Smith"
-  val SelectedUserLanguageRefForAudit = "selected-languages"
+  val childName = "Lauren Sam Smith"
   val summaryListRows: List[SummaryListRow] =
     SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1"))) :: Nil
   val expectedAuditAnswers = List(FtneaQuestionAndAnswer("user-question-1", "user-answer-1"))
@@ -63,7 +61,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     CourseDuration.TwoYear,
     ChildReferenceNumber("AC654321C"),
     LocalDate.of(2007, 2, 10),
-    expectedAuditAnswers :+ FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "en")
+    expectedAuditAnswers
   )
 
   "submitFtnaeInformation" should {
@@ -175,20 +173,8 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     "submitFtnaeAuditInformation" should {
       "return list of audit items from user selected questions and answers" in {
         val service   = new FtnaeService(ftnaeConnector, sessionRepository)
-        val auditData = service.buildAuditData(Some(summaryListRows), "cy")
-        auditData mustBe (expectedAuditAnswers :+ FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "cy"))
-      }
-
-      "return list of chosen language only, if there are no questions answered" in {
-        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
-        val auditData = service.buildAuditData(None, "cy")
-        auditData mustBe List(FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, "cy"))
-      }
-
-      "return list of chosen language only, if there are no questions answered or language support provided" in {
-        val service   = new FtnaeService(ftnaeConnector, sessionRepository)
-        val auditData = service.buildAuditData(None, "")
-        auditData mustBe List(FtneaQuestionAndAnswer(SelectedUserLanguageRefForAudit, ""))
+        val auditData = service.buildAuditData(Some(summaryListRows))
+        auditData mustBe expectedAuditAnswers
       }
     }
   }

@@ -70,9 +70,8 @@ class FtnaeService @Inject() (
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
       .mapN((child, courseDuration) => {
-        val currentLanguage           = request.cookies.get("PLAY_LANG").fold("en")(cookie => cookie.value)
-        val auditData                 = buildAuditData(summaryListRows, currentLanguage)
-        val childDetailsWithAuditInfo = ChildDetails(courseDuration, child.crn, child.dateOfBirth, auditData)
+        val childDetailsWithAuditInfo =
+          ChildDetails(courseDuration, child.crn, child.dateOfBirth, buildAuditData(summaryListRows))
         (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
       })
       .toRight(FtnaeChildUserAnswersNotRetrieved)
@@ -97,21 +96,18 @@ class FtnaeService @Inject() (
   }
 
   def buildAuditData(
-      summaryListRows:  Option[List[SummaryListRow]],
-      selectedLanguage: String
-  )(implicit messages:  Messages): List[FtneaQuestionAndAnswer] = {
+      summaryListRows: Option[List[SummaryListRow]]
+  )(implicit messages: Messages): List[FtneaQuestionAndAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
-    val auditAnswers = summaryListRows match {
+    summaryListRows match {
       case Some(rows) =>
         rows
           .dropWhile(_.key == Key(Text(messages(WhichYoungPersonSummary.keyName)), ""))
           .map(row => FtneaQuestionAndAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
       case _ => List.empty[FtneaQuestionAndAnswer]
     }
-
-    auditAnswers :+ FtneaQuestionAndAnswer("selected-languages", selectedLanguage)
   }
 
 }
