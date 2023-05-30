@@ -16,7 +16,7 @@
 
 package utils.pages
 
-import models.requests.DataRequest
+import models.requests.{BaseDataRequest, DataRequest}
 import models.viewmodels.checkAnswers._
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent
@@ -28,7 +28,9 @@ trait FtnaeHelper {
     messagesApi.preferred(Seq(Lang.apply("en"))).messages
   }
 
-  def buildSummaryRows(request: DataRequest[AnyContent])(implicit messages: Messages): Option[List[SummaryListRow]] = {
+  def buildSummaryRows(
+      request:         BaseDataRequest[AnyContent]
+  )(implicit messages: Messages): Option[List[SummaryListRow]] = {
 
     for {
       whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)

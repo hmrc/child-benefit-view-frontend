@@ -24,12 +24,12 @@ import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
 import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae._
-import models.requests.DataRequest
+import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageDataRequest}
 import models.viewmodels.checkAnswers.WhichYoungPersonSummary
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.Messages
-import play.api.mvc.AnyContent
-import repositories.SessionRepository
+import play.api.mvc.{AnyContent, WrappedRequest}
+import repositories.{SessionRepository, FtnaePaymentsExtendedPageSessionRepository}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,8 +40,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-    ftneaConnector:    FtneaConnector,
-    sessionRepository: SessionRepository
+    ftneaConnector:                             FtneaConnector,
+    sessionRepository:                          SessionRepository,
+    ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
 ) {
 
   def getFtnaeInformation()(implicit
@@ -52,7 +53,7 @@ class FtnaeService @Inject() (
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
       ec:                                     ExecutionContext,
       hc:                                     HeaderCarrier,
-      request:                                DataRequest[AnyContent],
+      request:                                BaseDataRequest[AnyContent],
       messages:                               Messages
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
@@ -78,10 +79,27 @@ class FtnaeService @Inject() (
 
     for {
       childDetails <- CBEnvelope(childDetails)
-      _            <- ftneaConnector.uploadFtnaeDetails(childDetails._2)
-      _            <- CBEnvelope(sessionRepository.clear(request.userAnswers.id))
+      _            <- uploadFtnaeDetailsIfNotFtnaePaymentsExtendedPageSession(childDetails)
+      _ <- CBEnvelope[Unit](ftnaePaymentsExtendedPageSessionRepository.set(request.userAnswers)).leftFlatMap(_ =>
+        CBEnvelope(())
+      )
+      _ <- CBEnvelope(sessionRepository.clear(request.userAnswers.id))
     } yield childDetails
 
+  }
+
+  private def uploadFtnaeDetailsIfNotFtnaePaymentsExtendedPageSession(
+      childDetails: (String, ChildDetails)
+  )(implicit
+      ec:       ExecutionContext,
+      hc:       HeaderCarrier,
+      request:  BaseDataRequest[AnyContent],
+      messages: Messages
+  ) = {
+    request match {
+      case DataRequest(_, _, _)                          => ftneaConnector.uploadFtnaeDetails(childDetails._2)
+      case FtnaePaymentsExtendedPageDataRequest(_, _, _) => CBEnvelope(())
+    }
   }
 
   private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {

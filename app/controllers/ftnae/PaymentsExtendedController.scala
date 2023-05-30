@@ -32,7 +32,7 @@ class PaymentsExtendedController @Inject() (
     override val messagesApi: MessagesApi,
     identify:                 IdentifierAction,
     getData:                  CBDataRetrievalAction,
-    requireData:              DataRequiredAction,
+    requireData:              FtnaePaymentsExtendedPageDataRequiredActionImpl,
     ftneaService:             FtnaeService,
     val controllerComponents: MessagesControllerComponents,
     featureActions:           FeatureFlagComposedActions,
