@@ -37,6 +37,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[Boolean]("features.welsh-translation")
   val showOutageBanner: Boolean = configuration.get[Boolean]("features.showOutageBanner")
 
+  val scaWrapperEnabled: Boolean =
+    configuration.get[Boolean]("features.sca-wrapper-enabled")
+
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val childBenefitServiceBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
   private val exitSurveyBaseUrl:          String = configuration.get[String]("microservice.services.feedback-frontend.url")

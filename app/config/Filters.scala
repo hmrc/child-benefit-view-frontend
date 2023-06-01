@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package config
 
-@this(
-        layout: templates.LayoutProvider,
-        govukButton: GovukButton,
-        heading: Heading,
-        para: ParagraphBody
-)
+import play.api.http.{EnabledFilters, HttpFilters}
+import play.api.mvc.EssentialFilter
+import uk.gov.hmrc.sca.filters.WrapperDataFilter
 
-@()(implicit request: Request[_], messages: Messages)
+import javax.inject.{Inject, Singleton}
 
-@layout(pageTitle = titleNoForm(messages("accountNotChanged.title"))) {
+@Singleton
+class Filters @Inject()(
+                         defaultFilters: EnabledFilters,
+                         wrapperDataFilter: WrapperDataFilter,
+                         appConfig: FrontendAppConfig
+                       ) extends HttpFilters {
 
-    @heading(messages("accountNotChanged.heading"))
-    @para(messages("accountNotChanged.p1"))
 
+  override val filters: Seq[EssentialFilter] = {
+    defaultFilters.filters ++
+      Option.when(appConfig.scaWrapperEnabled)(wrapperDataFilter)
+  }
 }
