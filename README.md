@@ -1,7 +1,7 @@
 
-# child-benefit-entitlement-frontend
+# child-benefit-view-frontend
 
-## Overview and responsibility
+## OVERVIEW AND RESPONSIBILITY
 child-benefit-entitlement-frontend is a frontend service, that visualises entitlement and change of bank data retrieved from
 child-benefit-service backend service. child-benefit-entitlement-frontend retrieves data from child-benefit-service 
 end visualises the data. The current journeys implemented and deployed are:
@@ -9,13 +9,13 @@ end visualises the data. The current journeys implemented and deployed are:
 - Payment history - for a child benefit user to view their payment history for their children
 - Change of bank - for a child benefit user to change the bank account they wish to be paid into
 - Ftnae - for a child benefit user to update information about non-advanced education of their children
-## Relevant endpoints for frontend service 
+## RELEVANT ENDPOINTS FOR THE FRONT END SERVICE 
 
 - https://www.development.tax.service.gov.uk/child-benefit-service/view-proof-entitlement
 - https://www.development.tax.service.gov.uk/child-benefit/view-payment-history
 - https://www.development.tax.service.gov.uk/child-benefit/change-bank/change-account
-
-## Documentation of how to test
+- https://www.development.tax.service.gov.uk/child-benefit/staying-in-education/extend-payments
+## HOW TO TEST
 sm --start CHILD-BENEFIT-SERVICE-ALL
 
 (Having signed in to the Government Gateway on the related environment)
@@ -29,9 +29,9 @@ eg:
 - https://www.development.tax.service.gov.uk/child-benefit/view-payment-history
 - https://www.development.tax.service.gov.uk/child-benefit/change-bank/change-account
 - https://www.development.tax.service.gov.uk/child-benefit/staying-in-education/extend-payments
-## Team channel and who owns the service
+## TEAM CHANNEL AND WHO OWNS THE SERVICE
 \#team-sca-child-benefit
-## Link to confluence page
+## LINK TO CONFLUENCE PAGE
 https://confluence.tools.tax.service.gov.uk/pages/viewpage.action?pageId=504988536
 
 ### License
