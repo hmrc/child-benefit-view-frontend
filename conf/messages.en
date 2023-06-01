@@ -307,6 +307,7 @@ extendPayments.govuk.link = https://www.gov.uk/government/publications/child-ben
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.p1 = If you want to tell us about more than one young person, complete a separate declaration for each one.
+whichYoungPerson.radioLegend = Select young person’s name
 whichYoungPerson.childNotListed = Young person not listed
 whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
