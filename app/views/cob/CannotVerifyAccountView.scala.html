@@ -28,7 +28,7 @@
 
 @formLink = @{link( id = "change-of-circumstances-form",
                     text = messages("cannotVerifyAccount.link.text"),
-                    call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide")
+                    call = Call("GET", messages("external.link.claimant.changeOfCircumstances.form.link"))
             )}
 
 @layout(pageTitle = titleNoForm(messages("cannotVerifyAccount.title"))) {
