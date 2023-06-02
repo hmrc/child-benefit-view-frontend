@@ -35,7 +35,7 @@ package config
 import com.google.inject.AbstractModule
 import controllers.actions._
 import play.api.Configuration
-import views.templates.{LayoutProvider, NewLayoutProvider, OldLayoutProvider}
+import views.html.templates.{LayoutProvider, NewLayoutProvider, OldLayoutProvider}
 
 import java.time.{Clock, ZoneOffset}
 

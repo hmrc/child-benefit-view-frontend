@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package views.templates
+package views.html.templates
 
+import models.viewmodels.govuk.DataLayer
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Request
@@ -31,8 +32,10 @@ trait LayoutProvider {
   def apply(
              pageTitle: String,
              showBackLink: Boolean = true,
+             showSignOut: Boolean = true,
              timeout: Boolean = true,
-             showSignOut: Boolean = false,
+             dataLayer: Option[DataLayer] = None,
+             removePhoneNumbersAsHyperlinks: Boolean = false,
              scripts: Option[Html] = None,
              stylesheets: Option[Html] = None
            )(contentBlock: Html)(
@@ -46,10 +49,11 @@ class OldLayoutProvider @Inject()(layout: views.html.templates.Layout) extends L
 
 
   //noinspection ScalaStyle
-  override def apply(pageTitle: String, showBackLink: Boolean, timeout: Boolean, showSignOut: Boolean,
+  override def apply(pageTitle: String, showBackLink: Boolean, showSignOut: Boolean, timeout: Boolean,
+                     dataLayer: Option[DataLayer], removePhoneNumbersAsHyperlinks: Boolean,
                      scripts: Option[Html], stylesheets: Option[Html])(contentBlock: Html)
                     (implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
-    layout(pageTitle, showBackLink, timeout, showSignOut, None, false)(contentBlock)
+    layout(pageTitle, showBackLink, showSignOut, timeout, dataLayer, removePhoneNumbersAsHyperlinks)(contentBlock)
   }
 }
 
@@ -59,7 +63,8 @@ class NewLayoutProvider @Inject()(wrapperService: WrapperService,
 
 
   //noinspection ScalaStyle
-  override def apply(pageTitle: String, showBackLink: Boolean, timeout: Boolean, showSignOut: Boolean,
+  override def apply(pageTitle: String, showBackLink: Boolean, showSignOut: Boolean, timeout: Boolean,
+                     dataLayer: Option[DataLayer], removePhoneNumbersAsHyperlinks: Boolean,
                      scripts: Option[Html], stylesheets: Option[Html])(contentBlock: Html)
                     (implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     wrapperService.layout(
