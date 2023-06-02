@@ -2,7 +2,7 @@
 # child-benefit-view-frontend
 
 ## OVERVIEW AND RESPONSIBILITY
-child-benefit-view-frontend is a frontend service, that visualises entitlement and change of bank data retrieved from
+child-benefit-view-frontend is a frontend service, that visualises entitlement, payment history, change of bank data and FTNAE retrieved from
 child-benefit-service backend service. child-benefit-view-frontend retrieves data from child-benefit-service 
 end visualises the data. The current journeys implemented and deployed are:
 - Proof of entitlement - for a child benefit user to view their entitlements for their children
