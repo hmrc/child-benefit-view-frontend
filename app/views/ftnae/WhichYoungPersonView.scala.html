@@ -16,6 +16,7 @@
 
 @import components._
 @import models.ftnae.FtneaResponse
+@import models.viewmodels.LegendSize
 @import controllers.ProofOfEntitlementController._
 @import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
@@ -59,7 +60,7 @@
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel("").asPageHeading(),
+                legend = LegendViewModel(messages("whichYoungPerson.radioLegend")).asPageHeading(size = LegendSize.Medium),
                 items = getRadioItems(messages("whichYoungPerson.childNotListed"))
             )
         )
