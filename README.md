@@ -33,6 +33,8 @@ eg:
 \#team-sca-child-benefit
 ## LINK TO CONFLUENCE PAGE
 https://confluence.tools.tax.service.gov.uk/pages/viewpage.action?pageId=504988536
+https://confluence.tools.tax.service.gov.uk/display/SCAChB/Feature%3A+Change+of+ChB+Bank+Account
+https://confluence.tools.tax.service.gov.uk/pages/viewpage.action?pageId=524550686
 
 ### License
 
