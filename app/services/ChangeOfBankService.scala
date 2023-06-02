@@ -23,11 +23,12 @@ import models.CBEnvelope.CBEnvelope
 import models.changeofbank._
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.ChangeOfBankValidationError
-import models.requests.OptionalDataRequest
+import models.requests.{BaseDataRequest, OptionalDataRequest}
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Results.{Ok, Redirect}
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{AnyContent, Request, Result}
+import repositories.SessionRepository
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.ClaimantBankInformationHelper.formatClaimantBankInformation
@@ -39,7 +40,8 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class ChangeOfBankService @Inject() (
-    changeOfBankConnector: ChangeOfBankConnector
+    changeOfBankConnector: ChangeOfBankConnector,
+    sessionRepository: SessionRepository
 )(implicit auditService:   AuditService) {
 
   def retrieveBankClaimantInfo(implicit
@@ -87,7 +89,8 @@ class ChangeOfBankService @Inject() (
   }
 
   def submitClaimantChangeOfBank(
-      newBankAccountInfo: Option[NewAccountDetails]
+      newBankAccountInfo: Option[NewAccountDetails],
+      request: BaseDataRequest[AnyContent]
   )(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -95,6 +98,7 @@ class ChangeOfBankService @Inject() (
     for {
       newInfo                   <- CBEnvelope(newBankAccountInfo.toRight(ChangeOfBankValidationError(Status.BAD_REQUEST)))
       updateBankDetailsResponse <- changeOfBankConnector.updateBankAccount(toUpdateBankAccountRequest(newInfo))
+      _                         <- CBEnvelope(sessionRepository.clear(request.userAnswers.id))
     } yield updateBankDetailsResponse
 
   def dropChangeOfBankCache()(implicit

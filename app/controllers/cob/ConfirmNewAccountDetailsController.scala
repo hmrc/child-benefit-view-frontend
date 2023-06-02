@@ -108,7 +108,8 @@ class ConfirmNewAccountDetailsController @Inject() (
                     submitClaimant <-
                       changeOfBankService
                         .submitClaimantChangeOfBank(
-                          changeAccount
+                          changeAccount,
+                          request
                         )
                         .value
                   } yield {
