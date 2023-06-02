@@ -41,7 +41,6 @@ helpline.info.textPhone = Ffôn testun: 0300 200 3103
 helpline.info.outsideUKTelephone = O’r tu allan i’r DU: +44 300 200 1900
 helpline.info.availability = Dydd Llun - Dydd Gwener, 08:30 - 17:30
 helpline.info.charges = Gwybodaeth am gostau galwadau
-helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 
 # ---------- Proof of Entitlement Section -------
 proofOfEntitlement.title = Tystiolaeth o hawl i Fudd-dal Plant
@@ -247,8 +246,6 @@ whichYoungPerson.error.required = Dewiswch enw’r person ifanc neu ‘Person if
 whichYoungPerson.checkYourAnswersLabel = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
 whichYoungPerson.ftneaChild.dateOfBirth = Dyddiad geni
 whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
-whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
-
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
@@ -386,7 +383,6 @@ paymentsExtended.whatHappensNext.h2 = Yr hyn sy’n digwydd nesaf
 paymentsExtended.p1 = Bydd y taliadau Budd-dal Plant ar gyfer {0} yn cael eu talu tra’i fod yn parhau ag addysg amser llawn nad yw’n addysg uwch. Byddwch yn cael y taliadau hyn am {1}.
 paymentsExtended.changeOfCircumstances = Mae’n rhaid i chi {0}.
 paymentsExtended.changeOfCircumstances.linkText = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd amgylchiadau yn newid (yn agor tab newydd)
-paymentsExtended.changeOfCircumstances.link = https://www.gov.uk/rhoi-gwybod-am-newidiadau-budd-dal-plant
 paymentsExtended.startPage.p1 = Rhowch wybod i ni am berson ifanc arall sy’n parhau â’i addysg
 paymentsExtended.ifYouReceive.h3 = Os ydych yn cael Credyd Treth Plant
 paymentsExtended.p2 = Mae hefyd angen i chi {0}.
@@ -397,3 +393,10 @@ paymentsExtended.p4 = Plîs {0}.
 paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
 paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
+
+# ----------  External Links ------------
+external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
+external.link.helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
+external.link.changeOfCircumstances.link = https://www.gov.uk/rhoi-gwybod-am-newidiadau-budd-dal-plant
+external.link.child.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide
+external.link.claimant.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide

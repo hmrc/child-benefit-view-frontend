@@ -69,7 +69,6 @@ helpline.info.textPhone = Textphone: 0300 200 3103
 helpline.info.outsideUKTelephone = Outside UK: +44 161 210 3086
 helpline.info.availability = Monday to Friday, 8AM to 6PM
 helpline.info.charges = Find out about call charges
-helpline.info.callChargesUrl = https://www.gov.uk/call-charges
 
 # ---------- Proof of Entitlement Section -------
 proofOfEntitlement.title = Proof of entitlement to Child Benefit
@@ -301,7 +300,6 @@ extendPayments.bulletPoint10 = on a course provided by a school or college
 extendPayments.bulletPoint11 = living with you in the UK
 extendPayments.p4 = Use another form to apply {0}.
 extendPayments.p4.linkText = if their circumstances will be different
-extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 
 # ----------  Which Young Person ----------------
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
@@ -313,7 +311,6 @@ whichYoungPerson.error.required = Select a young person’s name or Young person
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
 whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
-whichYoungPerson.formlink.ch297=https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 whichYoungPerson.change.hidden = WhichYoungPerson
 
 # ----------  Young person not listed for FTNAE ------------
@@ -419,7 +416,6 @@ paymentsExtended.whatHappensNext.h2 = What happens next
 paymentsExtended.p1 = The Child Benefit payments for {0} will now be paid while they stay in full-time non-advanced education. You’ll receive the payments for {1}.
 paymentsExtended.changeOfCircumstances = You must {0}.
 paymentsExtended.changeOfCircumstances.linkText = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
-paymentsExtended.changeOfCircumstances.link = https://www.gov.uk/report-changes-child-benefit
 paymentsExtended.startPage.p1 = Tell us about another young person staying in education
 paymentsExtended.ifYouReceive.h3 = If you receive Child Tax Credit
 paymentsExtended.p2 = You also need to {0}.
@@ -430,3 +426,10 @@ paymentsExtended.p4 = Please {0}.
 paymentsExtended.feedback.link.text = take the feedback survey
 paymentsExtended.courseDuration.oneYear = 1 year
 paymentsExtended.courseDuration.twoYears = 2 years
+
+# ----------  External Links ------------
+external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
+external.link.helpline.info.callChargesUrl = https://www.gov.uk/call-charges
+external.link.changeOfCircumstances.link = https://www.gov.uk/report-changes-child-benefit
+external.link.child.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide
+external.link.claimant.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide

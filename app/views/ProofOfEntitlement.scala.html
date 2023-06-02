@@ -36,12 +36,12 @@
 
 @claimantChocLink = @{link( id = "claimant-change-of-circumstances-link",
                         text = messages("proofOfEntitlement.entitlementdetail.p1.link.1"),
-                        call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide")
+                        call = Call("GET", messages("external.link.claimant.changeOfCircumstances.form.link"))
                         )}
 
 @childChocLink = @{link( id = "child-change-of-circumstances-link",
                         text = messages("proofOfEntitlement.entitlementdetail.p1.link.2"),
-                        call = Call("GET", "https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide")
+                        call = Call("GET", messages("external.link.child.changeOfCircumstances.form.link"))
                         )}
 
 @paymentsLink = @{link( id = "recent-payments-link",
