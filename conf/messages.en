@@ -335,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
 willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
 willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
-willYoungPersonBeStaying.error.required = Select Yes or No
+willYoungPersonBeStaying.error.required = Select yes if {0} will be studying one of these non-advanced courses.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------

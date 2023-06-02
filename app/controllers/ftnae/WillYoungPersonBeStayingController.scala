@@ -16,14 +16,20 @@
 
 package controllers.ftnae
 
+import cats.data.EitherT
 import controllers.actions._
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import models.Mode
+import models.errors.CBError
+import models.ftnae.FtneaClaimantInfo
 import pages.ftnae.WillYoungPersonBeStayingPage
+import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
+import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.handlers.ErrorHandler
 import utils.navigation.Navigator
 import views.html.ftnae.WillYoungPersonBeStayingView
 
@@ -40,8 +46,10 @@ class WillYoungPersonBeStayingController @Inject() (
     formProvider:             WillYoungPersonBeStayingFormProvider,
     val controllerComponents: MessagesControllerComponents,
     featureActions:           FeatureFlagComposedActions,
+    ftneaService:             FtnaeService,
+    errorHandler:             ErrorHandler,
     view:                     WillYoungPersonBeStayingView
-)(implicit ec:                ExecutionContext)
+)(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
 
@@ -62,7 +70,25 @@ class WillYoungPersonBeStayingController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => {
+            val result: EitherT[Future, CBError, FtneaClaimantInfo] = for {
+              ftneaResponse <- ftneaService.getFtnaeInformation()
+            } yield ftneaResponse.claimant
+
+            result.fold[Result](
+              l => errorHandler.handleError(l),
+              claimant => {
+                val errors: Seq[FormError] =
+                  formWithErrors.errors.headOption
+                    .map(x =>
+                      Seq(x.copy(messages = Seq(formWithErrors.errors.head.message), args = Seq(claimant.name.value)))
+                    )
+                    .getOrElse(Nil)
+                BadRequest(view(formWithErrors.copy(errors = errors), mode))
+              }
+            )
+
+          },
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(WillYoungPersonBeStayingPage, value))
