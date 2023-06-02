@@ -17,8 +17,12 @@
 package controllers.ftnae
 
 import base.CBSpecBase
+import connectors.FtneaConnector
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
-import models.{NormalMode, UserAnswers}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.{CBEnvelope, NormalMode, UserAnswers}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.WillYoungPersonBeStayingPage
@@ -27,11 +31,13 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillYoungPersonBeStayingView
 
-import scala.concurrent.Future
+import java.time.LocalDate
+import scala.concurrent.{ExecutionContext, Future}
 
 class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSugar {
 
@@ -43,6 +49,9 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
   lazy val willYoungPersonBeStayingRoute =
     controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
+
+  val mockSessionRepository = mock[SessionRepository]
+  val mockFtneaConnector    = mock[FtneaConnector]
 
   "WillYoungPersonBeStaying Controller" - {
 
@@ -142,7 +151,28 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .build()
+
+      val ftneaResponse = FtneaResponse(
+        FtneaClaimantInfo(FirstForename("{0}"), Surname("sa")),
+        List(
+          FtneaChildInfo(
+            ChildReferenceNumber("crn1234"),
+            FirstForename("Smith"),
+            None,
+            Surname("Surname"),
+            LocalDate.now(),
+            LocalDate.now()
+          )
+        )
+      )
+
+      when(
+        mockFtneaConnector.getFtneaAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn (CBEnvelope(ftneaResponse))
 
       running(application) {
         val request =

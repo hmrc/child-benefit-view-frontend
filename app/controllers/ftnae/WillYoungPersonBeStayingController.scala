@@ -76,7 +76,9 @@ class WillYoungPersonBeStayingController @Inject() (
             } yield ftneaResponse.claimant
 
             result.fold[Result](
-              l => errorHandler.handleError(l),
+              l => {
+                errorHandler.handleError(l)
+              },
               claimant => {
                 val errors: Seq[FormError] =
                   formWithErrors.errors.headOption

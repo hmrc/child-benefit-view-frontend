@@ -60,10 +60,26 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftne
 
   "ExtendPayments Controller" - {
     "must return OK and the correct view for a GET, call the backend service, and store the result in session" in {
+
+      val ftneaResponse = FtneaResponse(
+        FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+        List(
+          FtneaChildInfo(
+            ChildReferenceNumber("crn1234"),
+            FirstForename("First Name"),
+            None,
+            Surname("Surname"),
+            sixteenBy1stOfSeptemberThisYear,
+            getFirstMondayOfSeptemberThisYear()
+          )
+        )
+      )
+
       val userAnswers = UserAnswers(userAnswersId)
         .set(FtneaResponseUserAnswer, ftneaResponse)
         .success
         .value
+
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
