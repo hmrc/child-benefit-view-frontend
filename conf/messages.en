@@ -427,6 +427,7 @@ paymentsExtended.courseDuration.oneYear = 1 year
 paymentsExtended.courseDuration.twoYears = 2 years
 
 # ----------  External Links ------------
+external.link.formlink.child-benefit-16-19 = https://www.gov.uk/child-benefit-16-19
 external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
 external.link.helpline.info.callChargesUrl = https://www.gov.uk/call-charges
 external.link.changeOfCircumstances.link = https://www.gov.uk/report-changes-child-benefit
