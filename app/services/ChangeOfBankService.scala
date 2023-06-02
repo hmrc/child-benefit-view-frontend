@@ -41,7 +41,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ChangeOfBankService @Inject() (
     changeOfBankConnector: ChangeOfBankConnector,
-    sessionRepository: SessionRepository
+    sessionRepository:     SessionRepository
 )(implicit auditService:   AuditService) {
 
   def retrieveBankClaimantInfo(implicit
@@ -90,7 +90,7 @@ class ChangeOfBankService @Inject() (
 
   def submitClaimantChangeOfBank(
       newBankAccountInfo: Option[NewAccountDetails],
-      request: BaseDataRequest[AnyContent]
+      request:            BaseDataRequest[AnyContent]
   )(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier

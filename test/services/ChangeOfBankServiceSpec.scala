@@ -1,3 +1,0 @@
-package services class ChangeOfBankServiceSpec {
-
-}

@@ -77,7 +77,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
 
     override def submitClaimantChangeOfBank(
         newBankAccountInfo: Option[NewAccountDetails],
-        request: BaseDataRequest[AnyContent]
+        request:            BaseDataRequest[AnyContent]
     )(implicit
         ec: ExecutionContext,
         hc: HeaderCarrier
