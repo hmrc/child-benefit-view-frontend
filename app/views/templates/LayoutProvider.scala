@@ -49,7 +49,7 @@ class OldLayoutProvider @Inject()(layout: views.html.templates.Layout) extends L
   override def apply(pageTitle: String, showBackLink: Boolean, timeout: Boolean, showSignOut: Boolean,
                      scripts: Option[Html], stylesheets: Option[Html])(contentBlock: Html)
                     (implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
-    layout(pageTitle, showBackLink, timeout, showSignOut, scripts, stylesheets)(contentBlock)
+    layout(pageTitle, showBackLink, timeout, showSignOut, None, false)(contentBlock)
   }
 }
 
