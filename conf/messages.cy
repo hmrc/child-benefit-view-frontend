@@ -394,6 +394,7 @@ paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
 
 # ----------  External Links ------------
+external.link.formlink.child-benefit-16-19 = https://www.gov.uk/child-benefit-16-19
 external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 external.link.helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 external.link.changeOfCircumstances.link = https://www.gov.uk/rhoi-gwybod-am-newidiadau-budd-dal-plant

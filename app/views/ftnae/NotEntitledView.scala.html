@@ -28,12 +28,12 @@
 
 @fullTimeEducationLink = @{link( id = "full-time-education-link",
     text = messages("notEntitled.bulletPoint1.linkText"),
-    call = Call("GET", "https://www.gov.uk/child-benefit-16-19")
+    call = Call("GET", messages("external.link.formlink.child-benefit-16-19"))
 )}
 
  @approvedTrainingLink = @{link( id = "approved-training-link",
     text = messages("notEntitled.p2.linkText"),
-    call = Call("GET", "https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297"),
+    call = Call("GET", messages("external.link.formlink.ch297")),
     newTab = false
  )}
 
