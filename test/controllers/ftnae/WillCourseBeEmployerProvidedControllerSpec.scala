@@ -18,11 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
-import models.ftnae.HowManyYears
+import models.common.{FirstForename, Surname}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse, HowManyYears}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{HowManyYearsPage, SchoolOrCollegePage, WillCourseBeEmployerProvidedPage}
+import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, SchoolOrCollegePage, WillCourseBeEmployerProvidedPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -40,7 +41,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillCourseBeEmployerProvidedFormProvider()
-  val form         = formProvider()
+  val form         = formProvider("claimant-name")
 
   lazy val willCourseBeEmployerProvidedRoute =
     controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode).url
@@ -164,8 +165,16 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
+      val ftneaResponse =
+        FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")), List.empty[FtneaChildInfo])
 
-      val userAnswers = UserAnswers(userAnswersId).set(SchoolOrCollegePage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .success
+        .value
+        .set(SchoolOrCollegePage, true)
+        .success
+        .value
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
 

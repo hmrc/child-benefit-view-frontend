@@ -48,7 +48,7 @@ class TwelveHoursAWeekController @Inject() (
 
   def form[A](implicit request: DataRequest[A]) = {
     val displayName = request.userAnswers.get(FtneaResponseUserAnswer) match {
-      case None => "N/A"
+      case None       => "N/A"
       case Some(item) => item.claimant.name.value
     }
     formProvider(request.userAnswers.get(WhichYoungPersonPage).getOrElse(displayName))
