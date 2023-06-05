@@ -345,7 +345,7 @@ howManyYears.oneyear = 1 flwyddyn
 howManyYears.twoyears = 2 flynedd
 howManyYears.other = Arall
 howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.error.required = Dewiswch 1 flwyddyn, 2 flynedd neu Arall
+howManyYears.error.required = Dywedwch wrthym am sawl blwyddyn academaidd y bydd y cwrs yn para.
 howManyYears.change.hidden = HowManyYears
 
 # ----------  Check if course is provided by employer ------------
