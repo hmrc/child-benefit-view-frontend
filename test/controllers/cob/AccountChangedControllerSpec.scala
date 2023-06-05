@@ -26,6 +26,7 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
 import testconfig.TestConfig
 import testconfig.TestConfig._
@@ -42,9 +43,10 @@ import scala.concurrent.ExecutionContext
 class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
 
   val mockCobConnector          = mock[ChangeOfBankConnector]
+  val mockSessionRepository     = mock[SessionRepository]
   implicit val mockAuditService = mock[AuditService]
 
-  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector) {
+  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector, mockSessionRepository) {
 
     override def dropChangeOfBankCache()(implicit ec: ExecutionContext, hc: HeaderCarrier): CBEnvelope[Unit] = {
       CBEnvelope(())

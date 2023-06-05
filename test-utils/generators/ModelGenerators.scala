@@ -29,17 +29,20 @@ import java.time.LocalDate
 
 trait ModelGenerators {
 
-  implicit lazy val arbitraryHowManyYears: Arbitrary[HowManyYears] =
+  implicit lazy val arbitraryHowManyYears: Arbitrary[HowManyYears] = {
     Arbitrary {
       Gen.oneOf(HowManyYears.values.toSeq)
     }
-  private val ALLOWED_SORT_CODE_LENGTH = 6
+  }
+  private val ACCOUNT_HOLDER_MAX_LENGTH     = 30
+  private val ALLOWED_SORT_CODE_LENGTH      = 6
+  private val ALLOWED_ACCOUNT_NUMBER_LENGTH = 8
   implicit lazy val arbitraryNewAccountDetails: Arbitrary[NewAccountDetails] =
     Arbitrary {
       for {
-        accountHolder <- arbitrary[String]
-        sortCode      <- arbitrary[String].map(_.take(ALLOWED_SORT_CODE_LENGTH))
-        accountNumber <- arbitrary[String]
+        accountHolder <- alphaStr.suchThat(_.length > 0).map(_.take(ACCOUNT_HOLDER_MAX_LENGTH))
+        sortCode      <- numStr.map(_.take(ALLOWED_SORT_CODE_LENGTH))
+        accountNumber <- numStr.map(_.take(ALLOWED_ACCOUNT_NUMBER_LENGTH))
       } yield NewAccountDetails(accountHolder, sortCode, accountNumber)
     }
   implicit lazy val arbitraryConfirmNewAccountDetails: Arbitrary[ConfirmNewAccountDetails] =
@@ -202,4 +205,10 @@ trait ModelGenerators {
       ClaimantBankAccountInformation(None, None, None, None)
     }
 
+  val generateId: Arbitrary[String] =
+    Arbitrary {
+      for {
+        id <- alphaNumStr.suchThat(_.length >= 25).map(_.take(25))
+      } yield id
+    }
 }

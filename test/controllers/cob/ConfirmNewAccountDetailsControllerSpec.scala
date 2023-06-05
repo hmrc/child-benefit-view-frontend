@@ -23,6 +23,7 @@ import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.ConfirmNewAccountDetails.Yes
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankDetailsResponse}
+import models.requests.BaseDataRequest
 import models.{CBEnvelope, NormalMode, UserAnswers}
 import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
@@ -32,7 +33,7 @@ import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import play.api.Application
 import play.api.data.Form
 import play.api.inject.bind
-import play.api.mvc.Call
+import play.api.mvc.{AnyContent, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -68,14 +69,15 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
   val formProvider = new ConfirmNewAccountDetailsFormProvider()
   val form: Form[ConfirmNewAccountDetails] = formProvider()
 
-  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector) {
+  val cobService: ChangeOfBankService = new ChangeOfBankService(mockCobConnector, mockSessionRepository) {
     override def retrieveBankClaimantInfo(implicit
         ec: ExecutionContext,
         hc: HeaderCarrier
     ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(claimantBankInformation)
 
     override def submitClaimantChangeOfBank(
-        newBankAccountInfo: Option[NewAccountDetails]
+        newBankAccountInfo: Option[NewAccountDetails],
+        request:            BaseDataRequest[AnyContent]
     )(implicit
         ec: ExecutionContext,
         hc: HeaderCarrier
