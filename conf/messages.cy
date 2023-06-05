@@ -324,7 +324,7 @@ twelveHoursAWeek.bulletPoint2 = cael gwersi
 twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
 twelveHoursAWeek.bulletPoint4 = arholiadau
 twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
-twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn astudio ar sail amser llawn.
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 # ---------- QYP not eligible for FTNAE extension (general) ------------

@@ -356,7 +356,7 @@ twelveHoursAWeek.bulletPoint2 = receiving tuition
 twelveHoursAWeek.bulletPoint3 = practical work
 twelveHoursAWeek.bulletPoint4 = exams
 twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
-twelveHoursAWeek.error.required = Select Yes or No
+twelveHoursAWeek.error.required = Select yes if [{0}] will study full-time.
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 # ----------  QYP not eligible for FTNAE extension (general)  ------------

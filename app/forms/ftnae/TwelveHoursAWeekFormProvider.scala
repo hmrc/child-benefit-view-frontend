@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class TwelveHoursAWeekFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(claimantName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("twelveHoursAWeek.error.required")
+      "value" -> boolean("twelveHoursAWeek.error.required", args = Seq(claimantName))
     )
 }
