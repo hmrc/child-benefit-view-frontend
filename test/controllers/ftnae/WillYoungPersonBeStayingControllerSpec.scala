@@ -18,10 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
+import models.common.{FirstForename, Surname}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.WillYoungPersonBeStayingPage
+import pages.ftnae.{FtneaResponseUserAnswer, WillYoungPersonBeStayingPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,7 +41,7 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillYoungPersonBeStayingFormProvider()
-  val form         = formProvider()
+  val form         = formProvider("claimant-name")
 
   lazy val willYoungPersonBeStayingRoute =
     controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
@@ -142,7 +144,14 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val ftneaResponse = FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")),List.empty[FtneaChildInfo])
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .success
+        .value
+
+      val application = applicationBuilder(Some(userAnswers)).build()
 
       running(application) {
         val request =

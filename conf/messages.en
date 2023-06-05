@@ -305,7 +305,6 @@ extendPayments.p4.linkText = if their circumstances will be different
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.p1 = If you want to tell us about more than one young person, complete a separate declaration for each one.
-whichYoungPerson.radioLegend = Select young person’s name
 whichYoungPerson.childNotListed = Young person not listed
 whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
@@ -336,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
 willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
 willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
-willYoungPersonBeStaying.error.required = Select Yes or No
+willYoungPersonBeStaying.error.required = Select yes if [{0}] will be studying one of these non-advanced courses.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------

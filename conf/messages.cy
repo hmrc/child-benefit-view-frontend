@@ -303,7 +303,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQ, lefel 1, 2 neu 3
 willYoungPersonBeStaying.bulletPoint5 = Bagloriaeth Ryngwladol
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
 willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y cwrs yn un nad yw’n addysg uwch?
-willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------
