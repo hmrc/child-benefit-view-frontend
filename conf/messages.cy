@@ -311,7 +311,7 @@ schoolOrCollege.title = A fydd ysgol neu goleg yn darparu’r cwrs?
 schoolOrCollege.heading = A fydd ysgol neu goleg yn darparu’r cwrs?
 schoolOrCollege.p1 = Gallwch ddewis ‘Iawn’ os bydd y person ifanc ar gwrs a ddarperir gan ysgol neu goleg yn y DU ond yn astudio gartref.
 schoolOrCollege.checkYourAnswersLabel = A fydd ysgol neu goleg yn darparu’r cwrs?
-schoolOrCollege.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+schoolOrCollege.error.required = Dewiswch ‘Iawn’ os bydd ysgol neu goleg yn darparu’r cwrs.
 schoolOrCollege.change.hidden = SchoolOrCollege
 
 # ----------  Confirm average 12 hours per week ------------

@@ -343,7 +343,7 @@ schoolOrCollege.title = Will the course be provided by a school or college?
 schoolOrCollege.heading = Will the course be provided by a school or college?
 schoolOrCollege.p1 = You can select ‘yes’ if the young person will be on a course provided by a UK school or college but studying at home.
 schoolOrCollege.checkYourAnswersLabel = Will the course be provided by a school or college?
-schoolOrCollege.error.required = Select Yes or No
+schoolOrCollege.error.required = Select yes if the course will be provided by a school or college.
 schoolOrCollege.change.hidden = SchoolOrCollege
 
 # ----------  Confirm average 12 hours per week ------------
