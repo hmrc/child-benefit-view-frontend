@@ -25,7 +25,7 @@ class WillYoungPersonBeStayingFormProviderSpec extends BooleanFieldBehaviours {
   val requiredKey = "willYoungPersonBeStaying.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new WillYoungPersonBeStayingFormProvider()()
+  val form = new WillYoungPersonBeStayingFormProvider()("Test QYP")
 
   ".value" - {
 

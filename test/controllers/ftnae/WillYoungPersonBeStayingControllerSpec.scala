@@ -45,7 +45,7 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillYoungPersonBeStayingFormProvider()
-  val form         = formProvider()
+  val form         = formProvider("Test QYP")
 
   lazy val willYoungPersonBeStayingRoute =
     controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url

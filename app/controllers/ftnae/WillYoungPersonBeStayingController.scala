@@ -22,7 +22,8 @@ import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import models.Mode
 import models.errors.CBError
 import models.ftnae.FtneaClaimantInfo
-import pages.ftnae.WillYoungPersonBeStayingPage
+import models.requests.DataRequest
+import pages.ftnae.{WhichYoungPersonPage, WillYoungPersonBeStayingPage}
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -53,7 +54,7 @@ class WillYoungPersonBeStayingController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  def form[A](implicit request: DataRequest[A]) = formProvider(request.userAnswers.get(WhichYoungPersonPage).getOrElse("N/A"))
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
@@ -70,27 +71,7 @@ class WillYoungPersonBeStayingController @Inject() (
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => {
-            val result: EitherT[Future, CBError, FtneaClaimantInfo] = for {
-              ftneaResponse <- ftneaService.getFtnaeInformation()
-            } yield ftneaResponse.claimant
-
-            result.fold[Result](
-              l => {
-                errorHandler.handleError(l)
-              },
-              claimant => {
-                val errors: Seq[FormError] =
-                  formWithErrors.errors.headOption
-                    .map(x =>
-                      Seq(x.copy(messages = Seq(formWithErrors.errors.head.message), args = Seq(claimant.name.value)))
-                    )
-                    .getOrElse(Nil)
-                BadRequest(view(formWithErrors.copy(errors = errors), mode))
-              }
-            )
-
-          },
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(WillYoungPersonBeStayingPage, value))

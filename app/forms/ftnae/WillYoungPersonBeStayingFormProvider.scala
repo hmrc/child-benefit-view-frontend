@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class WillYoungPersonBeStayingFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(selectedQYP: String): Form[Boolean] =
     Form(
-      "value" -> boolean("willYoungPersonBeStaying.error.required")
+      "value" -> boolean("willYoungPersonBeStaying.error.required", args = Seq(selectedQYP))
     )
 }
