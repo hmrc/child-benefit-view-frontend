@@ -22,6 +22,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
 
@@ -74,7 +75,10 @@ class NewLayoutProvider @Inject()(wrapperService: WrapperService,
       showBackLinkJS = showBackLink,
       scripts = scripts.toSeq :+ additionalScript(),
       styleSheets = stylesheets.toSeq :+ headBlock(),
-      fullWidth = false
+      fullWidth = false,
+      bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
+      showSignOutInHeader = true,
+      hideMenuBar = true
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }
