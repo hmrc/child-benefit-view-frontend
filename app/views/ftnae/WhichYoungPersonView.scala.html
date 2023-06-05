@@ -38,7 +38,7 @@
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
     }
-    @heading(messages("whichYoungPerson.heading"))
+    @heading(messages("whichYoungPerson.heading"), "govuk-heading-l")
     @para(messages("whichYoungPerson.p1"))
 
     @for(child <- ftneaResponse.children) {
@@ -60,7 +60,7 @@
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(messages("whichYoungPerson.radioLegend")).asPageHeading(size = LegendSize.Medium),
+                legend = LegendViewModel(messages("whichYoungPerson.radioLegend")).asFieldSetHeading(size = LegendSize.Medium),
                 items = getRadioItems(messages("whichYoungPerson.childNotListed"))
             )
         )

@@ -79,6 +79,11 @@ trait FieldsetFluency {
         .withCssClass(size.toString)
         .withCssClass("govuk-fieldset__legend-as-header")
 
+    def asFieldSetHeading(size: LegendSize = LegendSize.ExtraLarge): Legend =
+      legend
+        .copy()
+        .withCssClass(size.toString)
+
     def withCssClass(newClass: String): Legend =
       legend copy (classes = s"${legend.classes} $newClass")
   }
