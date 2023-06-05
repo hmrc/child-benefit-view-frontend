@@ -361,7 +361,7 @@ liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd y
 liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
 liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
 liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
-liveWithYouInUK.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+liveWithYouInUK.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn byw gyda chi yn y DU pan fydd yn derbyn addysg.
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
