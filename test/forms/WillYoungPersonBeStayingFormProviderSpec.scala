@@ -25,7 +25,7 @@ class WillYoungPersonBeStayingFormProviderSpec extends BooleanFieldBehaviours {
   val requiredKey = "willYoungPersonBeStaying.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new WillYoungPersonBeStayingFormProvider()()
+  val form = new WillYoungPersonBeStayingFormProvider()("claimant-name")
 
   ".value" - {
 
@@ -34,13 +34,13 @@ class WillYoungPersonBeStayingFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, List("claimant-name"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, List("claimant-name"))
     )
   }
 }

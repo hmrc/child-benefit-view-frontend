@@ -18,10 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.TwelveHoursAWeekFormProvider
+import models.common.{FirstForename, Surname}
+import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{SchoolOrCollegePage, TwelveHoursAWeekPage}
+import pages.ftnae.{FtneaResponseUserAnswer, SchoolOrCollegePage, TwelveHoursAWeekPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,7 +41,7 @@ class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new TwelveHoursAWeekFormProvider()
-  val form         = formProvider()
+  val form         = formProvider("claimant-name")
 
   lazy val twelveHoursAWeekRoute = controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(CheckMode).url
 
@@ -141,7 +143,15 @@ class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val ftneaResponse =
+        FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")), List.empty[FtneaChildInfo])
+
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .success
+        .value
+
+      val application = applicationBuilder(Some(userAnswers)).build()
 
       running(application) {
         val request =

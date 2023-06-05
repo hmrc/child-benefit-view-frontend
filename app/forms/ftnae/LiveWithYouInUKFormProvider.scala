@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class LiveWithYouInUKFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(claimantName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("liveWithYouInUK.error.required")
+      "value" -> boolean("liveWithYouInUK.error.required", args = Seq(claimantName))
     )
 }

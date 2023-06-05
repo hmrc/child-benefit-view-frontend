@@ -19,7 +19,8 @@ package controllers.ftnae
 import controllers.actions._
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import models.Mode
-import pages.ftnae.WillYoungPersonBeStayingPage
+import models.requests.DataRequest
+import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage, WillYoungPersonBeStayingPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -45,7 +46,13 @@ class WillYoungPersonBeStayingController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  def form[A](implicit request: DataRequest[A]) = {
+    val displayName = request.userAnswers.get(FtneaResponseUserAnswer) match {
+      case None       => "N/A"
+      case Some(item) => item.claimant.name.value
+    }
+    formProvider(request.userAnswers.get(WhichYoungPersonPage).getOrElse(displayName))
+  }
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>

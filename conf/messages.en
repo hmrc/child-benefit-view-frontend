@@ -305,7 +305,6 @@ extendPayments.p4.linkText = if their circumstances will be different
 whichYoungPerson.title = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.heading = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.p1 = If you want to tell us about more than one young person, complete a separate declaration for each one.
-whichYoungPerson.radioLegend = Select young person’s name
 whichYoungPerson.childNotListed = Young person not listed
 whichYoungPerson.error.required = Select a young person’s name or Young person not listed.
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
@@ -336,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
 willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
 willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
-willYoungPersonBeStaying.error.required = Select Yes or No
+willYoungPersonBeStaying.error.required = Select yes if {0} will be studying one of these non-advanced courses.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------
@@ -344,7 +343,7 @@ schoolOrCollege.title = Will the course be provided by a school or college?
 schoolOrCollege.heading = Will the course be provided by a school or college?
 schoolOrCollege.p1 = You can select ‘yes’ if the young person will be on a course provided by a UK school or college but studying at home.
 schoolOrCollege.checkYourAnswersLabel = Will the course be provided by a school or college?
-schoolOrCollege.error.required = Select Yes or No
+schoolOrCollege.error.required = Select yes if the course will be provided by a school or college.
 schoolOrCollege.change.hidden = SchoolOrCollege
 
 # ----------  Confirm average 12 hours per week ------------
@@ -357,7 +356,7 @@ twelveHoursAWeek.bulletPoint2 = receiving tuition
 twelveHoursAWeek.bulletPoint3 = practical work
 twelveHoursAWeek.bulletPoint4 = exams
 twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
-twelveHoursAWeek.error.required = Select Yes or No
+twelveHoursAWeek.error.required = Select yes if {0} will study full-time.
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 # ----------  QYP not eligible for FTNAE extension (general)  ------------
@@ -378,7 +377,7 @@ howManyYears.oneyear = 1 year
 howManyYears.twoyears = 2 years
 howManyYears.other = Other
 howManyYears.checkYourAnswersLabel = How many academic years will the course last?
-howManyYears.error.required = Select 1 year, 2 years or Other
+howManyYears.error.required = Tell us how many academic years the course will last.
 howManyYears.change.hidden = HowManyYears
 
 # ----------  Check if course is provided by employer ------------
@@ -386,7 +385,7 @@ willCourseBeEmployerProvided.title = Will the course be provided by the young pe
 willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
 willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
 willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.error.required = Select Yes or No
+willCourseBeEmployerProvided.error.required = Select yes if {0}’s employer will provide the course.
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
@@ -399,7 +398,7 @@ liveWithYouInUK.title = Will the young person live with you in the UK when they�
 liveWithYouInUK.heading = Will the young person live with you in the UK when they’re in education?
 liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
 liveWithYouInUK.p1 = This includes during term time.
-liveWithYouInUK.error.required = Select Yes or No
+liveWithYouInUK.error.required = Select yes if {0} will live with you in the UK when they’re in education.
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 # ----------  FTNAE check your answers ------------
