@@ -353,7 +353,7 @@ willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu�
 willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
 willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
 willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
-willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ neu ‘Na’
+willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ os bydd cyflogwr [{0}] yn darparu’r cwrs.
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  Confirm QYP lives with claimant ------------

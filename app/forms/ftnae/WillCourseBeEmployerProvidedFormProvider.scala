@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 class WillCourseBeEmployerProvidedFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(claimantName: String): Form[Boolean] =
     Form(
-      "value" -> boolean("willCourseBeEmployerProvided.error.required")
+      "value" -> boolean("willCourseBeEmployerProvided.error.required", args = Seq(claimantName))
     )
 }

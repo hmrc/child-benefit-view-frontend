@@ -385,7 +385,7 @@ willCourseBeEmployerProvided.title = Will the course be provided by the young pe
 willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
 willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
 willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.error.required = Select Yes or No
+willCourseBeEmployerProvided.error.required = Select yes if [{0}]’s employer will provide the course.
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
