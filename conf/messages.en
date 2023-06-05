@@ -335,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQs, level 1, 2 or 3
 willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
 willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
-willYoungPersonBeStaying.error.required = Select yes if [{0}] will be studying one of these non-advanced courses.
+willYoungPersonBeStaying.error.required = Select yes if {0} will be studying one of these non-advanced courses.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------
@@ -356,7 +356,7 @@ twelveHoursAWeek.bulletPoint2 = receiving tuition
 twelveHoursAWeek.bulletPoint3 = practical work
 twelveHoursAWeek.bulletPoint4 = exams
 twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
-twelveHoursAWeek.error.required = Select yes if [{0}] will study full-time.
+twelveHoursAWeek.error.required = Select yes if {0} will study full-time.
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 # ----------  QYP not eligible for FTNAE extension (general)  ------------
@@ -385,7 +385,7 @@ willCourseBeEmployerProvided.title = Will the course be provided by the young pe
 willCourseBeEmployerProvided.heading = Will the course be provided by the young person’s employer?
 willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
 willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
-willCourseBeEmployerProvided.error.required = Select yes if [{0}]’s employer will provide the course.
+willCourseBeEmployerProvided.error.required = Select yes if {0}’s employer will provide the course.
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
@@ -398,7 +398,7 @@ liveWithYouInUK.title = Will the young person live with you in the UK when they�
 liveWithYouInUK.heading = Will the young person live with you in the UK when they’re in education?
 liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
 liveWithYouInUK.p1 = This includes during term time.
-liveWithYouInUK.error.required = Select yes if [{0}] will live with you in the UK when they’re in education.
+liveWithYouInUK.error.required = Select yes if {0} will live with you in the UK when they’re in education.
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 # ----------  FTNAE check your answers ------------

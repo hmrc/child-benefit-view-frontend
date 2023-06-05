@@ -303,7 +303,7 @@ willYoungPersonBeStaying.bulletPoint4 = NVQ, lefel 1, 2 neu 3
 willYoungPersonBeStaying.bulletPoint5 = Bagloriaeth Ryngwladol
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
 willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y cwrs yn un nad yw’n addysg uwch?
-willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch.
+willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ os bydd {0} yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch.
 willYoungPersonBeStaying.change.hidden = WillYoungPersonBeStaying
 
 # ----------  Confirm School Or College ------------
@@ -324,7 +324,7 @@ twelveHoursAWeek.bulletPoint2 = cael gwersi
 twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
 twelveHoursAWeek.bulletPoint4 = arholiadau
 twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
-twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn astudio ar sail amser llawn.
+twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ os bydd {0} yn astudio ar sail amser llawn.
 twelveHoursAWeek.change.hidden = TwelveHoursAWeek
 
 # ---------- QYP not eligible for FTNAE extension (general) ------------
@@ -353,7 +353,7 @@ willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu�
 willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
 willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
 willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
-willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ os bydd cyflogwr [{0}] yn darparu’r cwrs.
+willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ os bydd cyflogwr {0} yn darparu’r cwrs.
 willCourseBeEmployerProvided.change.hidden = WillCourseBeEmployerProvided
 
 # ----------  Confirm QYP lives with claimant ------------
@@ -361,7 +361,7 @@ liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd y
 liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
 liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
 liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
-liveWithYouInUK.error.required = Dewiswch ‘Iawn’ os bydd [{0}] yn byw gyda chi yn y DU pan fydd yn derbyn addysg.
+liveWithYouInUK.error.required = Dewiswch ‘Iawn’ os bydd {0} yn byw gyda chi yn y DU pan fydd yn derbyn addysg.
 liveWithYouInUK.change.hidden = LiveWithYouInUK
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
