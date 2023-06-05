@@ -47,7 +47,7 @@
 @taxCreditChangesLink = @{
     link(id = "tax-credit-changes-link",
         text = messages("paymentsExtended.p2.link"),
-        call = Call("GET", "https://www.gov.uk/changes-affect-tax-credits"),
+        call = Call("GET", messages("external.link.formlink.tax.credit.affect")),
         newTab = false
     )
 }
