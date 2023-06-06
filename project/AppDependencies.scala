@@ -13,7 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % HMRCBoostrapPlayVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HMRCMongoPlayVersion,
     "org.typelevel"     %% "cats-core"                     % "2.9.0",
-    "uk.gov.hmrc"       %% "sca-wrapper"                   % "1.0.34"
+    "uk.gov.hmrc"       %% "sca-wrapper"                   % "1.0.35"
   )
 
   val test: Seq[ModuleID] = Seq(
