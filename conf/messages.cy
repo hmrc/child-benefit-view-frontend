@@ -62,8 +62,7 @@ proofOfEntitlement.enddate = Dyddiad dod i ben
 proofOfEntitlement.awardDetail = Manylion dyfarniad Budd-dal Plant ar gyfe {0}
 proofOfEntitlement.dateOfBirth = Dyddiad geni
 proofOfEntitlement.viewpayments = Bwrw golwg dros eich taliadau Budd-dal Plant
-proofOfEntitlement.viewrecentpayments.para = Gallwch {0} a gweld eich 5 dyddiad talu diwethaf a faint a dalwyd i chi.
-proofOfEntitlement.viewrecentpayments.link = fwrw golwg dros eich taliadau Budd-dal Plant diweddar
+proofOfEntitlement.viewrecentpayments.link = Bwrw golwg dros fanylion hyd at 5 o’ch taliadau diweddaraf.
 proofOfEntitlement.printMessage = Argraffu’r dudalen hon
 proofOfEntitlement.nino = Rhif Yswiriant Gwladol
 
