@@ -24,3 +24,23 @@ body:not(.js-enabled) {
 .govuk-main-wrapper {
     padding-top: 20px;
 }
+
+body > div {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+body > div > nav {
+  flex-shrink: 0;
+  order: 1;
+}
+
+body > div > a {
+  order: 0;
+}
+
+body > div > main {
+  width: 100%;
+  order: 2;
+}
