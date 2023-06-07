@@ -86,13 +86,13 @@
 
     @h2(messages("proofOfEntitlement.viewpayments"), extraClasses = Seq("govuk-!-display-none-print"))
 
-<p class="govuk-body">
-    @{link( id = "recent-payments-link",
-        text = messages("proofOfEntitlement.viewrecentpayments.link"),
-        call = Call("GET", routes.PaymentHistoryController.view.url),
-        newTab = false,
-        classes = "govuk-!-display-none-print"
-    ) }
-</p>
+    <p class="govuk-body">
+        @{link( id = "recent-payments-link",
+            text = messages("proofOfEntitlement.viewrecentpayments.link"),
+            call = Call("GET", routes.PaymentHistoryController.view.url),
+            newTab = false,
+            classes = "govuk-!-display-none-print"
+        ) }
+    </p>
 
 }
