@@ -51,7 +51,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
       case None       => "N/A"
       case Some(item) => item.claimant.name.value
     }
-    formProvider(request.userAnswers.get(WhichYoungPersonPage).getOrElse(displayName))
+    formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
