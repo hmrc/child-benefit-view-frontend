@@ -18,12 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.TwelveHoursAWeekFormProvider
-import models.common.{FirstForename, Surname}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtneaResponseUserAnswer, SchoolOrCollegePage, TwelveHoursAWeekPage}
+import pages.ftnae.{FtneaResponseUserAnswer, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -33,6 +33,7 @@ import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.TwelveHoursAWeekView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
@@ -41,7 +42,7 @@ class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new TwelveHoursAWeekFormProvider()
-  val form         = formProvider("claimant-name")
+  val form         = formProvider("First Name")
 
   lazy val twelveHoursAWeekRoute = controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(CheckMode).url
 
@@ -143,14 +144,25 @@ class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val ftneaResponse =
-        FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")), List.empty[FtneaChildInfo])
+      val ftneaResponse = FtneaResponse(
+        FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+        List(
+          FtneaChildInfo(
+            ChildReferenceNumber("crn1234"),
+            FirstForename("First Name"),
+            None,
+            Surname("Surname"),
+            LocalDate.now(),
+            LocalDate.now()
+          )
+        )
+      )
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .set(WhichYoungPersonPage, "First Name Surname")
+        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
         .success
         .value
-
       val application = applicationBuilder(Some(userAnswers)).build()
 
       running(application) {

@@ -18,12 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
-import models.common.{FirstForename, Surname}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtneaResponseUserAnswer, WillYoungPersonBeStayingPage}
+import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage, WillYoungPersonBeStayingPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -33,6 +33,7 @@ import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillYoungPersonBeStayingView
 
+import java.time.{LocalDate, Month}
 import scala.concurrent.Future
 
 class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSugar {
@@ -41,7 +42,7 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillYoungPersonBeStayingFormProvider()
-  val form         = formProvider("claimant-name")
+  val form         = formProvider("First Name")
 
   lazy val willYoungPersonBeStayingRoute =
     controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
@@ -144,11 +145,23 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val ftneaResponse =
-        FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")), List.empty[FtneaChildInfo])
+      val ftneaResponse = FtneaResponse(
+        FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+        List(
+          FtneaChildInfo(
+            ChildReferenceNumber("crn1234"),
+            FirstForename("First Name"),
+            None,
+            Surname("Surname"),
+            LocalDate.now(),
+            LocalDate.now()
+          )
+        )
+      )
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .set(WhichYoungPersonPage, "First Name Surname")
+        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
         .success
         .value
 

@@ -19,6 +19,7 @@ package controllers.ftnae
 import controllers.actions._
 import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
 import models.Mode
+import models.common.YoungPersonTitleHelper
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,13 +45,11 @@ class WillCourseBeEmployerProvidedController @Inject() (
     view:                     WillCourseBeEmployerProvidedView
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with YoungPersonTitleHelper {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName = request.userAnswers.get(FtneaResponseUserAnswer) match {
-      case None       => "N/A"
-      case Some(item) => item.claimant.name.value
-    }
+    val displayName: String = firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =

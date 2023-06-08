@@ -19,12 +19,14 @@ package controllers.ftnae
 import controllers.actions._
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import models.Mode
+import models.common.YoungPersonTitleHelper
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage, WillYoungPersonBeStayingPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 import utils.navigation.Navigator
 import views.html.ftnae.WillYoungPersonBeStayingView
 
@@ -44,13 +46,11 @@ class WillYoungPersonBeStayingController @Inject() (
     view:                     WillYoungPersonBeStayingView
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with YoungPersonTitleHelper {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName = request.userAnswers.get(FtneaResponseUserAnswer) match {
-      case None       => "N/A"
-      case Some(item) => item.claimant.name.value
-    }
+    val displayName: String = firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
 
