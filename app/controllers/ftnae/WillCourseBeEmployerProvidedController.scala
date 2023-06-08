@@ -21,7 +21,7 @@ import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
 import models.Mode
 import models.common.YoungPersonTitleHelper
 import models.requests.DataRequest
-import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
+import pages.ftnae.WillCourseBeEmployerProvidedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -45,11 +45,10 @@ class WillCourseBeEmployerProvidedController @Inject() (
     view:                     WillCourseBeEmployerProvidedView
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport
-    with YoungPersonTitleHelper {
+    with I18nSupport {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName: String = firstNameFromConcatenatedChildNames().getOrElse("N/A")
+    val displayName: String = YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =

@@ -16,25 +16,29 @@
 
 package models.common
 
-import models.ftnae.FtneaChildInfo
 import models.requests.DataRequest
 import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
-trait YoungPersonTitleHelper {
+case class YoungPersonTitleHelper[A](request: DataRequest[A]) {
 
-  private def childFromConcatenatedChildNamesList[A]()(implicit request: DataRequest[A]) = {
-    request.userAnswers.get(FtneaResponseUserAnswer).map(userAnswer => {
-      val childNamesWithIndex: List[(String, Int)] = userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex
-      val youngPersonName = request.userAnswers.get(WhichYoungPersonPage)
+  private def childFromConcatenatedChildNamesList() = {
+    request.userAnswers
+      .get(FtneaResponseUserAnswer)
+      .map(userAnswer => {
+        val childNamesWithIndex: List[(String, Int)] =
+          userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex
+        val youngPersonName = request.userAnswers.get(WhichYoungPersonPage)
 
-      childNamesWithIndex.find(childName => childName._1 == youngPersonName.get).map(childFound => {
-        userAnswer.children(childFound._2)
+        childNamesWithIndex
+          .find(childName => childName._1 == youngPersonName.get)
+          .map(childFound => {
+            userAnswer.children(childFound._2)
+          })
       })
-    })
   }
 
-  def firstNameFromConcatenatedChildNames[A]()(implicit request: DataRequest[A]): Option[String] = {
-    childFromConcatenatedChildNamesList[A]()(request).map(_.map(_.name).get.value)
+  def firstNameFromConcatenatedChildNames(): Option[String] = {
+    childFromConcatenatedChildNamesList().map(_.map(_.name).get.value)
   }
 }

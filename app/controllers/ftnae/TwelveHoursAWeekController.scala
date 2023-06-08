@@ -21,7 +21,7 @@ import forms.ftnae.TwelveHoursAWeekFormProvider
 import models.Mode
 import models.common.YoungPersonTitleHelper
 import models.requests.DataRequest
-import pages.ftnae.{FtneaResponseUserAnswer, TwelveHoursAWeekPage, WhichYoungPersonPage}
+import pages.ftnae.TwelveHoursAWeekPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -45,11 +45,10 @@ class TwelveHoursAWeekController @Inject() (
     view:                     TwelveHoursAWeekView
 )(implicit ec:                ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport
-    with YoungPersonTitleHelper {
+    with I18nSupport {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName: String = firstNameFromConcatenatedChildNames().getOrElse("N/A")
+    val displayName: String = YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
 
