@@ -23,7 +23,7 @@ import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
 trait YoungPersonTitleHelper {
 
-  private def childFromConcatenatedChildNames[A]()(implicit request: DataRequest[A]) = {
+  private def childFromConcatenatedChildNamesList[A]()(implicit request: DataRequest[A]) = {
     request.userAnswers.get(FtneaResponseUserAnswer).map(userAnswer => {
       val childNamesWithIndex: List[(String, Int)] = userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex
       val youngPersonName = request.userAnswers.get(WhichYoungPersonPage)
@@ -35,6 +35,6 @@ trait YoungPersonTitleHelper {
   }
 
   def firstNameFromConcatenatedChildNames[A]()(implicit request: DataRequest[A]): Option[String] = {
-    childFromConcatenatedChildNames[A]()(request).map(_.map(_.name).get.value)
+    childFromConcatenatedChildNamesList[A]()(request).map(_.map(_.name).get.value)
   }
 }
