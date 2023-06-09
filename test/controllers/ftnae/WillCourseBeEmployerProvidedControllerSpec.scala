@@ -18,12 +18,12 @@ package controllers.ftnae
 
 import base.CBSpecBase
 import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
-import models.common.{FirstForename, Surname}
+import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse, HowManyYears}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, SchoolOrCollegePage, WillCourseBeEmployerProvidedPage}
+import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, SchoolOrCollegePage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -33,6 +33,7 @@ import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillCourseBeEmployerProvidedView
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with MockitoSugar {
@@ -41,7 +42,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
   def onwardNoRoute  = Call("GET", "/moo")
 
   val formProvider = new WillCourseBeEmployerProvidedFormProvider()
-  val form         = formProvider("claimant-name")
+  val form         = formProvider("First Name")
 
   lazy val willCourseBeEmployerProvidedRoute =
     controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode).url
@@ -165,14 +166,28 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val ftneaResponse =
-        FtneaResponse(FtneaClaimantInfo(FirstForename("claimant-name"), Surname("")), List.empty[FtneaChildInfo])
+      val ftneaResponse = FtneaResponse(
+        FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+        List(
+          FtneaChildInfo(
+            ChildReferenceNumber("crn1234"),
+            FirstForename("First Name"),
+            None,
+            Surname("Surname"),
+            LocalDate.now(),
+            LocalDate.now()
+          )
+        )
+      )
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(FtneaResponseUserAnswer, ftneaResponse)
         .success
         .value
         .set(SchoolOrCollegePage, true)
+        .success
+        .value
+        .set(WhichYoungPersonPage, "First Name Surname")
         .success
         .value
 
