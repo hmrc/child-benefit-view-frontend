@@ -31,7 +31,7 @@ case class YoungPersonTitleHelper[A](request: DataRequest[A]) {
         val youngPersonName = request.userAnswers.get(WhichYoungPersonPage)
 
         childNamesWithIndex
-          .find(childName => childName._1 == youngPersonName.get)
+          .find(childName => childName._1 == youngPersonName.getOrElse(""))
           .map(childFound => {
             userAnswer.children(childFound._2)
           })
