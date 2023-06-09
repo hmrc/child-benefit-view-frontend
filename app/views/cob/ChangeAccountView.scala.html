@@ -27,6 +27,7 @@
         para: ParagraphBody,
         govukSummaryList: GovukSummaryList,
         link: Link,
+        buttonLink: ButtonLink,
         note: Notification
 )
 
@@ -41,34 +42,29 @@
         rows = Seq(
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.name"))),
-                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))
-                ),
+                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))),
                 actions = None
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.sort.code"))),
-                value = Value(content = Text(formatSensitiveSort(accountDetails.sortCode.fold("Sort not found")(_.value)))
-                ),
+                value = Value(content = Text(formatSensitiveSort(accountDetails.sortCode.fold("Sort not found")(_.value)))),
                 actions = None
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.account.number"))),
-                value = Value(content = Text(formatSensitiveAccNumber(accountDetails.bankAccountNumber.fold("Account not found")(_.number)))
-            ),
+                value = Value(content = Text(formatSensitiveAccNumber(accountDetails.bankAccountNumber.fold("Account not found")(_.number)))),
                 actions = None
             )
         )
     ).withAttribute("id" -> "account-details-table")
-)
-}
+)}
 
 @altDetailsTableAsSummaryList ={@govukSummaryList(
         SummaryList(
             rows = Seq(
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.name"))),
-                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))
-            ),
+                value = Value(content = Text(accountDetails.accountHolderName.fold(claimantName)(_.value))),
                 actions = None
             )
         )
@@ -77,9 +73,7 @@
 
 @note(content = messages("changeAccount.notification.text"),
     id = Some("info-notice")
-)
-
-}
+)}
 
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
@@ -105,15 +99,8 @@
     @para(messages("changeAccount.paragraph.2", formLink))
 
     <div class="govuk-button-group">
-        <a class="govuk-button" href="@controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)"
-           data-module="govuk-button" id="continue-button">
-            @messages("changeAccount.button.1")
-        </a>
-        <a class="govuk-button govuk-button--secondary"
-           href="@controllers.cob.routes.AccountNotChangedController.onPageLoad()"
-           data-module="govuk-button" id="do-not-change-button">
-            @messages("changeAccount.button.2")
-        </a>
+        @buttonLink("continue-button", "changeAccount.button.1", controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode))
+        @buttonLink("do-not-change-button", "changeAccount.button.2", controllers.cob.routes.AccountNotChangedController.onPageLoad(), Some("govuk-button--secondary"))
     </div>
 
 }

@@ -23,7 +23,8 @@
     h2: HeadingH2,
     warningText: Warning,
     para: ParagraphBody,
-    link: Link
+    link: Link,
+    buttonLink: ButtonLink
 )
 
 @(list: SummaryList)(implicit request: Request[_], messages: Messages)
@@ -39,8 +40,6 @@
     @warningText(Html(messages("checkYourAnswers.warning")))
 
     <div class="govuk-button-group">
-        <a class="govuk-button" href="@controllers.ftnae.routes.PaymentsExtendedController.onPageLoad()" data-module="govuk-button">
-            @messages("checkYourAnswers.submit")
-        </a>
+        @buttonLink("continue-button", "checkYourAnswers.submit", controllers.ftnae.routes.PaymentsExtendedController.onPageLoad())
     </div>
 }
