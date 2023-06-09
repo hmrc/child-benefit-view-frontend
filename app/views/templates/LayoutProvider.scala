@@ -22,7 +22,6 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
 

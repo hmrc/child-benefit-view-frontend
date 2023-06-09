@@ -21,3 +21,5 @@ GET         /view-proof-entitlement                      controllers.ProofOfEnti
 GET         /view-payment-history                        controllers.PaymentHistoryController.view
 
 GET         /dummy-flag                                  controllers.DummyFlagController.onPageLoad
+
+GET         /hidden                                      controllers.HiddenController.hidden
