@@ -42,9 +42,7 @@
     )}
 
     @layout(pageTitle = titleNoForm(messages("extendPayments.title")), showBackLink = false) {
-        @caption(toTitleCase(s"${claimant.name.value} ${claimant.surname.value}"))
-
-        @heading(messages("extendPayments.heading"), classes = "govuk-heading-xl")
+        @heading(messages("extendPayments.heading"), classes = "govuk-heading-xl", caption = Some(toTitleCase(s"${claimant.name.value} ${claimant.surname.value}")))
         @para(messages("extendPayments.p1"))
 
         @list(elements = Seq(

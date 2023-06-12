@@ -30,8 +30,7 @@
     heading: Heading,
     h2: HeadingH2,
     link: Link,
-    para: ParagraphBody,
-    caption: CaptionHeader
+    para: ParagraphBody
 )
 
 @(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
@@ -46,8 +45,7 @@
     dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
     showBackLink = true) {
 
-    @caption(entitlement.claimant.name.value)
-    @heading(messages("paymentHistory.title"))
+    @heading(messages("paymentHistory.title"), caption = Some(entitlement.claimant.name.value))
 
     @if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
             @para(messages("paymentHistory.v2.noReceivedPayments"))

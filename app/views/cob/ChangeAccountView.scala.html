@@ -21,7 +21,6 @@
 @this(
         layout: templates.Layout,
         govukButton: GovukButton,
-        captionHeader: CaptionHeader,
         heading: Heading,
         h2: HeadingH2,
         para: ParagraphBody,
@@ -77,9 +76,7 @@
 
 @layout(pageTitle = titleNoForm(messages("changeAccount.title"))) {
 
-    @captionHeader(claimantName)
-
-    @heading(messages("changeAccount.heading"))
+    @heading(messages("changeAccount.heading"), caption = Some(claimantName))
 
     <!--Account details table-->
     @{if(isStandardAccount) detailsTableAsSummaryList else altDetailsTableAsSummaryList}
