@@ -26,8 +26,7 @@
     govukButton: GovukButton,
     summaryList: GovukSummaryList,
     heading: Heading,
-    h2: HeadingH2,
-    captionHeader: CaptionHeader
+    h2: HeadingH2
 )
 
 @(form: Form[_], mode: Mode, claimantName:String, accountHolder: String,
@@ -40,9 +39,7 @@ accountNumber: String)(implicit request: Request[_], messages: Messages)
         @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
     }
 
-    @captionHeader(claimantName)
-
-    @heading(messages("confirmNewAccountDetails.heading"))
+    @heading(messages("confirmNewAccountDetails.heading"), caption = Some(claimantName))
 
     @summaryList(
     SummaryList(

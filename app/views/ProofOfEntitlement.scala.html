@@ -27,7 +27,6 @@
         para: ParagraphBody,
         link: Link,
         list: BulletList,
-        caption: CaptionHeader,
         printLink: PrintLink,
         childDetailsView: ChildDetailsViewPicker
 )
@@ -48,9 +47,7 @@
             dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
             showBackLink = true) {
 
-    @caption(entitlement.claimant.name.value)
-
-    @heading(messages("proofOfEntitlement.title"))
+    @heading(messages("proofOfEntitlement.title"), caption = Some(entitlement.claimant.name.value))
 
     @printLink("proofOfEntitlement.printMessage")
 

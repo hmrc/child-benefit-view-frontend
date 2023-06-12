@@ -50,7 +50,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     }
 
     "have a heading" in {
-      view.getElementsByTag("h1").text mustBe messages("changeAccount.heading")
+      view.getElementsByTag("h1").text must include(messages("changeAccount.heading"))
     }
 
     "have a caption/section header" in {

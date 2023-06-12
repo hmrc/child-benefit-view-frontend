@@ -48,7 +48,7 @@ class ConfirmNewAccountDetailsViewSpec extends ViewSpecBase {
     }
 
     "have a heading" in {
-      view.getElementsByClass("govuk-heading-xl").text mustBe messages("confirmNewAccountDetails.heading")
+      view.getElementsByClass("govuk-heading-xl").text must include(messages("confirmNewAccountDetails.heading"))
     }
 
     "have a list" that {
