@@ -39,7 +39,7 @@
 @startFtnaeJourneyLink = @{
     link(id = "start-ftnae-journey-link",
         text = messages("paymentsExtended.startPage.p1"),
-        call = Call("GET", controllers.ftnae.routes.ExtendPaymentsController.onPageLoad.url),
+        call = Call("GET", controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url),
         newTab = false
     )
 }
@@ -67,7 +67,7 @@
     @h2(messages("paymentsExtended.whatHappensNext.h2"))
     @para(messages("paymentsExtended.p1", childName, courseDuration.toMessage))
     @para(messages("paymentsExtended.changeOfCircumstances", changeOfCircumstancesLink))
-    <p class="govuk-body">@Html(startFtnaeJourneyLink + ".")</p>
+    <p class="govuk-body">@Html(s"$startFtnaeJourneyLink.")</p>
     @h3(messages("paymentsExtended.ifYouReceive.h3"))
     @para(messages("paymentsExtended.p2", taxCreditChangesLink))
     @h3(messages("paymentsExtended.beforeYouGo.h3"))

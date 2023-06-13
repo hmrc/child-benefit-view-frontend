@@ -33,7 +33,7 @@ import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillYoungPersonBeStayingView
 
-import java.time.{LocalDate, Month}
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSugar {

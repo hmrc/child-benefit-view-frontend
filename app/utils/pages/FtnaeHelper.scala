@@ -16,7 +16,7 @@
 
 package utils.pages
 
-import models.requests.{BaseDataRequest, DataRequest}
+import models.requests.BaseDataRequest
 import models.viewmodels.checkAnswers._
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent

@@ -28,8 +28,8 @@ import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageD
 import models.viewmodels.checkAnswers.WhichYoungPersonSummary
 import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.Messages
-import play.api.mvc.{AnyContent, WrappedRequest}
-import repositories.{SessionRepository, FtnaePaymentsExtendedPageSessionRepository}
+import play.api.mvc.AnyContent
+import repositories.{FtnaePaymentsExtendedPageSessionRepository, SessionRepository}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -91,14 +91,14 @@ class FtnaeService @Inject() (
   private def uploadFtnaeDetailsIfNotFtnaePaymentsExtendedPageSession(
       childDetails: (String, ChildDetails)
   )(implicit
-      ec:       ExecutionContext,
-      hc:       HeaderCarrier,
-      request:  BaseDataRequest[AnyContent],
-      messages: Messages
+      ec:      ExecutionContext,
+      hc:      HeaderCarrier,
+      request: BaseDataRequest[AnyContent]
   ) = {
     request match {
       case DataRequest(_, _, _)                          => ftneaConnector.uploadFtnaeDetails(childDetails._2)
       case FtnaePaymentsExtendedPageDataRequest(_, _, _) => CBEnvelope(())
+      case _                                             => CBEnvelope(())
     }
   }
 
