@@ -44,10 +44,11 @@ class HICBCOptedOutPaymentsViewSpec extends ViewSpecBase {
       view.text() must include(messages("hICBCOptedOutPayments.paragraph.1"))
     }
     "have some text with a link" in {
+      val expectedLinkText = s"${messages("hICBCOptedOutPayments.guide.link.text")} ${messages("site.opensInNewTab")}"
       view.text() must include(
-        messages("hICBCOptedOutPayments.paragraph.2", messages("hICBCOptedOutPayments.guide.link.text"))
+        messages("hICBCOptedOutPayments.paragraph.2", expectedLinkText)
       )
-      view.getElementById("guide-link").text mustBe messages("hICBCOptedOutPayments.guide.link.text")
+      view.getElementById("guide-link").text mustBe expectedLinkText
     }
 
   }

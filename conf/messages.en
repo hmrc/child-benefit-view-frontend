@@ -16,6 +16,7 @@ site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
 site.technicalProblemMessage = Is this page not working properly? (opens in new tab)
+site.opensInNewTab = (opens in new tab)
 
 # ---------- Date Section -----------------------
 date.day = Day
@@ -78,8 +79,8 @@ proofOfEntitlement.firstChild = {0} for the eldest or only child
 proofOfEntitlement.additionalchild = {0} for each additional child
 proofOfEntitlement.entitlementdetail.title = Claimant’s entitlement details
 proofOfEntitlement.entitlementdetail.p1 = If your address or any names are incorrect, you can {0} or about {1} and we’ll update them for you.
-proofOfEntitlement.entitlementdetail.p1.link.1 = tell us about changes to your circumstances (opens in new tab)
-proofOfEntitlement.entitlementdetail.p1.link.2 = your child’s or children’s circumstances (opens in new tab)
+proofOfEntitlement.entitlementdetail.p1.link.1 = tell us about changes to your circumstances
+proofOfEntitlement.entitlementdetail.p1.link.2 = your child’s or children’s circumstances
 proofOfEntitlement.claimantname = Name
 proofOfEntitlement.address = Address
 proofOfEntitlement.amount = Amount
@@ -122,7 +123,7 @@ paymentHistory.v6.p2 = Our records show that you have not received any payments 
 paymentHistory.v1.header = Find out when you’ll be paid next
 paymentHistory.v1.p1 = If you’re paid every 4 weeks, you can find out when you’ll be paid next by counting 4 weeks forward from your last payment.
 paymentHistory.v1.p2 = You’ll be paid earlier if {0}
-paymentHistory.v1.link.text = the payment’s due on a bank holiday (opens in new tab)
+paymentHistory.v1.link.text = the payment’s due on a bank holiday
 paymentHistory.v1.p3 = Child Benefit is paid weekly or every 4 weeks. It is not paid by calendar month.
 
 # ---- Variant 3 - HICBC with payments in last 2 years
@@ -364,7 +365,7 @@ notEntitled.title = You’re not entitled to continuing Child Benefit
 notEntitled.heading = You’re not entitled to continuing Child Benefit
 notEntitled.p1 = You’re only entitled to continued payments if the young person will be:
 notEntitled.bulletPoint1 = staying in {0}
-notEntitled.bulletPoint1.linkText = full-time non-advanced education or approved training (opens in new tab)
+notEntitled.bulletPoint1.linkText = full-time non-advanced education or approved training
 notEntitled.bulletPoint2 = studying for more than an average of 12 hours a week in term time
 notEntitled.p2 = Use a different Child Benefit form to {0}.
 notEntitled.p2.linkText = tell us that the young person is staying in approved training
@@ -414,7 +415,7 @@ paymentsExtended.heading = Your Child Benefit payments have been extended
 paymentsExtended.whatHappensNext.h2 = What happens next
 paymentsExtended.p1 = The Child Benefit payments for {0} will now be paid while they stay in full-time non-advanced education. You’ll receive the payments for {1}.
 paymentsExtended.changeOfCircumstances = You must {0}.
-paymentsExtended.changeOfCircumstances.linkText = tell the Child Benefit office immediately if the young person’s circumstances change (opens in new tab)
+paymentsExtended.changeOfCircumstances.linkText = tell the Child Benefit office immediately if the young person’s circumstances change
 paymentsExtended.startPage.p1 = Tell us about another young person staying in education
 paymentsExtended.ifYouReceive.h3 = If you receive Child Tax Credit
 paymentsExtended.p2 = You also need to {0}.

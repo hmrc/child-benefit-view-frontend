@@ -10,6 +10,7 @@ site.continue = Yn eich blaen
 site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
+site.opensInNewTab = (yn agor tab newydd)
 
 # ---------- Date Section -----------------------
 
@@ -50,8 +51,8 @@ proofOfEntitlement.firstChild = {0} ar gyfer y plentyn hynaf neu’r unig blenty
 proofOfEntitlement.additionalchild = {0} ar gyfer pob plentyn ychwanegol
 proofOfEntitlement.entitlementdetail.title = Manylion hawl yr hawliwr
 proofOfEntitlement.entitlementdetail.p1 = Os yw’ch cyfeiriad neu unrhyw enwau’n anghywir, gallwch {0} neu am newidiadau i {1}, a byddwn yn eu diweddaru ar eich cyfer.
-proofOfEntitlement.entitlementdetail.p1.link.1 = rhoi gwybod i ni am newidiadau i’ch amgylchiadau (yn agor tab newydd)
-proofOfEntitlement.entitlementdetail.p1.link.2 = amgylchiadau’ch plentyn neu’ch plant (yn agor tab newydd)
+proofOfEntitlement.entitlementdetail.p1.link.1 = rhoi gwybod i ni am newidiadau i’ch amgylchiadau
+proofOfEntitlement.entitlementdetail.p1.link.2 = amgylchiadau’ch plentyn neu’ch plant
 proofOfEntitlement.claimantname = Enw
 proofOfEntitlement.address = Cyfeiriad
 proofOfEntitlement.amount = Swm
@@ -94,7 +95,7 @@ paymentHistory.v6.p2 = Mae ein cofnodion yn dangos nad ydych wedi cael unrhyw da
 paymentHistory.v1.header = Cael gwybod pryd y cewch eich talu nesaf
 paymentHistory.v1.p1 = Os ydych yn cael eich talu pob 4 wythnos, gallwch weithio allan pryd y cewch eich talu nesaf drwy rifo 4 wythnos ymlaen o’ch taliad diwethaf.
 paymentHistory.v1.p2 = Cewch eich talu cyn hynny os {0}
-paymentHistory.v1.link.text = mae’r taliad yn ddyledus ar ŵyl banc (yn agor tab newydd)
+paymentHistory.v1.link.text = mae’r taliad yn ddyledus ar ŵyl banc
 paymentHistory.v1.p3 = Mae Budd-dal Plant yn cael ei dalu’n wythnosol, neu bob 4 wythnos. Nid yw’n cael ei dalu yn ôl misoedd calendr.
 
 # ---- Variant 3 - HICBC with payments in last 2 years
@@ -332,7 +333,7 @@ notEntitled.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitled.heading = Nid oes gennych hawl i barhau i gael Budd-dal Plant
 notEntitled.p1 = Dim ond os yw’r canlynol yn wir am y person ifanc y bydd gennych hawl i daliadau parhaus:
 notEntitled.bulletPoint1 = bydd yn parhau mewn {0}
-notEntitled.bulletPoint1.linkText = addysg amser llawn nad yw’n addysg uwch neu hyfforddiant cymeradwy (yn agor tab newydd)
+notEntitled.bulletPoint1.linkText = addysg amser llawn nad yw’n addysg uwch neu hyfforddiant cymeradwy
 notEntitled.bulletPoint2 = bydd yn astudio am fwy na 12 awr yr wythnos ar gyfartaledd yn ystod y tymor
 notEntitled.p2 = Defnyddiwch ffurflen Budd-dal Plant wahanol i {0}.
 notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyfforddiant cymeradwy
@@ -382,7 +383,7 @@ paymentsExtended.heading = Mae’ch taliadau Budd-dal Plant wedi cael eu hymesty
 paymentsExtended.whatHappensNext.h2 = Yr hyn sy’n digwydd nesaf
 paymentsExtended.p1 = Bydd y taliadau Budd-dal Plant ar gyfer {0} yn cael eu talu tra bo’r plentyn hwnnw’n parhau ag addysg amser llawn nad yw’n addysg uwch. Byddwch yn cael y taliadau hyn am {1}.
 paymentsExtended.changeOfCircumstances = Mae’n rhaid i chi {0}.
-paymentsExtended.changeOfCircumstances.linkText = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd ei amgylchiadau yn newid (yn agor tab newydd)
+paymentsExtended.changeOfCircumstances.linkText = roi gwybod i’r swyddfa Budd-dal Plant ar unwaith os bydd ei amgylchiadau yn newid
 paymentsExtended.startPage.p1 = Rhowch wybod i ni am berson ifanc arall sy’n parhau â’i addysg
 paymentsExtended.ifYouReceive.h3 = Os ydych yn cael Credyd Treth Plant
 paymentsExtended.p2 = Mae hefyd angen i chi {0}.
