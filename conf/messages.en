@@ -238,7 +238,6 @@ confirmNewAccountDetails.yes = Yes
 confirmNewAccountDetails.no = No, I want to change them
 confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these details?
 confirmNewAccountDetails.error.required = Select ‘Yes’ or ‘No, I want to change them’
-confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = You cannot use this service because you do not receive Child Benefit payments
@@ -310,7 +309,7 @@ whichYoungPerson.error.required = Select a young person’s name or Young person
 whichYoungPerson.checkYourAnswersLabel = Who do you want to tell the Child Benefit office about?
 whichYoungPerson.ftneaChild.dateOfBirth = Date of birth
 whichYoungPerson.ftneaChild.currentClaimEndDate = Current claim end date
-whichYoungPerson.change.hidden = Your answer to the question, ‘Who do you want to tell the Child Benefit office about?'
+whichYoungPerson.change.hidden = your answer to the question, ‘Who do you want to tell the Child Benefit office about?‘
 
 # ----------  Young person not listed for FTNAE ------------
 whyYoungPersonNotListed.title = Why the young person is not listed
@@ -336,7 +335,7 @@ willYoungPersonBeStaying.bulletPoint5 = International Baccalaureate
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers — up to and including level 7 (apart from HNC level 7 or the Certificate of Higher Education level 7, because these are advanced courses)
 willYoungPersonBeStaying.checkYourAnswersLabel = Will the course be non-advanced?
 willYoungPersonBeStaying.error.required = Select yes if {0} will be studying one of these non-advanced courses.
-willYoungPersonBeStaying.change.hidden = Your answer to the question about the type of course the young person will be studying
+willYoungPersonBeStaying.change.hidden = your answer to the question about the type of course the young person will be studying
 
 # ----------  Confirm School Or College ------------
 schoolOrCollege.title = Will the course be provided by a school or college?
@@ -344,7 +343,7 @@ schoolOrCollege.heading = Will the course be provided by a school or college?
 schoolOrCollege.p1 = You can select ‘yes’ if the young person will be on a course provided by a UK school or college but studying at home.
 schoolOrCollege.checkYourAnswersLabel = Will the course be provided by a school or college?
 schoolOrCollege.error.required = Select yes if the course will be provided by a school or college.
-schoolOrCollege.change.hidden = Your answer to the question, 'Will the course be provided by a school or college?'
+schoolOrCollege.change.hidden = your answer to the question, ‘Will the course be provided by a school or college?‘
 
 # ----------  Confirm average 12 hours per week ------------
 twelveHoursAWeek.title = Will the young person study full-time?
@@ -357,7 +356,7 @@ twelveHoursAWeek.bulletPoint3 = practical work
 twelveHoursAWeek.bulletPoint4 = exams
 twelveHoursAWeek.p2 = The 12 hours do not include meal breaks or unsupervised study.
 twelveHoursAWeek.error.required = Select yes if {0} will study full-time.
-twelveHoursAWeek.change.hidden = Your answer to the question, 'Will the young person study full-time?'
+twelveHoursAWeek.change.hidden = your answer to the question, ‘Will the young person study full-time?‘
 
 # ----------  QYP not eligible for FTNAE extension (general)  ------------
 notEntitled.title = You’re not entitled to continuing Child Benefit
@@ -378,7 +377,7 @@ howManyYears.twoyears = 2 years
 howManyYears.other = Other
 howManyYears.checkYourAnswersLabel = How many academic years will the course last?
 howManyYears.error.required = Tell us how many academic years the course will last.
-howManyYears.change.hidden = Your answer to the question, 'How many academic years will the course last?'
+howManyYears.change.hidden = your answer to the question, ‘How many academic years will the course last?‘
 
 # ----------  Check if course is provided by employer ------------
 willCourseBeEmployerProvided.title = Will the course be provided by the young person’s employer?
@@ -386,7 +385,7 @@ willCourseBeEmployerProvided.heading = Will the course be provided by the young 
 willCourseBeEmployerProvided.p1 = For example, will it be part of an apprenticeship?
 willCourseBeEmployerProvided.checkYourAnswersLabel = Will the course be provided by the young person’s employer?
 willCourseBeEmployerProvided.error.required = Select yes if {0}’s employer will provide the course.
-willCourseBeEmployerProvided.change.hidden = Your answer to the question, 'Will the course be provided by the young person’s employer?'
+willCourseBeEmployerProvided.change.hidden = your answer to the question, ‘Will the course be provided by the young person’s employer?‘
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = You’re not entitled to continuing Child Benefit

@@ -205,7 +205,6 @@ confirmNewAccountDetails.yes = Iawn
 confirmNewAccountDetails.no = Na, hoffwn eu newid
 confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn atom?
 confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
-confirmNewAccountDetails.change.hidden = ConfirmNewAccountDetails
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant
@@ -245,7 +244,7 @@ whichYoungPerson.error.required = Dewiswch enw’r person ifanc neu ‘Person if
 whichYoungPerson.checkYourAnswersLabel = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
 whichYoungPerson.ftneaChild.dateOfBirth = Dyddiad geni
 whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
-whichYoungPerson.change.hidden = eich ateb i’r cwestiwn ‘Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?’
+whichYoungPerson.change.hidden = eich ateb i’r cwestiwn, ‘Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?’
 
 # ----------  Redirect to existing FTNAE iform ------------
 useDifferentForm.title = Defnyddiwch ffurflen wahanol i ymestyn eich Budd-dal Plant
@@ -304,7 +303,7 @@ willYoungPersonBeStaying.bulletPoint5 = Bagloriaeth Ryngwladol
 willYoungPersonBeStaying.bulletPoint6 = Scottish Highers – hyd at a chan gynnwys lefel 7 (ar wahân i HNC lefel 7, neu’r Dystysgrif Addysg Uwch ar lefel 7, gan fod y rhain yn gyrsiau uwch)
 willYoungPersonBeStaying.checkYourAnswersLabel = A fydd y cwrs yn un nad yw’n addysg uwch?
 willYoungPersonBeStaying.error.required = Dewiswch ‘Iawn’ os bydd {0} yn astudio un o’r cyrsiau hyn nad ydynt ar lefel uwch.
-willYoungPersonBeStaying.change.hidden = eich ateb i’r cwestiwn ynghylch y math o gwrs y bydd y person ifanc yn astudio.
+willYoungPersonBeStaying.change.hidden = eich ateb i’r cwestiwn, ynghylch y math o gwrs y bydd y person ifanc yn astudio.
 
 # ----------  Confirm School Or College ------------
 schoolOrCollege.title = A fydd ysgol neu goleg yn darparu’r cwrs?
@@ -312,7 +311,7 @@ schoolOrCollege.heading = A fydd ysgol neu goleg yn darparu’r cwrs?
 schoolOrCollege.p1 = Gallwch ddewis ‘Iawn’ os bydd y person ifanc ar gwrs a ddarperir gan ysgol neu goleg yn y DU ond yn astudio gartref.
 schoolOrCollege.checkYourAnswersLabel = A fydd ysgol neu goleg yn darparu’r cwrs?
 schoolOrCollege.error.required = Dewiswch ‘Iawn’ os bydd ysgol neu goleg yn darparu’r cwrs.
-schoolOrCollege.change.hidden = eich ateb i’r cwestiwn ‘A fydd ysgol neu goleg yn darparu’r cwrs?’
+schoolOrCollege.change.hidden = eich ateb i’r cwestiwn, ‘A fydd ysgol neu goleg yn darparu’r cwrs?’
 
 # ----------  Confirm average 12 hours per week ------------
 twelveHoursAWeek.title = A fydd y person ifanc yn astudio’n llawn amser?
@@ -325,7 +324,7 @@ twelveHoursAWeek.bulletPoint3 = gwaith ymarferol
 twelveHoursAWeek.bulletPoint4 = arholiadau
 twelveHoursAWeek.p2 = Nid yw’r 12 awr yn cynnwys seibiannau ar gyfer prydau bwyd nac astudio heb oruchwyliaeth.
 twelveHoursAWeek.error.required = Dewiswch ‘Iawn’ os bydd {0} yn astudio ar sail amser llawn.
-twelveHoursAWeek.change.hidden = eich ateb i’r cwestiwn ‘A fydd y person ifanc yn astudio ar sail amser llawn?’
+twelveHoursAWeek.change.hidden = eich ateb i’r cwestiwn, ‘A fydd y person ifanc yn astudio ar sail amser llawn?’
 
 # ---------- QYP not eligible for FTNAE extension (general) ------------
 notEntitled.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
@@ -346,7 +345,7 @@ howManyYears.twoyears = 2 flynedd
 howManyYears.other = Arall
 howManyYears.checkYourAnswersLabel = Am sawl blwyddyn academaidd fydd y cwrs yn para?
 howManyYears.error.required = Dywedwch wrthym am sawl blwyddyn academaidd y bydd y cwrs yn para.
-howManyYears.change.hidden = eich ateb i’r cwestiwn ‘Sawl blwyddyn academaidd fydd y cwrs yn para?’
+howManyYears.change.hidden = eich ateb i’r cwestiwn, ‘Sawl blwyddyn academaidd fydd y cwrs yn para?’
 
 # ----------  Check if course is provided by employer ------------
 willCourseBeEmployerProvided.title = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
@@ -354,7 +353,7 @@ willCourseBeEmployerProvided.heading = A fydd cyflogwr y person ifanc yn darparu
 willCourseBeEmployerProvided.p1 = Er enghraifft, a fydd yn rhan o brentisiaeth?
 willCourseBeEmployerProvided.checkYourAnswersLabel = A fydd cyflogwr y person ifanc yn darparu’r cwrs?
 willCourseBeEmployerProvided.error.required = Dewiswch ‘Iawn’ os bydd cyflogwr {0} yn darparu’r cwrs.
-willCourseBeEmployerProvided.change.hidden = eich ateb i’r cwestiwn ‘A fydd cyflogwr y person ifanc yn darparu’r cwrs?’
+willCourseBeEmployerProvided.change.hidden = eich ateb i’r cwestiwn, ‘A fydd cyflogwr y person ifanc yn darparu’r cwrs?’
 
 # ----------  Confirm QYP lives with claimant ------------
 liveWithYouInUK.title = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
@@ -362,7 +361,7 @@ liveWithYouInUK.heading = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd
 liveWithYouInUK.checkYourAnswersLabel = A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?
 liveWithYouInUK.p1 = Mae hyn yn cynnwys cyfnodau yn ystod y tymor.
 liveWithYouInUK.error.required = Dewiswch ‘Iawn’ os bydd {0} yn byw gyda chi yn y DU pan fydd yn derbyn addysg.
-liveWithYouInUK.change.hidden = eich ateb i’r cwestiwn ‘A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?’
+liveWithYouInUK.change.hidden = eich ateb i’r cwestiwn, ‘A fydd y person ifanc yn byw gyda chi yn y DU pan fydd yn derbyn addysg?’
 
 # ----------  QYP not eligible for FTNAE extension (employer provided) ------------
 notEntitledCourseEmployerProvided.title = Nid oes gennych hawl i barhau i gael Budd-dal Plant
