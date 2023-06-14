@@ -249,11 +249,11 @@ hICBCOptedOutPayments.paragraph.2 = You can tell us if you want to {0}.
 hICBCOptedOutPayments.guide.link.text = start receiving Child Benefit payments
 
 # ---------- Cannot Verify Account Section ------
-cannotVerifyAccount.title = We cannot verify the account details you’ve provided
-cannotVerifyAccount.heading = We cannot verify the account details you’ve provided
-cannotVerifyAccount.paragraph.1 = For security, we’ve locked you out of this service for 24 hours.
-cannotVerifyAccount.paragraph.2 = You can {0} for your Child Benefit payments.
-cannotVerifyAccount.link.text = use a different service to change the account details
+cannotVerifyAccount.title = Use another service to change your payment details
+cannotVerifyAccount.heading = Use another service to change your payment details
+cannotVerifyAccount.paragraph.1 = We are unable to verify your details, so you need to {0}
+cannotVerifyAccount.paragraph.2 = For your security, we’ve locked you out of this service for 24 hours.
+cannotVerifyAccount.link.text = use another service to change the account for your Child Benefit payments.
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
