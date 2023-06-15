@@ -39,6 +39,9 @@ case class YoungPersonTitleHelper[A](request: DataRequest[A]) {
   }
 
   def firstNameFromConcatenatedChildNames(): Option[String] = {
-    childFromConcatenatedChildNamesList().map(_.map(_.name).get.value)
+    childFromConcatenatedChildNamesList() match {
+      case None       => None
+      case Some(item) => item.map(_.name.value)
+    }
   }
 }
