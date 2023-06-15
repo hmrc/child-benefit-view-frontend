@@ -18,4 +18,4 @@
 
 @(id: String, text: String, call: Call, newTab: Boolean = true, classes: String = "govuk-link govuk-link--no-visited-state")(implicit messages: Messages)
 
-<a class="@classes" href="@call" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">@text @if(newTab){@messages("site.opensInNewTab")}</a>
+<a class="@classes" href="@call" @if(newTab) { target="_blank" rel="noopener noreferrer" } id="@id">@text@if(newTab){ @messages("site.opensInNewTab")}</a>
