@@ -399,7 +399,7 @@ liveWithYouInUK.heading = Will the young person live with you in the UK when the
 liveWithYouInUK.checkYourAnswersLabel = Will the young person live with you in the UK when they’re in education?
 liveWithYouInUK.p1 = This includes during term time.
 liveWithYouInUK.error.required = Select yes if {0} will live with you in the UK when they’re in education.
-liveWithYouInUK.change.hidden = Your answer to the question, 'Will the young person live with you in the UK when they’re in education?'
+liveWithYouInUK.change.hidden = your answer to the question, ‘Will the young person live with you in the UK when they’re in education?‘
 
 # ----------  FTNAE check your answers ------------
 checkYourAnswers.title = Check your answers before sending them
