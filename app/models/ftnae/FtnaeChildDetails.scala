@@ -25,6 +25,7 @@ final case class ChildDetails(
     courseDuration:           CourseDuration,
     crn:                      ChildReferenceNumber,
     dateOfBirth:              LocalDate,
+    whichYoungPerson:         String,
     ftneaQuestionsAndAnswers: List[FtneaQuestionAndAnswer]
 )
 
