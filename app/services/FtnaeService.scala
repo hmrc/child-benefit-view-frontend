@@ -73,7 +73,13 @@ class FtnaeService @Inject() (
       .mapN((child, courseDuration) => {
         val whichYoungPerson = request.userAnswers.get(WhichYoungPersonPage)
         val childDetailsWithAuditInfo =
-          ChildDetails(courseDuration, child.crn, child.dateOfBirth, whichYoungPerson, buildAuditData(summaryListRows))
+          ChildDetails(
+            courseDuration,
+            child.crn,
+            child.dateOfBirth,
+            whichYoungPerson.getOrElse(""),
+            buildAuditData(summaryListRows)
+          )
         (toFtnaeChildNameTitleCase(child), childDetailsWithAuditInfo)
       })
       .toRight(FtnaeChildUserAnswersNotRetrieved)
