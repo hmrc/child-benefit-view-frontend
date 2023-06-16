@@ -28,14 +28,15 @@
 
 @formLink = @{link( id = "change-of-circumstances-form",
                     text = messages("cannotVerifyAccount.link.text"),
-                    call = Call("GET", messages("external.link.claimant.changeOfCircumstances.form.link"))
+                    call = Call("GET", messages("external.link.claimant.changeOfCircumstances.form.link")),
+                    newTab = false
             )}
 
 @layout(pageTitle = titleNoForm(messages("cannotVerifyAccount.title"))) {
 
     @heading(messages("cannotVerifyAccount.heading"))
 
-    @para(messages("cannotVerifyAccount.paragraph.1"))
+    @para(messages("cannotVerifyAccount.paragraph.1", formLink))
 
-    @para(messages("cannotVerifyAccount.paragraph.2", formLink))
+    @para(messages("cannotVerifyAccount.paragraph.2"))
 }
