@@ -62,7 +62,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     CourseDuration.TwoYear,
     ChildReferenceNumber("AC654321C"),
     LocalDate.of(2007, 2, 10),
-    Some("Lauren Sam Smith"),
+    "Lauren Sam Smith",
     expectedAuditAnswers
   )
 

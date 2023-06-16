@@ -56,7 +56,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           CourseDuration.OneYear,
           ChildReferenceNumber("AA123456"),
           LocalDate.of(2001, 1, 1),
-          Some("sample-name"),
+          "sample-name",
           List.empty[FtneaQuestionAndAnswer]
         )
 
