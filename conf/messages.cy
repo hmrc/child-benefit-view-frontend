@@ -154,8 +154,8 @@ accountChanged.subHeading.1 = Yr hyn sy’n digwydd nesaf
 accountChanged.paragraph.1 = Bydd eich taliadau Budd-dal Plant yn cael eu talu i’r cyfrif newydd o hyn allan, oni bai bod eich taliad nesaf yn ddyledus ymhen y 3 diwrnod gwaith nesaf. Os yw’n ddyledus yn ystod y cyfnod hwnnw, bydd eich taliad nesaf yn cael ei dalu i’ch cyfrif blaenorol. O hynny ymlaen, bydd taliadau yn cael eu talu i’r cyfrif newydd.
 accountChanged.subHeading.2 = Cyn i chi fynd
 accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau.
-accountChanged.feedback = {0}
-accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth.
+accountChanged.feedback = {0}.
+accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
