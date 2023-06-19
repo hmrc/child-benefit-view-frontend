@@ -93,21 +93,21 @@ class FtnaeService @Inject() (
 
   def getSelectedChildInfo(request: BaseDataRequest[AnyContent]): Option[FtnaeChildInfo] = {
     for {
-      ftnaeResp <- request.userAnswers.get(FtnaeResponseUserAnswer)
-      selectedChild <- request.userAnswers.get(WhichYoungPersonPage)
+      ftnaeResp        <- request.userAnswers.get(FtnaeResponseUserAnswer)
+      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
       matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
     } yield matchedChildInfo
   }
 
   private def selectChildFromList(children: List[FtnaeChildInfo], selectedChild: String): Option[FtnaeChildInfo] = {
-    val childCrns = children.map(_.crn.value)
+    val childCrns       = children.map(_.crn.value)
     val noDuplicateCrns = childCrns.distinct.size == childCrns.size
     val onlyOneChildHasTheSelectedName =
       children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
 
     if (noDuplicateCrns && onlyOneChildHasTheSelectedName) {
       children.find(c => toFtnaeChildNameTitleCase(c) == selectedChild)
-    } else  {
+    } else {
       None
     }
   }

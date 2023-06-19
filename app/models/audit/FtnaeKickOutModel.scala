@@ -20,13 +20,13 @@ import models.ftnae.FtnaeQuestionAndAnswer
 import play.api.libs.json.Json
 
 final case class FtnaeKickOutModel(
-  nino: String,
-  status: String,
-  crn: Option[String],
-  courseDuration: Option[String],
-  dateOfBirth: Option[String],
-  name: Option[String],
-  answers: List[FtnaeQuestionAndAnswer]
+    nino:           String,
+    status:         String,
+    crn:            Option[String],
+    courseDuration: Option[String],
+    dateOfBirth:    Option[String],
+    name:           Option[String],
+    answers:        List[FtnaeQuestionAndAnswer]
 )
 
 object FtnaeKickOutModel {

@@ -39,7 +39,7 @@ class WhyYoungPersonNotListedController @Inject() (
     auditService:             AuditService,
     ftnaeService:             FtnaeService
 )(implicit
-  ec: ExecutionContext
+    ec: ExecutionContext
 ) extends FrontendBaseController
     with I18nSupport
     with FtnaeHelper {
