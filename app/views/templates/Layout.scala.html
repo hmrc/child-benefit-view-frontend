@@ -25,7 +25,8 @@
         hmrcTimeoutDialog: HmrcTimeoutDialogHelper,
         govukPhaseBanner: GovukPhaseBanner,
         standardBetaBanner: StandardBetaBanner,
-        dataLayerTemplate: DataLayerTemplate
+        dataLayerTemplate: DataLayerTemplate,
+        notificationBanner: GovukNotificationBanner
 )
 
 
@@ -60,6 +61,20 @@
     <p class="govuk-body govuk-!-display-none-print"><a target="_blank" href=@{appConfig.reportTechnicalProblemUrl(uri)} class="govuk-link">@messages("site.technicalProblemMessage")</a></p>
 }
 
+@bannerText = {
+  @messages("site.banner")
+  <a href="https://www.tax.service.gov.uk/personal-account/services-unavailable">@messages("site.bannerLinkText")</a>.
+}
+
+@infoBanner = {
+  @if(appConfig.showOutageBanner) {
+      @notificationBanner(NotificationBanner(
+          content = HtmlContent(bannerText),
+          classes = "govuk-!-display-none-print"
+      ))
+  }
+}
+
 @hmrcLayout(
     pageTitle = Option(pageTitle),
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
@@ -68,4 +83,4 @@
     phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl())),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
-)(new Html(List(contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))
+)(new Html(List(infoBanner, contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))
