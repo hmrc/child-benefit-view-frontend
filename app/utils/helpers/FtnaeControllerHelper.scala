@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils.pages
+package utils.helpers
 
 import models.requests.BaseDataRequest
 import models.viewmodels.checkAnswers._
@@ -22,7 +22,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 
-trait FtnaeHelper {
+trait FtnaeControllerHelper {
 
   def messagesWithFixedLangSupport(messagesApi: MessagesApi): Messages = {
     messagesApi.preferred(Seq(Lang.apply("en"))).messages

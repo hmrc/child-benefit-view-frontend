@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
-import utils.pages.FtnaeHelper
+import utils.helpers.FtnaeControllerHelper
 import views.html.ftnae.PaymentsExtendedView
 
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class PaymentsExtendedController @Inject() (
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport
-    with FtnaeHelper {
+    with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
