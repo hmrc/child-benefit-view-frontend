@@ -67,7 +67,7 @@
 }
 
 @infoBanner = {
-  @if(appConfig.showBanner) {
+  @if(appConfig.showOutageBanner) {
       @notificationBanner(NotificationBanner(
           content = HtmlContent(bannerText),
           classes = "govuk-!-display-none-print"
