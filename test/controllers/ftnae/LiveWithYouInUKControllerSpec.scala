@@ -153,7 +153,7 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val ftnaeResponse = FtnaeResponse(
+      val ftneaResponse = FtnaeResponse(
         FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
         List(
           FtnaeChildInfo(
@@ -169,7 +169,7 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftneaResponse))
         .success
         .value
 

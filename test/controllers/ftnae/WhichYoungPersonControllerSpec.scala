@@ -39,7 +39,7 @@ import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
 
-class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
+class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -50,10 +50,10 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
 
   private def arrangeRadioButtons(
-      ftnaeResponseUserAnswer:   FtnaeResponse
+      ftneaResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
-      ftnaeResponseUserAnswer.children
+      ftneaResponseUserAnswer.children
         .map(c => {
           val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
           s"${c.name.value} $midName${c.lastName.value}"
@@ -70,7 +70,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     }
   }
 
-  val ftnaeResponse = FtnaeResponse(
+  val ftneaResponse = FtnaeResponse(
     FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
       FtnaeChildInfo(
@@ -90,7 +90,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     "must return OK and the correct view for a GET" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtnaeResponseUserAnswer, ftnaeResponse)
+        .set(FtnaeResponseUserAnswer, ftneaResponse)
         .success
         .value
 
@@ -114,7 +114,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form, CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
+          view(form, CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
             request,
             messages(application)
           ).toString
@@ -126,7 +126,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftneaResponse))
         .success
         .value
 
@@ -147,7 +147,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
+          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
             request,
             messages(application)
           ).toString
@@ -160,7 +160,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftneaResponse))
         .success
         .value
 

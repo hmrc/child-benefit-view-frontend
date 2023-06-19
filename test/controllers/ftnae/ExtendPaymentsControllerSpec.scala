@@ -16,9 +16,9 @@
 
 package controllers.ftnae
 
-import connectors.FtnaeConnector
+import connectors.FtneaConnector
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
-import models.errors.{CBError, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError}
+import models.errors.{CBError, FtneaCannotFindYoungPersonError, FtneaNoCHBAccountError}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -37,12 +37,12 @@ import views.html.ftnae.ExtendPaymentsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
+class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
 
   def onwardRoute = Call("GET", "/foo")
 
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
-  val ftnaeResponse = FtnaeResponse(
+  val ftneaResponse = FtnaeResponse(
     FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
       FtnaeChildInfo(
@@ -56,24 +56,24 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftna
     )
   )
   val mockSessionRepository = mock[SessionRepository]
-  val mockFtnaeConnector    = mock[FtnaeConnector]
+  val mockFtneaConnector    = mock[FtneaConnector]
 
   "ExtendPayments Controller" - {
     "must return OK and the correct view for a GET, call the backend service, and store the result in session" in {
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtnaeResponseUserAnswer, ftnaeResponse)
+        .set(FtnaeResponseUserAnswer, ftneaResponse)
         .success
         .value
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-        .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
         .build()
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
       when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
       when(
-        mockFtnaeConnector.getFtnaeAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn (CBEnvelope(ftnaeResponse))
+        mockFtneaConnector.getFtneaAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn (CBEnvelope(ftneaResponse))
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
@@ -85,22 +85,22 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftna
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(ftnaeResponse.claimant)(request, messages(application)).toString
+          view(ftneaResponse.claimant)(request, messages(application)).toString
         )
       }
     }
 
-    "must redirect to No Account Found page, when backend service responds with FtnaeNoCHBAccountError" in {
+    "must redirect to No Account Found page, when backend service responds with FtneaNoCHBAccountError" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-        .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
         .build()
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
 
       when(
-        mockFtnaeConnector.getFtnaeAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn (CBEnvelope.fromError[CBError, FtnaeResponse](FtnaeNoCHBAccountError))
+        mockFtneaConnector.getFtneaAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn (CBEnvelope.fromError[CBError, FtnaeResponse](FtneaNoCHBAccountError))
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
@@ -112,17 +112,16 @@ class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with Ftna
       }
     }
 
-    "must redirect to CannotFindYoungPersonController page, when the backend service responds with Ftna" +
-      "eCannotFindYoungPersonError" in {
+    "must redirect to CannotFindYoungPersonController page, when the backend service responds with FtneaCannotFindYoungPersonError" in {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-        .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
+        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
         .build()
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
       when(
-        mockFtnaeConnector.getFtnaeAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn (CBEnvelope.fromError[CBError, FtnaeResponse](FtnaeCannotFindYoungPersonError))
+        mockFtneaConnector.getFtneaAccountDetails()(any[ExecutionContext](), any[HeaderCarrier]())
+      ) thenReturn (CBEnvelope.fromError[CBError, FtnaeResponse](FtneaCannotFindYoungPersonError))
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)

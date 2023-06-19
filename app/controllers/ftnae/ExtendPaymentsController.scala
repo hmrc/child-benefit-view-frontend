@@ -41,7 +41,7 @@ class ExtendPaymentsController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     sessionRepository:        SessionRepository,
     view:                     ExtendPaymentsView,
-    ftnaeService:             FtnaeService,
+    ftneaService:             FtnaeService,
     errorHandler:             ErrorHandler
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
@@ -50,16 +50,16 @@ class ExtendPaymentsController @Inject() (
   def onPageLoad(): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
       val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
-        ftnaeResponse <- ftnaeService.getFtnaeInformation()
+        ftneaResponse <- ftneaService.getFtnaeInformation()
         updatedAnswers <- CBEnvelope.fromF(
           Future.fromTry(
             request.userAnswers
               .getOrElse(UserAnswers(request.userId))
-              .set(FtnaeResponseUserAnswer, ftnaeResponse)
+              .set(FtnaeResponseUserAnswer, ftneaResponse)
           )
         )
         _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
-      } yield ftnaeResponse.claimant
+      } yield ftneaResponse.claimant
 
       result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant)))
 

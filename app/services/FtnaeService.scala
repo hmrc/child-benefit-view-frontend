@@ -18,7 +18,7 @@ package services
 
 import cats.data.EitherT
 import cats.implicits.catsSyntaxTuple2Semigroupal
-import connectors.FtnaeConnector
+import connectors.FtneaConnector
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-    ftnaeConnector:                             FtnaeConnector,
+    ftnaeConnector:                             FtneaConnector,
     sessionRepository:                          SessionRepository,
     ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
 ) {
@@ -48,7 +48,7 @@ class FtnaeService @Inject() (
   def getFtnaeInformation()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
-  ): CBEnvelope[FtnaeResponse] = ftnaeConnector.getFtnaeAccountDetails()
+  ): CBEnvelope[FtnaeResponse] = ftnaeConnector.getFtneaAccountDetails()
 
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
       ec:                                     ExecutionContext,
@@ -93,21 +93,21 @@ class FtnaeService @Inject() (
 
   def getSelectedChildInfo(request: BaseDataRequest[AnyContent]): Option[FtnaeChildInfo] = {
     for {
-      ftnaeResp        <- request.userAnswers.get(FtnaeResponseUserAnswer)
-      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
+      ftnaeResp <- request.userAnswers.get(FtnaeResponseUserAnswer)
+      selectedChild <- request.userAnswers.get(WhichYoungPersonPage)
       matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
     } yield matchedChildInfo
   }
 
   private def selectChildFromList(children: List[FtnaeChildInfo], selectedChild: String): Option[FtnaeChildInfo] = {
-    val childCrns       = children.map(_.crn.value)
+    val childCrns = children.map(_.crn.value)
     val noDuplicateCrns = childCrns.distinct.size == childCrns.size
     val onlyOneChildHasTheSelectedName =
       children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
 
     if (noDuplicateCrns && onlyOneChildHasTheSelectedName) {
       children.find(c => toFtnaeChildNameTitleCase(c) == selectedChild)
-    } else {
+    } else  {
       None
     }
   }

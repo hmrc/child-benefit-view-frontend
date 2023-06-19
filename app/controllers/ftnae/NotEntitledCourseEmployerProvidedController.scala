@@ -22,27 +22,27 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.helpers.FtnaeControllerHelper
+import utils.pages.FtnaeHelper
 import views.html.ftnae.NotEntitledCourseEmployerProvidedView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class NotEntitledCourseEmployerProvidedController @Inject() (
-    override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
-    getData:                  CBDataRetrievalAction,
-    requireData:              DataRequiredAction,
-    val controllerComponents: MessagesControllerComponents,
-    featureActions:           FeatureFlagComposedActions,
-    view:                     NotEntitledCourseEmployerProvidedView,
-    auditService:             AuditService,
-    ftnaeService:             FtnaeService
+  override val messagesApi: MessagesApi,
+  identify:                 IdentifierAction,
+  getData:                  CBDataRetrievalAction,
+  requireData:              DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  featureActions:           FeatureFlagComposedActions,
+  view:                     NotEntitledCourseEmployerProvidedView,
+  auditService:             AuditService,
+  ftnaeService:             FtnaeService
 )(implicit
-    ec: ExecutionContext
+  ec: ExecutionContext
 ) extends FrontendBaseController
     with I18nSupport
-    with FtnaeControllerHelper {
+    with FtnaeHelper {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>

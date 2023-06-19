@@ -16,7 +16,7 @@
 
 package services
 
-import models.audit.{ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, FtnaeKickOutModel, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.audit._
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement.Child
@@ -42,8 +42,8 @@ class AuditServiceSpec extends PlaySpec {
   val auditConnector: AuditConnector = mock[AuditConnector]
   val auditor:        AuditService   = new AuditService(auditConnector)
 
-  val testNino:   String = "CA123456A"
-  val testCRN:    String = "AC654321C"
+  val testNino: String = "CA123456A"
+  val testCRN: String = "AC654321C"
   val testStatus: String = "testStatus"
   protected val request: Request[_] =
     FakeRequest().withHeaders(Headers(("referer", "/foo")))

@@ -22,7 +22,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.helpers.FtnaeControllerHelper
+import utils.pages.FtnaeHelper
 import views.html.ftnae.NotEntitledView
 
 import javax.inject.Inject
@@ -39,10 +39,10 @@ class NotEntitledController @Inject() (
     auditService:             AuditService,
     ftnaeService:             FtnaeService
 )(implicit
-    ec: ExecutionContext
+  ec: ExecutionContext
 ) extends FrontendBaseController
     with I18nSupport
-    with FtnaeControllerHelper {
+    with FtnaeHelper {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>

@@ -16,7 +16,7 @@
 
 package services
 
-import connectors.FtnaeConnector
+import connectors.FtneaConnector
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.errors.FtnaeChildUserAnswersNotRetrieved
 import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse}
@@ -33,7 +33,7 @@ import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import repositories.{FtnaePaymentsExtendedPageSessionRepository, SessionRepository}
-import services.FtnaeServiceSpec._
+import services.FtnaeServiceSpec.{childInfoA, _}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -51,12 +51,11 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val messagesApi       = new DefaultMessagesApi(testMessages)
   implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
-  val ftnaeConnector                             = mock[FtnaeConnector]
+  val ftnaeConnector                             = mock[FtneaConnector]
   val sessionRepository                          = mock[SessionRepository]
   val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
-  val sut: FtnaeService =
-    new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
+  val sut: FtnaeService = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
   val childName = "Lauren Sam Smith"
   val childDetails = ChildDetails(
@@ -167,11 +166,10 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
+
       val userAnswers = buildUserAnswers(
-        ftnaeResponseField(
-          createFtnaeResponseWithChildren(
-            List(childInfoA, childInfoB.copy(name = childInfoA.name, lastName = childInfoA.lastName))
-          )
+        ftnaeResponseField(createFtnaeResponseWithChildren(
+          List(childInfoA, childInfoB.copy(name = childInfoA.name, lastName = childInfoA.lastName)))
         ),
         whichYoungPersonField(testName),
         howManyYearsField()
@@ -229,7 +227,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     val fakeRequest = FakeRequest("GET", "/unittest/getSelectedChildInfo")
     "GIVEN a valid list of Children AND a matching CRN" should {
       "THEN the expected child should be returned" in {
-        val children  = List(childInfoA, childInfoB, childInfoC)
+        val children = List(childInfoA, childInfoB, childInfoC)
         val childName = s"${childInfoA.name.value} ${childInfoA.lastName.value}"
         val userAnswers = buildUserAnswers(
           ftnaeResponseField(createFtnaeResponseWithChildren(children)),
@@ -247,7 +245,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
     "GIVEN a valid list of Children AND no matching CRN" should {
       "THEN None should be returned" in {
-        val children  = List(childInfoA, childInfoB, childInfoC)
+        val children = List(childInfoA, childInfoB, childInfoC)
         val childName = "Not in the list"
         val userAnswers = buildUserAnswers(
           ftnaeResponseField(createFtnaeResponseWithChildren(children)),
@@ -266,8 +264,8 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     "GIVEN a invalid list with duplicate CRNs" should {
       "THEN None should be returned" in {
         val duplicatedCRNChild = childInfoA.copy(crn = childInfoB.crn)
-        val children           = List(duplicatedCRNChild, childInfoB, childInfoC)
-        val childName          = "Should not be relevant"
+        val children = List(duplicatedCRNChild, childInfoB, childInfoC)
+        val childName = "Should not be relevant"
         val userAnswers = buildUserAnswers(
           ftnaeResponseField(createFtnaeResponseWithChildren(children)),
           whichYoungPersonField(childName)
@@ -285,8 +283,8 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
     "GIVEN a invalid list with duplicate names" should {
       "THEN None should be returned" in {
         val duplicatedNameChild = childInfoA.copy(name = childInfoB.name)
-        val children            = List(duplicatedNameChild, childInfoB, childInfoC)
-        val childName           = "Should not be relevant"
+        val children = List(duplicatedNameChild, childInfoB, childInfoC)
+        val childName = "Should not be relevant"
         val userAnswers = buildUserAnswers(
           ftnaeResponseField(createFtnaeResponseWithChildren(children)),
           whichYoungPersonField(childName)
@@ -305,8 +303,8 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
 object FtnaeServiceSpec {
   val testNino = NationalInsuranceNumber("nino")
-  val testId   = "unitTestId"
-  val testCRN  = "AA111111A"
+  val testId = "unitTestId"
+  val testCRN = "AA111111A"
   val testName = "A Child"
 
   val childInfoA: FtnaeChildInfo = FtnaeChildInfo(
@@ -336,16 +334,16 @@ object FtnaeServiceSpec {
     LocalDate.now().plusYears(4)
   )
 
-  val testSummaryListRows = List(
+  val testSummaryListRows = List (
     SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1")))
   )
   val testAuditAnswers = List(FtnaeQuestionAndAnswer("user-question-1", "user-answer-1"))
 
   def toChildDetails(
-      childInfo:           FtnaeChildInfo,
-      courseDuration:      CourseDuration = CourseDuration.OneYear,
+      childInfo: FtnaeChildInfo,
+      courseDuration: CourseDuration = CourseDuration.OneYear,
       questionsAndAnswers: List[FtnaeQuestionAndAnswer] = testAuditAnswers
-  ): ChildDetails =
+    ): ChildDetails =
     ChildDetails(
       courseDuration,
       childInfo.crn,
@@ -354,9 +352,7 @@ object FtnaeServiceSpec {
       questionsAndAnswers
     )
 
-  def createFtnaeResponseWithChildren(
-      children: List[FtnaeChildInfo] = List(childInfoA, childInfoB, childInfoC)
-  ): FtnaeResponse =
+  def createFtnaeResponseWithChildren(children: List[FtnaeChildInfo] = List(childInfoA, childInfoB, childInfoC)): FtnaeResponse =
     FtnaeResponse(
       FtnaeClaimantInfo(FirstForename("Jayne"), Surname("Doe")),
       children

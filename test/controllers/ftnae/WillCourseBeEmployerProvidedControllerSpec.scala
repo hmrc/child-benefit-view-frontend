@@ -166,7 +166,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
     "must return a Bad Request and errors when invalid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val ftnaeResponse = FtnaeResponse(
+      val ftneaResponse = FtnaeResponse(
         FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
         List(
           FtnaeChildInfo(
@@ -181,7 +181,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
       )
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtnaeResponseUserAnswer, ftnaeResponse)
+        .set(FtnaeResponseUserAnswer, ftneaResponse)
         .success
         .value
         .set(SchoolOrCollegePage, true)

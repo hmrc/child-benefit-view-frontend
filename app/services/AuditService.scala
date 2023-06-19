@@ -173,12 +173,12 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   }
 
   def auditFtnaeKickOut(
-      nino:           String,
-      status:         String,
-      child:          Option[FtnaeChildInfo],
+      nino: String,
+      status: String,
+      child: Option[FtnaeChildInfo],
       courseDuration: Option[String],
-      answers:        List[FtnaeQuestionAndAnswer]
-  )(implicit hc:      HeaderCarrier, ex: ExecutionContext): Unit = {
+      answers: List[FtnaeQuestionAndAnswer]
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
     val payload = FtnaeKickOutModel(
       nino,
       status,
