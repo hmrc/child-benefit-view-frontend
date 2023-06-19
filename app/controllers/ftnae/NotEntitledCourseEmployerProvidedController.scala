@@ -29,17 +29,17 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class NotEntitledCourseEmployerProvidedController @Inject() (
-  override val messagesApi: MessagesApi,
-  identify:                 IdentifierAction,
-  getData:                  CBDataRetrievalAction,
-  requireData:              DataRequiredAction,
-  val controllerComponents: MessagesControllerComponents,
-  featureActions:           FeatureFlagComposedActions,
-  view:                     NotEntitledCourseEmployerProvidedView,
-  auditService:             AuditService,
-  ftnaeService:             FtnaeService
+    override val messagesApi: MessagesApi,
+    identify:                 IdentifierAction,
+    getData:                  CBDataRetrievalAction,
+    requireData:              DataRequiredAction,
+    val controllerComponents: MessagesControllerComponents,
+    featureActions:           FeatureFlagComposedActions,
+    view:                     NotEntitledCourseEmployerProvidedView,
+    auditService:             AuditService,
+    ftnaeService:             FtnaeService
 )(implicit
-  ec: ExecutionContext
+    ec: ExecutionContext
 ) extends FrontendBaseController
     with I18nSupport
     with FtnaeHelper {
