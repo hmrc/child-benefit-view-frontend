@@ -18,9 +18,9 @@ package controllers.ftnae
 
 import controllers.actions._
 import forms.ftnae.WhichYoungPersonFormProvider
-import models.ftnae.FtneaResponse
+import models.ftnae.FtnaeResponse
 import models.{Mode, UserAnswers}
-import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -59,7 +59,7 @@ class WhichYoungPersonController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      userAnswers.get(FtneaResponseUserAnswer) match {
+      userAnswers.get(FtnaeResponseUserAnswer) match {
         case Some(ftneaResponseUserAnswer) =>
           Ok(
             view(
@@ -81,8 +81,8 @@ class WhichYoungPersonController @Inject() (
       {
         val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-        val ftneaResponseUserAnswer: Option[FtneaResponse] =
-          userAnswers.get(FtneaResponseUserAnswer)
+        val ftneaResponseUserAnswer: Option[FtnaeResponse] =
+          userAnswers.get(FtnaeResponseUserAnswer)
 
         ftneaResponseUserAnswer.fold(
           Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
@@ -110,7 +110,7 @@ class WhichYoungPersonController @Inject() (
     }
 
   private def arrangeRadioButtons(
-      ftneaResponseUserAnswer:   FtneaResponse
+      ftneaResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
       ftneaResponseUserAnswer.children

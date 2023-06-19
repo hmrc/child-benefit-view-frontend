@@ -16,20 +16,11 @@
 
 package models.ftnae
 
-import models.common.{ChildReferenceNumber, FirstForename, Surname}
+import models.common.{FirstForename, Surname}
 import play.api.libs.json.Json
 
-import java.time.LocalDate
+final case class FtnaeClaimantInfo(name: FirstForename, surname: Surname)
 
-final case class FtneaChildInfo(
-    crn:                 ChildReferenceNumber,
-    name:                FirstForename,
-    midName:             Option[SecondForename],
-    lastName:            Surname,
-    dateOfBirth:         LocalDate,
-    currentClaimEndDate: LocalDate
-)
-
-object FtneaChildInfo {
-  implicit val format = Json.format[FtneaChildInfo]
+object FtnaeClaimantInfo {
+  implicit val format = Json.format[FtnaeClaimantInfo]
 }

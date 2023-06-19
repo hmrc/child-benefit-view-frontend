@@ -20,7 +20,7 @@ import connectors.FtneaConnector
 import models.CBEnvelope
 import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
-import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
+import models.ftnae.{ChildDetails, CourseDuration, FtnaeQuestionAndAnswer}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -57,7 +57,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           ChildReferenceNumber("AA123456"),
           LocalDate.of(2001, 1, 1),
           "sample-name",
-          List.empty[FtneaQuestionAndAnswer]
+          List.empty[FtnaeQuestionAndAnswer]
         )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))

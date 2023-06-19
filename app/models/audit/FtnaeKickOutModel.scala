@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package models.ftnae
+package models.audit
 
+import models.ftnae.FtnaeQuestionAndAnswer
 import play.api.libs.json.Json
 
-final case class FtneaQuestionAndAnswer(question: String, answer: String)
+final case class FtnaeKickOutModel(
+  nino: String,
+  status: String,
+  crn: Option[String],
+  courseDuration: Option[String],
+  dateOfBirth: Option[String],
+  name: Option[String],
+  answers: List[FtnaeQuestionAndAnswer]
+)
 
-object FtneaQuestionAndAnswer {
-  implicit val format = Json.format[FtneaQuestionAndAnswer]
+object FtnaeKickOutModel {
+  implicit val formatFTNAEKickOutModel = Json.format[FtnaeKickOutModel]
+  val EventType: String = "FullTimeNonAdvancedEducationKickOutPage"
 }

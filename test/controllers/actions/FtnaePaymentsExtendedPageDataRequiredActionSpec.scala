@@ -87,7 +87,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
           .callTransform(OptionalDataRequest(fakeRequest, "id", nino, Some(allAnsweredForFtnae.get)))
           .futureValue
 
-        result mustBe Right(DataRequest(fakeRequest, "id", allAnsweredForFtnae.get))
+        result mustBe Right(DataRequest(fakeRequest, "id", nino, allAnsweredForFtnae.get))
       }
     }
 
@@ -106,7 +106,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
           .futureValue
 
         val temporaryDataRequest =
-          FtnaePaymentsExtendedPageDataRequest[AnyContent](fakeRequest, "id", allAnsweredForFtnae.get)
+          FtnaePaymentsExtendedPageDataRequest[AnyContent](fakeRequest, "id", nino, allAnsweredForFtnae.get)
         result mustBe Right(temporaryDataRequest)
       }
     }

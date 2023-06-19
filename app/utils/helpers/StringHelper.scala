@@ -16,7 +16,7 @@
 
 package utils.helpers
 
-import models.ftnae.FtneaChildInfo
+import models.ftnae.FtnaeChildInfo
 
 object StringHelper {
   val defaultDelimiters    = List(" ", "-", "'")
@@ -36,7 +36,7 @@ object StringHelper {
   def isWhitespaceOnly(str: String): Boolean =
     str.forall(_.isWhitespace)
 
-  def toFtnaeChildNameTitleCase(child: FtneaChildInfo): String = {
+  def toFtnaeChildNameTitleCase(child: FtnaeChildInfo): String = {
     val midName = child.midName.map(mn => s"${mn.value} ").getOrElse("")
     toTitleCase(s"${child.name.value} $midName${child.lastName.value}")
   }

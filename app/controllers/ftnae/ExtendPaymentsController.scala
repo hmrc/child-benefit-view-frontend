@@ -20,8 +20,8 @@ import cats.data.EitherT
 import controllers.actions._
 import models.{CBEnvelope, UserAnswers}
 import models.errors.CBError
-import models.ftnae.FtneaClaimantInfo
-import pages.ftnae.FtneaResponseUserAnswer
+import models.ftnae.FtnaeClaimantInfo
+import pages.ftnae.FtnaeResponseUserAnswer
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -49,13 +49,13 @@ class ExtendPaymentsController @Inject() (
 
   def onPageLoad(): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
-      val result: EitherT[Future, CBError, FtneaClaimantInfo] = for {
+      val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
         ftneaResponse <- ftneaService.getFtnaeInformation()
         updatedAnswers <- CBEnvelope.fromF(
           Future.fromTry(
             request.userAnswers
               .getOrElse(UserAnswers(request.userId))
-              .set(FtneaResponseUserAnswer, ftneaResponse)
+              .set(FtnaeResponseUserAnswer, ftneaResponse)
           )
         )
         _ <- CBEnvelope(sessionRepository.set(updatedAnswers))

@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import connectors.FtneaConnector.{claimantInfoLogMessage, mainError}
 import models.CBEnvelope.CBEnvelope
 import models.errors._
-import models.ftnae.{ChildDetails, FtneaResponse}
+import models.ftnae.{ChildDetails, FtnaeResponse}
 import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
@@ -41,7 +41,7 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
   def getFtneaAccountDetails()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
-  ): CBEnvelope[FtneaResponse] =
+  ): CBEnvelope[FtnaeResponse] =
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
@@ -49,10 +49,10 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
-              ConnectorError(e.responseCode, e.getMessage).asLeft[FtneaResponse]
+              ConnectorError(e.responseCode, e.getMessage).asLeft[FtnaeResponse]
             case e: UpstreamErrorResponse =>
               logger.error(claimantInfoLogMessage(e.statusCode, e.getMessage))
-              ConnectorError(e.statusCode, e.getMessage).asLeft[FtneaResponse]
+              ConnectorError(e.statusCode, e.getMessage).asLeft[FtnaeResponse]
           }
       )
     }

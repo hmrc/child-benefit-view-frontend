@@ -17,12 +17,16 @@
 package controllers.ftnae
 
 import controllers.actions._
+import pages.ftnae.WhichYoungPersonPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.pages.FtnaeHelper
 import views.html.ftnae.NotEntitledView
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class NotEntitledController @Inject() (
     override val messagesApi: MessagesApi,
@@ -31,12 +35,24 @@ class NotEntitledController @Inject() (
     requireData:              DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
     featureActions:           FeatureFlagComposedActions,
-    view:                     NotEntitledView
+    view:                     NotEntitledView,
+    auditService:             AuditService,
+    ftnaeService:             FtnaeService
+)(implicit
+  ec: ExecutionContext
 ) extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with FtnaeHelper {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+      auditService.auditFtnaeKickOut(
+        request.nino.nino,
+        "Success",
+        ftnaeService.getSelectedChildInfo(request),
+        request.userAnswers.get(WhichYoungPersonPage),
+        ftnaeService.buildAuditData(buildSummaryRows(request))
+      )
       Ok(view())
     }
 }

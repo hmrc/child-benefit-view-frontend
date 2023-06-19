@@ -21,6 +21,7 @@ import connectors.ChangeOfBankConnector
 import generators.ModelGenerators
 import models.{CBEnvelope, UserAnswers}
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse}
+import models.common.NationalInsuranceNumber
 import models.errors.CBError
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
@@ -58,7 +59,7 @@ class ChangeOfBankServiceSpec extends PlaySpec with MockitoSugar with ScalaFutur
 
           forAll((arbitrary[NewAccountDetails], "accountDetails"), (arbitrary[String](generateId), "id")) {
             (accountDetails, id) =>
-              val request: DataRequest[AnyContent] = DataRequest(FakeRequest(), id, UserAnswers(id))
+              val request: DataRequest[AnyContent] = DataRequest(FakeRequest(), id, NationalInsuranceNumber(id), UserAnswers(id))
               whenReady(sut.submitClaimantChangeOfBank(Some(accountDetails), request)(ec, hc).value) { response =>
                 s"Id: $id" should {
                   s"THEN the expected UpdateBankDetailsResponse is returned - Id: $id" in {

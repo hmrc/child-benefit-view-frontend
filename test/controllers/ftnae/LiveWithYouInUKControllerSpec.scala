@@ -19,11 +19,11 @@ package controllers.ftnae
 import base.CBSpecBase
 import forms.ftnae.LiveWithYouInUKFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
-import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtneaResponseUserAnswer, LiveWithYouInUKPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, LiveWithYouInUKPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -153,10 +153,10 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val ftneaResponse = FtneaResponse(
-        FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+      val ftneaResponse = FtnaeResponse(
+        FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
         List(
-          FtneaChildInfo(
+          FtnaeChildInfo(
             ChildReferenceNumber("crn1234"),
             FirstForename("First Name"),
             None,
@@ -169,7 +169,7 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftneaResponse))
         .success
         .value
 

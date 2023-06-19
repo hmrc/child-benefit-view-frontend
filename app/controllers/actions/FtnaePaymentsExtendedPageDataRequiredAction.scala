@@ -56,11 +56,11 @@ class FtnaePaymentsExtendedPageDataRequiredActionImpl @Inject() (
           .map(maybeData =>
             maybeData.fold[Either[Result, FtnaePaymentsExtendedPageDataRequest[A]]](
               Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
-            )(data => Right(FtnaePaymentsExtendedPageDataRequest(request.request, request.userId, data)))
+            )(data => Right(FtnaePaymentsExtendedPageDataRequest(request.request, request.userId, request.nino, data)))
           )
 
       case Some(data) =>
-        Future.successful(Right(DataRequest(request.request, request.userId, data)))
+        Future.successful(Right(DataRequest(request.request, request.userId, request.nino, data)))
     }
   }
 }

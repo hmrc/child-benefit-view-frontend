@@ -17,9 +17,9 @@
 package services
 
 import connectors.FtneaConnector
-import models.common.ChildReferenceNumber
+import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.errors.FtnaeChildUserAnswersNotRetrieved
-import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
+import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse}
 import models.requests.{DataRequest, FtnaePaymentsExtendedPageDataRequest}
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, anyString}
@@ -27,12 +27,13 @@ import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.DefaultMessagesApi
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
-import repositories.{SessionRepository, FtnaePaymentsExtendedPageSessionRepository}
-import services.FtnaeServiceSpec.{userAnswer, userAnswerWithIncorrectCourseDuration, userAnswerWithMultipleSameCRN, userAnswerWithMultipleSameName}
+import repositories.{FtnaePaymentsExtendedPageSessionRepository, SessionRepository}
+import services.FtnaeServiceSpec.{childInfoA, _}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -54,16 +55,15 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val sessionRepository                          = mock[SessionRepository]
   val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
+  val sut: FtnaeService = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
+
   val childName = "Lauren Sam Smith"
-  val summaryListRows: List[SummaryListRow] =
-    SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1"))) :: Nil
-  val expectedAuditAnswers = List(FtneaQuestionAndAnswer("user-question-1", "user-answer-1"))
   val childDetails = ChildDetails(
     CourseDuration.TwoYear,
     ChildReferenceNumber("AC654321C"),
     LocalDate.of(2007, 2, 10),
     "Lauren Sam Smith",
-    expectedAuditAnswers
+    testAuditAnswers
   )
 
   "submitFtnaeInformation" should {
@@ -78,34 +78,40 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       ) thenReturn CBEnvelope(())
 
       val fakeRequest = FakeRequest("GET", "/nothing")
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren()),
+        whichYoungPersonField(testName),
+        howManyYearsField()
+      )
 
       val request: DataRequest[AnyContent] =
-        DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
+        DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
+      whenReady(sut.submitFtnaeInformation(Some(testSummaryListRows))(ec, hc, request, messages).value) { result =>
         verify(ftnaeConnector, times(1))
           .uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
 
-        result mustBe Right((childName, childDetails))
+        result mustBe Right((testName, toChildDetails(childInfoA)))
       }
     }
 
     "should NOT call uploadFtnaeDetails if it is a FtnaePaymentsExtended session" in {
       reset(ftnaeConnector)
       val fakeRequest = FakeRequest("GET", "/nothing")
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren()),
+        whichYoungPersonField(testName),
+        howManyYearsField()
+      )
 
       val request: FtnaePaymentsExtendedPageDataRequest[AnyContent] =
-        FtnaePaymentsExtendedPageDataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
+        FtnaePaymentsExtendedPageDataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
+      whenReady(sut.submitFtnaeInformation(Some(testSummaryListRows))(ec, hc, request, messages).value) { result =>
         verify(ftnaeConnector, times(0))
           .uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
 
-        result mustBe Right((childName, childDetails))
+        result mustBe Right((testName, toChildDetails(childInfoA)))
       }
     }
 
@@ -114,16 +120,20 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren()),
+        whichYoungPersonField("Invalid Value"),
+        howManyYearsField()
+      )
       val request: DataRequest[AnyContent] =
         DataRequest(
           FakeRequest("GET", "/nothing"),
-          "id",
-          UserAnswers("id", data = userAnswerWithIncorrectCourseDuration)
+          testId,
+          testNino,
+          UserAnswers(testId, data = userAnswers)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
+      whenReady(sut.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -133,16 +143,20 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren(List(childInfoA, childInfoB.copy(crn = childInfoA.crn)))),
+        whichYoungPersonField(testName),
+        howManyYearsField()
+      )
       val request: DataRequest[AnyContent] =
         DataRequest(
           FakeRequest("GET", "/nothing"),
           "id",
-          UserAnswers("id", data = userAnswerWithMultipleSameCRN)
+          testNino,
+          UserAnswers("id", data = userAnswers)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
+      whenReady(sut.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
@@ -152,23 +166,29 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
+
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren(
+          List(childInfoA, childInfoB.copy(name = childInfoA.name, lastName = childInfoA.lastName)))
+        ),
+        whichYoungPersonField(testName),
+        howManyYearsField()
+      )
       val request: DataRequest[AnyContent] =
         DataRequest(
           FakeRequest("GET", "/nothing"),
           "id",
-          UserAnswers("id", data = userAnswerWithMultipleSameName)
+          testNino,
+          UserAnswers("id", data = userAnswers)
         )
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
+      whenReady(sut.submitFtnaeInformation(None)(ec, hc, request, messages).value) { result =>
         result mustBe Left(FtnaeChildUserAnswersNotRetrieved)
       }
     }
 
     "submit a user account information if the data" +
       "recorded in user answers are valid and confirm that cleaning database is performed" in {
-
       reset(sessionRepository)
 
       when(
@@ -178,14 +198,17 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       when(sessionRepository.clear(anyString())).thenReturn(Future.successful(true))
 
       val fakeRequest = FakeRequest("GET", "/nothing")
+      val userAnswers = buildUserAnswers(
+        ftnaeResponseField(createFtnaeResponseWithChildren()),
+        whichYoungPersonField(testName),
+        howManyYearsField()
+      )
 
       val request: DataRequest[AnyContent] =
-        DataRequest(fakeRequest, "id", UserAnswers("id", data = userAnswer))
+        DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
 
-      val service = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-
-      whenReady(service.submitFtnaeInformation(Some(summaryListRows))(ec, hc, request, messages).value) { result =>
-        result mustBe Right((childName, childDetails))
+      whenReady(sut.submitFtnaeInformation(Some(testSummaryListRows))(ec, hc, request, messages).value) { result =>
+        result mustBe Right((testName, toChildDetails(childInfoA)))
       }
 
       verify(sessionRepository, times(1)).clear(anyString())
@@ -194,130 +217,159 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
     "submitFtnaeAuditInformation" should {
       "return list of audit items from user selected questions and answers" in {
-        val service   = new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
-        val auditData = service.buildAuditData(Some(summaryListRows))
-        auditData mustBe expectedAuditAnswers
+        val auditData = sut.buildAuditData(Some(testSummaryListRows))
+        auditData mustBe testAuditAnswers
+      }
+    }
+  }
+
+  "getSelectedChildInfo" should {
+    val fakeRequest = FakeRequest("GET", "/unittest/getSelectedChildInfo")
+    "GIVEN a valid list of Children AND a matching CRN" should {
+      "THEN the expected child should be returned" in {
+        val children = List(childInfoA, childInfoB, childInfoC)
+        val childName = s"${childInfoA.name.value} ${childInfoA.lastName.value}"
+        val userAnswers = buildUserAnswers(
+          ftnaeResponseField(createFtnaeResponseWithChildren(children)),
+          whichYoungPersonField(childName)
+        )
+
+        val request: DataRequest[AnyContent] =
+          DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
+
+        val selectedChild = sut.getSelectedChildInfo(request)
+
+        selectedChild mustEqual Some(childInfoA)
+      }
+    }
+
+    "GIVEN a valid list of Children AND no matching CRN" should {
+      "THEN None should be returned" in {
+        val children = List(childInfoA, childInfoB, childInfoC)
+        val childName = "Not in the list"
+        val userAnswers = buildUserAnswers(
+          ftnaeResponseField(createFtnaeResponseWithChildren(children)),
+          whichYoungPersonField(childName)
+        )
+
+        val request: DataRequest[AnyContent] =
+          DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
+
+        val selectedChild = sut.getSelectedChildInfo(request)
+
+        selectedChild mustEqual None
+      }
+    }
+
+    "GIVEN a invalid list with duplicate CRNs" should {
+      "THEN None should be returned" in {
+        val duplicatedCRNChild = childInfoA.copy(crn = childInfoB.crn)
+        val children = List(duplicatedCRNChild, childInfoB, childInfoC)
+        val childName = "Should not be relevant"
+        val userAnswers = buildUserAnswers(
+          ftnaeResponseField(createFtnaeResponseWithChildren(children)),
+          whichYoungPersonField(childName)
+        )
+
+        val request: DataRequest[AnyContent] =
+          DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
+
+        val selectedChild = sut.getSelectedChildInfo(request)
+
+        selectedChild mustEqual None
+      }
+    }
+
+    "GIVEN a invalid list with duplicate names" should {
+      "THEN None should be returned" in {
+        val duplicatedNameChild = childInfoA.copy(name = childInfoB.name)
+        val children = List(duplicatedNameChild, childInfoB, childInfoC)
+        val childName = "Should not be relevant"
+        val userAnswers = buildUserAnswers(
+          ftnaeResponseField(createFtnaeResponseWithChildren(children)),
+          whichYoungPersonField(childName)
+        )
+
+        val request: DataRequest[AnyContent] =
+          DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, data = userAnswers))
+
+        val selectedChild = sut.getSelectedChildInfo(request)
+
+        selectedChild mustEqual None
       }
     }
   }
 }
 
 object FtnaeServiceSpec {
+  val testNino = NationalInsuranceNumber("nino")
+  val testId = "unitTestId"
+  val testCRN = "AA111111A"
+  val testName = "A Child"
 
-  private val ftnaeResponse: JsValue = Json.parse(
-    """
-      |{
-      |	"claimant": {
-      |		"name": "Luke",
-      |		"surname": "Smith"
-      |	},
-      |	"children": [{
-      |		"crn": "AC654321C",
-      |		"name": "Lauren",
-      |		"midName": "Sam",
-      |		"lastName": "Smith",
-      |		"dateOfBirth": "2007-02-10",
-      |		"currentClaimEndDate": "2023-09-04"
-      |	}]
-      |}
-      |""".stripMargin
+  val childInfoA: FtnaeChildInfo = FtnaeChildInfo(
+    ChildReferenceNumber("AA111111A"),
+    FirstForename("A"),
+    None,
+    Surname("Child"),
+    LocalDate.now().minusYears(3),
+    LocalDate.now().plusYears(13)
   )
 
-  private val ftnaeResponseWithMultipleCRN: JsValue = Json.parse(
-    """
-      |{
-      |	"claimant": {
-      |		"name": "Luke",
-      |		"surname": "Smith"
-      |	},
-      |	"children": [{
-      |		"crn": "AC654321C",
-      |		"name": "Lauren",
-      |		"midName": "Sam",
-      |		"lastName": "Smith",
-      |		"dateOfBirth": "2007-02-10",
-      |		"currentClaimEndDate": "2023-09-04"
-      |	},{
-      |		"crn": "AC654321C",
-      |		"name": "James",
-      |		"midName": "Sam",
-      |		"lastName": "Smith",
-      |		"dateOfBirth": "2007-02-10",
-      |		"currentClaimEndDate": "2023-09-04"
-      |	}
-      | ]
-      |}
-      |""".stripMargin
+  val childInfoB: FtnaeChildInfo = FtnaeChildInfo(
+    ChildReferenceNumber("BB222222B"),
+    FirstForename("B"),
+    None,
+    Surname("Child"),
+    LocalDate.now().minusYears(7),
+    LocalDate.now().plusYears(9)
   )
 
-  private val ftnaeResponseWithMultipleSameName: JsValue = Json.parse(
-    """
-      |{
-      |	"claimant": {
-      |		"name": "Luke",
-      |		"surname": "Smith"
-      |	},
-      |	"children": [{
-      |		"crn": "AC654321C",
-      |		"name": "Lauren",
-      |		"midName": "Sam",
-      |		"lastName": "Smith",
-      |		"dateOfBirth": "2007-02-10",
-      |		"currentClaimEndDate": "2023-09-04"
-      |	},{
-      |		"crn": "AC111111C",
-      |		"name": "Lauren",
-      |		"midName": "Sam",
-      |		"lastName": "Smith",
-      |		"dateOfBirth": "2007-01-10",
-      |		"currentClaimEndDate": "2023-09-04"
-      |	}
-      | ]
-      |}
-      |""".stripMargin
+  val childInfoC: FtnaeChildInfo = FtnaeChildInfo(
+    ChildReferenceNumber("CC333333C"),
+    FirstForename("C"),
+    None,
+    Surname("Child"),
+    LocalDate.now().minusYears(12),
+    LocalDate.now().plusYears(4)
   )
 
-  val userAnswer: JsObject = JsObject.apply(
-    Seq(
-      (
-        "ftneaResponseUserAnswer",
-        ftnaeResponse
-      ),
-      ("whichYoungPerson", JsString("Lauren Sam Smith")),
-      ("howManyYears", JsString("twoyears"))
+  val testSummaryListRows = List (
+    SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1")))
+  )
+  val testAuditAnswers = List(FtnaeQuestionAndAnswer("user-question-1", "user-answer-1"))
+
+  def toChildDetails(
+      childInfo: FtnaeChildInfo,
+      courseDuration: CourseDuration = CourseDuration.OneYear,
+      questionsAndAnswers: List[FtnaeQuestionAndAnswer] = testAuditAnswers
+    ): ChildDetails =
+    ChildDetails(
+      courseDuration,
+      childInfo.crn,
+      childInfo.dateOfBirth,
+      s"${childInfo.name.value} ${childInfo.lastName.value}",
+      questionsAndAnswers
     )
-  )
 
-  val userAnswerWithIncorrectCourseDuration: JsObject = JsObject.apply(
-    Seq(
-      (
-        "ftneaResponseUserAnswer",
-        ftnaeResponse
-      ),
-      ("whichYoungPerson", JsString("Lauren Sam Smith")),
-      ("howManyYears", JsString("other"))
+  def createFtnaeResponseWithChildren(children: List[FtnaeChildInfo] = List(childInfoA, childInfoB, childInfoC)): FtnaeResponse =
+    FtnaeResponse(
+      FtnaeClaimantInfo(FirstForename("Jayne"), Surname("Doe")),
+      children
     )
-  )
 
-  val userAnswerWithMultipleSameName: JsObject = JsObject.apply(
-    Seq(
-      (
-        "ftneaResponseUserAnswer",
-        ftnaeResponseWithMultipleSameName
-      ),
-      ("whichYoungPerson", JsString("Lauren Sam Smith")),
-      ("howManyYears", JsString("other"))
-    )
-  )
+  def buildUserAnswers(fields: (String, JsValue)*): JsObject = JsObject.apply(fields)
 
-  val userAnswerWithMultipleSameCRN: JsObject = JsObject.apply(
-    Seq(
-      (
-        "ftneaResponseUserAnswer",
-        ftnaeResponseWithMultipleCRN
-      ),
-      ("whichYoungPerson", JsString("Lauren Sam Smith")),
-      ("howManyYears", JsString("other"))
-    )
-  )
+  def ftnaeResponseField(response: FtnaeResponse): (String, JsValue) =
+    (FtnaeResponseUserAnswer.toString, Json.toJson(response))
+  def whichYoungPersonField(crn: String): (String, JsValue) =
+    (WhichYoungPersonPage.toString, JsString(crn))
+  def howManyYearsField(courseDuration: CourseDuration = CourseDuration.OneYear) =
+    (HowManyYearsPage.toString, JsString(courseDurationToHowManyYears(courseDuration)))
+
+  def courseDurationToHowManyYears(courseDuration: CourseDuration): String =
+    courseDuration match {
+      case CourseDuration.OneYear => "oneyear"
+      case CourseDuration.TwoYear => "twoyear"
+    }
 }

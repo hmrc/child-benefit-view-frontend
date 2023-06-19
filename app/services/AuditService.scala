@@ -16,9 +16,10 @@
 
 package services
 
-import models.audit.{BankDetails, ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, PersonalInformation, ViewDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.audit._
 import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
+import models.ftnae.{FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
@@ -171,4 +172,23 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     auditConnector.sendExplicitAudit(ViewPaymentDetailsModel.EventType, payload)
   }
 
+  def auditFtnaeKickOut(
+      nino: String,
+      status: String,
+      child: Option[FtnaeChildInfo],
+      courseDuration: Option[String],
+      answers: List[FtnaeQuestionAndAnswer]
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Unit = {
+    val payload = FtnaeKickOutModel(
+      nino,
+      status,
+      child.map(_.crn.value),
+      courseDuration,
+      child.map(_.dateOfBirth.toString),
+      child.map(_.name.value),
+      answers
+    )
+
+    auditConnector.sendExplicitAudit(FtnaeKickOutModel.EventType, payload)
+  }
 }
