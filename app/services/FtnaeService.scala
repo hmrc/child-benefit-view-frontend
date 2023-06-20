@@ -40,9 +40,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-                               ftnaeConnector:                             FtnaeConnector,
-                               sessionRepository:                          SessionRepository,
-                               ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
+    ftnaeConnector:                             FtnaeConnector,
+    sessionRepository:                          SessionRepository,
+    ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
 ) {
 
   def getFtnaeInformation()(implicit

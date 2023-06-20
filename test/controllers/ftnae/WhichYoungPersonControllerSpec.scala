@@ -50,7 +50,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
 
   private def arrangeRadioButtons(
-    ftnaeResponseUserAnswer:   FtnaeResponse
+      ftnaeResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
       ftnaeResponseUserAnswer.children
