@@ -34,11 +34,11 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse]
     with Logging {
 
-  def getFtnaeAccountDetails()(implicit
+  def getFtneaAccountDetails()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
   ): CBEnvelope[FtnaeResponse] =

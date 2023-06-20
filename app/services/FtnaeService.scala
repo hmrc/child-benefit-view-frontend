@@ -18,7 +18,7 @@ package services
 
 import cats.data.EitherT
 import cats.implicits.catsSyntaxTuple2Semigroupal
-import connectors.FtneaConnector
+import connectors.FtnaeConnector
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
@@ -40,15 +40,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-    ftnaeConnector:                             FtneaConnector,
-    sessionRepository:                          SessionRepository,
-    ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
+                               ftnaeConnector:                             FtnaeConnector,
+                               sessionRepository:                          SessionRepository,
+                               ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
 ) {
 
   def getFtnaeInformation()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
-  ): CBEnvelope[FtnaeResponse] = ftnaeConnector.getFtneaAccountDetails()
+  ): CBEnvelope[FtnaeResponse] = ftnaeConnector.getFtnaeAccountDetails()
 
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
       ec:                                     ExecutionContext,

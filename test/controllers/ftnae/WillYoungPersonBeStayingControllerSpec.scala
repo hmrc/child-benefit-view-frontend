@@ -145,7 +145,7 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val ftneaResponse = FtnaeResponse(
+      val ftnaeResponse = FtnaeResponse(
         FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
         List(
           FtnaeChildInfo(
@@ -161,7 +161,7 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftneaResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
 
