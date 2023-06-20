@@ -17,7 +17,7 @@
 package utils.handlers
 
 import controllers.cob
-import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtnaeChildUserAnswersNotRetrieved, FtneaCannotFindYoungPersonError, FtneaNoCHBAccountError, PaymentHistoryValidationError}
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtnaeChildUserAnswersNotRetrieved, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError, PaymentHistoryValidationError}
 import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -73,26 +73,26 @@ class ErrorHandler @Inject() (
       case PaymentHistoryValidationError(code, message) =>
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
-      case FtneaNoCHBAccountError =>
+      case FtnaeNoCHBAccountError =>
         logger.error(
           logMessage(
-            s"Ftnea No Chb Account error: ${FtneaNoCHBAccountError.message}",
-            Some(FtneaNoCHBAccountError.statusCode)
+            s"Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
+            Some(FtnaeNoCHBAccountError.statusCode)
           )
         )
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
-      case FtneaCannotFindYoungPersonError =>
+      case FtnaeCannotFindYoungPersonError =>
         logger.error(
           logMessage(
-            s"Ftnea can not find young person error: ${FtneaCannotFindYoungPersonError.message}",
-            Some(FtneaCannotFindYoungPersonError.statusCode)
+            s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}",
+            Some(FtnaeCannotFindYoungPersonError.statusCode)
           )
         )
         Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad())
       case FtnaeChildUserAnswersNotRetrieved =>
         logger.error(
           logMessage(
-            s"Ftnea error: ${FtnaeChildUserAnswersNotRetrieved.message}",
+            s"Ftnae error: ${FtnaeChildUserAnswersNotRetrieved.message}",
             Some(FtnaeChildUserAnswersNotRetrieved.statusCode)
           )
         )

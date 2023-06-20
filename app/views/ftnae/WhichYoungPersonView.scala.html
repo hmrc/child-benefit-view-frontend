@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import models.ftnae.FtneaResponse
+@import models.ftnae.FtnaeResponse
 @import models.viewmodels.LegendSize
 @import controllers.ProofOfEntitlementController._
 @import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
@@ -32,7 +32,7 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, getRadioItems: String => List[RadioItem], ftneaResponse: FtneaResponse)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, getRadioItems: String => List[RadioItem], ftnaeResponse: FtnaeResponse)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("whichYoungPerson.title"))) {
     @if(form.errors.nonEmpty) {
@@ -41,14 +41,14 @@
     @heading(messages("whichYoungPerson.heading"), "govuk-heading-l")
     @para(messages("whichYoungPerson.p1"))
 
-    @for(child <- ftneaResponse.children) {
+    @for(child <- ftnaeResponse.children) {
         @h2(toFtnaeChildNameTitleCase(child))
 
         @summaryList(
             SummaryList(
                 rows = Seq(
-                    SummaryListRow(key = Key(HtmlContent(messages("whichYoungPerson.ftneaChild.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
-                    SummaryListRow(key = Key(HtmlContent(messages("whichYoungPerson.ftneaChild.currentClaimEndDate"))), value = Value(HtmlContent(formatEntitlementDate(child.currentClaimEndDate))))
+                    SummaryListRow(key = Key(HtmlContent(messages("whichYoungPerson.ftnaeChild.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
+                    SummaryListRow(key = Key(HtmlContent(messages("whichYoungPerson.ftnaeChild.currentClaimEndDate"))), value = Value(HtmlContent(formatEntitlementDate(child.currentClaimEndDate))))
                 ),
                 classes = "govuk-!-margin-bottom-9"
             )

@@ -46,10 +46,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def changeOfBankUserInfoUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/change-bank-user-information"
 
-  def getFtneaAccountInfoUrl: String =
+  def getFtnaeAccountInfoUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/retrieve-ftnae-account-information"
 
-  def updateFtneaInfoUrl: String =
+  def updateFtnaeInfoUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/update-child-information/ftnae"
 
   def verifyBankAccountUrl: String =

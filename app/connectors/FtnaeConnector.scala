@@ -19,7 +19,7 @@ package connectors
 import cats.data.EitherT
 import cats.syntax.either._
 import config.FrontendAppConfig
-import connectors.FtneaConnector.{claimantInfoLogMessage, mainError}
+import connectors.FtnaeConnector.{claimantInfoLogMessage, mainError}
 import models.CBEnvelope.CBEnvelope
 import models.errors._
 import models.ftnae.{ChildDetails, FtnaeResponse}
@@ -34,18 +34,18 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+class FtnaeConnector @Inject()(httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse]
     with Logging {
 
-  def getFtneaAccountDetails()(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier
+  def getFtnaeAccountDetails()(implicit
+                               ec: ExecutionContext,
+                               hc: HeaderCarrier
   ): CBEnvelope[FtnaeResponse] =
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.getFtneaAccountInfoUrl)(httpReads, hc, ec)
+          .GET(appConfig.getFtnaeAccountInfoUrl)(httpReads, hc, ec)
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -64,7 +64,7 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .PUT(appConfig.updateFtneaInfoUrl, childDetails)(ChildDetails.format, httpReads, hc, ec)
+          .PUT(appConfig.updateFtnaeInfoUrl, childDetails)(ChildDetails.format, httpReads, hc, ec)
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -82,10 +82,10 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     val extractedMainErrorMessage = extractMainError(upstreamError.description)
     status match {
       case Status.NOT_FOUND if extractedMainErrorMessage.toUpperCase().trim.equals("NO CHB ACCOUNT") =>
-        FtneaNoCHBAccountError
+        FtnaeNoCHBAccountError
 
       case Status.NOT_FOUND if extractedMainErrorMessage.toUpperCase().trim.startsWith("CAN NOT FIND YOUNG PERSON") =>
-        FtneaCannotFindYoungPersonError
+        FtnaeCannotFindYoungPersonError
 
       case _ => ConnectorError(status, upstreamError.description)
     }
@@ -93,9 +93,9 @@ class FtneaConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
 
 }
 
-object FtneaConnector {
+object FtnaeConnector {
   private val claimantInfoLogMessage = (code: Int, message: String) =>
-    s"unable to retrieve Ftnea Response: code=$code message=$message"
+    s"unable to retrieve Ftnae Response: code=$code message=$message"
 
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r
 }

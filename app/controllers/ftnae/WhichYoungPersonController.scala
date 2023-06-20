@@ -60,13 +60,13 @@ class WhichYoungPersonController @Inject() (
       }
 
       userAnswers.get(FtnaeResponseUserAnswer) match {
-        case Some(ftneaResponseUserAnswer) =>
+        case Some(ftnaeResponseUserAnswer) =>
           Ok(
             view(
               preparedForm,
               mode,
-              arrangeRadioButtons(ftneaResponseUserAnswer),
-              ftneaResponseUserAnswer
+              arrangeRadioButtons(ftnaeResponseUserAnswer),
+              ftnaeResponseUserAnswer
             )
           )
         case None =>
@@ -81,10 +81,10 @@ class WhichYoungPersonController @Inject() (
       {
         val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-        val ftneaResponseUserAnswer: Option[FtnaeResponse] =
+        val ftnaeResponseUserAnswer: Option[FtnaeResponse] =
           userAnswers.get(FtnaeResponseUserAnswer)
 
-        ftneaResponseUserAnswer.fold(
+        ftnaeResponseUserAnswer.fold(
           Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
         )(answer => {
           form
@@ -110,10 +110,10 @@ class WhichYoungPersonController @Inject() (
     }
 
   private def arrangeRadioButtons(
-      ftneaResponseUserAnswer:   FtnaeResponse
+      ftnaeResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
-      ftneaResponseUserAnswer.children
+      ftnaeResponseUserAnswer.children
         .map(c => {
           toFtnaeChildNameTitleCase(c)
         })

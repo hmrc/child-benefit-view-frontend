@@ -16,7 +16,7 @@
 
 package services
 
-import connectors.FtneaConnector
+import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.errors.FtnaeChildUserAnswersNotRetrieved
 import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse}
@@ -33,7 +33,7 @@ import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import repositories.{FtnaePaymentsExtendedPageSessionRepository, SessionRepository}
-import services.FtnaeServiceSpec.{childInfoA, _}
+import services.FtnaeServiceSpec._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow, Value}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -51,7 +51,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   val messagesApi       = new DefaultMessagesApi(testMessages)
   implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
-  val ftnaeConnector                             = mock[FtneaConnector]
+  val ftnaeConnector                             = mock[FtnaeConnector]
   val sessionRepository                          = mock[SessionRepository]
   val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 

@@ -32,12 +32,12 @@ final case class ClaimantIsLockedOutOfChangeOfBank(
     message:    String
 ) extends CBError
 
-final case object FtneaNoCHBAccountError extends CBError {
+final case object FtnaeNoCHBAccountError extends CBError {
   override val statusCode = 404
   override val message    = "No ChB Account"
 }
 
-final case object FtneaCannotFindYoungPersonError extends CBError {
+final case object FtnaeCannotFindYoungPersonError extends CBError {
   override val statusCode = 404
   override val message    = "Can not find young person"
 }

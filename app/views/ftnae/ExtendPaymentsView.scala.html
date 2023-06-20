@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import models.ftnae.FtneaClaimantInfo
+@import models.ftnae.FtnaeClaimantInfo
 @import utils.helpers.StringHelper.toTitleCase
 
 @this(
@@ -28,7 +28,7 @@
         list: BulletList,
         caption: CaptionHeader
 )
-@(claimant: FtneaClaimantInfo)(implicit request: Request[_], messages: Messages)
+@(claimant: FtnaeClaimantInfo)(implicit request: Request[_], messages: Messages)
 
     @para2Link = @{link( id = "continuing-2",
         text = messages("extendPayments.p2.linkText"),

@@ -33,7 +33,7 @@ class PaymentsExtendedController @Inject() (
     identify:                 IdentifierAction,
     getData:                  CBDataRetrievalAction,
     requireData:              FtnaePaymentsExtendedPageDataRequiredActionImpl,
-    ftneaService:             FtnaeService,
+    ftnaeService:             FtnaeService,
     val controllerComponents: MessagesControllerComponents,
     featureActions:           FeatureFlagComposedActions,
     view:                     PaymentsExtendedView,
@@ -47,7 +47,7 @@ class PaymentsExtendedController @Inject() (
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
       val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
 
-      ftneaService
+      ftnaeService
         .submitFtnaeInformation(summaryListRows)
         .fold(
           error => errorHandler.handleError(error),
