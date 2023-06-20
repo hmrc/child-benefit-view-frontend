@@ -16,12 +16,12 @@
 
 package pages.ftnae
 
-import models.ftnae.FtneaResponse
+import models.ftnae.FtnaeResponse
 import play.api.libs.json.JsPath
 import utils.queries.{Gettable, Settable}
-case object FtneaResponseUserAnswer extends Gettable[FtneaResponse] with Settable[FtneaResponse] {
+case object FtnaeResponseUserAnswer extends Gettable[FtnaeResponse] with Settable[FtnaeResponse] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "ftneaResponseUserAnswer"
+  override def toString: String = "ftnaeResponseUserAnswer"
 }

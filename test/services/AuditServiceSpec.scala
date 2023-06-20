@@ -16,10 +16,11 @@
 
 package services
 
-import models.audit.{ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
+import models.audit.{ChangeOfBankAccountDetailsModel, ClaimantEntitlementDetails, FtnaeKickOutModel, ViewPaymentDetailsModel, ViewProofOfEntitlementModel}
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
-import models.common.NationalInsuranceNumber
+import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement.Child
+import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
@@ -41,10 +42,14 @@ class AuditServiceSpec extends PlaySpec {
   val auditConnector: AuditConnector = mock[AuditConnector]
   val auditor:        AuditService   = new AuditService(auditConnector)
 
+  val testNino:   String = "CA123456A"
+  val testCRN:    String = "AC654321C"
+  val testStatus: String = "testStatus"
   protected val request: Request[_] =
     FakeRequest().withHeaders(Headers(("referer", "/foo")))
   protected val optionalDataRequest: OptionalDataRequest[_] =
-    OptionalDataRequest(request, "123", NationalInsuranceNumber("CA123456A"), None)
+    OptionalDataRequest(request, "123", NationalInsuranceNumber(testNino), None)
+
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
 
@@ -70,15 +75,14 @@ class AuditServiceSpec extends PlaySpec {
       )
     )
 
-  "viewProofOfEntitlement" should {
+  "auditProofOfEntitlement" should {
     "fire event" in {
-
       Mockito.reset(auditConnector)
 
       val captor: ArgumentCaptor[ViewProofOfEntitlementModel] =
         ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
 
-      auditor.auditProofOfEntitlement("CA123456A", "testStatus", request, Some(entitlementResult))
+      auditor.auditProofOfEntitlement(testNino, testStatus, request, Some(entitlementResult))
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
@@ -91,8 +95,8 @@ class AuditServiceSpec extends PlaySpec {
       val capturedEntitlementDetails: ClaimantEntitlementDetails = capturedEvent.claimantEntitlementDetails.get
       val capturedChild:              Child                      = capturedEntitlementDetails.children.last
 
-      capturedEvent.nino mustBe "CA123456A"
-      capturedEvent.status mustBe "testStatus"
+      capturedEvent.nino mustBe testNino
+      capturedEvent.status mustBe testStatus
       capturedEvent.referrer mustBe "/foo"
       capturedEvent.deviceFingerprint mustBe "-"
 
@@ -109,7 +113,7 @@ class AuditServiceSpec extends PlaySpec {
 
     }
   }
-  "changeOfBankAccountDetails" should {
+  "auditChangeOfBankAccountDetails" should {
     "fire event" in {
 
       Mockito.reset(auditConnector)
@@ -117,7 +121,7 @@ class AuditServiceSpec extends PlaySpec {
       val captor: ArgumentCaptor[ChangeOfBankAccountDetailsModel] =
         ArgumentCaptor.forClass(classOf[ChangeOfBankAccountDetailsModel])
 
-      auditor.auditChangeOfBankAccountDetails("CA123456A", "testStatus", optionalDataRequest, claimantBankInformation)
+      auditor.auditChangeOfBankAccountDetails(testNino, testStatus, optionalDataRequest, claimantBankInformation)
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(ChangeOfBankAccountDetailsModel.EventType), captor.capture())(
@@ -132,8 +136,8 @@ class AuditServiceSpec extends PlaySpec {
       val capturedBankDetails         = capturedEvent.bankDetails
       val capturedViewDetails         = capturedEvent.viewDetails
 
-      capturedEvent.nino mustBe "CA123456A"
-      capturedEvent.status mustBe "testStatus"
+      capturedEvent.nino mustBe testNino
+      capturedEvent.status mustBe testStatus
       capturedEvent.referrer mustBe "/foo"
       capturedEvent.deviceFingerprint mustBe "-"
 
@@ -157,14 +161,14 @@ class AuditServiceSpec extends PlaySpec {
       capturedViewDetails.sortCode mustBe "**-**-33"
     }
   }
-  "viewPaymentDetails" should {
+  "auditPaymentDetails" should {
     "fire event" in {
       Mockito.reset(auditConnector)
 
       val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
         ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-      auditor.auditPaymentDetails("CA123456A", "testStatus", request, Some(entitlementResult))
+      auditor.auditPaymentDetails(testNino, testStatus, request, Some(entitlementResult))
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.EventType), captor.capture())(
@@ -175,8 +179,8 @@ class AuditServiceSpec extends PlaySpec {
 
       val capturedEvent = captor.getValue
 
-      capturedEvent.nino mustBe "CA123456A"
-      capturedEvent.status mustBe "testStatus"
+      capturedEvent.nino mustBe testNino
+      capturedEvent.status mustBe testStatus
       capturedEvent.referrer mustBe "/foo"
       capturedEvent.deviceFingerprint mustBe "-"
       capturedEvent.numberOfPaymentsVisibleToUser mustBe 5
@@ -184,4 +188,47 @@ class AuditServiceSpec extends PlaySpec {
     }
   }
 
+  "auditFTNAEKickOut" should {
+    "fire event" in {
+      Mockito.reset(auditConnector)
+      val childInfo: FtnaeChildInfo = FtnaeChildInfo(
+        ChildReferenceNumber(testCRN),
+        FirstForename("John"),
+        None,
+        Surname("Doe"),
+        LocalDate.now(),
+        LocalDate.now().plusYears(1)
+      )
+      val courseDuration: String = "ONE_YEAR"
+      val answers: List[FtnaeQuestionAndAnswer] =
+        List(
+          FtnaeQuestionAndAnswer("Question 1", "Answer A"),
+          FtnaeQuestionAndAnswer("Question 2", "Answer B"),
+          FtnaeQuestionAndAnswer("Question 3", "Answer C")
+        )
+
+      val captor: ArgumentCaptor[FtnaeKickOutModel] =
+        ArgumentCaptor.forClass(classOf[FtnaeKickOutModel])
+
+      auditor.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), Some(courseDuration), answers)
+
+      verify(auditConnector, times(1))
+        .sendExplicitAudit(eqTo(FtnaeKickOutModel.EventType), captor.capture())(
+          any[HeaderCarrier](),
+          any[ExecutionContext](),
+          any[Writes[FtnaeKickOutModel]]()
+        )
+
+      val capturedEvent = captor.getValue
+
+      capturedEvent.nino mustBe testNino
+      capturedEvent.status mustBe testStatus
+      capturedEvent.crn mustBe Some(childInfo.crn.value)
+      capturedEvent.courseDuration mustBe Some(courseDuration)
+      capturedEvent.dateOfBirth mustBe Some(childInfo.dateOfBirth.toString)
+      capturedEvent.name mustBe Some(childInfo.name.value)
+      capturedEvent.answers.length mustEqual answers.length
+      capturedEvent.answers mustEqual answers
+    }
+  }
 }

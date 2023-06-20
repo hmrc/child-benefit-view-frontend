@@ -20,8 +20,8 @@ import cats.data.EitherT
 import controllers.actions._
 import models.{CBEnvelope, UserAnswers}
 import models.errors.CBError
-import models.ftnae.FtneaClaimantInfo
-import pages.ftnae.FtneaResponseUserAnswer
+import models.ftnae.FtnaeClaimantInfo
+import pages.ftnae.FtnaeResponseUserAnswer
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -41,7 +41,7 @@ class ExtendPaymentsController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     sessionRepository:        SessionRepository,
     view:                     ExtendPaymentsView,
-    ftneaService:             FtnaeService,
+    ftnaeService:             FtnaeService,
     errorHandler:             ErrorHandler
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
@@ -49,17 +49,17 @@ class ExtendPaymentsController @Inject() (
 
   def onPageLoad(): Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
-      val result: EitherT[Future, CBError, FtneaClaimantInfo] = for {
-        ftneaResponse <- ftneaService.getFtnaeInformation()
+      val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
+        ftnaeResponse <- ftnaeService.getFtnaeInformation()
         updatedAnswers <- CBEnvelope.fromF(
           Future.fromTry(
             request.userAnswers
               .getOrElse(UserAnswers(request.userId))
-              .set(FtneaResponseUserAnswer, ftneaResponse)
+              .set(FtnaeResponseUserAnswer, ftnaeResponse)
           )
         )
         _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
-      } yield ftneaResponse.claimant
+      } yield ftnaeResponse.claimant
 
       result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant)))
 

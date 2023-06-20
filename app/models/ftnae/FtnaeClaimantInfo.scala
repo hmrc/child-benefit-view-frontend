@@ -16,10 +16,11 @@
 
 package models.ftnae
 
+import models.common.{FirstForename, Surname}
 import play.api.libs.json.Json
 
-final case class FtneaResponse(claimant: FtneaClaimantInfo, children: List[FtneaChildInfo])
+final case class FtnaeClaimantInfo(name: FirstForename, surname: Surname)
 
-object FtneaResponse {
-  implicit val format = Json.format[FtneaResponse]
+object FtnaeClaimantInfo {
+  implicit val format = Json.format[FtnaeClaimantInfo]
 }

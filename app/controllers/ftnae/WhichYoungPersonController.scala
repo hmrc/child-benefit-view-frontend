@@ -18,9 +18,9 @@ package controllers.ftnae
 
 import controllers.actions._
 import forms.ftnae.WhichYoungPersonFormProvider
-import models.ftnae.FtneaResponse
+import models.ftnae.FtnaeResponse
 import models.{Mode, UserAnswers}
-import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -59,14 +59,14 @@ class WhichYoungPersonController @Inject() (
         case Some(value) => form.fill(value)
       }
 
-      userAnswers.get(FtneaResponseUserAnswer) match {
-        case Some(ftneaResponseUserAnswer) =>
+      userAnswers.get(FtnaeResponseUserAnswer) match {
+        case Some(ftnaeResponseUserAnswer) =>
           Ok(
             view(
               preparedForm,
               mode,
-              arrangeRadioButtons(ftneaResponseUserAnswer),
-              ftneaResponseUserAnswer
+              arrangeRadioButtons(ftnaeResponseUserAnswer),
+              ftnaeResponseUserAnswer
             )
           )
         case None =>
@@ -81,10 +81,10 @@ class WhichYoungPersonController @Inject() (
       {
         val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-        val ftneaResponseUserAnswer: Option[FtneaResponse] =
-          userAnswers.get(FtneaResponseUserAnswer)
+        val ftnaeResponseUserAnswer: Option[FtnaeResponse] =
+          userAnswers.get(FtnaeResponseUserAnswer)
 
-        ftneaResponseUserAnswer.fold(
+        ftnaeResponseUserAnswer.fold(
           Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
         )(answer => {
           form
@@ -110,10 +110,10 @@ class WhichYoungPersonController @Inject() (
     }
 
   private def arrangeRadioButtons(
-      ftneaResponseUserAnswer:   FtneaResponse
+      ftnaeResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
-      ftneaResponseUserAnswer.children
+      ftnaeResponseUserAnswer.children
         .map(c => {
           toFtnaeChildNameTitleCase(c)
         })

@@ -18,11 +18,11 @@ package controllers.ftnae
 
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
-import models.ftnae.{FtneaChildInfo, FtneaClaimantInfo, FtneaResponse}
+import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -39,7 +39,7 @@ import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
 
-class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
+class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -50,10 +50,10 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
 
   private def arrangeRadioButtons(
-      ftneaResponseUserAnswer:   FtneaResponse
+      ftnaeResponseUserAnswer:   FtnaeResponse
   )(youngPersonNotListedMessage: String): List[RadioItem] = {
     val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
-      ftneaResponseUserAnswer.children
+      ftnaeResponseUserAnswer.children
         .map(c => {
           val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
           s"${c.name.value} $midName${c.lastName.value}"
@@ -70,10 +70,10 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     }
   }
 
-  val ftneaResponse = FtneaResponse(
-    FtneaClaimantInfo(FirstForename("s"), Surname("sa")),
+  val ftnaeResponse = FtnaeResponse(
+    FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
-      FtneaChildInfo(
+      FtnaeChildInfo(
         ChildReferenceNumber("crn1234"),
         FirstForename("First Name"),
         None,
@@ -90,7 +90,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     "must return OK and the correct view for a GET" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(FtneaResponseUserAnswer, ftneaResponse)
+        .set(FtnaeResponseUserAnswer, ftnaeResponse)
         .success
         .value
 
@@ -114,7 +114,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form, CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
+          view(form, CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
             request,
             messages(application)
           ).toString
@@ -126,7 +126,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
 
@@ -147,7 +147,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftneaResponse), ftneaResponse)(
+          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
             request,
             messages(application)
           ).toString
@@ -160,7 +160,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
-        .flatMap(x => x.set(FtneaResponseUserAnswer, ftneaResponse))
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
 

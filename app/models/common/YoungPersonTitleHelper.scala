@@ -17,14 +17,14 @@
 package models.common
 
 import models.requests.DataRequest
-import pages.ftnae.{FtneaResponseUserAnswer, WhichYoungPersonPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
 case class YoungPersonTitleHelper[A](request: DataRequest[A]) {
 
   private def childFromConcatenatedChildNamesList() = {
     request.userAnswers
-      .get(FtneaResponseUserAnswer)
+      .get(FtnaeResponseUserAnswer)
       .map(userAnswer => {
         val childNamesWithIndex: List[(String, Int)] =
           userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex

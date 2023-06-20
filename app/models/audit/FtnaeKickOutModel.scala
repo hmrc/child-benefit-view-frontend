@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package models.ftnae
+package models.audit
 
-import models.common.{ChildReferenceNumber, FirstForename, Surname}
+import models.ftnae.FtnaeQuestionAndAnswer
 import play.api.libs.json.Json
 
-import java.time.LocalDate
-
-final case class FtneaChildInfo(
-    crn:                 ChildReferenceNumber,
-    name:                FirstForename,
-    midName:             Option[SecondForename],
-    lastName:            Surname,
-    dateOfBirth:         LocalDate,
-    currentClaimEndDate: LocalDate
+final case class FtnaeKickOutModel(
+    nino:           String,
+    status:         String,
+    crn:            Option[String],
+    courseDuration: Option[String],
+    dateOfBirth:    Option[String],
+    name:           Option[String],
+    answers:        List[FtnaeQuestionAndAnswer]
 )
 
-object FtneaChildInfo {
-  implicit val format = Json.format[FtneaChildInfo]
+object FtnaeKickOutModel {
+  implicit val formatFTNAEKickOutModel = Json.format[FtnaeKickOutModel]
+  val EventType: String = "FullTimeNonAdvancedEducationKickOutPage"
 }

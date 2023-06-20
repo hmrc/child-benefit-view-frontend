@@ -16,11 +16,11 @@
 
 package controllers.ftnae
 
-import connectors.FtneaConnector
+import connectors.FtnaeConnector
 import models.CBEnvelope
 import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
-import models.ftnae.{ChildDetails, CourseDuration, FtneaQuestionAndAnswer}
+import models.ftnae.{ChildDetails, CourseDuration, FtnaeQuestionAndAnswer}
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -41,10 +41,10 @@ import views.html.ftnae.PaymentsExtendedView
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with FtneaFixture {
+class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
 
   val mockFtnaeService      = mock[FtnaeService]
-  val mockFtneaConnector    = mock[FtneaConnector]
+  val mockFtnaeConnector    = mock[FtnaeConnector]
   val mockSessionRepository = mock[SessionRepository]
 
   "PaymentsExtended Controller" - {
@@ -57,13 +57,13 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
           ChildReferenceNumber("AA123456"),
           LocalDate.of(2001, 1, 1),
           "sample-name",
-          List.empty[FtneaQuestionAndAnswer]
+          List.empty[FtnaeQuestionAndAnswer]
         )
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .overrides(bind[FtnaeService].toInstance(mockFtnaeService))
-        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
+        .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
         .build()
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
@@ -79,7 +79,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
       ) thenReturn CBEnvelope(Right((childName, childDetails)))
 
       when(
-        mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+        mockFtnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope(())
 
       running(application) {
@@ -102,7 +102,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .overrides(bind[FtnaeService].toInstance(mockFtnaeService))
-        .overrides(bind[FtneaConnector].toInstance(mockFtneaConnector))
+        .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
         .build()
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
@@ -118,7 +118,7 @@ class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with Ft
       ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
 
       when(
-        mockFtneaConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
+        mockFtnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
       ) thenReturn CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error"))
 
       running(application) {

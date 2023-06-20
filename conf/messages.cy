@@ -245,8 +245,8 @@ whichYoungPerson.radioLegend = Dewiswch enw’r person ifanc
 whichYoungPerson.childNotListed = Person ifanc heb ei restru
 whichYoungPerson.error.required = Dewiswch enw’r person ifanc neu ‘Person ifanc heb ei restru’.
 whichYoungPerson.checkYourAnswersLabel = Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?
-whichYoungPerson.ftneaChild.dateOfBirth = Dyddiad geni
-whichYoungPerson.ftneaChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
+whichYoungPerson.ftnaeChild.dateOfBirth = Dyddiad geni
+whichYoungPerson.ftnaeChild.currentClaimEndDate = Dyddiad dod i ben y cyfnod hawlio presennol
 whichYoungPerson.change.hidden = eich ateb i’r cwestiwn, ‘Pwy ydych am roi gwybod i’r swyddfa Budd-dal Plant amdano?’
 
 # ----------  Redirect to existing FTNAE iform ------------

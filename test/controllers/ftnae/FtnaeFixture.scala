@@ -18,7 +18,7 @@ package controllers.ftnae
 
 import java.time.{DayOfWeek, LocalDate, Month}
 
-trait FtneaFixture {
+trait FtnaeFixture {
   val thisYear1stOfSeptember            = LocalDate.of(LocalDate.now().getYear, Month.SEPTEMBER, 1)
   val sixteenBy1stOfSeptemberThisYear   = thisYear1stOfSeptember.minusYears(16)
   val seventeenBy1stOfSeptemberThisYear = thisYear1stOfSeptember.minusYears(17)

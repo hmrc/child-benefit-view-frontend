@@ -18,7 +18,7 @@ package services
 
 import cats.data.EitherT
 import cats.implicits.catsSyntaxTuple2Semigroupal
-import connectors.FtneaConnector
+import connectors.FtnaeConnector
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
@@ -26,7 +26,7 @@ import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae._
 import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageDataRequest}
 import models.viewmodels.checkAnswers.WhichYoungPersonSummary
-import pages.ftnae.{FtneaResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
+import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
 import repositories.{FtnaePaymentsExtendedPageSessionRepository, SessionRepository}
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FtnaeService @Inject() (
-    ftneaConnector:                             FtneaConnector,
+    ftnaeConnector:                             FtnaeConnector,
     sessionRepository:                          SessionRepository,
     ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository
 ) {
@@ -48,7 +48,7 @@ class FtnaeService @Inject() (
   def getFtnaeInformation()(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
-  ): CBEnvelope[FtneaResponse] = ftneaConnector.getFtneaAccountDetails()
+  ): CBEnvelope[FtnaeResponse] = ftnaeConnector.getFtnaeAccountDetails()
 
   def submitFtnaeInformation(summaryListRows: Option[List[SummaryListRow]])(implicit
       ec:                                     ExecutionContext,
@@ -57,11 +57,7 @@ class FtnaeService @Inject() (
       messages:                               Messages
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
-    val maybeMatchedChild = for {
-      ftnaeResp        <- request.userAnswers.get(FtneaResponseUserAnswer)
-      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
-      matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
-    } yield matchedChildInfo
+    val maybeMatchedChild = getSelectedChildInfo(request)
 
     val maybeCourseDuration = request.userAnswers.get(HowManyYearsPage) match {
       case Some(Oneyear)  => Some(CourseDuration.OneYear)
@@ -95,6 +91,27 @@ class FtnaeService @Inject() (
 
   }
 
+  def getSelectedChildInfo(request: BaseDataRequest[AnyContent]): Option[FtnaeChildInfo] = {
+    for {
+      ftnaeResp        <- request.userAnswers.get(FtnaeResponseUserAnswer)
+      selectedChild    <- request.userAnswers.get(WhichYoungPersonPage)
+      matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
+    } yield matchedChildInfo
+  }
+
+  private def selectChildFromList(children: List[FtnaeChildInfo], selectedChild: String): Option[FtnaeChildInfo] = {
+    val childCrns       = children.map(_.crn.value)
+    val noDuplicateCrns = childCrns.distinct.size == childCrns.size
+    val onlyOneChildHasTheSelectedName =
+      children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
+
+    if (noDuplicateCrns && onlyOneChildHasTheSelectedName) {
+      children.find(c => toFtnaeChildNameTitleCase(c) == selectedChild)
+    } else {
+      None
+    }
+  }
+
   private def uploadFtnaeDetailsIfNotFtnaePaymentsExtendedPageSession(
       childDetails: (String, ChildDetails)
   )(implicit
@@ -103,26 +120,15 @@ class FtnaeService @Inject() (
       request: BaseDataRequest[AnyContent]
   ) = {
     request match {
-      case DataRequest(_, _, _)                          => ftneaConnector.uploadFtnaeDetails(childDetails._2)
-      case FtnaePaymentsExtendedPageDataRequest(_, _, _) => CBEnvelope(())
-      case _                                             => CBEnvelope(())
+      case DataRequest(_, _, _, _)                          => ftnaeConnector.uploadFtnaeDetails(childDetails._2)
+      case FtnaePaymentsExtendedPageDataRequest(_, _, _, _) => CBEnvelope(())
+      case _                                                => CBEnvelope(())
     }
-  }
-
-  private def selectChildFromList(children: List[FtneaChildInfo], selectedChild: String): Option[FtneaChildInfo] = {
-    val childCrns       = children.map(_.crn.value)
-    val noDuplicateCrns = childCrns.distinct.size == childCrns.size
-    val onlyOneChildHasTheSelectedName =
-      children.map(toFtnaeChildNameTitleCase).count(name => name == selectedChild) == 1
-
-    if (noDuplicateCrns && onlyOneChildHasTheSelectedName) {
-      children.find(c => toFtnaeChildNameTitleCase(c) == selectedChild)
-    } else None
   }
 
   def buildAuditData(
       summaryListRows: Option[List[SummaryListRow]]
-  )(implicit messages: Messages): List[FtneaQuestionAndAnswer] = {
+  )(implicit messages: Messages): List[FtnaeQuestionAndAnswer] = {
 
     def convertRowElement(content: Content): String = content.asHtml.body
 
@@ -130,8 +136,8 @@ class FtnaeService @Inject() (
       case Some(rows) =>
         rows
           .dropWhile(_.key == Key(Text(messages(WhichYoungPersonSummary.keyName)), ""))
-          .map(row => FtneaQuestionAndAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
-      case _ => List.empty[FtneaQuestionAndAnswer]
+          .map(row => FtnaeQuestionAndAnswer(convertRowElement(row.key.content), convertRowElement(row.value.content)))
+      case _ => List.empty[FtnaeQuestionAndAnswer]
     }
   }
 

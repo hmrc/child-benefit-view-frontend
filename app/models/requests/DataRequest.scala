@@ -46,17 +46,20 @@ case class OptionalDataRequest[A](
 abstract class BaseDataRequest[A](baseRequest: Request[A]) extends WrappedRequest[A](baseRequest) {
   def request: Request[A] = baseRequest
   def userId:      String
+  def nino:        NationalInsuranceNumber
   def userAnswers: UserAnswers
 }
 
 final case class DataRequest[A](
     override val request:     Request[A],
     override val userId:      String,
+    override val nino:        NationalInsuranceNumber,
     override val userAnswers: UserAnswers
 ) extends BaseDataRequest[A](request)
 
 final case class FtnaePaymentsExtendedPageDataRequest[A](
     override val request:     Request[A],
     override val userId:      String,
+    override val nino:        NationalInsuranceNumber,
     override val userAnswers: UserAnswers
 ) extends BaseDataRequest[A](request)
