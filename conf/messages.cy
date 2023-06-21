@@ -220,7 +220,7 @@ hICBCOptedOutPayments.guide.link.text = dechrau cael taliadau Budd-dal Plant
 cannotVerifyAccount.title = Ni allwn ddilysu’r manylion cyfrif rydych chi wedi’u darparu
 cannotVerifyAccount.heading = Ni allwn ddilysu’r manylion cyfrif rydych chi wedi’u darparu
 cannotVerifyAccount.paragraph.1 = Ni allwn ddilysu’ch manylion, felly bydd angen i chi {0}
-cannotVerifyAccount.paragraph.2 = Am resymau diogelwch, rydym wedi’ch cloi allan o’r gwasanaeth hwn am 24 awr.
+cannotVerifyAccount.paragraph.2 = Er eich diogelwch, rydym wedi’ch cloi allan o’r gwasanaeth hwn am 24 awr.
 cannotVerifyAccount.link.text = ddefnyddio gwasanaeth arall i newid y cyfrif ar gyfer eich taliadau Budd-dal Plant.
 
 # ------------------------------ FTNAE Messages Section ------------------------------
