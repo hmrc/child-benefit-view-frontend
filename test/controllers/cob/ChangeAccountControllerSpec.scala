@@ -18,7 +18,7 @@ package controllers.cob
 
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import controllers.cob
-import controllers.cob.ChangeAccountControllerSpec.{claimantBankInformationWithBuildingSocietyRollNumber, claimantBankInformationWithEndDateInPast, claimantBankInformationWithEndDateToday, claimantBankInformationWithHICBC}
+import controllers.cob.ChangeAccountControllerSpec._
 import models.changeofbank._
 import models.common.AdjustmentReasonCode
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks

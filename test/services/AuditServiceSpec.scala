@@ -20,7 +20,7 @@ import models.audit._
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement.Child
-import models.ftnae.{FtnaeChildInfo, FtnaeQuestionAndAnswer}
+import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
@@ -199,7 +199,7 @@ class AuditServiceSpec extends PlaySpec {
         LocalDate.now(),
         LocalDate.now().plusYears(1)
       )
-      val courseDuration: String = "ONE_YEAR"
+      val courseDuration: Option[CourseDuration] = Some(CourseDuration.TwoYear)
       val answers: List[FtnaeQuestionAndAnswer] =
         List(
           FtnaeQuestionAndAnswer("Question 1", "Answer A"),
@@ -210,7 +210,7 @@ class AuditServiceSpec extends PlaySpec {
       val captor: ArgumentCaptor[FtnaeKickOutModel] =
         ArgumentCaptor.forClass(classOf[FtnaeKickOutModel])
 
-      auditor.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), Some(courseDuration), answers)
+      auditor.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), courseDuration, answers)
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(FtnaeKickOutModel.EventType), captor.capture())(
@@ -224,9 +224,9 @@ class AuditServiceSpec extends PlaySpec {
       capturedEvent.nino mustBe testNino
       capturedEvent.status mustBe testStatus
       capturedEvent.crn mustBe Some(childInfo.crn.value)
-      capturedEvent.courseDuration mustBe Some(courseDuration)
+      capturedEvent.courseDuration mustBe courseDuration.map(_.toString)
       capturedEvent.dateOfBirth mustBe Some(childInfo.dateOfBirth.toString)
-      capturedEvent.name mustBe Some(childInfo.name.value)
+      capturedEvent.name mustBe Some(s"${childInfo.name.value} ${childInfo.lastName.value}")
       capturedEvent.answers.length mustEqual answers.length
       capturedEvent.answers mustEqual answers
     }

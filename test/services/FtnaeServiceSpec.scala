@@ -19,7 +19,7 @@ package services
 import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.errors.FtnaeChildUserAnswersNotRetrieved
-import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse}
+import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse, HowManyYears}
 import models.requests.{DataRequest, FtnaePaymentsExtendedPageDataRequest}
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, anyString}
@@ -27,6 +27,7 @@ import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.DefaultMessagesApi
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
@@ -41,7 +42,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
+class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with ScalaCheckPropertyChecks {
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val hc: HeaderCarrier    = HeaderCarrier()
@@ -301,6 +302,38 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       }
     }
   }
+
+  "getSelectedCourseDuration" should {
+    val fakeRequest = FakeRequest("GET", "/unittest/getSelectedCourseDuration")
+    val testCases = Table(
+      ("Name", "HowManyYears", "ExpectedCourseDuration"),
+      ("One Year", HowManyYears.Oneyear, Some(CourseDuration.OneYear)),
+      ("Two Years", HowManyYears.Twoyears, Some(CourseDuration.TwoYear)),
+      ("Other", HowManyYears.Other, None)
+    )
+
+    forAll(testCases) { (name, howManyYears, expectedCourseDuration) =>
+      {
+        s"Test Case: ${name}" should {
+          s"GIVEN the HowManyYears case ${howManyYears.toString}" should {
+            s"THEN should return the Option[CourseDuration] case ${expectedCourseDuration
+              .fold("None")(c => s"Some(${c.toString})")}" in {
+              val userAnswers = buildUserAnswers(
+                howManyYearsField(howManyYears)
+              )
+
+              val request: DataRequest[AnyContent] =
+                DataRequest(fakeRequest, testId, testNino, UserAnswers(testId, userAnswers))
+
+              val courseDuration = sut.getSelectedCourseDuration(request)
+
+              courseDuration mustEqual expectedCourseDuration
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 object FtnaeServiceSpec {
@@ -368,8 +401,8 @@ object FtnaeServiceSpec {
     (FtnaeResponseUserAnswer.toString, Json.toJson(response))
   def whichYoungPersonField(crn: String): (String, JsValue) =
     (WhichYoungPersonPage.toString, JsString(crn))
-  def howManyYearsField(courseDuration: CourseDuration = CourseDuration.OneYear) =
-    (HowManyYearsPage.toString, JsString(courseDurationToHowManyYears(courseDuration)))
+  def howManyYearsField(howManyYears: HowManyYears = HowManyYears.Oneyear) =
+    (HowManyYearsPage.toString, JsString(howManyYears.toString))
 
   def courseDurationToHowManyYears(courseDuration: CourseDuration): String =
     courseDuration match {

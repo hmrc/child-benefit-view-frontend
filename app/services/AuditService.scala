@@ -19,12 +19,14 @@ package services
 import models.audit._
 import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
-import models.ftnae.{FtnaeChildInfo, FtnaeQuestionAndAnswer}
+import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
+import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 import views.ViewUtils.{formatSensitiveAccNumber, formatSensitiveSort}
 
 import javax.inject.Inject
@@ -176,19 +178,20 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
       nino:           String,
       status:         String,
       child:          Option[FtnaeChildInfo],
-      courseDuration: Option[String],
+      courseDuration: Option[CourseDuration],
       answers:        List[FtnaeQuestionAndAnswer]
   )(implicit hc:      HeaderCarrier, ex: ExecutionContext): Unit = {
     val payload = FtnaeKickOutModel(
       nino,
       status,
       child.map(_.crn.value),
-      courseDuration,
+      courseDuration.map(_.toString),
       child.map(_.dateOfBirth.toString),
-      child.map(_.name.value),
+      child.map(toFtnaeChildNameTitleCase),
       answers
     )
 
+    val test = Json.toJson(payload).as[JsObject]
     auditConnector.sendExplicitAudit(FtnaeKickOutModel.EventType, payload)
   }
 }
