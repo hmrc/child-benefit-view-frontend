@@ -20,7 +20,7 @@ import models.audit._
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement.Child
-import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
+import models.ftnae.{FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
