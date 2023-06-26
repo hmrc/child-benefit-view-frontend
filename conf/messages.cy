@@ -286,6 +286,7 @@ extendPayments.govuk.link = https://www.gov.uk/government/publications/child-ben
 whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.heading = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
+whyYoungPersonNotListed.bulletPoint5 = nid ydym wedi anfon cais atoch yn gofyn i chi roi gwybod i ni am addysg y person ifanc eto – bydd hwn yn cael ei anfon erbyn 10 Gorffennaf
 whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
 whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
 whyYoungPersonNotListed.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
