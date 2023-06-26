@@ -64,6 +64,11 @@ class ProofOfEntitlementController @Inject() (
 }
 
 object ProofOfEntitlementController {
+
+  /**
+    * These are effectively default dates and carried over from CBS migration from COBOL.
+    * These dates were used if the dates were missing
+    */
   private val specialAwardStartDates: Set[LocalDate] =
     Set(
       LocalDate.of(2021, 2, 22),
