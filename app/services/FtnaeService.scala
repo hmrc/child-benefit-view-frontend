@@ -57,13 +57,8 @@ class FtnaeService @Inject() (
       messages:                               Messages
   ): EitherT[Future, CBError, (String, ChildDetails)] = {
 
-    val maybeMatchedChild = getSelectedChildInfo(request)
-
-    val maybeCourseDuration = request.userAnswers.get(HowManyYearsPage) match {
-      case Some(Oneyear)  => Some(CourseDuration.OneYear)
-      case Some(Twoyears) => Some(CourseDuration.TwoYear)
-      case _              => None
-    }
+    val maybeMatchedChild   = getSelectedChildInfo(request)
+    val maybeCourseDuration = getSelectedCourseDuration(request)
 
     val childDetails: Either[CBError, (String, ChildDetails)] = (maybeMatchedChild, maybeCourseDuration)
       .mapN((child, courseDuration) => {
@@ -98,6 +93,13 @@ class FtnaeService @Inject() (
       matchedChildInfo <- selectChildFromList(ftnaeResp.children, selectedChild)
     } yield matchedChildInfo
   }
+
+  def getSelectedCourseDuration(request: BaseDataRequest[AnyContent]): Option[CourseDuration] =
+    request.userAnswers.get(HowManyYearsPage) match {
+      case Some(Oneyear)  => Some(CourseDuration.OneYear)
+      case Some(Twoyears) => Some(CourseDuration.TwoYear)
+      case _              => None
+    }
 
   private def selectChildFromList(children: List[FtnaeChildInfo], selectedChild: String): Option[FtnaeChildInfo] = {
     val childCrns       = children.map(_.crn.value)

@@ -17,7 +17,6 @@
 package controllers.ftnae
 
 import controllers.actions._
-import pages.ftnae.WhichYoungPersonPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, FtnaeService}
@@ -50,7 +49,7 @@ class WhyYoungPersonNotListedController @Inject() (
         request.nino.nino,
         "Success",
         ftnaeService.getSelectedChildInfo(request),
-        request.userAnswers.get(WhichYoungPersonPage),
+        ftnaeService.getSelectedCourseDuration(request),
         ftnaeService.buildAuditData(buildSummaryRows(request))
       )
       Ok(view())
