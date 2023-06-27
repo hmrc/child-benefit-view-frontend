@@ -17,10 +17,10 @@
 package utils.helpers
 
 import models.requests.BaseDataRequest
-import models.viewmodels.checkAnswers._
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.ftnae._
 
 trait FtnaeControllerHelper {
 
@@ -31,24 +31,19 @@ trait FtnaeControllerHelper {
   def buildSummaryRows(
       request:         BaseDataRequest[AnyContent]
   )(implicit messages: Messages): Option[List[SummaryListRow]] = {
+    val rows = List(
+      WhichYoungPersonSummary.row(request.userAnswers),
+      WillYoungPersonBeStayingSummary.row(request.userAnswers),
+      SchoolOrCollegeSummary.row(request.userAnswers),
+      TwelveHoursAWeekSummary.row(request.userAnswers),
+      HowManyYearsSummary.row(request.userAnswers),
+      WillCourseBeEmployerProvidedSummary.row(request.userAnswers),
+      LiveWithYouInUKSummary.row(request.userAnswers)
+    ).flatten
 
-    for {
-      whichYoungPersonRow             <- WhichYoungPersonSummary.row(request.userAnswers)
-      willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(request.userAnswers)
-      schoolOrCollegeRow              <- SchoolOrCollegeSummary.row(request.userAnswers)
-      twelveHoursAWeekRow             <- TwelveHoursAWeekSummary.row(request.userAnswers)
-      howManyYearsRow                 <- HowManyYearsSummary.row(request.userAnswers)
-      willCourseBeEmployerProvidedRow <- WillCourseBeEmployerProvidedSummary.row(request.userAnswers)
-      liveWithYouInUKRow              <- LiveWithYouInUKSummary.row(request.userAnswers)
-    } yield List(
-      whichYoungPersonRow,
-      willYoungPersonBeStayingRow,
-      schoolOrCollegeRow,
-      twelveHoursAWeekRow,
-      howManyYearsRow,
-      willCourseBeEmployerProvidedRow,
-      liveWithYouInUKRow
-    )
+    rows match {
+      case rows if !rows.isEmpty => Some(rows)
+      case _                     => None
+    }
   }
-
 }

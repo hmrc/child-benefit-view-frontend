@@ -34,4 +34,6 @@ package utils.pages
 
 import utils.queries.{Gettable, Settable}
 
-trait QuestionPage[A] extends Page with Gettable[A] with Settable[A]
+trait QuestionPage[A] extends Page with Gettable[A] with Settable[A] {
+  def toString: String
+}

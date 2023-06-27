@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package models.viewmodels.checkAnswers
+package viewmodels.checkAnswers.ftnae
 
 import controllers.ftnae.routes
 import models.{CheckMode, UserAnswers}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import models.viewmodels.govuk.summarylist._
 import models.viewmodels.implicits._
-import pages.ftnae.WillYoungPersonBeStayingPage
+import pages.ftnae.LiveWithYouInUKPage
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.PageSummary
 
-object WillYoungPersonBeStayingSummary {
-
+object LiveWithYouInUKSummary extends PageSummary {
+  val keyName = "liveWithYouInUK.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(WillYoungPersonBeStayingPage).map { answer =>
+    answers.get(LiveWithYouInUKPage).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "willYoungPersonBeStaying.checkYourAnswersLabel",
+        key = keyName,
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.WillYoungPersonBeStayingController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("willYoungPersonBeStaying.change.hidden"))
+          ActionItemViewModel("site.change", routes.LiveWithYouInUKController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("liveWithYouInUK.change.hidden"))
         )
       )
     }

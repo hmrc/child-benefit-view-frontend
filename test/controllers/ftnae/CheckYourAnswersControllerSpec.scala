@@ -17,7 +17,6 @@
 package controllers.ftnae
 
 import models.ftnae.HowManyYears
-import models.viewmodels.checkAnswers._
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -29,6 +28,7 @@ import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
+import viewmodels.checkAnswers.ftnae._
 import views.html.ftnae.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency with TableDrivenPropertyChecks {

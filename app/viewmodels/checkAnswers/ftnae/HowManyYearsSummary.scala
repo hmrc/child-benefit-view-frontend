@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package models.viewmodels.checkAnswers
+package viewmodels.checkAnswers.ftnae
 
 import controllers.ftnae.routes
 import models.{CheckMode, UserAnswers}
+import models.viewmodels.govuk.summarylist._
+import models.viewmodels.implicits._
+import pages.ftnae.HowManyYearsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import models.viewmodels.govuk.summarylist._
-import models.viewmodels.implicits._
-import pages.ftnae.HowManyYearsPage
+import viewmodels.checkAnswers.PageSummary
 
-object HowManyYearsSummary {
-
+object HowManyYearsSummary extends PageSummary {
+  val keyName = "howManyYears.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(HowManyYearsPage).map { answer =>
       val value = ValueViewModel(
@@ -37,7 +38,7 @@ object HowManyYearsSummary {
       )
 
       SummaryListRowViewModel(
-        key = "howManyYears.checkYourAnswersLabel",
+        key = keyName,
         value = value,
         actions = Seq(
           ActionItemViewModel("site.change", routes.HowManyYearsController.onPageLoad(CheckMode).url)

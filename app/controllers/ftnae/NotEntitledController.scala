@@ -45,6 +45,8 @@ class NotEntitledController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+      println(s"Current raw UserAnswers: ${request.userAnswers}")
+      println(s"Summary Rows: ${buildSummaryRows(request)}")
       auditService.auditFtnaeKickOut(
         request.nino.nino,
         "Success",

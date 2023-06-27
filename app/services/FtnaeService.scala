@@ -25,7 +25,6 @@ import models.errors.{CBError, FtnaeChildUserAnswersNotRetrieved}
 import models.ftnae.HowManyYears.{Oneyear, Twoyears}
 import models.ftnae._
 import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageDataRequest}
-import models.viewmodels.checkAnswers.WhichYoungPersonSummary
 import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContent
@@ -34,6 +33,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
+import viewmodels.checkAnswers.ftnae.WhichYoungPersonSummary
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
