@@ -184,7 +184,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
       nino,
       status,
       child.map(_.crn.value),
-      courseDuration.map(_.toString), // TODO: this is returning the obj serial
+      courseDuration.map(_.toString),
       child.map(_.dateOfBirth.toString),
       child.map(toFtnaeChildNameTitleCase),
       answers
