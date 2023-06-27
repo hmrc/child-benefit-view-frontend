@@ -14,32 +14,35 @@
  * limitations under the License.
  */
 
-package models.viewmodels.checkAnswers
+package viewmodels.checkAnswers.ftnae
 
-import controllers.cob.routes
+import controllers.ftnae.routes
 import models.{CheckMode, UserAnswers}
+import models.viewmodels.govuk.summarylist._
+import models.viewmodels.implicits._
+import pages.ftnae.WhichYoungPersonPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import models.viewmodels.govuk.summarylist._
-import models.viewmodels.implicits._
-import pages.cob.NewAccountDetailsPage
+import viewmodels.checkAnswers.PageSummary
 
-object NewAccountDetailsSummary {
-
+object WhichYoungPersonSummary extends PageSummary {
+  val keyName = "whichYoungPerson.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(NewAccountDetailsPage).map { answer =>
-      val value = HtmlFormat.escape(answer.newAccountHoldersName).toString + "<br/>" + HtmlFormat
-        .escape(answer.newSortCode)
-        .toString
+    answers.get(WhichYoungPersonPage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(answer)
+        )
+      )
 
       SummaryListRowViewModel(
-        key = "newAccountDetails.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = keyName,
+        value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.NewAccountDetailsController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("newAccountDetails.change.hidden"))
+          ActionItemViewModel("site.change", routes.WhichYoungPersonController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("whichYoungPerson.change.hidden"))
         )
       )
     }

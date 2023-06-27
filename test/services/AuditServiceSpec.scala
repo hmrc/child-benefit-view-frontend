@@ -224,7 +224,7 @@ class AuditServiceSpec extends PlaySpec {
       capturedEvent.nino mustBe testNino
       capturedEvent.status mustBe testStatus
       capturedEvent.crn mustBe Some(childInfo.crn.value)
-      capturedEvent.courseDuration mustBe courseDuration.map(_.toString)
+      capturedEvent.courseDuration mustBe Some("TWO_YEAR")
       capturedEvent.dateOfBirth mustBe Some(childInfo.dateOfBirth.toString)
       capturedEvent.name mustBe Some(s"${childInfo.name.value} ${childInfo.lastName.value}")
       capturedEvent.answers.length mustEqual answers.length

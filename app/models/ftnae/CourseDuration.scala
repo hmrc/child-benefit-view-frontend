@@ -16,6 +16,7 @@
 
 package models.ftnae
 
+import models.WithName
 import play.api.i18n.Messages
 import play.api.libs.json.{JsPath, Reads, Writes}
 
@@ -23,8 +24,8 @@ sealed trait CourseDuration
 
 object CourseDuration {
 
-  object OneYear extends CourseDuration
-  object TwoYear extends CourseDuration
+  object OneYear extends WithName("ONE_YEAR") with CourseDuration
+  object TwoYear extends WithName("TWO_YEAR") with CourseDuration
 
   implicit val reads: Reads[CourseDuration] = JsPath
     .read[String]

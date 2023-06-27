@@ -21,7 +21,6 @@ import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
 import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
-import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -191,7 +190,6 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
       answers
     )
 
-    val test = Json.toJson(payload).as[JsObject]
     auditConnector.sendExplicitAudit(FtnaeKickOutModel.EventType, payload)
   }
 }

@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package models.viewmodels.checkAnswers
+package viewmodels.checkAnswers.cob
 
 import controllers.cob.routes
 import models.{CheckMode, UserAnswers}
+import models.viewmodels.govuk.summarylist._
+import models.viewmodels.implicits._
+import pages.cob.ConfirmNewAccountDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import models.viewmodels.govuk.summarylist._
-import models.viewmodels.implicits._
-import pages.cob.ConfirmNewAccountDetailsPage
+import viewmodels.checkAnswers.PageSummary
 
-object ConfirmNewAccountDetailsSummary {
-
+object ConfirmNewAccountDetailsSummary extends PageSummary {
+  val keyName = "confirmNewAccountDetails.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(ConfirmNewAccountDetailsPage).map { answer =>
       val value = ValueViewModel(
@@ -37,7 +38,7 @@ object ConfirmNewAccountDetailsSummary {
       )
 
       SummaryListRowViewModel(
-        key = "confirmNewAccountDetails.checkYourAnswersLabel",
+        key = keyName,
         value = value,
         actions = Seq(
           ActionItemViewModel("site.change", routes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode).url)

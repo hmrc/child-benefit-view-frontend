@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package models.viewmodels.checkAnswers
+package viewmodels.checkAnswers.ftnae
 
 import controllers.ftnae.routes
 import models.{CheckMode, UserAnswers}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import models.viewmodels.govuk.summarylist._
 import models.viewmodels.implicits._
-import pages.ftnae.TwelveHoursAWeekPage
+import pages.ftnae.WillYoungPersonBeStayingPage
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import viewmodels.checkAnswers.PageSummary
 
-object TwelveHoursAWeekSummary {
-
+object WillYoungPersonBeStayingSummary extends PageSummary {
+  val keyName = "willYoungPersonBeStaying.checkYourAnswersLabel"
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(TwelveHoursAWeekPage).map { answer =>
+    answers.get(WillYoungPersonBeStayingPage).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "twelveHoursAWeek.checkYourAnswersLabel",
+        key = keyName,
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.TwelveHoursAWeekController.onPageLoad(CheckMode).url)
-            .withVisuallyHiddenText(messages("twelveHoursAWeek.change.hidden"))
+          ActionItemViewModel("site.change", routes.WillYoungPersonBeStayingController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("willYoungPersonBeStaying.change.hidden"))
         )
       )
     }
