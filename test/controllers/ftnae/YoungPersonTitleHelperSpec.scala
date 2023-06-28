@@ -27,7 +27,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.BaseISpec
 
-
 class YoungPersonTitleHelperSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
 
   val defaultFtnaeResponse = FtnaeResponse(
@@ -109,7 +108,9 @@ class YoungPersonTitleHelperSpec extends BaseISpec with MockitoSugar with FtnaeF
   }
 
   private def childInfoList(firstName: String, surname: String) = {
-    List(defaultFtnaeResponse.children.head
-      .copy(name = FirstForename(firstName), lastName = Surname(surname)))
+    List(
+      defaultFtnaeResponse.children.head
+        .copy(name = FirstForename(firstName), lastName = Surname(surname))
+    )
   }
 }
