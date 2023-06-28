@@ -77,7 +77,7 @@ class NewLayoutProvider @Inject()(wrapperService: WrapperService,
       fullWidth = false,
       bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
       showSignOutInHeader = true,
-      hideMenuBar = true
+      hideMenuBar = false
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }
