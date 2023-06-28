@@ -258,13 +258,14 @@ cannotVerifyAccount.link.text = use another service to change the account for yo
 
 # ------------------------------ FTNAE Messages Section ------------------------------
 # ----------  Cannot find Young Person ------------
-cannotFindYoungPerson.title = You cannot use this service to extend your payments
-cannotFindYoungPerson.heading = You cannot use this service to extend your payments
-cannotFindYoungPerson.p1 = This might be because the young person you want to tell the Child Benefit office about:
-cannotFindYoungPerson.bulletPoint1 = is under 16 — we’ll contact you when you should tell us if they’re staying in full-time non-advanced education
-cannotFindYoungPerson.bulletPoint2 = is over 19, so you’re no longer eligible for continued Child Benefit
-cannotFindYoungPerson.bulletPoint3 = will be 18 or older on 1 September 2023 — if so, {0}
-cannotFindYoungPerson.bulletPoint3.linkText = use a different form to extend your Child Benefit
+cannotFindYoungPerson.title = You cannot use this service to tell the Child Benefit office about the young person - Child Benefit - GOV.UK
+cannotFindYoungPerson.heading = You cannot use this service to tell the Child Benefit office about the young person
+cannotFindYoungPerson.p1 = This might be because
+cannotFindYoungPerson.bulletPoint1 = we’ve not yet sent a request for you to tell us about their education — this will be sent by 10 July
+cannotFindYoungPerson.bulletPoint2 = they’re under 16 — we’ll contact you when you should tell us if they’re staying in full-time non-advanced education
+cannotFindYoungPerson.bulletPoint3 = they’re over 19, so you’re no longer eligible for continued Child Benefit
+cannotFindYoungPerson.bulletPoint4 = they’ll be 18 or older on 1 September 2023 — if so, {0}
+cannotFindYoungPerson.bulletPoint4.linkText = use a different form to extend your Child Benefit
 cannotFindYoungPerson.p2 = It might also be because you’ve already told the Child Benefit office about them staying in education — {0}.
 cannotFindYoungPerson.p2.linkText = use a different form if you want to change what you sent
 cannotFindYoungPerson.p3 = To check who you get payments for, how much you get and when payments will stop, {0}.
