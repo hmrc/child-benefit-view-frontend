@@ -37,12 +37,14 @@
 
     @formHelper(action = controllers.ftnae.routes.HowManyYearsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
+        <h1 class="govuk-heading-l">@messages("howManyYears.heading")</h1>
+
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
-                legend = LegendViewModel(messages("howManyYears.heading")).asPageHeading(LegendSize.Large),
+                legend = LegendViewModel(messages("howManyYears.p1")),
                 items = models.ftnae.HowManyYears.options
-            ).withHint(HintViewModel(HtmlContent(para(messages("howManyYears.p1")))))
+            ).withHint(HintViewModel(HtmlContent(para(messages("howManyYears.p2")))))
         )
 
         @govukButton(

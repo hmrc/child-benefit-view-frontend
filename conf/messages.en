@@ -377,6 +377,7 @@ notEntitled.p2.linkText = tell us that the young person is staying in approved t
 howManyYears.title = How many academic years will the course last?
 howManyYears.heading = How many academic years will the course last?
 howManyYears.p1 = An academic year lasts up to 12 months and usually starts in September.
+howManyYears.p2 = If there’s 1 year left on a course that’s already started, select ‘1 year’.
 howManyYears.oneyear = 1 year
 howManyYears.twoyears = 2 years
 howManyYears.other = Other
