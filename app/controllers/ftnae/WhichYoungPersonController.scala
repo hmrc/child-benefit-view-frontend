@@ -19,7 +19,8 @@ package controllers.ftnae
 import controllers.actions._
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.ftnae.FtnaeResponse
-import models.{Mode, UserAnswers}
+import models.{Mode, CheckMode, UserAnswers}
+import models.requests.OptionalDataRequest
 import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,6 +34,7 @@ import views.html.ftnae.WhichYoungPersonView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class WhichYoungPersonController @Inject() (
     override val messagesApi: MessagesApi,
@@ -98,16 +100,19 @@ class WhichYoungPersonController @Inject() (
                 ),
               value =>
                 for {
-                  updatedAnswers <- Future.fromTry(
-                    request.userAnswers.getOrElse(UserAnswers(request.userId)).set(WhichYoungPersonPage, value)
-                  )
-                  _ <- sessionRepository.set(updatedAnswers)
-
+                  updatedAnswers <- Future.fromTry(updateName(request, mode, value))
+                  _              <- sessionRepository.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(WhichYoungPersonPage, mode, updatedAnswers))
             )
         })
       }
     }
+
+  private def updateName(request: OptionalDataRequest[AnyContent], mode: Mode, value: String): Try[UserAnswers] =
+    request.userAnswers
+      .getOrElse(UserAnswers(request.userId))
+      .set(WhichYoungPersonPage, value)
+      .map(_.copy(nameChangedDuringCheck = mode == CheckMode))
 
   private def arrangeRadioButtons(
       ftnaeResponseUserAnswer:   FtnaeResponse
