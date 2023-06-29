@@ -44,12 +44,12 @@ import views.html.templates.NewLayoutProvider
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class HiddenController @Inject()(
+class HiddenController @Inject() (
     getData:           DataRetrievalAction,
     sessionRepository: SessionRepository,
     authConnector:     AuthConnector,
     identify:          IdentifierAction,
-    layout: NewLayoutProvider
+    layout:            NewLayoutProvider
 )(implicit
     config: Configuration,
     env:    Environment,

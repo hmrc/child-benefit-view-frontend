@@ -30,43 +30,55 @@ import javax.inject.Inject
 trait LayoutProvider {
   //noinspection ScalaStyle
   def apply(
-             pageTitle: String,
-             showBackLink: Boolean = true,
-             showSignOut: Boolean = true,
-             timeout: Boolean = true,
-             dataLayer: Option[DataLayer] = None,
-             removePhoneNumbersAsHyperlinks: Boolean = false,
-             scripts: Option[Html] = None,
-             stylesheets: Option[Html] = None
-           )(contentBlock: Html)(
-             implicit request: Request[_],
-             messages: Messages
-           ): HtmlFormat.Appendable
+      pageTitle:                      String,
+      showBackLink:                   Boolean = true,
+      showSignOut:                    Boolean = true,
+      timeout:                        Boolean = true,
+      dataLayer:                      Option[DataLayer] = None,
+      removePhoneNumbersAsHyperlinks: Boolean = false,
+      scripts:                        Option[Html] = None,
+      stylesheets:                    Option[Html] = None
+  )(contentBlock:                     Html)(implicit
+      request:                        Request[_],
+      messages:                       Messages
+  ): HtmlFormat.Appendable
 }
 
-
-class OldLayoutProvider @Inject()(layout: views.html.templates.Layout) extends LayoutProvider {
-
+class OldLayoutProvider @Inject() (layout: views.html.templates.Layout) extends LayoutProvider {
 
   //noinspection ScalaStyle
-  override def apply(pageTitle: String, showBackLink: Boolean, showSignOut: Boolean, timeout: Boolean,
-                     dataLayer: Option[DataLayer], removePhoneNumbersAsHyperlinks: Boolean,
-                     scripts: Option[Html], stylesheets: Option[Html])(contentBlock: Html)
-                    (implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
+  override def apply(
+      pageTitle:                      String,
+      showBackLink:                   Boolean,
+      showSignOut:                    Boolean,
+      timeout:                        Boolean,
+      dataLayer:                      Option[DataLayer],
+      removePhoneNumbersAsHyperlinks: Boolean,
+      scripts:                        Option[Html],
+      stylesheets:                    Option[Html]
+  )(contentBlock:                     Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     layout(pageTitle, showBackLink, showSignOut, timeout, dataLayer, removePhoneNumbersAsHyperlinks)(contentBlock)
   }
 }
 
-
-class NewLayoutProvider @Inject()(wrapperService: WrapperService,
-                                  additionalScript: AdditionalScript, headBlock: HeadBlock) extends LayoutProvider with Logging {
-
+class NewLayoutProvider @Inject() (
+    wrapperService:   WrapperService,
+    additionalScript: AdditionalScript,
+    headBlock:        HeadBlock
+) extends LayoutProvider
+    with Logging {
 
   //noinspection ScalaStyle
-  override def apply(pageTitle: String, showBackLink: Boolean, showSignOut: Boolean, timeout: Boolean,
-                     dataLayer: Option[DataLayer], removePhoneNumbersAsHyperlinks: Boolean,
-                     scripts: Option[Html], stylesheets: Option[Html])(contentBlock: Html)
-                    (implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
+  override def apply(
+      pageTitle:                      String,
+      showBackLink:                   Boolean,
+      showSignOut:                    Boolean,
+      timeout:                        Boolean,
+      dataLayer:                      Option[DataLayer],
+      removePhoneNumbersAsHyperlinks: Boolean,
+      scripts:                        Option[Html],
+      stylesheets:                    Option[Html]
+  )(contentBlock:                     Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     wrapperService.layout(
       disableSessionExpired = !timeout,
       content = contentBlock,
@@ -81,4 +93,3 @@ class NewLayoutProvider @Inject()(wrapperService: WrapperService,
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }
-
