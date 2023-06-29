@@ -16,32 +16,33 @@
 
 package models.common
 
+import models.ftnae.{FtnaeChildInfo, FtnaeResponse}
 import models.requests.DataRequest
 import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
 
 case class YoungPersonTitleHelper[A](request: DataRequest[A]) {
+  private def childFromConcatenatedChildNamesList(): Option[FtnaeChildInfo] = {
+    request.userAnswers.get(FtnaeResponseUserAnswer).map(createMatchList(_)) match {
+      case Some(item) => item
+      case None       => None
+    }
+  }
+  private def createMatchList(userAnswer: FtnaeResponse) = {
+    val childNamesMatchListWithIndex: List[(String, Int)] =
+      userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex
 
-  private def childFromConcatenatedChildNamesList() = {
-    request.userAnswers
-      .get(FtnaeResponseUserAnswer)
-      .map(userAnswer => {
-        val childNamesWithIndex: List[(String, Int)] =
-          userAnswer.children.map(toFtnaeChildNameTitleCase(_)).zipWithIndex
-        val youngPersonName = request.userAnswers.get(WhichYoungPersonPage)
+    val youngPersonNameAsPerPage = request.userAnswers.get(WhichYoungPersonPage)
 
-        childNamesWithIndex
-          .find(childName => childName._1 == youngPersonName.getOrElse(""))
-          .map(childFound => {
-            userAnswer.children(childFound._2)
-          })
-      })
+    childNamesMatchListWithIndex
+      .find(childName => childName._1 == youngPersonNameAsPerPage.getOrElse(""))
+      .map(item => userAnswer.children(item._2))
   }
 
+  /**
+    * Match on user from UI page, if found, then return the name that matches.
+    */
   def firstNameFromConcatenatedChildNames(): Option[String] = {
-    childFromConcatenatedChildNamesList() match {
-      case None       => None
-      case Some(item) => item.map(_.name.value)
-    }
+    childFromConcatenatedChildNamesList().map(_.name.value)
   }
 }
