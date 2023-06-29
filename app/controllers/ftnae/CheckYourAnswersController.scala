@@ -75,9 +75,10 @@ class CheckYourAnswersController @Inject() (
 
         firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
           case Right(()) =>
-            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))(sr =>
-              Ok(view(SummaryListViewModel(sr)))
-            )
+            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())) { sr =>
+              val qypChanged = request.userAnswers.nameChangedDuringCheck
+              Ok(view(SummaryListViewModel(sr), qypChanged))
+            }
           case Left(Left(unansweredUrl)) =>
             Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
           case Left(Right(kickedOutUrl)) =>

@@ -86,7 +86,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
         )
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list)(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonce)(contentAsString(result), view(list, qypChanged = false)(request, messages(application)).toString)
       }
     }
 

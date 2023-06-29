@@ -378,6 +378,7 @@ checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.h2 = Anfonwch eich atebion nawr
 checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
+checkYourAnswers.qypChanged = Rydych wedi newid pwy rydych yn rhoi gwybod i ni amdano, gwiriwch eich atebion eraill.
 checkYourAnswers.submit = Anfon
 
 # ----------  Payments Extended ------------

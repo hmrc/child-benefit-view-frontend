@@ -27,7 +27,7 @@
     buttonLink: ButtonLink
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, qypChanged: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -35,6 +35,9 @@
 
     @govukSummaryList(list)
 
+    @if(qypChanged) {
+      @warningText(Html(messages("checkYourAnswers.qypChanged")))
+    }
     @h2(messages("checkYourAnswers.h2"))
 
     @warningText(Html(messages("checkYourAnswers.warning")))
