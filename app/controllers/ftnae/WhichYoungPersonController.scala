@@ -108,11 +108,13 @@ class WhichYoungPersonController @Inject() (
       }
     }
 
-  private def updateName(request: OptionalDataRequest[AnyContent], mode: Mode, value: String): Try[UserAnswers] =
-    request.userAnswers
-      .getOrElse(UserAnswers(request.userId))
+  private def updateName(request: OptionalDataRequest[AnyContent], mode: Mode, value: String): Try[UserAnswers] = {
+    val userAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+    val qypChanged  = mode == CheckMode && userAnswers.get(WhichYoungPersonPage) != Some(value)
+    userAnswers
+      .copy(nameChangedDuringCheck = qypChanged)
       .set(WhichYoungPersonPage, value)
-      .map(_.copy(nameChangedDuringCheck = mode == CheckMode))
+  }
 
   private def arrangeRadioButtons(
       ftnaeResponseUserAnswer:   FtnaeResponse

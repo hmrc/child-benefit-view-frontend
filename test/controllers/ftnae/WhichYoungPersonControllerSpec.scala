@@ -190,7 +190,37 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
     }
 
     "must set name changed in user answers if in check mode" in {
+      val mockSessionRepository = mock[SessionRepository]
+      val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhichYoungPersonPage, "First Name Surname")
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .success
+        .value
 
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.set(captor.capture())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whichYoungPersonRoute(CheckMode))
+            .withFormUrlEncodedBody(("value", "A Different Name"))
+
+        await(route(application, request).value)
+
+        captor.getValue().nameChangedDuringCheck mustEqual true
+      }
+    }
+
+    "must not set name changed in user answers if in check mode but name not changed" in {
       val mockSessionRepository = mock[SessionRepository]
       val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
       val userAnswers = UserAnswers(userAnswersId)
@@ -217,7 +247,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
         await(route(application, request).value)
 
-        captor.getValue().nameChangedDuringCheck mustEqual true
+        captor.getValue().nameChangedDuringCheck mustEqual false
       }
     }
 
