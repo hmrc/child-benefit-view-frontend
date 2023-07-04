@@ -43,7 +43,8 @@
 
 @layout(pageTitle = messages("paymentHistory.pageTitle"),
     dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
-    showBackLink = true) {
+    showBackLink = false
+) {
 
     @heading(messages("paymentHistory.title"), caption = Some(entitlement.claimant.name.value))
 
