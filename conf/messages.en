@@ -411,6 +411,7 @@ checkYourAnswers.title = Check your answers before sending them
 checkYourAnswers.heading = Check your answers before sending them
 checkYourAnswers.h2 = Now send your answers
 checkYourAnswers.warning = The information must be correct to the best of your knowledge.
+checkYourAnswers.qypChanged = You changed who you’re telling us about, check your other answers.
 checkYourAnswers.submit = Send
 
 # ----------  Payments Extended ------------

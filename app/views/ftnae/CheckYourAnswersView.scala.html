@@ -27,7 +27,7 @@
     buttonLink: ButtonLink
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList, qypChanged: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
@@ -35,9 +35,17 @@
 
     @govukSummaryList(list)
 
-    @h2(messages("checkYourAnswers.h2"))
+    @if(qypChanged) {
+      @warningText(Html(messages("checkYourAnswers.qypChanged")))
 
-    @warningText(Html(messages("checkYourAnswers.warning")))
+      @h2(messages("checkYourAnswers.h2"))
+
+      @para(messages("checkYourAnswers.warning"))
+    } else {
+      @h2(messages("checkYourAnswers.h2"))
+
+      @warningText(Html(messages("checkYourAnswers.warning")))
+    }
 
     <div class="govuk-button-group">
         @buttonLink("continue-button", "checkYourAnswers.submit", controllers.ftnae.routes.PaymentsExtendedController.onPageLoad())
