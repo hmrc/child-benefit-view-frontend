@@ -74,7 +74,7 @@ class ErrorHandler @Inject() (
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case FtnaeNoCHBAccountError =>
-        logger.error(
+        logger.warn(
           logMessage(
             s"Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
             Some(FtnaeNoCHBAccountError.statusCode)
@@ -82,7 +82,7 @@ class ErrorHandler @Inject() (
         )
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case FtnaeCannotFindYoungPersonError =>
-        logger.error(
+        logger.warn(
           logMessage(
             s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}",
             Some(FtnaeCannotFindYoungPersonError.statusCode)
