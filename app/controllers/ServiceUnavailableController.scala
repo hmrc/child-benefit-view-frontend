@@ -30,6 +30,6 @@ class ServiceUnavailableController @Inject() (
     with I18nSupport {
   def onPageLoad: Action[AnyContent] =
     Action { implicit request =>
-      ServiceUnavailable(view())
+      InternalServerError(view())
     }
 }
