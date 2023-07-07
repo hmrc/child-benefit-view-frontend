@@ -16,10 +16,9 @@
 
 package utils.logging
 
-
 import org.slf4j.MDC
 import play.api.Logger
-import uk.gov.hmrc.http.{ HeaderCarrier, RequestId }
+import uk.gov.hmrc.http.{HeaderCarrier, RequestId}
 
 class RequestLogger(clazz: Class[_]) {
   private val underlying = Logger(clazz)
@@ -28,15 +27,15 @@ class RequestLogger(clazz: Class[_]) {
 
   def trace(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.trace(msg))
   def debug(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.debug(msg))
-  def info(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.info(msg))
-  def warn(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.warn(msg))
+  def info(msg:  => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.info(msg))
+  def warn(msg:  => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.warn(msg))
   def error(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.error(msg))
 
   def withRequestIdinMDC(f: => Unit)(implicit hc: HeaderCarrier): Unit = {
     val requestId = hc.requestId.getOrElse(RequestId("Undefined"))
     MDC.put(requestIdKey, requestId.value)
-    f
     MDC.remove(requestIdKey)
+
   }
 
 }
