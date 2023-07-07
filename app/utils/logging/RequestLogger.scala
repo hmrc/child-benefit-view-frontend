@@ -26,16 +26,19 @@ class RequestLogger(clazz: Class[_]) {
   private val requestIdKey = "x-request-id"
 
   def trace(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.trace(msg))
+
   def debug(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.debug(msg))
-  def info(msg:  => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.info(msg))
-  def warn(msg:  => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.warn(msg))
+
+  def info(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.info(msg))
+
+  def warn(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.warn(msg))
+
   def error(msg: => String)(implicit hc: HeaderCarrier): Unit = withRequestIdinMDC(underlying.error(msg))
 
   def withRequestIdinMDC(f: => Unit)(implicit hc: HeaderCarrier): Unit = {
     val requestId = hc.requestId.getOrElse(RequestId("Undefined"))
     MDC.put(requestIdKey, requestId.value)
     MDC.remove(requestIdKey)
-
   }
 
 }
