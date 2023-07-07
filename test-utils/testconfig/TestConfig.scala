@@ -20,14 +20,12 @@ object TestConfig {
   def apply(): Map[String, Any] = Map()
 
   def featureFlags(
-      dummyFlag:    Boolean = true,
       changeOfBank: Boolean = true,
       ftnae:        Boolean = true,
       addChild:     Boolean = true,
       hicbc:        Boolean = true
   ): Map[String, Boolean] =
     Map(
-      ("dummy-flag", dummyFlag),
       ("change-of-bank", changeOfBank),
       ("ftnae", ftnae),
       ("add-child", addChild),
