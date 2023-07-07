@@ -42,7 +42,7 @@ class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
     implicit val config:         FrontendAppConfig,
     val parser:                  BodyParsers.Default
-)(implicit val executionContext: ExecutionContext, hc: HeaderCarrier)
+)(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions {
 
@@ -75,6 +75,7 @@ class AuthenticatedIdentifierAction @Inject() (
   private def handleFailure(
   )(implicit config: FrontendAppConfig, request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.debug("no active session whilst attempting to authorise user: redirecting to login")
       Redirect(
         config.loginUrl,
@@ -85,6 +86,7 @@ class AuthenticatedIdentifierAction @Inject() (
       )
 
     case _: InsufficientConfidenceLevel =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn("insufficient confidence level whilst attempting to authorise user: redirect to uplift")
       Redirect(
         config.ivUpliftUrl,
@@ -97,10 +99,12 @@ class AuthenticatedIdentifierAction @Inject() (
       )
 
     case IncorrectNino =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn("incorrect none encountered whilst attempting to authorise user")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad)
 
     case ex: AuthorisationException =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn(s"could not authenticate user due to: $ex")
       InternalServerError
   }

@@ -44,7 +44,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.logging.RequestLogger
 
 @Singleton
-class Navigator @Inject() (implicit hc: HeaderCarrier) {
+class Navigator @Inject() () {
 
   private implicit val logger = new RequestLogger(this.getClass)
 
@@ -60,7 +60,6 @@ class Navigator @Inject() (implicit hc: HeaderCarrier) {
     case LiveWithYouInUKPage              => userAnswers => navigateLiveWithYouIntheUK(userAnswers)
     case _ @page =>
       _ => {
-        logger.warn(s"reached state where page: $page is not implemented in Navigator.normalRoutes decision flow")
         controllers.routes.ServiceUnavailableController.onPageLoad
       }
   }
