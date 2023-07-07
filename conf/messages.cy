@@ -130,8 +130,6 @@ notFound.header = Heb ddod o hyd i’r dudalen
 notFound.explanation1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 notFound.explanation2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 
-# ---------- Dummy Flag Section -----------------
-
 # ---------- Page Not Found Section -------------
 
 # ---------- Change Account Section -------------

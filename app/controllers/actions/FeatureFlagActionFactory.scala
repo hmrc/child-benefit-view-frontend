@@ -61,7 +61,6 @@ class FeatureFlagActionFactory @Inject() (
       override protected def executionContext: ExecutionContext = ec
     }
 
-  val dummyFlagEnabled:    FeatureFlagAction = whenEnabled("dummy-flag")
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
   val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae")
   val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")

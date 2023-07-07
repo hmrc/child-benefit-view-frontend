@@ -158,10 +158,6 @@ notFound.header = Page not found
 notFound.explanation1 = If you typed the web address, check it’s correct.
 notFound.explanation2 = If you pasted the web address, check you copied the entire address.
 
-# ---------- Dummy Flag Section -----------------
-dummyFlag.title = Dummy Flag
-dummyFlag.heading = This page will be removed
-
 # ---------- Page Not Found Section -------------
 pageNotFound.title = Page not found
 pageNotFound.heading = This page can’t be found
