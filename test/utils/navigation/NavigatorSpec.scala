@@ -24,11 +24,15 @@ import models._
 import models.cob.ConfirmNewAccountDetails._
 import models.cob.NewAccountDetails
 import models.ftnae.HowManyYears
+import org.mockito.MockitoSugar.mock
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HeaderCarrier
 
 class NavigatorSpec extends SpecBase {
+
+  implicit val mockHeaderCarrier = mock[HeaderCarrier]
 
   val navigator = new Navigator
 

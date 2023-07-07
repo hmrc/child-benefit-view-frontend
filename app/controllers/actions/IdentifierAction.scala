@@ -21,7 +21,6 @@ import config.FrontendAppConfig
 import controllers.actions.IdentifierAction._
 import models.common.NationalInsuranceNumber
 import models.requests.IdentifierRequest
-import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
@@ -31,6 +30,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.logging.RequestLogger
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,10 +42,11 @@ class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
     implicit val config:         FrontendAppConfig,
     val parser:                  BodyParsers.Default
-)(implicit val executionContext: ExecutionContext)
+)(implicit val executionContext: ExecutionContext, hc: HeaderCarrier)
     extends IdentifierAction
-    with AuthorisedFunctions
-    with Logging {
+    with AuthorisedFunctions {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   private val AuthPredicate = (config: FrontendAppConfig) =>
     Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel

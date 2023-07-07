@@ -17,7 +17,7 @@
 package controllers
 
 import controllers.actions.FeatureFlagActionFactory
-import play.api.Logging
+
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -31,8 +31,7 @@ class DummyFlagController @Inject() (
     view:                     DummyFlagView,
     featureFlags:             FeatureFlagActionFactory
 ) extends FrontendBaseController
-    with I18nSupport
-    with Logging {
+    with I18nSupport {
   val onPageLoad: Action[AnyContent] =
     (Action andThen featureFlags.dummyFlagEnabled).async { implicit request =>
       Future.successful(Ok(view()))

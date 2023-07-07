@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import testconfig.TestConfig
 import testconfig.TestConfig._
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
@@ -49,6 +50,8 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
 
   val formProvider = new NewAccountDetailsFormProvider()
   val form         = formProvider()
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val newAccountDetailsRoute = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
   val newAccountDetails           = NewAccountDetails("name", "123456", "11110000")

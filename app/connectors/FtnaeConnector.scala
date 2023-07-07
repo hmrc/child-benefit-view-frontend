@@ -23,11 +23,11 @@ import connectors.FtnaeConnector.{claimantInfoLogMessage, mainError}
 import models.CBEnvelope.CBEnvelope
 import models.errors._
 import models.ftnae.{ChildDetails, FtnaeResponse}
-import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 import utils.helpers.Implicits._
+import utils.logging.RequestLogger
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -35,8 +35,9 @@ import scala.util.matching.Regex
 
 @Singleton
 class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
-    extends HttpReadsWrapper[CBErrorResponse]
-    with Logging {
+    extends HttpReadsWrapper[CBErrorResponse] {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   def getFtnaeAccountDetails()(implicit
       ec: ExecutionContext,

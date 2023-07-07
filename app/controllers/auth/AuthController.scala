@@ -22,9 +22,10 @@ import controllers.actions.IdentifierAction
 import controllers.actions.IdentifierAction.toContinueUrl
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Configuration, Environment, Logging}
+import play.api.{Configuration, Environment}
 import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AuthConnector
+import utils.logging.RequestLogger
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -40,8 +41,9 @@ class AuthController @Inject() (
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig
 ) extends ChildBenefitBaseController(authConnector)
-    with Logging
     with I18nSupport {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   def signOut(): Action[AnyContent] =
     identify async { implicit request =>

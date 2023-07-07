@@ -36,14 +36,17 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import models.cob.ConfirmNewAccountDetails.{No, Yes}
-import models.ftnae.{HowManyYears}
+import models.ftnae.HowManyYears
 import utils.pages._
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
-import play.api.Logging
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.logging.RequestLogger
 
 @Singleton
-class Navigator @Inject() () extends Logging {
+class Navigator @Inject() (implicit hc: HeaderCarrier) {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case NewAccountDetailsPage            => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)

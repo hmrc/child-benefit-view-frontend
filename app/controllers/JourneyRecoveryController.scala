@@ -35,10 +35,11 @@ package controllers
 import controllers.actions.IdentifierAction
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import play.api.{Configuration, Environment, Logging}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 import uk.gov.hmrc.play.bootstrap.binders._
+import utils.logging.RequestLogger
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 import javax.inject.Inject
@@ -54,8 +55,9 @@ class JourneyRecoveryController @Inject() (
     env:    Environment,
     cc:     MessagesControllerComponents
 ) extends ChildBenefitBaseController(authConnector)
-    with Logging
     with I18nSupport {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] =
     identify async { implicit request =>
