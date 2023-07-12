@@ -38,6 +38,7 @@ class RequestLogger(clazz: Class[_]) {
   def withRequestIdinMDC(f: => Unit)(implicit hc: HeaderCarrier): Unit = {
     val requestId = hc.requestId.getOrElse(RequestId("Undefined"))
     MDC.put(requestIdKey, requestId.value)
+    f
     MDC.remove(requestIdKey)
   }
 
