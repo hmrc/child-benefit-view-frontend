@@ -315,7 +315,6 @@ whichYoungPerson.change.hidden = your answer to the question, ‘Who do you want
 whyYoungPersonNotListed.title = Why the young person is not listed
 whyYoungPersonNotListed.heading = Why the young person is not listed
 whyYoungPersonNotListed.p1 = This might be because:
-whyYoungPersonNotListed.bulletPoint5 = we’ve not yet sent a request for you to tell us about their education — this will be sent by 10 July
 whyYoungPersonNotListed.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, {0}
