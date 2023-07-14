@@ -17,31 +17,20 @@
 package models.cob
 
 import models.{Enumerable, WithName}
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 sealed trait WhatTypeOfAccount
 
 object WhatTypeOfAccount extends Enumerable.Implicits {
 
-  case object SoleAccount  extends WithName("sole") with WhatTypeOfAccount
-  case object JointAccount extends WithName("joint") with WhatTypeOfAccount
+  case object SoleAccount                   extends WithName("sole") with WhatTypeOfAccount
+  case object JointAccountSharedWithSomeone extends WithName("joint_shared") with WhatTypeOfAccount
+  case object JointAccountNotHeldByYou      extends WithName("joint_not_shared") with WhatTypeOfAccount
 
   val values: Seq[WhatTypeOfAccount] = Seq(
     SoleAccount,
-    JointAccount
+    JointAccountSharedWithSomeone,
+    JointAccountNotHeldByYou
   )
-
-  def options(implicit messages: Messages): Seq[RadioItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
-        RadioItem(
-          content = Text(messages(s"whatTypeOfAccount.${value.toString}")),
-          value = Some(value.toString),
-          id = Some(s"value_$index")
-        )
-    }
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
     Enumerable(values.map(v => v.toString -> v): _*)
