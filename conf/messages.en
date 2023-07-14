@@ -257,7 +257,6 @@ cannotVerifyAccount.link.text = use another service to change the account for yo
 cannotFindYoungPerson.title = You cannot use this service to tell the Child Benefit office about the young person
 cannotFindYoungPerson.heading = You cannot use this service to tell the Child Benefit office about the young person
 cannotFindYoungPerson.p1 = This might be because:
-cannotFindYoungPerson.bulletPoint1 = we’ve not yet sent a request for you to tell us about their education — this will be sent by 10 July
 cannotFindYoungPerson.bulletPoint2 = they’re under 16 — we’ll contact you when you should tell us if they’re staying in full-time non-advanced education
 cannotFindYoungPerson.bulletPoint3 = they’re over 19, so you’re no longer eligible for continued Child Benefit
 cannotFindYoungPerson.bulletPoint4 = they’ll be 18 or older on 1 September 2023 — if so, {0}
