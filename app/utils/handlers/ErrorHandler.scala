@@ -40,7 +40,7 @@ class ErrorHandler @Inject() (
 ) extends FrontendErrorHandler
     with I18nSupport {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()

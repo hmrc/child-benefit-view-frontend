@@ -37,7 +37,7 @@ import scala.util.matching.Regex
 class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse] {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   private val claimantInfoLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank User Info: code=$code message=$message"

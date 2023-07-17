@@ -46,7 +46,7 @@ class AuthenticatedIdentifierAction @Inject() (
     extends IdentifierAction
     with AuthorisedFunctions {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   private val AuthPredicate = (config: FrontendAppConfig) =>
     Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel

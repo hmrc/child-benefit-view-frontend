@@ -57,7 +57,7 @@ class JourneyRecoveryController @Inject() (
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] =
     identify async { implicit request =>

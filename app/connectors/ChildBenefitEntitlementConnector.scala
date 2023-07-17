@@ -42,7 +42,7 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
     extends ChildBenefitEntitlementConnector
     with HttpReadsWrapper[CBErrorResponse] {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   val logMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Entitlement: code=$code message=$message"

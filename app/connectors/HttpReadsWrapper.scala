@@ -29,7 +29,7 @@ import scala.util.{Failure, Success, Try}
 
 trait HttpReadsWrapper[E] {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
   def withHttpReads[T](
       block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
   )(implicit

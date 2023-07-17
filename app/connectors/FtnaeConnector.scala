@@ -37,7 +37,7 @@ import scala.util.matching.Regex
 class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse] {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   def getFtnaeAccountDetails()(implicit
       ec: ExecutionContext,

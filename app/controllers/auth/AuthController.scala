@@ -43,7 +43,7 @@ class AuthController @Inject() (
 ) extends ChildBenefitBaseController(authConnector)
     with I18nSupport {
 
-  private implicit val logger = new RequestLogger(this.getClass)
+  private val logger = new RequestLogger(this.getClass)
 
   def signOut(): Action[AnyContent] =
     identify async { implicit request =>
