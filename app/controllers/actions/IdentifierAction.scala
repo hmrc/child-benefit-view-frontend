@@ -21,7 +21,6 @@ import config.FrontendAppConfig
 import controllers.actions.IdentifierAction._
 import models.common.NationalInsuranceNumber
 import models.requests.IdentifierRequest
-import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
@@ -31,6 +30,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.logging.RequestLogger
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,8 +44,9 @@ class AuthenticatedIdentifierAction @Inject() (
     val parser:                  BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
-    with AuthorisedFunctions
-    with Logging {
+    with AuthorisedFunctions {
+
+  private implicit val logger = new RequestLogger(this.getClass)
 
   private val AuthPredicate = (config: FrontendAppConfig) =>
     Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel
@@ -74,6 +75,7 @@ class AuthenticatedIdentifierAction @Inject() (
   private def handleFailure(
   )(implicit config: FrontendAppConfig, request: Request[_]): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.debug("no active session whilst attempting to authorise user: redirecting to login")
       Redirect(
         config.loginUrl,
@@ -84,6 +86,7 @@ class AuthenticatedIdentifierAction @Inject() (
       )
 
     case _: InsufficientConfidenceLevel =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn("insufficient confidence level whilst attempting to authorise user: redirect to uplift")
       Redirect(
         config.ivUpliftUrl,
@@ -96,10 +99,12 @@ class AuthenticatedIdentifierAction @Inject() (
       )
 
     case IncorrectNino =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn("incorrect none encountered whilst attempting to authorise user")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad)
 
     case ex: AuthorisationException =>
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
       logger.warn(s"could not authenticate user due to: $ex")
       InternalServerError
   }

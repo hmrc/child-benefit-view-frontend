@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillCourseBeEmployerProvidedView
@@ -43,6 +44,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
 
   val formProvider = new WillCourseBeEmployerProvidedFormProvider()
   val form         = formProvider("First Name")
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val willCourseBeEmployerProvidedRoute =
     controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode).url

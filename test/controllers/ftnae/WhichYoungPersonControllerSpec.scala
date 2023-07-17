@@ -19,7 +19,7 @@ package controllers.ftnae
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
-import models.{Mode, NormalMode, CheckMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.mockito.ArgumentCaptor
 import org.scalatestplus.mockito.MockitoSugar
@@ -31,6 +31,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
@@ -49,6 +50,8 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
   val formProvider             = new WhichYoungPersonFormProvider()
   val form                     = formProvider()
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def arrangeRadioButtons(
       ftnaeResponseUserAnswer:   FtnaeResponse

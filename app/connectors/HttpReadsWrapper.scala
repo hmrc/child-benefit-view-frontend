@@ -20,25 +20,29 @@ import cats.Show
 import cats.syntax.all._
 import models.CBEnvelope.CBEnvelope
 import models.errors.{CBError, ConnectorError}
-import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.{JsPath, JsonValidationError, Reads}
-import uk.gov.hmrc.http.HttpReads
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
+import utils.logging.RequestLogger
 
 import scala.util.{Failure, Success, Try}
 
-trait HttpReadsWrapper[E] extends Logging {
+trait HttpReadsWrapper[E] {
+
+  private implicit val logger = new RequestLogger(this.getClass)
   def withHttpReads[T](
       block: HttpReads[Either[CBError, T]] => CBEnvelope[T]
   )(implicit
       readsSuccess: Reads[T],
-      readsError:   Reads[E]
+      readsError:   Reads[E],
+      hc:           HeaderCarrier
   ): CBEnvelope[T] =
-    block(getHttpReads(readsSuccess, readsError))
+    block(getHttpReads(readsSuccess, readsError, hc))
 
   private def getHttpReads[T](implicit
       readsSuccess: Reads[T],
-      readsError:   Reads[E]
+      readsError:   Reads[E],
+      hc:           HeaderCarrier
   ): HttpReads[Either[CBError, T]] =
     (_, _, response) => {
       response.status match {
