@@ -23,7 +23,7 @@ import models.cob.WhatTypeOfAccount
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import play.api.libs.json._
 
 class WhatTypeOfAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
@@ -50,7 +50,7 @@ class WhatTypeOfAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
     "must serialise" in {
       val gen = Gen.oneOf(WhatTypeOfAccount.values.toSeq)
 
-      forAll(gen) { whatTypeOfAccount =>
+      forAll(gen) { whatTypeOfAccount: WhatTypeOfAccount =>
         Json.toJson(whatTypeOfAccount) mustEqual JsString(whatTypeOfAccount.toString)
       }
     }

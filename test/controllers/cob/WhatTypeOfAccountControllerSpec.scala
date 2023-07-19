@@ -17,7 +17,7 @@
 package controllers.cob
 
 import forms.cob.WhatTypeOfAccountFormProvider
-import models.cob.WhatTypeOfAccount
+import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
 import models.{CBEnvelope, NormalMode, UserAnswers}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
@@ -35,10 +35,11 @@ import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
 import utils.TestData.NinoUser
 import views.html.cob.WhatTypeOfAccountView
 import pages.cob.WhatTypeOfAccountPage
-import models.cob.WhatTypeOfAccount.{SoleAccount, JointAccountSharedWithSomeone}
+import models.cob.WhatTypeOfAccount.{Sole, JointHeldByClaimant}
 import org.mockito.MockitoSugar.when
 import org.mockito.Mockito.reset
 import play.api.inject.bind
+import utils.navigation.{FakeNavigator, Navigator}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -100,7 +101,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
         userLoggedInChildBenefitUser(NinoUser)
 
         val userAnswers: UserAnswers = UserAnswers(userAnswersId)
-          .set(WhatTypeOfAccountPage, JointAccountSharedWithSomeone)
+          .set(WhatTypeOfAccountPage, JointHeldByClaimant)
           .success
           .value
 
@@ -125,10 +126,67 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
             view(
-              form.fill(JointAccountSharedWithSomeone),
+              form.fill(JointHeldByClaimant),
               NormalMode
             )(request, messages(application)).toString
           )
+        }
+      }
+
+      "must return BAD_REQUEST for a POST if no existing data is found" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val application = applicationBuilder(config, userAnswers = None).build()
+
+        running(application) {
+          val request =
+            FakeRequest(POST, whatTypeOfAccountRoute).withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
+        }
+      }
+
+      "must redirect to the next page when valid data is submitted" in {
+        userLoggedInChildBenefitUser(NinoUser)
+        verifyClaimantBankAccount(200, """""""")
+        val mockSessionRepository = mock[SessionRepository]
+
+        val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+          .set(WhatTypeOfAccountPage, WhatTypeOfAccount.Sole)
+          .success
+          .value
+
+        val application =
+          applicationBuilder(config, userAnswers = Some(userAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, whatTypeOfAccountRoute)
+                .withFormUrlEncodedBody(
+                  (AccountType.name -> "sole")
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
+          when(mockSessionRepository.get(userAnswersId))
+            .thenReturn(Future.successful(Some(userAnswers)))
+
+          // TODO figure out a better way of mocking this ugh
+          when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
+            .thenReturn(Future.successful(true))
+
+          val result = route(application, request).value
+
+          println(contentAsString(result))
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe onwardRoute.url
         }
       }
 

@@ -22,17 +22,38 @@ sealed trait WhatTypeOfAccount
 
 object WhatTypeOfAccount extends Enumerable.Implicits {
 
-  case object SoleAccount                   extends WithName("sole") with WhatTypeOfAccount
-  case object JointAccountSharedWithSomeone extends WithName("joint_shared") with WhatTypeOfAccount
-  case object JointAccountNotHeldByYou      extends WithName("joint_not_shared") with WhatTypeOfAccount
+  case object Sole                   extends WithName("sole") with WhatTypeOfAccount
+  case object JointHeldByClaimant    extends WithName("joint_held_by_claimant") with WhatTypeOfAccount
+  case object JointNotHeldByClaimant extends WithName("joint_not_held_by_claimant") with WhatTypeOfAccount
 
-  val values: Seq[WhatTypeOfAccount] = Seq(
-    SoleAccount,
-    JointAccountSharedWithSomeone,
-    JointAccountNotHeldByYou
-  )
+  val values = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant)
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
     Enumerable(values.map(v => v.toString -> v): _*)
+}
 
+sealed trait AccountType
+
+object AccountType extends Enumerable.Implicits {
+
+  val name = "account_type"
+
+  case object Sole  extends WithName("sole") with AccountType
+  case object Joint extends WithName("joint") with AccountType
+
+  implicit val enumerable: Enumerable[AccountType] =
+    Enumerable(List(Sole, Joint).map(v => v.toString -> v): _*)
+}
+
+sealed trait JointAccountType
+
+object JointAccountType extends Enumerable.Implicits {
+
+  val name = "joint_account_type"
+
+  case object HeldByClaimant    extends WithName("held_by_claimant") with JointAccountType
+  case object NotHeldByClaimant extends WithName("not_held_by_claimant") with JointAccountType
+
+  implicit val enumerable: Enumerable[JointAccountType] =
+    Enumerable(List(HeldByClaimant, NotHeldByClaimant).map(v => v.toString -> v): _*)
 }

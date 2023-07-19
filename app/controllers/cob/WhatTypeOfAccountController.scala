@@ -28,10 +28,12 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.cob.WhatTypeOfAccountView
+import play.api.data.Form
+import models.requests.OptionalDataRequest
+import play.api.mvc.Result
 
 import javax.inject.Inject
-import play.api.data.Form
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Future, ExecutionContext}
 
 class WhatTypeOfAccountController @Inject() (
     override val messagesApi: MessagesApi,
@@ -65,9 +67,27 @@ class WhatTypeOfAccountController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData) {
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
       implicit request =>
-        ???
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value => updateAnswersAndRedirect(mode, value)
+          )
     }
+
+  private def updateAnswersAndRedirect(
+      mode:           Mode,
+      value:          WhatTypeOfAccount
+  )(implicit request: OptionalDataRequest[AnyContent]): Future[Result] =
+    for {
+      updatedAnswers <- Future.fromTry(
+        request.userAnswers
+          .getOrElse(UserAnswers(request.userId))
+          .set(WhatTypeOfAccountPage, value)
+      )
+      _ <- sessionRepository.set(updatedAnswers)
+    } yield Redirect(navigator.nextPage(WhatTypeOfAccountPage, mode, updatedAnswers))
 
 }

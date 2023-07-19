@@ -16,9 +16,10 @@
 
 package forms.cob
 
-import models.cob.WhatTypeOfAccount
+import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
 import play.api.data.Form
 import utils.mappings.Mappings
+import play.api.data.Forms._
 
 import javax.inject.Inject
 
@@ -26,7 +27,31 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
 
   def apply(): Form[WhatTypeOfAccount] =
     Form(
-      "value" -> enumerable[WhatTypeOfAccount]("whatTypeOfAccount.error.required")
+      mapping(
+        AccountType.name      -> enumerable[AccountType]("whatTypeOfAccount.error.required"),
+        JointAccountType.name -> optional(enumerable[JointAccountType]("whatTypeOfAccount.error.required"))
+      )(bind)(unbind)
     )
 
+  private def bind(
+      accountType:    AccountType,
+      heldByClaimant: Option[JointAccountType]
+  ): WhatTypeOfAccount =
+    (accountType, heldByClaimant) match {
+      case (AccountType.Sole, _) => WhatTypeOfAccount.Sole
+      case (AccountType.Joint, Some(JointAccountType.HeldByClaimant)) =>
+        WhatTypeOfAccount.JointHeldByClaimant
+      case (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant)) =>
+        WhatTypeOfAccount.JointNotHeldByClaimant
+      case (_, None) => WhatTypeOfAccount.Sole
+    }
+
+  def unbind(whatAccountType: WhatTypeOfAccount): Option[(AccountType, Option[JointAccountType])] =
+    whatAccountType match {
+      case WhatTypeOfAccount.Sole => Some((AccountType.Sole, None))
+      case WhatTypeOfAccount.JointHeldByClaimant =>
+        Some((AccountType.Joint, Some(JointAccountType.HeldByClaimant)))
+      case WhatTypeOfAccount.JointNotHeldByClaimant =>
+        Some((AccountType.Joint, Some(JointAccountType.NotHeldByClaimant)))
+    }
 }
