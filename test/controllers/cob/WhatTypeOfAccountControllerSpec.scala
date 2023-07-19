@@ -21,19 +21,24 @@ import models.cob.WhatTypeOfAccount
 import models.{CBEnvelope, NormalMode, UserAnswers}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
+import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, Call}
-import repositories.SessionRepository
-import testconfig.TestConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
-import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
-import testconfig.TestConfig._
-import utils.TestData.NinoUser
 import play.api.test.Helpers._
 import play.api.test.{CSRFTokenHelper, FakeRequest}
-import views.html.cob.WhatTypeOfAccountView
+import repositories.SessionRepository
+import testconfig.TestConfig
+import testconfig.TestConfig._
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import play.api.libs.json.Json
+import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
+import utils.TestData.NinoUser
+import views.html.cob.WhatTypeOfAccountView
+import pages.cob.WhatTypeOfAccountPage
+import models.cob.WhatTypeOfAccount.{SoleAccount, JointAccountSharedWithSomeone}
+import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.reset
+import play.api.inject.bind
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,9 +47,9 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
   implicit val mockExecutionContext = mock[ExecutionContext]
   implicit val mockHeaderCarrier    = mock[HeaderCarrier]
 
-  def onwardRoute = Call("GET", "/foo")
+  val mockSessionRepository = mock[SessionRepository]
 
-  val mockSessionRepository         = mock[SessionRepository]
+  def onwardRoute = Call("GET", "/foo")
 
   lazy val whatTypeOfAccountRoute: String =
     controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode).url
@@ -54,6 +59,15 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
   val formProvider = new WhatTypeOfAccountFormProvider()
   val form: Form[WhatTypeOfAccount] = formProvider()
 
+  override protected def beforeEach(): Unit = {
+    super.beforeEach()
+    reset[Object](
+      mockSessionRepository,
+      mockExecutionContext,
+      mockHeaderCarrier
+    )
+  }
+
   "WhatTypeOfAccount Controller" - {
 
     "when the change of bank feature is enabled" - {
@@ -62,7 +76,8 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       "must respond OK and the correct view for GET" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers))
+          .build()
 
         running(application) {
           val request = FakeRequest(GET, whatTypeOfAccountRoute)
@@ -77,6 +92,42 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
             view(form, NormalMode)(request, messages(application)).toString
+          )
+        }
+      }
+
+      "must populate the view correctly on a GET when the question has previously been answered" in {
+        userLoggedInChildBenefitUser(NinoUser)
+
+        val userAnswers: UserAnswers = UserAnswers(userAnswersId)
+          .set(WhatTypeOfAccountPage, JointAccountSharedWithSomeone)
+          .success
+          .value
+
+        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
+          .overrides(
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+        running(application) {
+          val request = FakeRequest(GET, whatTypeOfAccountRoute)
+            .withSession("authToken" -> "Bearer 123")
+
+          when(mockSessionRepository.get(userAnswersId))
+            .thenReturn(Future.successful(Some(userAnswers)))
+
+          val view = application.injector.instanceOf[WhatTypeOfAccountView]
+
+          val result = route(application, request).value
+
+          status(result) mustEqual OK
+          assertSameHtmlAfter(removeCsrfAndNonce)(
+            contentAsString(result),
+            view(
+              form.fill(JointAccountSharedWithSomeone),
+              NormalMode
+            )(request, messages(application)).toString
           )
         }
       }

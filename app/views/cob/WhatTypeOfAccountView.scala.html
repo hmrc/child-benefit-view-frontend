@@ -53,6 +53,10 @@ govukRadios(
 
 @layout(pageTitle = title(form, messages("whatTypeOfAccount.title"))) {
 
+  @if(form.errors.nonEmpty) {
+      @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+  }
+
   @heading(messages("whatTypeOfAccount.heading"))
 
   @formHelper(action = controllers.cob.routes.WhatTypeOfAccountController.onSubmit(mode), Symbol("autoComplete") -> "off") {

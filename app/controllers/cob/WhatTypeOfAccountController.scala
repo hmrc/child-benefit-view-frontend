@@ -16,22 +16,22 @@
 
 package controllers.cob
 
+import controllers.actions._
+import forms.cob.WhatTypeOfAccountFormProvider
+import models.cob.WhatTypeOfAccount
+import models.{Mode, UserAnswers}
+import pages.cob.WhatTypeOfAccountPage
+import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
-import forms.cob.WhatTypeOfAccountFormProvider
-import models.{Mode, UserAnswers}
-import models.cob.WhatTypeOfAccount
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import controllers.actions._
 import views.html.cob.WhatTypeOfAccountView
-import pages.cob.WhatTypeOfAccountPage
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 import play.api.data.Form
+import scala.concurrent.ExecutionContext
 
 class WhatTypeOfAccountController @Inject() (
     override val messagesApi: MessagesApi,
