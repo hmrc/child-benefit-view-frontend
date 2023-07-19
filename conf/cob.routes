@@ -1,6 +1,10 @@
 # microservice specific routes
 
 GET         /change-bank/change-account                             controllers.cob.ChangeAccountController.onPageLoad()
+
+GET         /change-bank/account-type                               controllers.cob.WhatTypeOfAccountController.onPageLoad(mode: Mode = NormalMode)
+# POST        /change-bank/account-type                             controllers.cob.ChangeAccountController.onPageLoad()
+
 GET         /change-bank/new-account-details                        controllers.cob.NewAccountDetailsController.onPageLoad(mode: Mode = NormalMode)
 POST        /change-bank/new-account-details                        controllers.cob.NewAccountDetailsController.onSubmit(mode: Mode = NormalMode)
 GET         /change-bank/change-new-account-details                 controllers.cob.NewAccountDetailsController.onPageLoad(mode: Mode = CheckMode)
