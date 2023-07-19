@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WillYoungPersonBeStayingView
@@ -43,6 +44,8 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
 
   val formProvider = new WillYoungPersonBeStayingFormProvider()
   val form         = formProvider("First Name")
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val willYoungPersonBeStayingRoute =
     controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
