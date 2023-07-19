@@ -55,7 +55,7 @@ govukRadios(
 
   @heading(messages("whatTypeOfAccount.heading"))
 
-  @formHelper(action = ???) {
+  @formHelper(action = controllers.cob.routes.WhatTypeOfAccountController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
     @govukRadios(
       RadiosViewModel(

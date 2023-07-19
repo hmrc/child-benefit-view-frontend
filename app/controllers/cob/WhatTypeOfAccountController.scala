@@ -34,19 +34,19 @@ import scala.concurrent.ExecutionContext
 import play.api.data.Form
 
 class WhatTypeOfAccountController @Inject() (
-  override val messagesApi: MessagesApi,
-  sessionRepository: SessionRepository,
-  featureActions:           FeatureFlagComposedActions,
-  navigator:                Navigator,
-  formProvider:             WhatTypeOfAccountFormProvider,
-  getData:                  CBDataRetrievalAction,
-  verifyBarNotLockedAction: VerifyBarNotLockedAction,
-  verifyHICBCAction:        VerifyHICBCAction,
-  val controllerComponents: MessagesControllerComponents,
-  view:                     WhatTypeOfAccountView,
-)(implicit ec: ExecutionContext)
-  extends FrontendBaseController
-  with I18nSupport {
+    override val messagesApi: MessagesApi,
+    sessionRepository:        SessionRepository,
+    featureActions:           FeatureFlagComposedActions,
+    navigator:                Navigator,
+    formProvider:             WhatTypeOfAccountFormProvider,
+    getData:                  CBDataRetrievalAction,
+    verifyBarNotLockedAction: VerifyBarNotLockedAction,
+    verifyHICBCAction:        VerifyHICBCAction,
+    val controllerComponents: MessagesControllerComponents,
+    view:                     WhatTypeOfAccountView
+)(implicit ec:                ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
@@ -56,12 +56,18 @@ class WhatTypeOfAccountController @Inject() (
         val preparedForm = request.userAnswers
           .getOrElse(UserAnswers(request.userId))
           .get(WhatTypeOfAccountPage) match {
-              case None => form
-              case Some(value) =>
-                form.fill(value)
-            }
+          case None => form
+          case Some(value) =>
+            form.fill(value)
+        }
 
         Ok(view(preparedForm, mode))
+    }
+
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData) {
+      implicit request =>
+        ???
     }
 
 }
