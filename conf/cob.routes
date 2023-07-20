@@ -4,10 +4,8 @@ GET         /change-bank/change-account                             controllers.
 
 GET         /change-bank/account-type                               controllers.cob.WhatTypeOfAccountController.onPageLoad(mode: Mode = NormalMode)
 POST        /change-bank/account-type                               controllers.cob.WhatTypeOfAccountController.onSubmit(mode: Mode = NormalMode)
-
-# TODO: DELETE THESE; just to help play routes compilation
-GET         /change-bank/account-type2                               controllers.cob.WhatTypeOfAccountController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-bank/account-type2                              controllers.cob.WhatTypeOfAccountController.onSubmit(mode: Mode = CheckMode)
+GET         /change-bank/change-account-type                        controllers.cob.WhatTypeOfAccountController.onPageLoad(mode: Mode = CheckMode)
+POST        /change-bank/change-account-type                        controllers.cob.WhatTypeOfAccountController.onSubmit(mode: Mode = CheckMode)
 
 GET         /change-bank/new-account-details                        controllers.cob.NewAccountDetailsController.onPageLoad(mode: Mode = NormalMode)
 POST        /change-bank/new-account-details                        controllers.cob.NewAccountDetailsController.onSubmit(mode: Mode = NormalMode)
