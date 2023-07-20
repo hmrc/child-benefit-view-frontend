@@ -52,8 +52,8 @@
       }
     }
 
-    @if(form.errors.isEmpty) {
-        @paragraph(messages("newAccountDetails.paragraph"))
+    @if(form.errors.isEmpty && accountType != WhatTypeOfAccount.JointHeldByClaimant) {
+      @paragraph(messages("newAccountDetails.paragraph"))
     }
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
