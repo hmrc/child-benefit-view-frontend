@@ -19,9 +19,7 @@ GET         /change-bank/account-not-changed                        controllers.
 GET         /change-bank/locked-out                                 controllers.cob.BARSLockOutController.onPageLoad()
 
 GET         /change-bank/confirm-new-account-details                controllers.cob.ConfirmNewAccountDetailsController.onPageLoad(mode: Mode = NormalMode)
-POST        /change-bank/confirm-new-account-details                controllers.cob.ConfirmNewAccountDetailsController.onSubmit(mode: Mode = NormalMode)
 GET         /change-bank/change-confirm-new-account-details         controllers.cob.ConfirmNewAccountDetailsController.onPageLoad(mode: Mode = CheckMode)
-POST        /change-bank/change-confirm-new-account-details         controllers.cob.ConfirmNewAccountDetailsController.onSubmit(mode: Mode = CheckMode)
 
 GET         /change-bank/service-not-available/opted-out-payments   controllers.cob.HICBCOptedOutPaymentsController.onPageLoad()
 

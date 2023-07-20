@@ -212,14 +212,15 @@ bARSLockOut.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion 
 # ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
-confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.table.name = Yr enw sydd ar y cyfrif:
-confirmNewAccountDetails.table.sortCode = Cod didoli:
-confirmNewAccountDetails.table.accountNumber = Rhif y cyfrif:
-confirmNewAccountDetails.yes = Iawn
-confirmNewAccountDetails.no = Na, hoffwn eu newid
-confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
+confirmNewAccountDetails.p1 = Gwiriwch mai dyma’r manylion yr hoffech eu defnyddio, a dewiswch ‘Yn eich blaen’ i newid eich cyfrif.
+confirmNewAccountDetails.summary.accountType.label = Math o gyfrif
+confirmNewAccountDetails.summary.accountType.change.hidden = eich ateb i’r cwestiwn, ‘Pa fath o gyfrif yw hwn?‘
+confirmNewAccountDetails.summary.accountHoldersName.label = Yr enw sydd ar y cyfrif:
+confirmNewAccountDetails.summary.accountHoldersName.change.hidden = eich ateb i’r cwestiwn, ‘Yr enw sydd ar y cyfrif‘
+confirmNewAccountDetails.summary.sortCode.label = Cod didoli:
+confirmNewAccountDetails.summary.sortCode.change.hidden = eich ateb i’r cwestiwn, ‘Cod didoli‘
+confirmNewAccountDetails.summary.accountNumber.label = Rhif y cyfrif:
+confirmNewAccountDetails.summary.accountNumber.change.hidden = eich ateb i’r cwestiwn, ‘Rhif y cyfrif‘
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant

@@ -17,6 +17,7 @@
 package controllers.cob
 
 import controllers.actions._
+import pages.cob.NewAccountDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{AuditService, ChangeOfBankService}
@@ -30,6 +31,8 @@ import scala.concurrent.ExecutionContext
 class AccountChangedController @Inject() (
     override val messagesApi: MessagesApi,
     featureActions:           FeatureFlagComposedActions,
+    getData:                  CBDataRetrievalAction,
+    requireData:              DataRequiredAction,
     verifyBarNotLockedAction: VerifyBarNotLockedAction,
     verifyHICBCActionImpl:    VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
@@ -41,12 +44,27 @@ class AccountChangedController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCActionImpl).async {
-      implicit request =>
+    (featureActions.changeBankAction andThen
+      verifyBarNotLockedAction andThen
+      verifyHICBCActionImpl andThen
+      getData andThen
+      requireData)
+      .async { implicit request =>
         {
-          changeOfBankService
-            .dropChangeOfBankCache()
-            .fold(err => errorHandler.handleError(err), _ => Ok(view()))
+          val newAccountDetails = request.userAnswers.get(NewAccountDetailsPage)
+          for {
+            submissionResponse <- changeOfBankService.submitClaimantChangeOfBank(newAccountDetails, request).value
+            cacheResponse      <- changeOfBankService.dropChangeOfBankCache().value
+          } yield {
+            submissionResponse match {
+              case Left(error) => errorHandler.handleError(error)
+              case Right(_) =>
+                cacheResponse match {
+                  case Left(error) => errorHandler.handleError(error)
+                  case Right(_)    => Ok(view())
+                }
+            }
+          }
         }
-    }
+      }
 }
