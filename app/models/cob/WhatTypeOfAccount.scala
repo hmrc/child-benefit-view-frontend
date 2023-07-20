@@ -30,6 +30,7 @@ object WhatTypeOfAccount extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
     Enumerable(values.map(v => v.toString -> v): _*)
+
 }
 
 sealed trait AccountType
@@ -43,6 +44,7 @@ object AccountType extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[AccountType] =
     Enumerable(List(Sole, Joint).map(v => v.toString -> v): _*)
+
 }
 
 sealed trait JointAccountType
@@ -56,4 +58,5 @@ object JointAccountType extends Enumerable.Implicits {
 
   implicit val enumerable: Enumerable[JointAccountType] =
     Enumerable(List(HeldByClaimant, NotHeldByClaimant).map(v => v.toString -> v): _*)
+
 }

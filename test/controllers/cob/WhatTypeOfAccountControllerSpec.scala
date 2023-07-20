@@ -184,9 +184,39 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
 
           val result = route(application, request).value
 
-          println(contentAsString(result))
           status(result) mustEqual SEE_OTHER
           redirectLocation(result).value mustBe onwardRoute.url
+        }
+      }
+
+      "must fail to validate when no joint account type is selected" in {
+        userLoggedInChildBenefitUser(NinoUser)
+        verifyClaimantBankAccount(200, """""""")
+        val mockSessionRepository = mock[SessionRepository]
+
+        val application =
+          applicationBuilder(config, userAnswers = Some(userAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, whatTypeOfAccountRoute)
+                .withFormUrlEncodedBody(
+                  (AccountType.name -> "joint")
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
+          when(mockSessionRepository.get(userAnswersId))
+            .thenReturn(Future.successful(Some(userAnswers)))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual BAD_REQUEST
         }
       }
 

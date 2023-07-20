@@ -52,7 +52,13 @@
 @layout(pageTitle = title(form, messages("whatTypeOfAccount.title"))) {
 
   @if(form.errors.nonEmpty) {
-      @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+      @govukErrorSummary(
+        ErrorSummaryViewModel(
+          form,
+          errorLinkOverrides = Map(AccountType.name -> "WhatTypeOfAccount.Sole.toString")
+        )
+      )
+    )
   }
 
   @heading(messages("whatTypeOfAccount.heading"))

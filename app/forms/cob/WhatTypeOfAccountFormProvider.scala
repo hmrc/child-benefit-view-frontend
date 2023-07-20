@@ -17,9 +17,9 @@
 package forms.cob
 
 import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
-import play.api.data.Form
-import utils.mappings.Mappings
 import play.api.data.Forms._
+import play.api.data.{ Form, Mapping }
+import utils.mappings.Mappings
 
 import javax.inject.Inject
 
@@ -27,10 +27,24 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
 
   def apply(): Form[WhatTypeOfAccount] =
     Form(
-      mapping(
-        AccountType.name      -> enumerable[AccountType]("whatTypeOfAccount.error.required"),
-        JointAccountType.name -> optional(enumerable[JointAccountType]("whatTypeOfAccount.error.required"))
-      )(bind)(unbind)
+      radioButtonMapping.transform(
+        { case (a, b) => bind(a, b) },
+        unbind
+      )
+    )
+
+  private lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
+    tuple(
+      AccountType.name      ->
+        enumerable[AccountType]("whatTypeOfAccount.error.account-type-required"),
+      JointAccountType.name ->
+        optional(enumerable[JointAccountType]("whatTypeOfAccount.error.joint-type-required"))
+    ).verifying(
+      "whatTypeOfAccount.error.joint-type-required",
+      {
+        case (AccountType.Sole, _) => true
+        case (AccountType.Joint, jointType) => jointType.isDefined
+      }
     )
 
   private def bind(
@@ -46,12 +60,13 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
       case (_, None) => WhatTypeOfAccount.Sole
     }
 
-  def unbind(whatAccountType: WhatTypeOfAccount): Option[(AccountType, Option[JointAccountType])] =
+  private def unbind(whatAccountType: WhatTypeOfAccount): (AccountType, Option[JointAccountType]) =
     whatAccountType match {
-      case WhatTypeOfAccount.Sole => Some((AccountType.Sole, None))
+      case WhatTypeOfAccount.Sole => (AccountType.Sole, None)
       case WhatTypeOfAccount.JointHeldByClaimant =>
-        Some((AccountType.Joint, Some(JointAccountType.HeldByClaimant)))
+        (AccountType.Joint, Some(JointAccountType.HeldByClaimant))
       case WhatTypeOfAccount.JointNotHeldByClaimant =>
-        Some((AccountType.Joint, Some(JointAccountType.NotHeldByClaimant)))
+        (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant))
     }
+
 }
