@@ -96,7 +96,7 @@
     @para(messages("changeAccount.paragraph.2", formLink))
 
     <div class="govuk-button-group">
-        @buttonLink("continue-button", "changeAccount.button.1", controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode))
+        @buttonLink("continue-button", "changeAccount.button.1", controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode))
         @buttonLink("do-not-change-button", "changeAccount.button.2", controllers.cob.routes.AccountNotChangedController.onPageLoad(), Some("govuk-button--secondary"))
     </div>
 

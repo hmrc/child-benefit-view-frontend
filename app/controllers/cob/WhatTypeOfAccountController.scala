@@ -28,7 +28,6 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.cob.WhatTypeOfAccountView
-import play.api.data.Form
 import models.requests.OptionalDataRequest
 import play.api.mvc.Result
 

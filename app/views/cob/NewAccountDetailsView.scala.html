@@ -42,18 +42,17 @@
 
     @heading(messages("newAccountDetails.heading"), classes = "govuk-heading-l")
 
-    @accountType match {
-      case WhatTypeOfAccount.Sole => {}
-      case WhatTypeOfAccount.JointHeldByClaimant => {
-        @warningText(Html(messages("newAccountDetails.warningHeldByClaimant")) )
-      }
-      case WhatTypeOfAccount.JointHeldByClaimant => {
-        @warningText(Html(messages("newAccountDetails.warningNotHeldByClaimant")))
-      }
+    
+    @if(accountType == WhatTypeOfAccount.JointHeldByClaimant) {
+      @warningText(Html(messages("newAccountDetails.warningHeldByClaimant")) )
     }
 
     @if(form.errors.isEmpty && accountType != WhatTypeOfAccount.JointHeldByClaimant) {
       @paragraph(messages("newAccountDetails.paragraph"))
+    }
+
+    @if(accountType == WhatTypeOfAccount.JointNotHeldByClaimant) {
+      @warningText(Html(messages("newAccountDetails.warningNotHeldByClaimant")))
     }
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
@@ -74,7 +73,7 @@
                     messages("newAccountDetails.newAccountHoldersNameHint")
                   case WhatTypeOfAccount.JointHeldByClaimant =>
                     messages("newAccountDetails.jointHeldnewAccountHoldersNameHint")
-                  case WhatTypeOfAccount.JointHeldByClaimant =>
+                  case WhatTypeOfAccount.JointNotHeldByClaimant =>
                     messages("newAccountDetails.jointNotHeldnewAccountHoldersNameHint")
                 }
               )
