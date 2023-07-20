@@ -33,7 +33,7 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
       )
     )
 
-  private lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
+  lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
     tuple(
       AccountType.name ->
         enumerable[AccountType]("whatTypeOfAccount.error.account-type-required"),

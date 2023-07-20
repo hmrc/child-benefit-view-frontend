@@ -18,22 +18,22 @@ package forms
 
 import forms.behaviours.OptionFieldBehaviours
 import forms.cob.WhatTypeOfAccountFormProvider
-import models.cob.WhatTypeOfAccount
+import models.cob.{AccountType, JointAccountType}
 import play.api.data.FormError
 
 class WhatTypeOfAccountFormProviderSpec extends OptionFieldBehaviours {
 
   val form = new WhatTypeOfAccountFormProvider()()
 
-  ".value" - {
+  ".accountType" - {
 
-    val fieldName   = "value"
-    val requiredKey = "whatTypeOfAccount.error.required"
+    val fieldName   = AccountType.name
+    val requiredKey = "whatTypeOfAccount.error.account-type-required"
 
-    behave like optionsField[WhatTypeOfAccount](
+    behave like optionsField[AccountType](
       form,
       fieldName,
-      validValues = WhatTypeOfAccount.values,
+      validValues = AccountType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
@@ -42,6 +42,19 @@ class WhatTypeOfAccountFormProviderSpec extends OptionFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  ".joint_account_type" - {
+
+    val fieldName = JointAccountType.name
+
+    behave like optionsField[JointAccountType](
+      form,
+      fieldName,
+      validValues = JointAccountType.values,
+      invalidError = FormError(fieldName, "error.invalid")
+    )
+
   }
 
 }

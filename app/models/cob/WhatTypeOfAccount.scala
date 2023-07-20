@@ -42,8 +42,10 @@ object AccountType extends Enumerable.Implicits {
   case object Sole  extends WithName("sole") with AccountType
   case object Joint extends WithName("joint") with AccountType
 
+  val values = List(Sole, Joint)
+
   implicit val enumerable: Enumerable[AccountType] =
-    Enumerable(List(Sole, Joint).map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v): _*)
 
 }
 
@@ -56,7 +58,9 @@ object JointAccountType extends Enumerable.Implicits {
   case object HeldByClaimant    extends WithName("held_by_claimant") with JointAccountType
   case object NotHeldByClaimant extends WithName("not_held_by_claimant") with JointAccountType
 
+  val values = List(HeldByClaimant, NotHeldByClaimant)
+
   implicit val enumerable: Enumerable[JointAccountType] =
-    Enumerable(List(HeldByClaimant, NotHeldByClaimant).map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v): _*)
 
 }
