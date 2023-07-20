@@ -19,17 +19,15 @@ package controllers.cob
 import controllers.actions._
 import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount
+import models.requests.OptionalDataRequest
 import models.{Mode, UserAnswers}
 import pages.cob.WhatTypeOfAccountPage
-import play.api.i18n.I18nSupport
-import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.navigation.Navigator
 import views.html.cob.WhatTypeOfAccountView
-import models.requests.OptionalDataRequest
-import play.api.mvc.Result
 
 import javax.inject.Inject
 import scala.concurrent.{Future, ExecutionContext}

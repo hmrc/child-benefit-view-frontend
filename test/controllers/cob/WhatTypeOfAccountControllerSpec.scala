@@ -17,12 +17,16 @@
 package controllers.cob
 
 import forms.cob.WhatTypeOfAccountFormProvider
+import models.cob.WhatTypeOfAccount.JointHeldByClaimant
 import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
-import models.{CBEnvelope, NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers}
+import org.mockito.Mockito.reset
+import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.cob.WhatTypeOfAccountPage
 import play.api.data.Form
-import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, Call}
+import play.api.inject.bind
+import play.api.mvc.Call
 import play.api.test.Helpers._
 import play.api.test.{CSRFTokenHelper, FakeRequest}
 import repositories.SessionRepository
@@ -31,15 +35,10 @@ import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
+import utils.navigation.{FakeNavigator, Navigator}
 import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
 import utils.TestData.NinoUser
 import views.html.cob.WhatTypeOfAccountView
-import pages.cob.WhatTypeOfAccountPage
-import models.cob.WhatTypeOfAccount.{Sole, JointHeldByClaimant}
-import org.mockito.MockitoSugar.when
-import org.mockito.Mockito.reset
-import play.api.inject.bind
-import utils.navigation.{FakeNavigator, Navigator}
 
 import scala.concurrent.{ExecutionContext, Future}
 
