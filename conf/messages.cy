@@ -157,6 +157,16 @@ accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau
 accountChanged.feedback = {0}.
 accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.options.sole = Cyfrif unigol
+whatTypeOfAccount.options.joint = Cyfrif ar y cyd
+whatTypeOfAccount.options.joint-held-by-claimant = Rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.joint-not-held-by-claimant = Nid chi yw deiliad y cyfrif
+whatTypeOfAccount.error.account-type-required = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
+whatTypeOfAccount.error.joint-type-required = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
 accountNotChanged.heading = Nid ydych wedi newid eich cyfrif

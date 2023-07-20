@@ -34,7 +34,7 @@
   @govukRadios(
     RadiosViewModel(
       field = form(JointAccountType.name),
-      legend = LegendViewModel(messages("whatTypeOfAccount.subHeading")),
+      legend = LegendViewModel("").withCssClass("hidden"),
       items = Seq(
         RadioItem(
           content = Text(messages("whatTypeOfAccount.options.joint-held-by-claimant")),
@@ -60,8 +60,6 @@
       )
   }
 
-  @heading(messages("whatTypeOfAccount.heading"))
-
   @formHelper(
     action = controllers.cob.routes.WhatTypeOfAccountController.onSubmit(mode),
     Symbol("autoComplete") -> "off"
@@ -70,7 +68,7 @@
     @govukRadios(
       RadiosViewModel(
         field = form(AccountType.name),
-        legend = LegendViewModel(messages("whatTypeOfAccount.subHeading")),
+        legend = LegendViewModel(messages("whatTypeOfAccount.heading")).asPageHeading(),
         items = Seq(
           RadioItem(
             content = Text(messages("whatTypeOfAccount.options.sole")),
