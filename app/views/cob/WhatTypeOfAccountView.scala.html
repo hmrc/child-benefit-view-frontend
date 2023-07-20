@@ -38,11 +38,11 @@
       items = Seq(
         RadioItem(
           content = Text(messages("whatTypeOfAccount.options.joint-held-by-claimant")),
-          value = Some(WhatTypeOfAccount.JointHeldByClaimant.toString),
+          value = Some(JointAccountType.HeldByClaimant.toString),
         ),
         RadioItem(
           content = Text(messages("whatTypeOfAccount.options.joint-not-held-by-claimant")),
-          value = Some(WhatTypeOfAccount.JointNotHeldByClaimant.toString),
+          value = Some(JointAccountType.NotHeldByClaimant.toString),
         )
       )
     )
@@ -58,7 +58,6 @@
           errorLinkOverrides = Map(AccountType.name -> "WhatTypeOfAccount.Sole.toString")
         )
       )
-    )
   }
 
   @heading(messages("whatTypeOfAccount.heading"))

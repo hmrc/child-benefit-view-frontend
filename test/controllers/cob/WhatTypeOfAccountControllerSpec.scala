@@ -220,6 +220,48 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
         }
       }
 
+      "must redirect to the next page when a joint account with a joint type is submitted" in {
+        userLoggedInChildBenefitUser(NinoUser)
+        verifyClaimantBankAccount(200, """""""")
+        val mockSessionRepository = mock[SessionRepository]
+
+        val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+          .set(WhatTypeOfAccountPage, WhatTypeOfAccount.JointHeldByClaimant)
+          .success
+          .value
+
+        val application =
+          applicationBuilder(config, userAnswers = Some(userAnswers))
+            .overrides(
+              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            )
+            .build()
+
+        running(application) {
+          val request =
+            CSRFTokenHelper.addCSRFToken(
+              FakeRequest(POST, whatTypeOfAccountRoute)
+                .withFormUrlEncodedBody(
+                  (AccountType.name -> "joint"),
+                  (JointAccountType.name -> "held_by_claimant")
+                )
+                .withSession("authToken" -> "Bearer 123")
+            )
+          when(mockSessionRepository.get(userAnswersId))
+            .thenReturn(Future.successful(Some(userAnswers)))
+
+          // TODO figure out a better way of mocking this ugh
+          when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
+            .thenReturn(Future.successful(true))
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe onwardRoute.url
+        }
+      }
+
     }
 
   }
