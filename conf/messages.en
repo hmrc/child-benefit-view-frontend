@@ -193,10 +193,10 @@ whatTypeOfAccount.title = What type of account is it?
 whatTypeOfAccount.heading = What type of account is it?
 whatTypeOfAccount.options.sole = Sole account
 whatTypeOfAccount.options.joint = Joint account
-whatTypeOfAccount.options.joint-held-by-claimant = you share with someone
-whatTypeOfAccount.options.joint-not-held-by-claimant = not held by you
-whatTypeOfAccount.error.account-type-required = Select ‘Sole account’ or ‘Joint account’ 
-whatTypeOfAccount.error.joint-type-required = Select ‘you share with someone’ or ‘not held by you’ 
+whatTypeOfAccount.options.jointHeldByClaimant = you share with someone
+whatTypeOfAccount.options.jointNotHeldByClaimant = not held by you
+whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’ or ‘Joint account’ 
+whatTypeOfAccount.error.jointTypeRequired = Select ‘you share with someone’ or ‘not held by you’ 
 
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = You have not changed your account

@@ -36,11 +36,11 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
   lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
     tuple(
       AccountType.name ->
-        enumerable[AccountType]("whatTypeOfAccount.error.account-type-required"),
+        enumerable[AccountType]("whatTypeOfAccount.error.accountTypeRequired"),
       JointAccountType.name ->
-        optional(enumerable[JointAccountType]("whatTypeOfAccount.error.joint-type-required"))
+        optional(enumerable[JointAccountType]("whatTypeOfAccount.error.jointTypeRequired"))
     ).verifying(
-      "whatTypeOfAccount.error.joint-type-required",
+      "whatTypeOfAccount.error.jointTypeRequired",
       {
         case (AccountType.Sole, _)          => true
         case (AccountType.Joint, jointType) => jointType.isDefined

@@ -162,10 +162,10 @@ whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.options.sole = Cyfrif unigol
 whatTypeOfAccount.options.joint = Cyfrif ar y cyd
-whatTypeOfAccount.options.joint-held-by-claimant = Rydych yn rhannu’r cyfrif â rhywun
-whatTypeOfAccount.options.joint-not-held-by-claimant = Nid chi yw deiliad y cyfrif
-whatTypeOfAccount.error.account-type-required = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
-whatTypeOfAccount.error.joint-type-required = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
+whatTypeOfAccount.options.jointHeldByClaimant = Rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.jointNotHeldByClaimant = Nid chi yw deiliad y cyfrif
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
+whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
 
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
