@@ -22,7 +22,7 @@ import models.cob.WhatTypeOfAccount
 import models.requests.OptionalDataRequest
 import models.{Mode, UserAnswers}
 import pages.cob.WhatTypeOfAccountPage
-import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController

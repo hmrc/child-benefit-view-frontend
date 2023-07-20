@@ -28,7 +28,7 @@ class WhatTypeOfAccountFormProviderSpec extends OptionFieldBehaviours {
   ".accountType" - {
 
     val fieldName   = AccountType.name
-    val requiredKey = "whatTypeOfAccount.error.account-type-required"
+    val requiredKey = "whatTypeOfAccount.error.accountTypeRequired"
 
     behave like optionsField[AccountType](
       form,
