@@ -243,7 +243,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
             CSRFTokenHelper.addCSRFToken(
               FakeRequest(POST, whatTypeOfAccountRoute)
                 .withFormUrlEncodedBody(
-                  (AccountType.name -> "joint"),
+                  (AccountType.name      -> "joint"),
                   (JointAccountType.name -> "held_by_claimant")
                 )
                 .withSession("authToken" -> "Bearer 123")

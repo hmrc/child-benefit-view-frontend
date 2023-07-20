@@ -58,7 +58,7 @@ class NewAccountDetailsFormProvider @Inject() extends Mappings {
         ),
         "bacsError" -> bacsString()
       )((a, b, c, _) => NewAccountDetails(a, b, c))(a =>
-        Some((a.newAccountNumber, a.newSortCode, a.newAccountHoldersName, ""))
+        Some((a.newAccountHoldersName, a.newSortCode, a.newAccountNumber, ""))
       )
     )
 }

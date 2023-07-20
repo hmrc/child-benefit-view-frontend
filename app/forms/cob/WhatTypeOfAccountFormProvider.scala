@@ -18,7 +18,7 @@ package forms.cob
 
 import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
 import play.api.data.Forms._
-import play.api.data.{ Form, Mapping }
+import play.api.data.{Form, Mapping}
 import utils.mappings.Mappings
 
 import javax.inject.Inject
@@ -35,14 +35,14 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
 
   private lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
     tuple(
-      AccountType.name      ->
+      AccountType.name ->
         enumerable[AccountType]("whatTypeOfAccount.error.account-type-required"),
       JointAccountType.name ->
         optional(enumerable[JointAccountType]("whatTypeOfAccount.error.joint-type-required"))
     ).verifying(
       "whatTypeOfAccount.error.joint-type-required",
       {
-        case (AccountType.Sole, _) => true
+        case (AccountType.Sole, _)          => true
         case (AccountType.Joint, jointType) => jointType.isDefined
       }
     )
