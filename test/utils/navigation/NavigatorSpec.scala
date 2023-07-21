@@ -25,6 +25,7 @@ import models.cob.ConfirmNewAccountDetails._
 import models.cob._
 import models.ftnae.HowManyYears
 import pages.cob._
+import pages.cob._
 import org.mockito.MockitoSugar.mock
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
