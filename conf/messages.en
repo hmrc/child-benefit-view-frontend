@@ -188,6 +188,16 @@ accountChanged.paragraph.2 = We use feedback to make our services better.
 accountChanged.feedback = Please {0}.
 accountChanged.feedback.link.text = take the feedback survey
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = What type of account is it?
+whatTypeOfAccount.heading = What type of account is it?
+whatTypeOfAccount.options.sole = Sole account
+whatTypeOfAccount.options.joint = Joint account
+whatTypeOfAccount.options.jointHeldByClaimant = you share with someone
+whatTypeOfAccount.options.jointNotHeldByClaimant = not held by you
+whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’ or ‘Joint account’ 
+whatTypeOfAccount.error.jointTypeRequired = Select ‘you share with someone’ or ‘not held by you’ 
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = You have not changed your account
 accountNotChanged.heading = You have not changed your account
@@ -197,8 +207,12 @@ accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same acco
 newAccountDetails.title = What are the new account details?
 newAccountDetails.heading = What are the new account details?
 newAccountDetails.paragraph = If you change to an account in someone else’s name, you’re responsible for making sure you get the money and that it’s used how you want.
+newAccountDetails.warningHeldByClaimant = Enter the name of the other account holder in ‘Name on the account’.
+newAccountDetails.warningNotHeldByClaimant = Only enter the name of one of the account holders.
 newAccountDetails.newAccountHoldersName = Name on the account
-newAccountDetails.newAccountHoldersNameHint = Only enter first and last names. Do not use initials or titles like Mr or Mrs. If it’s a joint account that you share with someone, enter the names of the other person. If it’s a joint account held by other people, enter the names of just one of the account holders.
+newAccountDetails.newAccountHoldersNameHint = Only enter the first and last name, and do not use initials or titles like Mr or Mrs
+newAccountDetails.jointHeldnewAccountHoldersNameHint = Enter the first and last name of the other account holder, and do not use initials or titles like Mr or Mrs
+newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Enter the first and last name of just one of the account holders, and do not use initials or titles like Mr or Mrs
 newAccountDetails.newSortCode = Sort code
 newAccountDetails.newSortCodeHint = Must be 6 digits long
 newAccountDetails.newAccountNumber = Account number

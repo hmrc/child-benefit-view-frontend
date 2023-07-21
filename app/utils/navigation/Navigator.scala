@@ -38,13 +38,14 @@ import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import models.cob.ConfirmNewAccountDetails.{No, Yes}
 import models.ftnae.HowManyYears
 import utils.pages._
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage, WhatTypeOfAccountPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
 
 @Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case WhatTypeOfAccountPage            => _ => controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
     case NewAccountDetailsPage            => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
     case ConfirmNewAccountDetailsPage     => userAnswers => confirmAccountDetails(userAnswers)
     case WhichYoungPersonPage             => userAnswers => navigateWhichYoungPerson(userAnswers)
@@ -123,7 +124,7 @@ class Navigator @Inject() () {
   private def confirmAccountDetails(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfirmNewAccountDetailsPage) match {
       case Some(Yes) => controllers.cob.routes.AccountChangedController.onPageLoad()
-      case Some(No)  => controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      case Some(No)  => controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode)
       case _         => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
 }

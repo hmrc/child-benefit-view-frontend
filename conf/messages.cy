@@ -157,6 +157,16 @@ accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau
 accountChanged.feedback = {0}.
 accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.options.sole = Cyfrif unigol
+whatTypeOfAccount.options.joint = Cyfrif ar y cyd
+whatTypeOfAccount.options.jointHeldByClaimant = Rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.jointNotHeldByClaimant = Nid chi yw deiliad y cyfrif
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
+whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
 accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
@@ -166,8 +176,12 @@ accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfr
 newAccountDetails.title = Beth yw manylion y cyfrif newydd?
 newAccountDetails.heading = Beth yw manylion y cyfrif newydd?
 newAccountDetails.paragraph = Os byddwch yn newid i gyfrif sydd yn enw rhywun arall, chi sy’n gyfrifol am sicrhau eich bod yn cael yr arian a bod yr arian yn cael ei ddefnyddio yn unol â’ch dymuniadau.
+newAccountDetails.warningHeldByClaimant = Nodwch enw deiliad arall y cyfrif yn y blwch ‘Enw sydd ar y cyfrif’.
+newAccountDetails.warningNotHeldByClaimant = Nodwch enw un o ddeiliaid y cyfrif yn unig.
 newAccountDetails.newAccountHoldersName = Yr enw sydd ar y cyfrif
-newAccountDetails.newAccountHoldersNameHint = Nodwch enwau cyntaf ac olaf yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs. Os yw’r cyfrif yn gyfrif ar y cyd rydych yn ei rannu gyda rhywun, nodwch enwau’r person arall. Os yw’n gyfrif ar y cyd a ddelir gan bobl eraill, nodwch enwau un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.newAccountHoldersNameHint = Nodwch yr enw cyntaf a’r cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw deiliad arall y cyfrif. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw un o ddeiliaid y cyfrif yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs
 newAccountDetails.newSortCode = Cod didoli
 newAccountDetails.newSortCodeHint = Mae’n rhaid i hyn fod yn 6 digid o hyd
 newAccountDetails.newAccountNumber = Rhif y cyfrif

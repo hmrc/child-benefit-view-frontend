@@ -15,6 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
+@import models.cob.WhatTypeOfAccount
 @import components._
 
 @this(
@@ -24,10 +25,15 @@
     govukInput: GovukInput,
     govukButton: GovukButton,
     heading: Heading,
-    paragraph: ParagraphBody
+    paragraph: ParagraphBody,
+    warningText: Warning
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(
+  form: Form[_],
+  mode: Mode,
+  accountType: WhatTypeOfAccount
+)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("newAccountDetails.title"))) {
     @if(form.errors.nonEmpty) {
@@ -35,8 +41,18 @@
     }
 
     @heading(messages("newAccountDetails.heading"), classes = "govuk-heading-l")
-    @if(form.errors.isEmpty) {
-        @paragraph(messages("newAccountDetails.paragraph"))
+
+    
+    @if(accountType == WhatTypeOfAccount.JointHeldByClaimant) {
+      @warningText(Html(messages("newAccountDetails.warningHeldByClaimant")) )
+    }
+
+    @if(form.errors.isEmpty && accountType != WhatTypeOfAccount.JointHeldByClaimant) {
+      @paragraph(messages("newAccountDetails.paragraph"))
+    }
+
+    @if(accountType == WhatTypeOfAccount.JointNotHeldByClaimant) {
+      @warningText(Html(messages("newAccountDetails.warningNotHeldByClaimant")))
     }
 
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
@@ -50,7 +66,18 @@
                 label = LabelViewModel(messages("newAccountDetails.newAccountHoldersName"))
             )
             .withWidth(Full)
-            .withHint(HintViewModel(messages("newAccountDetails.newAccountHoldersNameHint")))
+            .withHint(
+              HintViewModel(
+                accountType match {
+                  case WhatTypeOfAccount.Sole =>
+                    messages("newAccountDetails.newAccountHoldersNameHint")
+                  case WhatTypeOfAccount.JointHeldByClaimant =>
+                    messages("newAccountDetails.jointHeldnewAccountHoldersNameHint")
+                  case WhatTypeOfAccount.JointNotHeldByClaimant =>
+                    messages("newAccountDetails.jointNotHeldnewAccountHoldersNameHint")
+                }
+              )
+            )
         )
         @if(form.errors.map(_.key).contains("bacsErrorMiddle")) {
             @paragraph(messages(form.errors.find(_.key.equals("bacsErrorMiddle")).map(_.message).get), "govuk-error-message", Some("bacsErrorMiddle"))
