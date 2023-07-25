@@ -64,7 +64,7 @@ class Navigator @Inject() () {
   private val checkRouteMap: Page => UserAnswers => Call = {
     case WhatTypeOfAccountPage => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode)
     case NewAccountDetailsPage => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode)
-    case _ => _ => controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
+    case _                     => _ => controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = {

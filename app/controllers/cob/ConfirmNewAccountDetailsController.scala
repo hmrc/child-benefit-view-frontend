@@ -42,8 +42,7 @@ class ConfirmNewAccountDetailsController @Inject() (
     verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
     view:                     ConfirmNewAccountDetailsView
-)
-    extends FrontendBaseController
+) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = {
@@ -97,10 +96,10 @@ object ConfirmNewAccountDetailsController {
   }
 
   private def getAnswerSummary[A](
-    answers: Option[A],
-    answerKey:         String,
-    getValue:          A => String,
-    changeCall:        Call
+      answers:    Option[A],
+      answerKey:  String,
+      getValue:   A => String,
+      changeCall: Call
   )(implicit
       messages: Messages
   ): Option[SummaryListRow] = {

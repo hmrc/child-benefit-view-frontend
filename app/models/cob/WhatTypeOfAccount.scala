@@ -25,15 +25,19 @@ sealed trait WhatTypeOfAccount {
 
 object WhatTypeOfAccount extends Enumerable.Implicits {
 
-  case object Sole
-    extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole"))
-    with WhatTypeOfAccount
+  case object Sole extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with WhatTypeOfAccount
   case object JointHeldByClaimant
-    extends WithMessage("joint_held_by_claimant", m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}")
-    with WhatTypeOfAccount
+      extends WithMessage(
+        "joint_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}"
+      )
+      with WhatTypeOfAccount
   case object JointNotHeldByClaimant
-    extends WithMessage("joint_not_held_by_claimant", m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointNotHeldByClaimant")}")
-    with WhatTypeOfAccount
+      extends WithMessage(
+        "joint_not_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointNotHeldByClaimant")}"
+      )
+      with WhatTypeOfAccount
 
   val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant)
 
@@ -48,12 +52,8 @@ object AccountType extends Enumerable.Implicits {
 
   val name = "account_type"
 
-  case object Sole
-    extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole"))
-    with AccountType
-  case object Joint
-    extends WithMessage("joint", m => m("whatTypeOfAccount.options.joint"))
-    with AccountType
+  case object Sole  extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with AccountType
+  case object Joint extends WithMessage("joint", m => m("whatTypeOfAccount.options.joint")) with AccountType
 
   val values: List[AccountType] = List(Sole, Joint)
 
@@ -69,11 +69,11 @@ object JointAccountType extends Enumerable.Implicits {
   val name = "joint_account_type"
 
   case object HeldByClaimant
-    extends WithMessage("held_by_claimant", m => m("whatTypeOfAccount.options.jointHeldByClaimant"))
-    with JointAccountType
+      extends WithMessage("held_by_claimant", m => m("whatTypeOfAccount.options.jointHeldByClaimant"))
+      with JointAccountType
   case object NotHeldByClaimant
-    extends WithMessage("not_held_by_claimant", m => m("whatTypeOfAccount.options.jointNotHeldByClaimant"))
-    with JointAccountType
+      extends WithMessage("not_held_by_claimant", m => m("whatTypeOfAccount.options.jointNotHeldByClaimant"))
+      with JointAccountType
 
   val values: List[JointAccountType] = List(HeldByClaimant, NotHeldByClaimant)
 
