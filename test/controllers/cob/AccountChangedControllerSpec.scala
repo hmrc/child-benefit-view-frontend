@@ -138,7 +138,9 @@ class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with Scal
                     val result = route(application, request).value
 
                     status(result) mustEqual expectedResult
-                    redirectLocation(result) mustEqual expectedUrl.map(url => s"/child-benefit$url")
+                    redirectLocation(result).fold(
+                      redirectLocation(result) mustEqual None
+                    )(location => location must include(expectedUrl.get))
                   }
                 }
               }

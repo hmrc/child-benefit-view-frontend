@@ -19,7 +19,7 @@ package controllers.cob
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
-import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
+import models.cob.{NewAccountDetails, UpdateBankDetailsResponse, WhatTypeOfAccount}
 import models.requests.BaseDataRequest
 import models.viewmodels.govuk.summarylist._
 import models.{CBEnvelope, NormalMode, UserAnswers}
@@ -27,7 +27,7 @@ import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.cob.NewAccountDetailsPage
+import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, Call}
@@ -63,6 +63,8 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
   implicit val mockExecutionContext = mock[ExecutionContext]
   implicit val mockHeaderCarrier    = mock[HeaderCarrier]
   implicit val mockAuditService     = mock[AuditService]
+  implicit val mockMessages         = mock[Messages]
+  when(mockMessages("whatTypeOfAccount.options.sole")).thenReturn("Sole account")
 
   lazy val confirmNewAccountDetailsRoute: String =
     controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode).url
@@ -82,15 +84,16 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
     ): CBEnvelope[UpdateBankDetailsResponse] = CBEnvelope(UpdateBankDetailsResponse("submitted"))
   }
 
+  val typeOfAccount     = WhatTypeOfAccount.Sole
   val newAccountDetails = NewAccountDetails("John Doe", "123456", "11110000")
   def summaryList(messages: Messages) =
     SummaryListViewModel(
       Seq(
         SummaryListRowViewModel(
           key = Key(content = Text(messages("confirmNewAccountDetails.summary.accountType.label"))),
-          value = ValueViewModel(HtmlContent(HtmlFormat.escape("TEST"))),
+          value = ValueViewModel(HtmlContent(typeOfAccount.message())),
           actions = Seq(
-            ActionItemViewModel(Text(messages("site.change")), "/child-benefit/change-bank/change-new-account-details")
+            ActionItemViewModel(Text(messages("site.change")), "/child-benefit/change-bank/change-account-type")
               .withVisuallyHiddenText(messages("confirmNewAccountDetails.summary.accountType.change.hidden"))
           )
         ),
@@ -144,7 +147,11 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
           "THEN should return OK Result and the expected view" in {
             userLoggedInChildBenefitUser(NinoUser)
 
-            val userAnswers = UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).toOption
+            val userAnswers = UserAnswers(userAnswersId)
+              .set(WhatTypeOfAccountPage, typeOfAccount)
+              .get
+              .set(NewAccountDetailsPage, newAccountDetails)
+              .toOption
             val application = applicationBuilder(config, userAnswers = userAnswers)
               .overrides(
                 bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),

@@ -66,19 +66,12 @@ class WhatTypeOfAccountController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] = {
     (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
       implicit request =>
-        {
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors => {
-                Future.successful(BadRequest(view(formWithErrors, mode)))
-              },
-              value => {
-                println("Redirecting")
-                updateAnswersAndRedirect(mode, value)
-              }
-            )
-        }
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value => updateAnswersAndRedirect(mode, value)
+          )
     }
   }
 
