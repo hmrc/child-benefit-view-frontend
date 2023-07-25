@@ -162,8 +162,8 @@ whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.options.sole = Cyfrif unigol
 whatTypeOfAccount.options.joint = Cyfrif ar y cyd
-whatTypeOfAccount.options.jointHeldByClaimant = Rydych yn rhannu’r cyfrif â rhywun
-whatTypeOfAccount.options.jointNotHeldByClaimant = Nid chi yw deiliad y cyfrif
+whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.jointNotHeldByClaimant = nid chi yw deiliad y cyfrif
 whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
 whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
 

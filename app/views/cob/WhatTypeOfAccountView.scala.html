@@ -37,11 +37,11 @@
       legend = LegendViewModel("").withCssClass("hidden"),
       items = Seq(
         RadioItem(
-          content = Text(messages("whatTypeOfAccount.options.jointHeldByClaimant")),
+          content = Text(JointAccountType.HeldByClaimant.message),
           value = Some(JointAccountType.HeldByClaimant.toString),
         ),
         RadioItem(
-          content = Text(messages("whatTypeOfAccount.options.jointNotHeldByClaimant")),
+          content = Text(JointAccountType.NotHeldByClaimant.message),
           value = Some(JointAccountType.NotHeldByClaimant.toString),
         )
       )
@@ -71,12 +71,12 @@
         legend = LegendViewModel(messages("whatTypeOfAccount.heading")).asPageHeading(),
         items = Seq(
           RadioItem(
-            content = Text(messages("whatTypeOfAccount.options.sole")),
-            value = Some(WhatTypeOfAccount.Sole.toString),
+            content = Text(AccountType.Sole.message),
+            value = Some(AccountType.Sole.toString),
           ),
           RadioItem(
             content = Text(messages("whatTypeOfAccount.options.joint")),
-            value = Some("joint"),
+            value = Some(AccountType.Joint.toString),
             conditionalHtml = Some(inner)
           )
         )

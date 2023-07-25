@@ -19,8 +19,7 @@ package controllers.cob
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
-import models.cob.ConfirmNewAccountDetails.Yes
-import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankDetailsResponse}
+import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
 import models.requests.BaseDataRequest
 import models.viewmodels.govuk.summarylist._
 import models.{CBEnvelope, NormalMode, UserAnswers}
@@ -28,7 +27,7 @@ import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.cob.NewAccountDetailsPage
 import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.mvc.{AnyContent, Call}

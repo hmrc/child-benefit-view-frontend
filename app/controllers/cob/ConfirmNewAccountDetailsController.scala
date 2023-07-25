@@ -18,40 +18,31 @@ package controllers.cob
 
 import controllers.actions._
 import controllers.cob.ConfirmNewAccountDetailsController.buildSummaryRows
-import models.cob.NewAccountDetails
+import models.cob.{NewAccountDetails, WhatTypeOfAccount}
 import models.viewmodels.govuk.summarylist._
 import models.viewmodels.implicits._
 import models.{CheckMode, Mode, UserAnswers}
-import pages.cob.NewAccountDetailsPage
+import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.twirl.api.HtmlFormat
-import repositories.SessionRepository
-import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import utils.handlers.ErrorHandler
-import utils.navigation.Navigator
 import views.html.cob.ConfirmNewAccountDetailsView
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class ConfirmNewAccountDetailsController @Inject() (
     override val messagesApi: MessagesApi,
-    sessionRepository:        SessionRepository,
-    navigator:                Navigator,
     featureActions:           FeatureFlagComposedActions,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
-    changeOfBankService:      ChangeOfBankService,
     verifyBarNotLockedAction: VerifyBarNotLockedAction,
     verifyHICBCAction:        VerifyHICBCAction,
     val controllerComponents: MessagesControllerComponents,
-    view:                     ConfirmNewAccountDetailsView,
-    errorHandler:             ErrorHandler
-)(implicit ec:                ExecutionContext, auditService: AuditService)
+    view:                     ConfirmNewAccountDetailsView
+)
     extends FrontendBaseController
     with I18nSupport {
 
@@ -73,11 +64,11 @@ class ConfirmNewAccountDetailsController @Inject() (
 object ConfirmNewAccountDetailsController {
   def buildSummaryRows(userAnswers: UserAnswers)(implicit messages: Messages): List[SummaryListRow] = {
     val rows = List(
-      getAnswerSummary[NewAccountDetails](
-        userAnswers.get(NewAccountDetailsPage),
+      getAnswerSummary[WhatTypeOfAccount](
+        userAnswers.get(WhatTypeOfAccountPage),
         "accountType",
-        _ => "TEST",
-        routes.NewAccountDetailsController.onPageLoad(CheckMode)
+        a => a.message,
+        routes.WhatTypeOfAccountController.onPageLoad(CheckMode)
       ),
       getAnswerSummary[NewAccountDetails](
         userAnswers.get(NewAccountDetailsPage),
@@ -106,14 +97,14 @@ object ConfirmNewAccountDetailsController {
   }
 
   private def getAnswerSummary[A](
-      newAccountDetails: Option[A],
-      answerKey:         String,
-      getValue:          A => String,
-      changeCall:        Call
+    answers: Option[A],
+    answerKey:         String,
+    getValue:          A => String,
+    changeCall:        Call
   )(implicit
       messages: Messages
   ): Option[SummaryListRow] = {
-    newAccountDetails.map { answer =>
+    answers.map { answer =>
       SummaryListRowViewModel(
         key = s"confirmNewAccountDetails.summary.$answerKey.label",
         value = ValueViewModel(HtmlContent(HtmlFormat.escape(getValue(answer)))),
