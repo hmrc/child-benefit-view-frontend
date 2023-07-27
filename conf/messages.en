@@ -193,9 +193,10 @@ whatTypeOfAccount.title = What type of account is it?
 whatTypeOfAccount.heading = What type of account is it?
 whatTypeOfAccount.options.sole = Sole account
 whatTypeOfAccount.options.joint = Joint account
+whatTypeOfAccount.options.creditUnion = Credit union account
 whatTypeOfAccount.options.jointHeldByClaimant = you share with someone
 whatTypeOfAccount.options.jointNotHeldByClaimant = not held by you
-whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’ or ‘Joint account’ 
+whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’, ‘Joint account’ or ‘Credit union account’
 whatTypeOfAccount.error.jointTypeRequired = Select ‘you share with someone’ or ‘not held by you’ 
 
 # ---------- Account Not Changed Section --------
@@ -209,10 +210,12 @@ newAccountDetails.heading = What are the new account details?
 newAccountDetails.paragraph = If you change to an account in someone else’s name, you’re responsible for making sure you get the money and that it’s used how you want.
 newAccountDetails.warningHeldByClaimant = Enter the name of the other account holder in ‘Name on the account’.
 newAccountDetails.warningNotHeldByClaimant = Only enter the name of one of the account holders.
+newAccountDetails.warningCreditUnion = Enter your name, not the name of the credit union.
 newAccountDetails.newAccountHoldersName = Name on the account
 newAccountDetails.newAccountHoldersNameHint = Only enter the first and last name, and do not use initials or titles like Mr or Mrs
 newAccountDetails.jointHeldnewAccountHoldersNameHint = Enter the first and last name of the other account holder, and do not use initials or titles like Mr or Mrs
 newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Enter the first and last name of just one of the account holders, and do not use initials or titles like Mr or Mrs
+newAccountDetails.creditUnionAccountHoldersNameHint = Only enter your first and last name, and do not use initials or titles like Mr or Mrs
 newAccountDetails.newSortCode = Sort code
 newAccountDetails.newSortCodeHint = Must be 6 digits long
 newAccountDetails.newAccountNumber = Account number

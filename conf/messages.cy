@@ -162,9 +162,10 @@ whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.options.sole = Cyfrif unigol
 whatTypeOfAccount.options.joint = Cyfrif ar y cyd
+whatTypeOfAccount.options.creditUnion = Credit union account # TODO: SB-2032
 whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
 whatTypeOfAccount.options.jointNotHeldByClaimant = nid chi yw deiliad y cyfrif
-whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigol’ neu ‘Cyfrif ar y cyd’ # TODO: SB-2032
 whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
 
 # ---------- Account Not Changed Section --------
@@ -178,10 +179,12 @@ newAccountDetails.heading = Beth yw manylion y cyfrif newydd?
 newAccountDetails.paragraph = Os byddwch yn newid i gyfrif sydd yn enw rhywun arall, chi sy’n gyfrifol am sicrhau eich bod yn cael yr arian a bod yr arian yn cael ei ddefnyddio yn unol â’ch dymuniadau.
 newAccountDetails.warningHeldByClaimant = Nodwch enw deiliad arall y cyfrif yn y blwch ‘Enw sydd ar y cyfrif’.
 newAccountDetails.warningNotHeldByClaimant = Nodwch enw un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.warningCreditUnion = Enter your name, not the name of the credit union. # TODO: SB-2032
 newAccountDetails.newAccountHoldersName = Yr enw sydd ar y cyfrif
 newAccountDetails.newAccountHoldersNameHint = Nodwch yr enw cyntaf a’r cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
 newAccountDetails.jointHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw deiliad arall y cyfrif. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
 newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw un o ddeiliaid y cyfrif yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs
+newAccountDetails.creditUnionAccountHoldersNameHint = Nodwch yr enw cyntaf a’r cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
 newAccountDetails.newSortCode = Cod didoli
 newAccountDetails.newSortCodeHint = Mae’n rhaid i hyn fod yn 6 digid o hyd
 newAccountDetails.newAccountNumber = Rhif y cyfrif

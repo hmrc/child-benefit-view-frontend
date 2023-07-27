@@ -39,7 +39,11 @@ object WhatTypeOfAccount extends Enumerable.Implicits {
       )
       with WhatTypeOfAccount
 
-  val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant)
+  case object CreditUnion
+      extends WithMessage("credit_union", m => m("whatTypeOfAccount.options.creditUnion"))
+      with WhatTypeOfAccount
+
+  val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant, CreditUnion)
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
     Enumerable(values.map(v => v.toString -> v): _*)
@@ -54,8 +58,11 @@ object AccountType extends Enumerable.Implicits {
 
   case object Sole  extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with AccountType
   case object Joint extends WithMessage("joint", m => m("whatTypeOfAccount.options.joint")) with AccountType
+  case object CreditUnion
+      extends WithMessage("credit-union", m => m("whatTypeOfAccount.options.creditUnion"))
+      with AccountType
 
-  val values: List[AccountType] = List(Sole, Joint)
+  val values: List[AccountType] = List(Sole, Joint, CreditUnion)
 
   implicit val enumerable: Enumerable[AccountType] =
     Enumerable(values.map(v => v.toString -> v): _*)

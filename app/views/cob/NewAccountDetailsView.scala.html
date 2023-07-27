@@ -55,6 +55,10 @@
       @warningText(Html(messages("newAccountDetails.warningNotHeldByClaimant")))
     }
 
+    @if(accountType == WhatTypeOfAccount.CreditUnion) {
+      @warningText(Html(messages("newAccountDetails.warningCreditUnion")))
+    }
+
     @formHelper(action = controllers.cob.routes.NewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
         @if(form.errors.map(_.key).contains("bacsErrorTop")) {
             @paragraph(messages(form.errors.find(_.key.equals("bacsErrorTop")).map(_.message).get), "govuk-error-message", Some("bacsErrorTop"))
@@ -75,6 +79,8 @@
                     messages("newAccountDetails.jointHeldnewAccountHoldersNameHint")
                   case WhatTypeOfAccount.JointNotHeldByClaimant =>
                     messages("newAccountDetails.jointNotHeldnewAccountHoldersNameHint")
+                  case WhatTypeOfAccount.CreditUnion =>
+                    messages("newAccountDetails.creditUnionAccountHoldersNameHint")
                 }
               )
             )

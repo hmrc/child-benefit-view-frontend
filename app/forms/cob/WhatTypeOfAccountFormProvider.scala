@@ -44,6 +44,7 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
       {
         case (AccountType.Sole, _)          => true
         case (AccountType.Joint, jointType) => jointType.isDefined
+        case (AccountType.CreditUnion, _)   => true
       }
     )
 
@@ -57,7 +58,7 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
         WhatTypeOfAccount.JointHeldByClaimant
       case (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant)) =>
         WhatTypeOfAccount.JointNotHeldByClaimant
-      case (_, None) => WhatTypeOfAccount.Sole
+      case (AccountType.CreditUnion, _) => WhatTypeOfAccount.CreditUnion
     }
 
   private def unbind(whatAccountType: WhatTypeOfAccount): (AccountType, Option[JointAccountType]) =
@@ -67,6 +68,7 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
         (AccountType.Joint, Some(JointAccountType.HeldByClaimant))
       case WhatTypeOfAccount.JointNotHeldByClaimant =>
         (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant))
+      case WhatTypeOfAccount.CreditUnion => (AccountType.CreditUnion, None)
     }
 
 }
