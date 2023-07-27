@@ -78,8 +78,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       "must return OK and the correct view for a GET" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
-          .build()
+        val application = applicationBuilder(config, userAnswers = Some(userAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")

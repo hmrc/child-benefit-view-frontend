@@ -63,7 +63,7 @@ class WhatTypeOfAccountController @Inject() (
         Ok(view(preparedForm, mode))
     }
 
-  def onSubmit(mode: Mode): Action[AnyContent] =
+  def onSubmit(mode: Mode): Action[AnyContent] = {
     (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
       implicit request =>
         form
@@ -73,6 +73,7 @@ class WhatTypeOfAccountController @Inject() (
             value => updateAnswersAndRedirect(mode, value)
           )
     }
+  }
 
   private def updateAnswersAndRedirect(
       mode:           Mode,

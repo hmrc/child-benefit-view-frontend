@@ -16,17 +16,30 @@
 
 package models.cob
 
-import models.{Enumerable, WithName}
+import models.{Enumerable, WithMessage}
+import play.api.i18n.Messages
 
-sealed trait WhatTypeOfAccount
+sealed trait WhatTypeOfAccount {
+  def message()(implicit messages: Messages): String
+}
 
 object WhatTypeOfAccount extends Enumerable.Implicits {
 
-  case object Sole                   extends WithName("sole") with WhatTypeOfAccount
-  case object JointHeldByClaimant    extends WithName("joint_held_by_claimant") with WhatTypeOfAccount
-  case object JointNotHeldByClaimant extends WithName("joint_not_held_by_claimant") with WhatTypeOfAccount
+  case object Sole extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with WhatTypeOfAccount
+  case object JointHeldByClaimant
+      extends WithMessage(
+        "joint_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}"
+      )
+      with WhatTypeOfAccount
+  case object JointNotHeldByClaimant
+      extends WithMessage(
+        "joint_not_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointNotHeldByClaimant")}"
+      )
+      with WhatTypeOfAccount
 
-  val values = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant)
+  val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant)
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
     Enumerable(values.map(v => v.toString -> v): _*)
@@ -39,10 +52,10 @@ object AccountType extends Enumerable.Implicits {
 
   val name = "account_type"
 
-  case object Sole  extends WithName("sole") with AccountType
-  case object Joint extends WithName("joint") with AccountType
+  case object Sole  extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with AccountType
+  case object Joint extends WithMessage("joint", m => m("whatTypeOfAccount.options.joint")) with AccountType
 
-  val values = List(Sole, Joint)
+  val values: List[AccountType] = List(Sole, Joint)
 
   implicit val enumerable: Enumerable[AccountType] =
     Enumerable(values.map(v => v.toString -> v): _*)
@@ -55,10 +68,14 @@ object JointAccountType extends Enumerable.Implicits {
 
   val name = "joint_account_type"
 
-  case object HeldByClaimant    extends WithName("held_by_claimant") with JointAccountType
-  case object NotHeldByClaimant extends WithName("not_held_by_claimant") with JointAccountType
+  case object HeldByClaimant
+      extends WithMessage("held_by_claimant", m => m("whatTypeOfAccount.options.jointHeldByClaimant"))
+      with JointAccountType
+  case object NotHeldByClaimant
+      extends WithMessage("not_held_by_claimant", m => m("whatTypeOfAccount.options.jointNotHeldByClaimant"))
+      with JointAccountType
 
-  val values = List(HeldByClaimant, NotHeldByClaimant)
+  val values: List[JointAccountType] = List(HeldByClaimant, NotHeldByClaimant)
 
   implicit val enumerable: Enumerable[JointAccountType] =
     Enumerable(values.map(v => v.toString -> v): _*)
