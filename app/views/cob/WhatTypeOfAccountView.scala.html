@@ -72,12 +72,16 @@
         items = Seq(
           RadioItem(
             content = Text(AccountType.Sole.message),
-            value = Some(AccountType.Sole.toString),
+            value = Some(AccountType.Sole.toString)
           ),
           RadioItem(
             content = Text(messages("whatTypeOfAccount.options.joint")),
             value = Some(AccountType.Joint.toString),
             conditionalHtml = Some(inner)
+          ),
+          RadioItem(
+            content = Text(AccountType.CreditUnion.message),
+            value = Some(AccountType.CreditUnion.toString)
           )
         )
       )
