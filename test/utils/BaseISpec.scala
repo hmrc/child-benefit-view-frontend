@@ -82,8 +82,7 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
       .configure(
         config ++ Map(
           "microservice.services.auth.port"                      -> wiremockPort,
-          "microservice.services.child-benefit-entitlement.port" -> wiremockPort,
-          "play.http.router"                                     -> "prod.Routes"
+          "microservice.services.child-benefit-entitlement.port" -> wiremockPort
         )
       )
       .overrides(
