@@ -340,8 +340,8 @@ notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyffor
 # ----------  Confirm course duration ------------
 howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
 howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.p1 = Mae blwyddyn academaidd yn para hyd at 12 mis ac mae fel arfer yn dechrau ym mis Medi.
-howManyYears.p2 = Os oes un flwyddyn yn weddill ar gwrs sydd eisoes wedi dechrau, dewiswch ‘Un flwyddyn’.
+howManyYears.p1 = Fel arfer, mae blwyddyn academaidd yn dechrau ym mis Medi a bydd y rhan fwyaf o fyfyrwyr yn gorffen yn y mis Mai neu’r mis Mehefin canlynol.
+howManyYears.p2 = Os oes un flwyddyn yn weddill ar gwrs sydd eisoes wedi dechrau, dewiswch ‘1 flwyddyn’.
 howManyYears.oneyear = 1 flwyddyn
 howManyYears.twoyears = 2 flynedd
 howManyYears.other = Arall
