@@ -51,9 +51,9 @@ class AuditServiceSpec extends PlaySpec {
   protected val optionalDataRequest: OptionalDataRequest[_] =
     OptionalDataRequest(request, "123", NationalInsuranceNumber(testNino), None)
 
-  protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  protected implicit val hc: HeaderCarrier    = HeaderCarrier()
-  protected implicit val messages: Messages = mock[Messages]
+  protected implicit val ec:       ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+  protected implicit val hc:       HeaderCarrier    = HeaderCarrier()
+  protected implicit val messages: Messages         = mock[Messages]
 
   val entitlementDetails: Option[ClaimantEntitlementDetails] =
     Some(
