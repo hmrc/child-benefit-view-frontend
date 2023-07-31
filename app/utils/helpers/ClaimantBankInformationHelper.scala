@@ -16,14 +16,35 @@
 
 package utils.helpers
 
-import models.changeofbank.ClaimantBankInformation
+import models.changeofbank.{BankAccountNumber, ClaimantBankInformation, SortCode}
 import models.common.{FirstForename, Surname}
+import play.api.i18n.Messages
 import utils.helpers.StringHelper.toTitleCase
 
 object ClaimantBankInformationHelper {
+  val accountNumberTake = 4
+
   def formatClaimantBankInformation(information: ClaimantBankInformation): ClaimantBankInformation =
     information.copy(
       firstForename = FirstForename(toTitleCase(information.firstForename.value)),
       surname = Surname(toTitleCase(information.surname.value))
+    )
+
+  def formatBankAccountInformation(
+      information:     ClaimantBankInformation
+  )(implicit messages: Messages): ClaimantBankInformation =
+    information.copy(
+      financialDetails = information.financialDetails.copy(
+        bankAccountInformation = information.financialDetails.bankAccountInformation.copy(
+          sortCode = information.financialDetails.bankAccountInformation.sortCode
+            .map(s => SortCode(s.value.grouped(2).reduce((prev, next) => s"$prev-$next"))),
+          bankAccountNumber = information.financialDetails.bankAccountInformation.bankAccountNumber
+            .map(n =>
+              BankAccountNumber(
+                s"${messages("changeAccount.table.ending.in")} ${n.number.takeRight(accountNumberTake)}"
+              )
+            )
+        )
+      )
     )
 }

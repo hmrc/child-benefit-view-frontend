@@ -43,8 +43,8 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
 
     val accountInfo = ClaimantBankAccountInformation(
       accountHolderName = Some(AccountHolderName("Mr J Doe")),
-      sortCode = Some(SortCode("112233")),
-      bankAccountNumber = Some(BankAccountNumber("12345678")),
+      sortCode = Some(SortCode("11-22-33")),
+      bankAccountNumber = Some(BankAccountNumber("ending in 5678")),
       buildingSocietyRollNumber = None
     )
 

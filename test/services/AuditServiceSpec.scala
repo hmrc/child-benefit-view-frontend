@@ -27,6 +27,7 @@ import org.mockito.Mockito.{times, verify}
 import org.mockito.MockitoSugar.mock
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.play.PlaySpec
+import play.api.i18n.Messages
 import play.api.libs.json.Writes
 import play.api.mvc.{Headers, Request}
 import play.api.test.FakeRequest
@@ -52,6 +53,7 @@ class AuditServiceSpec extends PlaySpec {
 
   protected implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   protected implicit val hc: HeaderCarrier    = HeaderCarrier()
+  protected implicit val messages: Messages = mock[Messages]
 
   val entitlementDetails: Option[ClaimantEntitlementDetails] =
     Some(
@@ -151,14 +153,14 @@ class AuditServiceSpec extends PlaySpec {
         AccountHolderName("Mr J Doe")
       )
       capturedBankDetails.accountNumber mustBe Some(
-        BankAccountNumber("12345678")
+        BankAccountNumber(s"${messages("changeAccount.table.ending.in")} 5678")
       )
-      capturedBankDetails.sortCode mustBe Some(SortCode("112233"))
+      capturedBankDetails.sortCode mustBe Some(SortCode("11-22-33"))
       capturedBankDetails.buildingSocietyRollNumber mustBe None
 
       capturedViewDetails.accountHolderName mustBe "Mr J Doe"
-      capturedViewDetails.accountNumber mustBe "****5678"
-      capturedViewDetails.sortCode mustBe "**-**-33"
+      capturedViewDetails.accountNumber mustBe s"${messages("changeAccount.table.ending.in")} 5678"
+      capturedViewDetails.sortCode mustBe "11-22-33"
     }
   }
   "auditPaymentDetails" should {

@@ -46,12 +46,12 @@
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.sort.code"))),
-                value = Value(content = Text(formatSensitiveSort(accountDetails.sortCode.fold("Sort not found")(_.value)))),
+                value = Value(content = Text(accountDetails.sortCode.fold("Sort not found")(_.value))),
                 actions = None
             ),
             SummaryListRow(
                 key = Key(content = Text(messages("changeAccount.table.account.number"))),
-                value = Value(content = Text(formatSensitiveAccNumber(accountDetails.bankAccountNumber.fold("Account not found")(_.number)))),
+                value = Value(content = Text(accountDetails.bankAccountNumber.fold("Account not found")(_.number))),
                 actions = None
             )
         )

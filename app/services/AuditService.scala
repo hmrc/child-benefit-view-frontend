@@ -21,12 +21,13 @@ import models.changeofbank.ClaimantBankInformation
 import models.entitlement.ChildBenefitEntitlement
 import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
+import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
+import utils.helpers.ClaimantBankInformationHelper.formatBankAccountInformation
 import utils.helpers.StringHelper.toFtnaeChildNameTitleCase
-import views.ViewUtils.{formatSensitiveAccNumber, formatSensitiveSort}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -82,14 +83,11 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   }
 
   def auditChangeOfBankAccountDetails(
-      nino:                  String,
-      status:                String,
-      request:               OptionalDataRequest[_],
-      formattedClaimantInfo: ClaimantBankInformation
-  )(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext
-  ): Unit = {
+      nino:         String,
+      status:       String,
+      request:      OptionalDataRequest[_],
+      claimantInfo: ClaimantBankInformation
+  )(implicit hc:    HeaderCarrier, ec: ExecutionContext, messages: Messages): Unit = {
 
     val referrer = request.headers
       .get("referer") //MDTP header
@@ -98,16 +96,10 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
           .get("Referer") //common browser header
           .getOrElse("Referrer not found")
       )
-
-    val deviceFingerprint = DeviceFingerprint.deviceFingerprintFrom(request)
-
+    val formattedClaimantInfo = formatBankAccountInformation(claimantInfo)
+    val deviceFingerprint     = DeviceFingerprint.deviceFingerprintFrom(request)
     val claimantName: String = s"${formattedClaimantInfo.firstForename.value} ${formattedClaimantInfo.surname.value}"
-
-    val personalInformation = PersonalInformation(
-      claimantName,
-      formattedClaimantInfo.dateOfBirth,
-      nino
-    )
+    val personalInformation = PersonalInformation(claimantName, formattedClaimantInfo.dateOfBirth, nino)
 
     val bankDetails = BankDetails(
       formattedClaimantInfo.firstForename.value,
@@ -119,14 +111,12 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
     )
 
     val viewDetails = ViewDetails(
-      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName.fold(claimantName)(_.value),
-      formatSensitiveAccNumber(
-        formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber
-          .fold("Account not found")(_.number)
-      ),
-      formatSensitiveSort(
-        formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode.fold("Sort not found")(_.value)
-      )
+      formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName
+        .fold(claimantName)(_.value),
+      formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber
+        .fold("Account not found")(_.number),
+      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode
+        .fold("Sort not found")(_.value)
     )
 
     val payload = ChangeOfBankAccountDetailsModel(

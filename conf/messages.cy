@@ -144,6 +144,7 @@ changeAccount.notification.text = Ni allwn ddangos y cod didoli na rhif y cyfrif
 changeAccount.table.name = Yr enw sydd ar y cyfrif:
 changeAccount.table.sort.code = Cod didoli:
 changeAccount.table.account.number = Rhif y cyfrif:
+changeAccount.table.ending.in = yn diweddu yn
 changeAccount.button.1 = Yn eich blaen
 changeAccount.button.2 = Peidio â newid
 
