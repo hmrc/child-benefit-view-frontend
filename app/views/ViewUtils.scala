@@ -77,13 +77,4 @@ object ViewUtils {
       case EntitlementEndedButNoPaymentsInLastTwoYears        => "payment details - inactive - no payments"
     }
 
-  def formatSensitiveSort(raw: String): String = {
-    s"""**-**-${raw.filter(_.isDigit).substring(4)}"""
-  }
-
-  def formatSensitiveAccNumber(raw: String): String = {
-    val asterisks: String = (for (_ <- 1 to (raw.length - 4)) yield "*").mkString
-    s"""$asterisks${raw.takeRight(4)}"""
-  }
-
 }

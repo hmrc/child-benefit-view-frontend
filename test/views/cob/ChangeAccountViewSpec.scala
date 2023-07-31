@@ -28,7 +28,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
   val page: ChangeAccountView = inject[ChangeAccountView]
   val name: String            = "Cindy Boo"
   val details: ClaimantBankAccountInformation = ClaimantBankAccountInformation(
-    Some(AccountHolderName("Cindy")),
+    Some(AccountHolderName("w2saq1z ")),
     Some(SortCode("123456")),
     Some(BankAccountNumber("123456789")),
     Some(BuildingSocietyRollNumber("666666"))
@@ -54,7 +54,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     }
 
     "have a caption/section header" in {
-      view.getElementById("section-header").text() mustBe "Cindy Boo"
+      view.getElementById("section-header").text() mustBe name
     }
 
     "have a warning" in {
@@ -72,8 +72,8 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     }
     "have obscured details" when {
       "claimant has bank account" in {
-        view.getElementById("account-details-table").text must include("**-**-56")
-        view.getElementById("account-details-table").text must include("****6789")
+        view.getElementById("account-details-table").text must include(details.sortCode.get.value)
+        view.getElementById("account-details-table").text must include(details.bankAccountNumber.get.number)
       }
     }
 

@@ -175,6 +175,7 @@ changeAccount.notification.text = We’re unable to show the sort code and accou
 changeAccount.table.name = Name on the account:
 changeAccount.table.sort.code = Sort code:
 changeAccount.table.account.number = Account number:
+changeAccount.table.ending.in = ending in
 changeAccount.button.1 = Continue
 changeAccount.button.2 = Do not change
 
