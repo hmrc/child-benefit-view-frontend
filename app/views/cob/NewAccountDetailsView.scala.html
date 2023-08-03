@@ -47,7 +47,7 @@
       @warningText(Html(messages("newAccountDetails.warningHeldByClaimant")) )
     }
 
-    @if(form.errors.isEmpty && accountType != WhatTypeOfAccount.JointHeldByClaimant) {
+    @if(form.errors.isEmpty && accountType != WhatTypeOfAccount.JointHeldByClaimant && accountType != WhatTypeOfAccount.CreditUnion) {
       @paragraph(messages("newAccountDetails.paragraph"))
     }
 
