@@ -21,14 +21,14 @@ import forms.cob.NewAccountDetailsFormProvider
 
 import scala.concurrent.Future
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
-import models.cob.NewAccountDetails
-import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, PriorityBacsVerificationError}
+import models.cob.{NewAccountDetails, WhatTypeOfAccount}
+import models.errors._
 import play.api.mvc.{Request, Result}
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
 import models.requests.OptionalDataRequest
 import models.{Mode, UserAnswers}
-import pages.cob.NewAccountDetailsPage
+import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -69,22 +69,38 @@ class NewAccountDetailsController @Inject() (
             bindForm(value, None)
         }
 
-        Ok(view(preparedForm, mode))
+        getUserAccountType(request) match {
+          case Right(accountType) => Ok(view(preparedForm, mode, accountType))
+          case Left(err)          => errorHandler.handleError(err)
+        }
     }
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
     (featureActions.changeBankAction andThen verifyBarNotLockedAction andThen verifyHICBCAction andThen getData).async {
       implicit request =>
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors => {
-              Future.successful(BadRequest(view(formWithErrors, mode)))
-            },
-            value => validateBankSaveSessionAndRedirect(mode, value)
-          )
+        getUserAccountType(request) match {
+          case Right(accountType) =>
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors => {
+                  Future.successful(BadRequest(view(formWithErrors, mode, accountType)))
+                },
+                value => validateBankSaveSessionAndRedirect(mode, value)
+              )
+          case Left(err) =>
+            Future.successful(errorHandler.handleError(err))
+        }
     }
+
+  private def getUserAccountType(
+      request: OptionalDataRequest[AnyContent]
+  ): Either[CBError, WhatTypeOfAccount] = {
+    request.userAnswers
+      .flatMap(_.get(WhatTypeOfAccountPage))
+      .toRight(ChangeOfBankValidationError(BAD_REQUEST, message = "Missing account type"))
+  }
 
   private def validateBankSaveSessionAndRedirect(mode: Mode, value: NewAccountDetails)(implicit
       request:                                         OptionalDataRequest[AnyContent]
@@ -141,17 +157,21 @@ class NewAccountDetailsController @Inject() (
 
   private def bacsErrorBlock(value: NewAccountDetails, mode: Mode, error: CBError)(implicit
       request:                      OptionalDataRequest[AnyContent]
-  ) = {
-    Future.successful {
-      BadRequest(
-        view(
-          bindForm(value, Some(error.message)),
-          mode
-        )
-      )
+  ) =
+    getUserAccountType(request) match {
+      case Right(accountType) =>
+        Future.successful {
+          BadRequest(
+            view(
+              bindForm(value, Some(error.message)),
+              mode,
+              accountType
+            )
+          )
+        }
+      case Left(err) =>
+        Future.successful(errorHandler.handleError(err))
     }
-
-  }
 
   private def bindForm(value: NewAccountDetails, bacsError: Option[String])(implicit
       request:                OptionalDataRequest[AnyContent]

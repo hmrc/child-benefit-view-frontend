@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package forms.cob
+package models
 
-import models.cob.ConfirmNewAccountDetails
-import play.api.data.Form
-import utils.mappings.Mappings
+import play.api.i18n.Messages
 
-import javax.inject.Inject
-
-class ConfirmNewAccountDetailsFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[ConfirmNewAccountDetails] =
-    Form(
-      "value" -> enumerable[ConfirmNewAccountDetails]("confirmNewAccountDetails.error.required")
-    )
+class WithMessage(name: String, messageFactory: Messages => String) extends WithName(name) {
+  def message()(implicit messages: Messages): String = messageFactory(messages)
 }

@@ -17,7 +17,7 @@
 package utils
 
 import connectors.{ChildBenefitEntitlementConnector, DefaultChildBenefitEntitlementConnector}
-import controllers.actions.{DataRequiredAction, DataRequiredActionImpl, DataRetrievalAction, FakeDataRetrievalAction, FakeIdentifierAction, FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction, IdentifierAction, VerifyBarNotLockedAction, VerifyHICBCAction}
+import controllers.actions._
 import models.UserAnswers
 import org.jsoup.Jsoup
 import org.scalactic.source.Position
@@ -64,6 +64,7 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers)),
         bind[VerifyBarNotLockedAction].toInstance(FakeVerifyBarNotLockedAction(verify = true)),
         bind[VerifyHICBCAction].toInstance(FakeVerifyHICBCAction(verify = true)),
         entitlementConnector
@@ -88,6 +89,7 @@ class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
+        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers)),
         bind[VerifyBarNotLockedAction].toInstance(verifyBarNotLockedAction),
         bind[VerifyHICBCAction].toInstance(verifyHICBCAction),
         entitlementConnector

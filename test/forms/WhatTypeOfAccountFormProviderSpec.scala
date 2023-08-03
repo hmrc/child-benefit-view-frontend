@@ -17,23 +17,23 @@
 package forms
 
 import forms.behaviours.OptionFieldBehaviours
-import forms.cob.ConfirmNewAccountDetailsFormProvider
-import models.cob.ConfirmNewAccountDetails
+import forms.cob.WhatTypeOfAccountFormProvider
+import models.cob.{AccountType, JointAccountType}
 import play.api.data.FormError
 
-class ConfirmNewAccountDetailsFormProviderSpec extends OptionFieldBehaviours {
+class WhatTypeOfAccountFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ConfirmNewAccountDetailsFormProvider()()
+  val form = new WhatTypeOfAccountFormProvider()()
 
-  ".value" - {
+  ".accountType" - {
 
-    val fieldName   = "value"
-    val requiredKey = "confirmNewAccountDetails.error.required"
+    val fieldName   = AccountType.name
+    val requiredKey = "whatTypeOfAccount.error.accountTypeRequired"
 
-    behave like optionsField[ConfirmNewAccountDetails](
+    behave like optionsField[AccountType](
       form,
       fieldName,
-      validValues = ConfirmNewAccountDetails.values,
+      validValues = AccountType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 
@@ -43,4 +43,18 @@ class ConfirmNewAccountDetailsFormProviderSpec extends OptionFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  ".joint_account_type" - {
+
+    val fieldName = JointAccountType.name
+
+    behave like optionsField[JointAccountType](
+      form,
+      fieldName,
+      validValues = JointAccountType.values,
+      invalidError = FormError(fieldName, "error.invalid")
+    )
+
+  }
+
 }

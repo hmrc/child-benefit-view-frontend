@@ -144,6 +144,7 @@ changeAccount.notification.text = Ni allwn ddangos y cod didoli na rhif y cyfrif
 changeAccount.table.name = Yr enw sydd ar y cyfrif:
 changeAccount.table.sort.code = Cod didoli:
 changeAccount.table.account.number = Rhif y cyfrif:
+changeAccount.table.ending.in = yn diweddu yn
 changeAccount.button.1 = Yn eich blaen
 changeAccount.button.2 = Peidio â newid
 
@@ -157,6 +158,17 @@ accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau
 accountChanged.feedback = {0}.
 accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.options.sole = Cyfrif unigol
+whatTypeOfAccount.options.joint = Cyfrif ar y cyd
+whatTypeOfAccount.options.creditUnion = Cyfrif undeb credyd
+whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.jointNotHeldByClaimant = nid chi yw deiliad y cyfrif
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigolyn’, ‘Cyfrif ar y cyd’ neu ‘Cyfrif undeb credyd’
+whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
 accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
@@ -166,8 +178,14 @@ accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfr
 newAccountDetails.title = Beth yw manylion y cyfrif newydd?
 newAccountDetails.heading = Beth yw manylion y cyfrif newydd?
 newAccountDetails.paragraph = Os byddwch yn newid i gyfrif sydd yn enw rhywun arall, chi sy’n gyfrifol am sicrhau eich bod yn cael yr arian a bod yr arian yn cael ei ddefnyddio yn unol â’ch dymuniadau.
+newAccountDetails.warningHeldByClaimant = Nodwch enw deiliad arall y cyfrif yn y blwch ‘Enw sydd ar y cyfrif’.
+newAccountDetails.warningNotHeldByClaimant = Nodwch enw un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.warningCreditUnion = Nodwch eich enw, nid enw’r undeb credyd.
 newAccountDetails.newAccountHoldersName = Yr enw sydd ar y cyfrif
-newAccountDetails.newAccountHoldersNameHint = Nodwch enwau cyntaf ac olaf yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs. Os yw’r cyfrif yn gyfrif ar y cyd rydych yn ei rannu gyda rhywun, nodwch enwau’r person arall. Os yw’n gyfrif ar y cyd a ddelir gan bobl eraill, nodwch enwau un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.newAccountHoldersNameHint = Nodwch yr enw cyntaf a’r cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw deiliad arall y cyfrif. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw un o ddeiliaid y cyfrif yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs
+newAccountDetails.creditUnionAccountHoldersNameHint = Nodwch eich enw cyntaf a’ch cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
 newAccountDetails.newSortCode = Cod didoli
 newAccountDetails.newSortCodeHint = Mae’n rhaid i hyn fod yn 6 digid o hyd
 newAccountDetails.newAccountNumber = Rhif y cyfrif
@@ -198,14 +216,15 @@ bARSLockOut.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion 
 # ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
-confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.table.name = Yr enw sydd ar y cyfrif:
-confirmNewAccountDetails.table.sortCode = Cod didoli:
-confirmNewAccountDetails.table.accountNumber = Rhif y cyfrif:
-confirmNewAccountDetails.yes = Iawn
-confirmNewAccountDetails.no = Na, hoffwn eu newid
-confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
+confirmNewAccountDetails.p1 = Gwiriwch mai dyma’r manylion yr hoffech eu defnyddio, a dewiswch ‘Yn eich blaen’ i newid eich cyfrif.
+confirmNewAccountDetails.summary.accountType.label = Math o gyfrif
+confirmNewAccountDetails.summary.accountType.change.hidden = eich ateb i’r cwestiwn, ‘Pa fath o gyfrif yw hwn?‘
+confirmNewAccountDetails.summary.accountHoldersName.label = Yr enw sydd ar y cyfrif:
+confirmNewAccountDetails.summary.accountHoldersName.change.hidden = eich ateb i’r cwestiwn, ‘Yr enw sydd ar y cyfrif‘
+confirmNewAccountDetails.summary.sortCode.label = Cod didoli:
+confirmNewAccountDetails.summary.sortCode.change.hidden = eich ateb i’r cwestiwn, ‘Cod didoli‘
+confirmNewAccountDetails.summary.accountNumber.label = Rhif y cyfrif:
+confirmNewAccountDetails.summary.accountNumber.change.hidden = eich ateb i’r cwestiwn, ‘Rhif y cyfrif‘
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant

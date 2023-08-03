@@ -22,8 +22,10 @@ import models.cob.ConfirmNewAccountDetails.Yes
 import utils.pages._
 import models._
 import models.cob.ConfirmNewAccountDetails._
-import models.cob.NewAccountDetails
+import models.cob._
 import models.ftnae.HowManyYears
+import pages.cob._
+import pages.cob._
 import org.mockito.MockitoSugar.mock
 import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
@@ -50,6 +52,14 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ServiceUnavailableController.onPageLoad
       }
 
+      "must go from WhatTypeOfAccount to NewAccountDetailsPage page" in {
+        navigator.nextPage(
+          WhatTypeOfAccountPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      }
+
       "must go from NewAccountDetails to ConfirmNewAccountDetails page" in {
         navigator.nextPage(
           NewAccountDetailsPage,
@@ -68,14 +78,14 @@ class NavigatorSpec extends SpecBase {
         ) mustBe controllers.cob.routes.AccountChangedController.onPageLoad()
       }
 
-      "must go from ConfirmNewAccountDetails back to NewAccountDetails page when No is selected" in {
+      "must go from ConfirmNewAccountDetails back to WhatTypeOfAccount page when No is selected" in {
         navigator.nextPage(
           ConfirmNewAccountDetailsPage,
           NormalMode,
           UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
             .set(ConfirmNewAccountDetailsPage, No)
             .get
-        ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+        ) mustBe controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode)
       }
 
       val emptyUserAnswers = UserAnswers("id")
