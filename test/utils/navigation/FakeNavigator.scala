@@ -19,8 +19,9 @@ package utils.navigation
 import play.api.mvc.Call
 import utils.pages._
 import models.{Mode, UserAnswers}
+import uk.gov.hmrc.http.HeaderCarrier
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+class FakeNavigator(desiredRoute: Call)(implicit val mockHeaderCarrier: HeaderCarrier) extends Navigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
     desiredRoute

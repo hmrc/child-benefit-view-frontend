@@ -15,7 +15,7 @@ site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
 site.govuk = GOV.UK
-site.technicalProblemMessage = Is this page not working properly? (opens in new tab)
+site.technicalProblemMessage = Is this page not working properly?
 site.opensInNewTab = (opens in new tab)
 site.banner = A number of services will be unavailable from 12.00pm on Friday 23 June to 7.00am on Monday 26 June.
 site.bannerLinkText = Find out which services are affected
@@ -158,10 +158,6 @@ notFound.header = Page not found
 notFound.explanation1 = If you typed the web address, check it’s correct.
 notFound.explanation2 = If you pasted the web address, check you copied the entire address.
 
-# ---------- Dummy Flag Section -----------------
-dummyFlag.title = Dummy Flag
-dummyFlag.heading = This page will be removed
-
 # ---------- Page Not Found Section -------------
 pageNotFound.title = Page not found
 pageNotFound.heading = This page can’t be found
@@ -179,6 +175,7 @@ changeAccount.notification.text = We’re unable to show the sort code and accou
 changeAccount.table.name = Name on the account:
 changeAccount.table.sort.code = Sort code:
 changeAccount.table.account.number = Account number:
+changeAccount.table.ending.in = ending in
 changeAccount.button.1 = Continue
 changeAccount.button.2 = Do not change
 
@@ -192,6 +189,17 @@ accountChanged.paragraph.2 = We use feedback to make our services better.
 accountChanged.feedback = Please {0}.
 accountChanged.feedback.link.text = take the feedback survey
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = What type of account is it?
+whatTypeOfAccount.heading = What type of account is it?
+whatTypeOfAccount.options.sole = Sole account
+whatTypeOfAccount.options.joint = Joint account
+whatTypeOfAccount.options.creditUnion = Credit union account
+whatTypeOfAccount.options.jointHeldByClaimant = you share with someone
+whatTypeOfAccount.options.jointNotHeldByClaimant = not held by you
+whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’, ‘Joint account’ or ‘Credit union account’
+whatTypeOfAccount.error.jointTypeRequired = Select ‘you share with someone’ or ‘not held by you’ 
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = You have not changed your account
 accountNotChanged.heading = You have not changed your account
@@ -201,8 +209,14 @@ accountNotChanged.p1 = We’ll keep paying your Child Benefit into the same acco
 newAccountDetails.title = What are the new account details?
 newAccountDetails.heading = What are the new account details?
 newAccountDetails.paragraph = If you change to an account in someone else’s name, you’re responsible for making sure you get the money and that it’s used how you want.
+newAccountDetails.warningHeldByClaimant = Enter the name of the other account holder in ‘Name on the account’.
+newAccountDetails.warningNotHeldByClaimant = Only enter the name of one of the account holders.
+newAccountDetails.warningCreditUnion = Enter your name, not the name of the credit union.
 newAccountDetails.newAccountHoldersName = Name on the account
-newAccountDetails.newAccountHoldersNameHint = Only enter first and last names. Do not use initials or titles like Mr or Mrs. If it’s a joint account that you share with someone, enter the names of the other person. If it’s a joint account held by other people, enter the names of just one of the account holders.
+newAccountDetails.newAccountHoldersNameHint = Only enter the first and last name, and do not use initials or titles like Mr or Mrs
+newAccountDetails.jointHeldnewAccountHoldersNameHint = Enter the first and last name of the other account holder, and do not use initials or titles like Mr or Mrs
+newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Enter the first and last name of just one of the account holders, and do not use initials or titles like Mr or Mrs
+newAccountDetails.creditUnionAccountHoldersNameHint = Only enter your first and last name, and do not use initials or titles like Mr or Mrs
 newAccountDetails.newSortCode = Sort code
 newAccountDetails.newSortCodeHint = Must be 6 digits long
 newAccountDetails.newAccountNumber = Account number
@@ -233,14 +247,15 @@ bARSLockOut.link.text = use a different service to change the account details
 # ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Check and confirm your new account details
 confirmNewAccountDetails.heading = Check and confirm your new account details
-confirmNewAccountDetails.subHeading = Do you want to send us these details?
-confirmNewAccountDetails.table.name = Name on the account:
-confirmNewAccountDetails.table.sortCode = Sort code:
-confirmNewAccountDetails.table.accountNumber = Account number:
-confirmNewAccountDetails.yes = Yes
-confirmNewAccountDetails.no = No, I want to change them
-confirmNewAccountDetails.checkYourAnswersLabel = Do you want to send us these details?
-confirmNewAccountDetails.error.required = Select ‘Yes’ or ‘No, I want to change them’
+confirmNewAccountDetails.p1 = Check these are the details you want to send and select continue to change your account.
+confirmNewAccountDetails.summary.accountType.label = Account type:
+confirmNewAccountDetails.summary.accountType.change.hidden = your answer to the question, ‘What type of account is it?‘
+confirmNewAccountDetails.summary.accountHoldersName.label = Name on the account:
+confirmNewAccountDetails.summary.accountHoldersName.change.hidden = your answer to the question, ‘Name on the account‘
+confirmNewAccountDetails.summary.sortCode.label = Sort code:
+confirmNewAccountDetails.summary.sortCode.change.hidden = your answer to the question, ‘Sort code‘
+confirmNewAccountDetails.summary.accountNumber.label = Account number:
+confirmNewAccountDetails.summary.accountNumber.change.hidden = your answer to the question, ‘Account number‘
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = You cannot use this service because you do not receive Child Benefit payments
@@ -260,8 +275,7 @@ cannotVerifyAccount.link.text = use another service to change the account for yo
 # ----------  Cannot find Young Person ------------
 cannotFindYoungPerson.title = You cannot use this service to tell the Child Benefit office about the young person
 cannotFindYoungPerson.heading = You cannot use this service to tell the Child Benefit office about the young person
-cannotFindYoungPerson.p1 = This might be because
-cannotFindYoungPerson.bulletPoint1 = we’ve not yet sent a request for you to tell us about their education — this will be sent by 10 July
+cannotFindYoungPerson.p1 = This might be because:
 cannotFindYoungPerson.bulletPoint2 = they’re under 16 — we’ll contact you when you should tell us if they’re staying in full-time non-advanced education
 cannotFindYoungPerson.bulletPoint3 = they’re over 19, so you’re no longer eligible for continued Child Benefit
 cannotFindYoungPerson.bulletPoint4 = they’ll be 18 or older on 1 September 2023 — if so, {0}
@@ -319,7 +333,6 @@ whichYoungPerson.change.hidden = your answer to the question, ‘Who do you want
 whyYoungPersonNotListed.title = Why the young person is not listed
 whyYoungPersonNotListed.heading = Why the young person is not listed
 whyYoungPersonNotListed.p1 = This might be because:
-whyYoungPersonNotListed.bulletPoint5 = we’ve not yet sent a request for you to tell us about their education — this will be sent by 10 July
 whyYoungPersonNotListed.bulletPoint1 = they’re under 16, so you’re not yet eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint2 = they’re over 19, so you’re no longer eligible for continued Child Benefit
 whyYoungPersonNotListed.bulletPoint3 = they’ll be 18 or older on 1 September 2023 — if so, {0}
@@ -376,7 +389,8 @@ notEntitled.p2.linkText = tell us that the young person is staying in approved t
 # ----------  Confirm course duration ------------
 howManyYears.title = How many academic years will the course last?
 howManyYears.heading = How many academic years will the course last?
-howManyYears.p1 = An academic year lasts up to 12 months and usually starts in September.
+howManyYears.p1 = An academic year usually starts in September and most students finish in the following May or June.
+howManyYears.p2 = If there’s 1 year left on a course that’s already started, select ‘1 year’.
 howManyYears.oneyear = 1 year
 howManyYears.twoyears = 2 years
 howManyYears.other = Other
@@ -410,6 +424,7 @@ checkYourAnswers.title = Check your answers before sending them
 checkYourAnswers.heading = Check your answers before sending them
 checkYourAnswers.h2 = Now send your answers
 checkYourAnswers.warning = The information must be correct to the best of your knowledge.
+checkYourAnswers.qypChanged = You changed who you’re telling us about, check your other answers.
 checkYourAnswers.submit = Send
 
 # ----------  Payments Extended ------------

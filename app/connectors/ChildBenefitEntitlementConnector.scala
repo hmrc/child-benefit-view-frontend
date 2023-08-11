@@ -23,8 +23,8 @@ import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBErrorResponse, ConnectorError}
-import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import utils.logging.RequestLogger
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -40,8 +40,9 @@ trait ChildBenefitEntitlementConnector {
 @Singleton
 class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
     extends ChildBenefitEntitlementConnector
-    with HttpReadsWrapper[CBErrorResponse]
-    with Logging {
+    with HttpReadsWrapper[CBErrorResponse] {
+
+  private val logger = new RequestLogger(this.getClass)
 
   val logMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Entitlement: code=$code message=$message"

@@ -23,11 +23,11 @@ import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBacsVerificationError}
-import play.api.Logging
 import play.api.http.Status
 import play.api.libs.json.{JsSuccess, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import utils.logging.RequestLogger
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -35,8 +35,9 @@ import scala.util.matching.Regex
 
 @Singleton
 class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
-    extends HttpReadsWrapper[CBErrorResponse]
-    with Logging {
+    extends HttpReadsWrapper[CBErrorResponse] {
+
+  private val logger = new RequestLogger(this.getClass)
 
   private val claimantInfoLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Child Benefit Change Of Bank User Info: code=$code message=$message"

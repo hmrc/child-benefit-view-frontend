@@ -27,6 +27,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.SchoolOrCollegeView
@@ -40,6 +41,8 @@ class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
 
   val formProvider = new SchoolOrCollegeFormProvider()
   val form         = formProvider()
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val schoolOrCollegeRoute = controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode).url
 

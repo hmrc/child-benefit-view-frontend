@@ -9,7 +9,7 @@ site.yes = Iawn
 site.continue = Yn eich blaen
 site.signIn = Mewngofnodi
 site.govuk = GOV.UK
-site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn? (yn agor mewn tab newydd)
+site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn?
 site.opensInNewTab = (yn agor tab newydd)
 site.banner = Ni fydd nifer o wasanaethau ar gael o 12:00 prynhawn dydd Gwener, 23 Mehefin, tan 07:00 bore dydd Llun, 26 Mehefin.
 site.bannerLinkText = Dysgwch pa wasanaethau a fydd yn cael eu heffeithio
@@ -130,8 +130,6 @@ notFound.header = Heb ddod o hyd i’r dudalen
 notFound.explanation1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 notFound.explanation2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 
-# ---------- Dummy Flag Section -----------------
-
 # ---------- Page Not Found Section -------------
 
 # ---------- Change Account Section -------------
@@ -146,6 +144,7 @@ changeAccount.notification.text = Ni allwn ddangos y cod didoli na rhif y cyfrif
 changeAccount.table.name = Yr enw sydd ar y cyfrif:
 changeAccount.table.sort.code = Cod didoli:
 changeAccount.table.account.number = Rhif y cyfrif:
+changeAccount.table.ending.in = yn diweddu yn
 changeAccount.button.1 = Yn eich blaen
 changeAccount.button.2 = Peidio â newid
 
@@ -159,6 +158,17 @@ accountChanged.paragraph.2 = Rydym yn defnyddio adborth i wella ein gwasanaethau
 accountChanged.feedback = {0}.
 accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 
+# ---------- Type Of Bank Account Section -------
+whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
+whatTypeOfAccount.options.sole = Cyfrif unigol
+whatTypeOfAccount.options.joint = Cyfrif ar y cyd
+whatTypeOfAccount.options.creditUnion = Cyfrif undeb credyd
+whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
+whatTypeOfAccount.options.jointNotHeldByClaimant = nid chi yw deiliad y cyfrif
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigolyn’, ‘Cyfrif ar y cyd’ neu ‘Cyfrif undeb credyd’
+whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
+
 # ---------- Account Not Changed Section --------
 accountNotChanged.title = Nid ydych wedi newid eich cyfrif
 accountNotChanged.heading = Nid ydych wedi newid eich cyfrif
@@ -168,8 +178,14 @@ accountNotChanged.p1 = Byddwn yn parhau i dalu’ch Budd-dal Plant i’r un cyfr
 newAccountDetails.title = Beth yw manylion y cyfrif newydd?
 newAccountDetails.heading = Beth yw manylion y cyfrif newydd?
 newAccountDetails.paragraph = Os byddwch yn newid i gyfrif sydd yn enw rhywun arall, chi sy’n gyfrifol am sicrhau eich bod yn cael yr arian a bod yr arian yn cael ei ddefnyddio yn unol â’ch dymuniadau.
+newAccountDetails.warningHeldByClaimant = Nodwch enw deiliad arall y cyfrif yn y blwch ‘Enw sydd ar y cyfrif’.
+newAccountDetails.warningNotHeldByClaimant = Nodwch enw un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.warningCreditUnion = Nodwch eich enw, nid enw’r undeb credyd.
 newAccountDetails.newAccountHoldersName = Yr enw sydd ar y cyfrif
-newAccountDetails.newAccountHoldersNameHint = Nodwch enwau cyntaf ac olaf yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs. Os yw’r cyfrif yn gyfrif ar y cyd rydych yn ei rannu gyda rhywun, nodwch enwau’r person arall. Os yw’n gyfrif ar y cyd a ddelir gan bobl eraill, nodwch enwau un o ddeiliaid y cyfrif yn unig.
+newAccountDetails.newAccountHoldersNameHint = Nodwch yr enw cyntaf a’r cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw deiliad arall y cyfrif. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
+newAccountDetails.jointNotHeldnewAccountHoldersNameHint = Nodwch enw cyntaf a chyfenw un o ddeiliaid y cyfrif yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau megis Mr neu Mrs
+newAccountDetails.creditUnionAccountHoldersNameHint = Nodwch eich enw cyntaf a’ch cyfenw yn unig. Peidiwch â defnyddio llythrennau cyntaf na theitlau, megis Mr neu Mrs
 newAccountDetails.newSortCode = Cod didoli
 newAccountDetails.newSortCodeHint = Mae’n rhaid i hyn fod yn 6 digid o hyd
 newAccountDetails.newAccountNumber = Rhif y cyfrif
@@ -200,14 +216,15 @@ bARSLockOut.link.text = ddefnyddio gwasanaeth gwahanol er mwyn newid y manylion 
 # ---------- Confirm Details Section ------------
 confirmNewAccountDetails.title = Gwirio a chadarnhau manylion eich cyfrif newydd
 confirmNewAccountDetails.heading = Gwirio a chadarnhau manylion eich cyfrif newydd
-confirmNewAccountDetails.subHeading = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.table.name = Yr enw sydd ar y cyfrif:
-confirmNewAccountDetails.table.sortCode = Cod didoli:
-confirmNewAccountDetails.table.accountNumber = Rhif y cyfrif:
-confirmNewAccountDetails.yes = Iawn
-confirmNewAccountDetails.no = Na, hoffwn eu newid
-confirmNewAccountDetails.checkYourAnswersLabel = A ydych am anfon y manylion hyn atom?
-confirmNewAccountDetails.error.required = Dewiswch ‘Iawn’ neu ‘Na, hoffwn eu newid’
+confirmNewAccountDetails.p1 = Gwiriwch mai dyma’r manylion yr hoffech eu defnyddio, a dewiswch ‘Yn eich blaen’ i newid eich cyfrif.
+confirmNewAccountDetails.summary.accountType.label = Math o gyfrif:
+confirmNewAccountDetails.summary.accountType.change.hidden = eich ateb i’r cwestiwn, ‘Pa fath o gyfrif yw hwn?‘
+confirmNewAccountDetails.summary.accountHoldersName.label = Yr enw sydd ar y cyfrif:
+confirmNewAccountDetails.summary.accountHoldersName.change.hidden = eich ateb i’r cwestiwn, ‘Yr enw sydd ar y cyfrif‘
+confirmNewAccountDetails.summary.sortCode.label = Cod didoli:
+confirmNewAccountDetails.summary.sortCode.change.hidden = eich ateb i’r cwestiwn, ‘Cod didoli‘
+confirmNewAccountDetails.summary.accountNumber.label = Rhif y cyfrif:
+confirmNewAccountDetails.summary.accountNumber.change.hidden = eich ateb i’r cwestiwn, ‘Rhif y cyfrif‘
 
 # ---------- HICBC Opted Out Section ------------
 hICBCOptedOutPayments.title = Ni allwch ddefnyddio’r gwasanaeth hwn oherwydd nad ydych chi’n cael taliadau Budd-dal Plant
@@ -227,8 +244,7 @@ cannotVerifyAccount.link.text = ddefnyddio gwasanaeth arall i newid y cyfrif ar 
 # ----------  Cannot find Young Person --------¬----
 cannotFindYoungPerson.title = Ni allwch ddefnyddio’r gwasanaeth hwn i roi gwybod i’r swyddfa Budd-dal Plant am y person ifanc hwn
 cannotFindYoungPerson.heading = Ni allwch ddefnyddio’r gwasanaeth hwn i roi gwybod i’r swyddfa Budd-dal Plant am y person ifanc hwn
-cannotFindYoungPerson.p1 = Gall hyn fod oherwydd
-cannotFindYoungPerson.bulletPoint1 = nid ydym wedi anfon cais atoch yn gofyn i chi roi gwybod i ni am addysg y person ifanc eto – bydd hwn yn cael ei anfon erbyn 10 Gorffennaf
+cannotFindYoungPerson.p1 = Gall hyn fod oherwydd:
 cannotFindYoungPerson.bulletPoint2 = mae’r person ifanc o dan 16 oed – byddwn yn cysylltu â chi pan ddylech roi gwybod i ni os bydd y person ifanc yn parhau ag addysg amser llawn nad yw’n addysg uwch
 cannotFindYoungPerson.bulletPoint3 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
 cannotFindYoungPerson.bulletPoint4 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
@@ -287,7 +303,6 @@ extendPayments.govuk.link = https://www.gov.uk/government/publications/child-ben
 whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.heading = Pam nad yw’r person ifanc wedi’i restru
 whyYoungPersonNotListed.p1 = Gall hyn fod oherwydd y rhesymau canlynol:
-whyYoungPersonNotListed.bulletPoint5 = nid ydym wedi anfon cais atoch yn gofyn i chi roi gwybod i ni am addysg y person ifanc eto – bydd hwn yn cael ei anfon erbyn 10 Gorffennaf
 whyYoungPersonNotListed.bulletPoint1 = mae’r person ifanc o dan 16 oed, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus eto
 whyYoungPersonNotListed.bulletPoint2 = mae’r person ifanc yn hŷn na 19, felly nid ydych yn gymwys i gael Budd-dal Plant parhaus mwyach
 whyYoungPersonNotListed.bulletPoint3 = bydd y person ifanc yn 18 neu’n hŷn ar 1 Medi 2023 – os felly, {0}
@@ -344,7 +359,8 @@ notEntitled.p2.linkText = roi gwybod i ni fod y person ifanc yn parhau â hyffor
 # ----------  Confirm course duration ------------
 howManyYears.title = Am sawl blwyddyn academaidd fydd y cwrs yn para?
 howManyYears.heading = Am sawl blwyddyn academaidd fydd y cwrs yn para?
-howManyYears.p1 = Mae blwyddyn academaidd yn para hyd at 12 mis ac mae fel arfer yn dechrau ym mis Medi.
+howManyYears.p1 = Fel arfer, mae blwyddyn academaidd yn dechrau ym mis Medi a bydd y rhan fwyaf o fyfyrwyr yn gorffen yn y mis Mai neu’r mis Mehefin canlynol.
+howManyYears.p2 = Os oes un flwyddyn yn weddill ar gwrs sydd eisoes wedi dechrau, dewiswch ‘1 flwyddyn’.
 howManyYears.oneyear = 1 flwyddyn
 howManyYears.twoyears = 2 flynedd
 howManyYears.other = Arall
@@ -378,6 +394,7 @@ checkYourAnswers.title = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.heading = Gwiriwch eich atebion cyn eu hanfon
 checkYourAnswers.h2 = Anfonwch eich atebion nawr
 checkYourAnswers.warning = Mae’n rhaid bod yr wybodaeth hon yn gywir, hyd eithaf eich gwybodaeth.
+checkYourAnswers.qypChanged = Rydych wedi newid pwy rydych yn rhoi gwybod i ni amdano, gwiriwch eich atebion eraill.
 checkYourAnswers.submit = Anfon
 
 # ----------  Payments Extended ------------

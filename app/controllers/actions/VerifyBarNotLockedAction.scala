@@ -19,7 +19,7 @@ package controllers.actions
 import connectors.ChangeOfBankConnector
 import models.requests.IdentifierRequest
 import play.api.mvc.ActionFilter
-import play.api.Logging
+
 import play.api.mvc.{Result}
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,8 +36,7 @@ class VerifyBarNotLockedActionImpl @Inject() (
     errorHandler:                ErrorHandler,
     auditService:                AuditService
 )(implicit val executionContext: ExecutionContext)
-    extends VerifyBarNotLockedAction
-    with Logging {
+    extends VerifyBarNotLockedAction {
 
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
     {

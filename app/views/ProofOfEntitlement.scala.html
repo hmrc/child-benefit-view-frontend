@@ -44,8 +44,9 @@
                         )}
 
 @layout(pageTitle = titleNoForm(messages("proofOfEntitlement.title")),
-            dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
-            showBackLink = true) {
+        dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
+        showBackLink = false
+) {
 
     @heading(messages("proofOfEntitlement.title"), caption = Some(entitlement.claimant.name.value))
 

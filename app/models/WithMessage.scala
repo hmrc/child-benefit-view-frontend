@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package models
 
-@this(
-    layout: templates.LayoutProvider,
-    heading: Heading
-)
+import play.api.i18n.Messages
 
-@()(implicit request: Request[_], messages: Messages)
-
-@layout(
-    pageTitle = titleNoForm(messages("dummyFlag.title")),
-    timeout   = false
-) {
-    @heading(messages("dummyFlag.heading"))
+class WithMessage(name: String, messageFactory: Messages => String) extends WithName(name) {
+  def message()(implicit messages: Messages): String = messageFactory(messages)
 }

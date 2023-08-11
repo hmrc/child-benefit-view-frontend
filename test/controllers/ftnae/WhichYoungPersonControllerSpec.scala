@@ -19,8 +19,9 @@ package controllers.ftnae
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import org.mockito.Mockito.when
+import org.mockito.ArgumentCaptor
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.inject.bind
@@ -30,6 +31,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
@@ -43,11 +45,13 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val whichYoungPersonRoute = controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(CheckMode).url
+  def whichYoungPersonRoute(mode: Mode) = controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(mode).url
 
   val formProvider             = new WhichYoungPersonFormProvider()
   val form                     = formProvider()
   lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def arrangeRadioButtons(
       ftnaeResponseUserAnswer:   FtnaeResponse
@@ -104,7 +108,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       userLoggedInChildBenefitUser(NinoUser)
 
       running(application) {
-        val request = FakeRequest(GET, whichYoungPersonRoute)
+        val request = FakeRequest(GET, whichYoungPersonRoute(NormalMode))
           .withSession("authToken" -> "Bearer 123")
 
         val result = route(application, request).value
@@ -114,7 +118,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form, CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
+          view(form, NormalMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
             request,
             messages(application)
           ).toString
@@ -138,7 +142,8 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
       when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
 
       running(application) {
-        val request = FakeRequest(GET, whichYoungPersonRoute).withFormUrlEncodedBody(("value", "First Name Surname"))
+        val request =
+          FakeRequest(GET, whichYoungPersonRoute(NormalMode)).withFormUrlEncodedBody(("value", "First Name Surname"))
 
         val view = application.injector.instanceOf[WhichYoungPersonView]
 
@@ -147,7 +152,7 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(form.fill("First Name Surname"), CheckMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
+          view(form.fill("First Name Surname"), NormalMode, arrangeRadioButtons(ftnaeResponse), ftnaeResponse)(
             request,
             messages(application)
           ).toString
@@ -177,13 +182,75 @@ class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with Ft
 
       running(application) {
         val request =
-          FakeRequest(POST, whichYoungPersonRoute)
+          FakeRequest(POST, whichYoungPersonRoute(NormalMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual onwardRoute.url
+      }
+    }
+
+    "must set name changed in user answers if in check mode" in {
+      val mockSessionRepository = mock[SessionRepository]
+      val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhichYoungPersonPage, "First Name Surname")
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .success
+        .value
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.set(captor.capture())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whichYoungPersonRoute(CheckMode))
+            .withFormUrlEncodedBody(("value", "A Different Name"))
+
+        await(route(application, request).value)
+
+        captor.getValue().nameChangedDuringCheck mustEqual true
+      }
+    }
+
+    "must not set name changed in user answers if in check mode but name not changed" in {
+      val mockSessionRepository = mock[SessionRepository]
+      val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(WhichYoungPersonPage, "First Name Surname")
+        .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
+        .success
+        .value
+
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.set(captor.capture())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, whichYoungPersonRoute(CheckMode))
+            .withFormUrlEncodedBody(("value", "First Name Surname"))
+
+        await(route(application, request).value)
+
+        captor.getValue().nameChangedDuringCheck mustEqual false
       }
     }
 

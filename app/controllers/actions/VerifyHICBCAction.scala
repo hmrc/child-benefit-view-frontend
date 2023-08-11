@@ -19,11 +19,9 @@ package controllers.actions
 import models.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.requests.IdentifierRequest
-import play.api.Logging
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionFilter, Result}
-import services.AuditService
-import services.ChangeOfBankService
+import services.{AuditService, ChangeOfBankService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.handlers.ErrorHandler
@@ -40,8 +38,7 @@ class VerifyHICBCActionImpl @Inject() (
     errorHandler:                ErrorHandler,
     auditService:                AuditService
 )(implicit val executionContext: ExecutionContext)
-    extends VerifyHICBCAction
-    with Logging {
+    extends VerifyHICBCAction {
 
   private val HICBCAdjustmentCode = "28"
 

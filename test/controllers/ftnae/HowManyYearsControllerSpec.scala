@@ -28,6 +28,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.HowManyYearsView
@@ -42,6 +43,8 @@ class HowManyYearsControllerSpec extends CBSpecBase with MockitoSugar {
 
   val formProvider = new HowManyYearsFormProvider()
   val form         = formProvider()
+
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   "HowManyYears Controller" - {
 

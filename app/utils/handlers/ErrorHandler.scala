@@ -17,8 +17,7 @@
 package utils.handlers
 
 import controllers.cob
-import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtnaeChildUserAnswersNotRetrieved, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError, PaymentHistoryValidationError}
-import play.api.Logging
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtnaeCannotFindYoungPersonError, FtnaeChildUserAnswersNotRetrieved, FtnaeNoCHBAccountError, PaymentHistoryValidationError}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
@@ -27,6 +26,7 @@ import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import utils.logging.RequestLogger
 import views.html.{ErrorTemplate, NotFoundView}
 
 import javax.inject.{Inject, Singleton}
@@ -38,8 +38,9 @@ class ErrorHandler @Inject() (
     notFoundView:    NotFoundView,
     error:           ErrorTemplate
 ) extends FrontendErrorHandler
-    with I18nSupport
-    with Logging {
+    with I18nSupport {
+
+  private val logger = new RequestLogger(this.getClass)
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()
@@ -74,7 +75,7 @@ class ErrorHandler @Inject() (
         logger.error(logMessage(s"payment history validation error: $message", Some(code)))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case FtnaeNoCHBAccountError =>
-        logger.error(
+        logger.warn(
           logMessage(
             s"Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
             Some(FtnaeNoCHBAccountError.statusCode)
@@ -82,7 +83,7 @@ class ErrorHandler @Inject() (
         )
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case FtnaeCannotFindYoungPersonError =>
-        logger.error(
+        logger.warn(
           logMessage(
             s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}",
             Some(FtnaeCannotFindYoungPersonError.statusCode)

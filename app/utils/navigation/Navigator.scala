@@ -36,16 +36,16 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import models.cob.ConfirmNewAccountDetails.{No, Yes}
-import models.ftnae.{HowManyYears}
+import models.ftnae.HowManyYears
 import utils.pages._
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage, WhatTypeOfAccountPage}
 import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
-import play.api.Logging
 
 @Singleton
-class Navigator @Inject() () extends Logging {
+class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
+    case WhatTypeOfAccountPage            => _ => controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
     case NewAccountDetailsPage            => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
     case ConfirmNewAccountDetailsPage     => userAnswers => confirmAccountDetails(userAnswers)
     case WhichYoungPersonPage             => userAnswers => navigateWhichYoungPerson(userAnswers)
@@ -57,13 +57,14 @@ class Navigator @Inject() () extends Logging {
     case LiveWithYouInUKPage              => userAnswers => navigateLiveWithYouIntheUK(userAnswers)
     case _ @page =>
       _ => {
-        logger.warn(s"reached state where page: $page is not implemented in Navigator.normalRoutes decision flow")
         controllers.routes.ServiceUnavailableController.onPageLoad
       }
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
-    case _ => _ => controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
+    case WhatTypeOfAccountPage => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode)
+    case NewAccountDetailsPage => _ => controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode)
+    case _                     => _ => controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = {
@@ -125,7 +126,7 @@ class Navigator @Inject() () extends Logging {
   private def confirmAccountDetails(userAnswers: UserAnswers): Call =
     userAnswers.get(ConfirmNewAccountDetailsPage) match {
       case Some(Yes) => controllers.cob.routes.AccountChangedController.onPageLoad()
-      case Some(No)  => controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      case Some(No)  => controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode)
       case _         => controllers.routes.JourneyRecoveryController.onPageLoad()
     }
 }

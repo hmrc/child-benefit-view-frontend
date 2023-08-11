@@ -22,48 +22,24 @@
     layout: templates.LayoutProvider,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
-    summaryList: GovukSummaryList,
+    govukSummaryList: GovukSummaryList,
+    buttonLink: ButtonLink,
     heading: Heading,
-    h2: HeadingH2
+    h2: HeadingH2,
+    para: ParagraphBody
 )
 
-@(form: Form[_], mode: Mode, claimantName:String, accountHolder: String,
-accountSortCode: String,
-accountNumber: String)(implicit request: Request[_], messages: Messages)
+@(mode: Mode, list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 
-@layout(pageTitle = title(form, messages("confirmNewAccountDetails.title")), removePhoneNumbersAsHyperlinks = true) {
-    @if(form.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
-    }
+@layout(pageTitle = titleNoForm(messages("confirmNewAccountDetails.title")), removePhoneNumbersAsHyperlinks = true) {
+    @heading(messages("confirmNewAccountDetails.heading"))
 
-    @heading(messages("confirmNewAccountDetails.heading"), caption = Some(claimantName))
+    @para(messages("confirmNewAccountDetails.p1"))
 
-    @summaryList(
-    SummaryList(
-    rows = Seq(
-            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.name"))), value = Value(HtmlContent(accountHolder))),
-            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.sortCode"))), value = Value(HtmlContent(accountSortCode))),
-            SummaryListRow(key = Key(HtmlContent(messages("confirmNewAccountDetails.table.accountNumber"))), value = Value(HtmlContent(accountNumber)))
-        ),
-        classes = "govuk-!-margin-bottom-9",
-        attributes = Map("id" -> "account-details-list")
-    ))
+    @govukSummaryList(list)
 
-    @formHelper(action = controllers.cob.routes.ConfirmNewAccountDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
-
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(messages("confirmNewAccountDetails.subHeading")).asPageHeading(LegendSize.Medium),
-                items  = ConfirmNewAccountDetails.options
-            )
-        )
-
-        @govukButton(
-            ButtonViewModel(messages("site.continue"))
-        )
-    }
+    <div class="govuk-button-group">
+        @buttonLink("continue-button", "site.continue", controllers.cob.routes.AccountChangedController.onPageLoad())
+    </div>
 }

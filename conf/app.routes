@@ -20,6 +20,4 @@ GET         /service-down                                controllers.ServiceUnav
 GET         /view-proof-entitlement                      controllers.ProofOfEntitlementController.view
 GET         /view-payment-history                        controllers.PaymentHistoryController.view
 
-GET         /dummy-flag                                  controllers.DummyFlagController.onPageLoad
-
 GET         /hidden                                      controllers.HiddenController.hidden

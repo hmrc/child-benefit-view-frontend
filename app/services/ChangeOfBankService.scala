@@ -31,7 +31,7 @@ import play.api.mvc.{AnyContent, Request, Result}
 import repositories.SessionRepository
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.helpers.ClaimantBankInformationHelper.formatClaimantBankInformation
+import utils.helpers.ClaimantBankInformationHelper.{formatBankAccountInformation, formatClaimantBankInformation}
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
@@ -76,13 +76,14 @@ class ChangeOfBankService @Inject() (
   ): CBEnvelope[Result] = {
     for {
       claimantInfo     <- retrieveBankClaimantInfo
-      childBenefitPage <- validateToChangeOfBankPage(claimantInfo, view)
+      viewClaimantInfo <- CBEnvelope(formatBankAccountInformation(claimantInfo))
+      childBenefitPage <- validateToChangeOfBankPage(viewClaimantInfo, view)
     } yield {
       auditService.auditChangeOfBankAccountDetails(
         request.nino.nino,
         "Successful",
         request,
-        claimantInfo
+        viewClaimantInfo
       )
       childBenefitPage
     }

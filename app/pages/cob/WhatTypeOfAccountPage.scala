@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package forms.cob
+package pages.cob
 
-import models.cob.ConfirmNewAccountDetails
-import play.api.data.Form
-import utils.mappings.Mappings
+import models.cob.WhatTypeOfAccount
+import play.api.libs.json.JsPath
+import utils.pages.QuestionPage
 
-import javax.inject.Inject
+case object WhatTypeOfAccountPage extends QuestionPage[WhatTypeOfAccount] {
 
-class ConfirmNewAccountDetailsFormProvider @Inject() extends Mappings {
+  override def path: JsPath = JsPath \ toString
 
-  def apply(): Form[ConfirmNewAccountDetails] =
-    Form(
-      "value" -> enumerable[ConfirmNewAccountDetails]("confirmNewAccountDetails.error.required")
-    )
+  override def toString: String = "whatTypeOfAccount"
+
 }

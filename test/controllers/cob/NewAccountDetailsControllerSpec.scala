@@ -18,12 +18,12 @@ package controllers.cob
 
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import forms.cob.NewAccountDetailsFormProvider
-import models.cob.NewAccountDetails
+import models.cob.{NewAccountDetails, WhatTypeOfAccount}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.cob.NewAccountDetailsPage
+import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import repositories.SessionRepository
 import testconfig.TestConfig
 import testconfig.TestConfig._
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
@@ -50,12 +51,22 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
   val formProvider = new NewAccountDetailsFormProvider()
   val form         = formProvider()
 
+  implicit lazy val hc: HeaderCarrier = HeaderCarrier()
+
   lazy val newAccountDetailsRoute = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
   val newAccountDetails           = NewAccountDetails("name", "123456", "11110000")
+  val accountType: WhatTypeOfAccount = WhatTypeOfAccount.Sole
   val userAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
-      NewAccountDetailsPage.toString -> Json.toJsObject(newAccountDetails)
+      NewAccountDetailsPage.toString -> Json.toJsObject(newAccountDetails),
+      WhatTypeOfAccountPage.toString -> Json.toJson(accountType)
+    )
+  )
+  val userAnswersNoAccountDetails = UserAnswers(
+    userAnswersId,
+    Json.obj(
+      WhatTypeOfAccountPage.toString -> Json.toJson(accountType)
     )
   )
 
@@ -80,7 +91,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
 
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
-            view(form, NormalMode)(request, messages(application)).toString
+            view(form.fill(newAccountDetails), NormalMode, accountType)(request, messages(application)).toString
           )
         }
       }
@@ -116,7 +127,8 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
                     "newAccountNumber"      -> newAccountDetails.newAccountNumber
                   )
                 ),
-              NormalMode
+              NormalMode,
+              accountType
             )(
               request,
               messages(application)
@@ -202,7 +214,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
           status(result) mustEqual BAD_REQUEST
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
-            view(expectedBoundForm, NormalMode)(request, messages(application)).toString
+            view(expectedBoundForm, NormalMode, accountType)(request, messages(application)).toString
           )
         }
       }
@@ -248,7 +260,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       "must return a Bad Request and errors when invalid data is submitted" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =
@@ -266,7 +278,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
 
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
-            view(boundForm, NormalMode)(request, messages(application)).toString
+            view(boundForm, NormalMode, accountType)(request, messages(application)).toString
           )
         }
       }
@@ -274,7 +286,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       "must return OK for a GET if no existing data is found" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = None).build()
+        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
@@ -288,7 +300,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       "must return BAD_REQUEST for a POST if no existing data is found" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = None).build()
+        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =
