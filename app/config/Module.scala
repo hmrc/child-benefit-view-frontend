@@ -34,10 +34,14 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
+import play.api.{Configuration, Environment}
+import views.html.templates.{LayoutProvider, NewLayoutProvider, OldLayoutProvider}
 
 import java.time.{Clock, ZoneOffset}
 
-class Module extends AbstractModule {
+class Module(environment: Environment, config: Configuration) extends AbstractModule {
+
+  val scaWrapperEnabled: Boolean = config.getOptional[Boolean]("features.sca-wrapper-enabled").getOrElse(false)
 
   override def configure(): Unit = {
 
@@ -51,5 +55,11 @@ class Module extends AbstractModule {
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
     bind(classOf[VerifyBarNotLockedAction]).to(classOf[VerifyBarNotLockedActionImpl]).asEagerSingleton()
     bind(classOf[VerifyHICBCAction]).to(classOf[VerifyHICBCActionImpl]).asEagerSingleton()
+    if (scaWrapperEnabled) {
+      bind(classOf[LayoutProvider]).to(classOf[NewLayoutProvider]).asEagerSingleton()
+    } else {
+      bind(classOf[LayoutProvider]).to(classOf[OldLayoutProvider]).asEagerSingleton()
+    }
+
   }
 }

@@ -19,3 +19,5 @@ GET         /service-down                                controllers.ServiceUnav
 
 GET         /view-proof-entitlement                      controllers.ProofOfEntitlementController.view
 GET         /view-payment-history                        controllers.PaymentHistoryController.view
+
+GET         /hidden                                      controllers.HiddenController.hidden

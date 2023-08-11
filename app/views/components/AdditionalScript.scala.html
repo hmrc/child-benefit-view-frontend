@@ -14,20 +14,9 @@
  * limitations under the License.
  *@
 
-@import components._
+@this()
+@()(implicit request: RequestHeader)
 
-@this(
-        layout: templates.LayoutProvider,
-        govukButton: GovukButton,
-        heading: Heading,
-        para: ParagraphBody
-)
+<script src='@controllers.routes.Assets.versioned("javascripts/dataLayer.js")'></script>
 
-@()(implicit request: Request[_], messages: Messages)
-
-@layout(pageTitle = titleNoForm(messages("accountNotChanged.title"))) {
-
-    @heading(messages("accountNotChanged.heading"))
-    @para(messages("accountNotChanged.p1"))
-
-}
+  <script src="https://cdn.optimizely.com/js/8461600066.js"></script>
