@@ -161,7 +161,7 @@ accountChanged.feedback.link.text = Cwblhewch yr arolwg adborth
 # ---------- Type Of Bank Account Section -------
 whatTypeOfAccount.title = Pa fath o gyfrif yw hwn?
 whatTypeOfAccount.heading = Pa fath o gyfrif yw hwn?
-whatTypeOfAccount.options.sole = Cyfrif unigol
+whatTypeOfAccount.options.sole = Cyfrif unigolyn
 whatTypeOfAccount.options.joint = Cyfrif ar y cyd
 whatTypeOfAccount.options.creditUnion = Cyfrif undeb credyd
 whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
