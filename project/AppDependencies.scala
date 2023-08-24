@@ -3,7 +3,7 @@ import sbt._
 object AppDependencies {
   import play.core.PlayVersion
 
-  val HMRCMongoPlayVersion = "1.3.0"
+  val HMRCMongoPlayVersion    = "1.3.0"
   val HMRCBoostrapPlayVersion = "7.19.0"
 
   val compile: Seq[ModuleID] = Seq(
@@ -13,7 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % HMRCBoostrapPlayVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % HMRCMongoPlayVersion,
     "org.typelevel"     %% "cats-core"                     % "2.9.0",
-    "uk.gov.hmrc"       %% "sca-wrapper"                   % "1.0.37"
+    "uk.gov.hmrc"       %% "sca-wrapper"                   % "1.0.42"
   )
 
   val test: Seq[ModuleID] = Seq(
