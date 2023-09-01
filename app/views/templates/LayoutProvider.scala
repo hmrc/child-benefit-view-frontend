@@ -88,7 +88,7 @@ class NewLayoutProvider @Inject() (
       styleSheets = stylesheets.toSeq :+ headBlock(),
       fullWidth = false,
       bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
-      showSignOutInHeader = true,
+      showSignOutInHeader = false,
       hideMenuBar = false
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
