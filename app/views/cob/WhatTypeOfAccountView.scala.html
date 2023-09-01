@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import models.cob.{ WhatTypeOfAccount, AccountType, JointAccountType }
 @import components._
+@import models.cob.{AccountType, JointAccountType}
 
 @this(
-    layout: templates.Layout,
+    layout: templates.NewLayoutProvider,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
