@@ -18,7 +18,7 @@ package generators
 
 import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
-import models.common.{AddressLine, AddressPostcode, FirstForename, NationalInsuranceNumber, Surname}
+import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
 import models.entitlement._
 import models.ftnae.HowManyYears
 import org.scalacheck.Arbitrary.arbitrary
@@ -139,15 +139,6 @@ trait ModelGenerators {
     Arbitrary {
       None
     }
-  implicit lazy val arbitraryNationalInsuranceNumber: Arbitrary[NationalInsuranceNumber] =
-    Arbitrary {
-      arbitrary[String].map(NationalInsuranceNumber(_))
-    }
-
-  implicit lazy val arbitraryNinoSuffix: Arbitrary[NinoSuffix] =
-    Arbitrary {
-      arbitrary[String].map(NinoSuffix(_))
-    }
 
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
@@ -163,10 +154,7 @@ trait ModelGenerators {
         fullName,
         dateOfBirth,
         relationshipStartDate,
-        relationshipEndDate,
-        nationalInsuranceNumber,
-        ninoSuffix,
-        crnIndicator
+        relationshipEndDate
       )
     }
 

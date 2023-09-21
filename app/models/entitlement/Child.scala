@@ -16,7 +16,6 @@
 
 package models.entitlement
 
-import models.common.NationalInsuranceNumber
 import play.api.libs.json.{Format, Json}
 
 import java.time.LocalDate
@@ -25,26 +24,8 @@ final case class Child(
     name:                  FullName,
     dateOfBirth:           LocalDate,
     relationshipStartDate: LocalDate,
-    relationshipEndDate:   Option[LocalDate],
-    ninoWithoutSuffix:     Option[NationalInsuranceNumber],
-    ninoSuffix:            Option[NinoSuffix],
-    crnIndicator:          Option[Int]
-) {
-  def shouldShowNino: Boolean = {
-    val today      = LocalDate.now()
-    val ageLimit   = today.minusYears(15).minusMonths(9)
-    val ageReached = dateOfBirth.isBefore(ageLimit) || dateOfBirth.isEqual(ageLimit)
-
-    ageReached && ninoWithoutSuffix.nonEmpty
-  }
-
-  def crnIndicatorAsBoolean: Option[Boolean] = {
-    crnIndicator.flatMap {
-      case 0 => Some(false)
-      case 1 => Some(true)
-    }
-  }
-}
+    relationshipEndDate:   Option[LocalDate]
+)
 
 object Child {
   implicit val format: Format[Child] = Json.format[Child]

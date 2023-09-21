@@ -67,7 +67,6 @@ proofOfEntitlement.dateOfBirth = Dyddiad geni
 proofOfEntitlement.viewpayments = Bwrw golwg dros eich taliadau Budd-dal Plant
 proofOfEntitlement.viewrecentpayments.link = Bwrw golwg dros fanylion hyd at 5 o’ch taliadau diweddaraf.
 proofOfEntitlement.printMessage = Argraffu’r dudalen hon
-proofOfEntitlement.nino = Rhif Yswiriant Gwladol
 
 # ---------- Payment History Section ------------
 paymentHistory.pageTitle = Hanes taliadau Budd-dal Plant - Budd-dal Plant - GOV.UK

@@ -78,9 +78,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 
-  val showYoungPersonsNinoInEntitlement: Boolean =
-    configuration.getOptional[Boolean]("features.showYoungPersonsNinoInEntitlement").getOrElse(false)
-
   val confidenceLevel: ConfidenceLevel =
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
