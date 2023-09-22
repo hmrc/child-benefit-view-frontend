@@ -147,8 +147,6 @@ trait ModelGenerators {
         dateOfBirth             <- arbitrary[LocalDate]
         relationshipStartDate   <- arbitrary[LocalDate]
         relationshipEndDate     <- arbitrary[Option[LocalDate]]
-        nationalInsuranceNumber <- arbitrary[Option[NationalInsuranceNumber]]
-        ninoSuffix              <- arbitrary[Option[NinoSuffix]]
         crnIndicator            <- arbitrary[Option[Int]]
       } yield Child(
         fullName,
