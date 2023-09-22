@@ -27,7 +27,6 @@ import java.time.LocalDate
 
 class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-
   val childJson =
     """{
       | "dateOfBirth": "2021-01-01",
