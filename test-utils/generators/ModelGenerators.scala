@@ -143,11 +143,11 @@ trait ModelGenerators {
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
       for {
-        fullName                <- arbitrary[FullName]
-        dateOfBirth             <- arbitrary[LocalDate]
-        relationshipStartDate   <- arbitrary[LocalDate]
-        relationshipEndDate     <- arbitrary[Option[LocalDate]]
-        crnIndicator            <- arbitrary[Option[Int]]
+        fullName              <- arbitrary[FullName]
+        dateOfBirth           <- arbitrary[LocalDate]
+        relationshipStartDate <- arbitrary[LocalDate]
+        relationshipEndDate   <- arbitrary[Option[LocalDate]]
+        crnIndicator          <- arbitrary[Option[Int]]
       } yield Child(
         fullName,
         dateOfBirth,
