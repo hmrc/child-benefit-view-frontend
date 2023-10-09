@@ -61,7 +61,7 @@ class AuthenticatedIdentifierAction @Inject() (
           logger.debug("user is authorised: executing action block")
           block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
         case _ =>
-          logger.warn("user could not be authorised: redirecting")
+          logger.debug("user could not be authorised: redirecting")
           Future successful Redirect(
             controllers.routes.UnauthorisedController.onPageLoad
           )
