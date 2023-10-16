@@ -95,7 +95,6 @@ proofOfEntitlement.dateOfBirth = Date of birth
 proofOfEntitlement.viewpayments = View your Child Benefit payments
 proofOfEntitlement.viewrecentpayments.link = View details of up to 5 of your most recent payments.
 proofOfEntitlement.printMessage = Print this page
-proofOfEntitlement.nino = National Insurance number
 
 # ---------- Payment History Section ------------
 paymentHistory.pageTitle = Child Benefit payment history - Child Benefit - GOV.UK

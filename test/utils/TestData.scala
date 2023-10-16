@@ -83,10 +83,7 @@ object TestData {
         FullName("Full Name"),
         dateOfBirth = LocalDate.of(2012, 1, 1),
         relationshipStartDate = LocalDate.of(2013, 1, 1),
-        relationshipEndDate = Some(LocalDate.of(2016, 1, 1)),
-        None,
-        None,
-        None
+        relationshipEndDate = Some(LocalDate.of(2016, 1, 1))
       )
     )
   )

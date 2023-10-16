@@ -18,7 +18,6 @@
 @import controllers.ProofOfEntitlementController._
 @import models.entitlement.ChildBenefitEntitlement
 @import viewmodels.govuk.DataLayer
-@import views.components.ChildDetailsViewPicker
 
 @this(  layout: templates.LayoutProvider,
         summaryList: GovukSummaryList,
@@ -27,8 +26,7 @@
         para: ParagraphBody,
         link: Link,
         list: BulletList,
-        printLink: PrintLink,
-        childDetailsView: ChildDetailsViewPicker
+        printLink: PrintLink
 )
 
 @(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
@@ -79,7 +77,19 @@
     )
     <!--details per child-->
     @for(child <- entitlement.children) {
-        @childDetailsView(child)
+        @if(child.relationshipStartDate.isBefore(child.relationshipEndDate.get)) {
+            @h2(messages("proofOfEntitlement.awardDetail", child.name.value))
+            @summaryList(
+                SummaryList(
+                    rows = Seq(
+                        SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.dateOfBirth"))), value = Value(HtmlContent(formatEntitlementDate(child.dateOfBirth)))),
+                        SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.startdate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipStartDate, checkForSpecialAwardStartDate = true)))),
+                        SummaryListRow(key = Key(HtmlContent(messages("proofOfEntitlement.enddate"))), value = Value(HtmlContent(formatEntitlementDate(child.relationshipEndDate.get))))
+                    ),
+                    classes = "govuk-!-margin-bottom-9"
+                )
+            )
+        }
     }
 
     @h2(messages("proofOfEntitlement.viewpayments"), extraClasses = Seq("govuk-!-display-none-print"))
