@@ -61,9 +61,9 @@
 }
 
 
-@layout(pageTitle = titleNoForm(messages("paymentsExtended.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("paymentsExtended.title", childName)), showBackLink = false) {
 
-    @panel(messages("paymentsExtended.heading"))
+    @panel(s"${messages("paymentsExtended.heading")}</br>$childName")
     @h2(messages("paymentsExtended.whatHappensNext.h2"))
     @para(messages("paymentsExtended.p1", childName, courseDuration.toMessage))
     @para(messages("paymentsExtended.changeOfCircumstances", changeOfCircumstancesLink))
