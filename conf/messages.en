@@ -427,8 +427,8 @@ checkYourAnswers.qypChanged = You changed who you’re telling us about, check y
 checkYourAnswers.submit = Send
 
 # ----------  Payments Extended ------------
-paymentsExtended.title = Your Child Benefit payments have been extended
-paymentsExtended.heading = Your Child Benefit payments have been extended
+paymentsExtended.title = HMRC has extended your Child Benefit for {0}
+paymentsExtended.heading = HMRC has extended your Child Benefit for
 paymentsExtended.whatHappensNext.h2 = What happens next
 paymentsExtended.p1 = The Child Benefit payments for {0} will now be paid while they stay in full-time non-advanced education. You’ll receive the payments for {1}.
 paymentsExtended.changeOfCircumstances = You must {0}.

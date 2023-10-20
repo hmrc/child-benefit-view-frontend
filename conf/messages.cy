@@ -397,8 +397,8 @@ checkYourAnswers.qypChanged = Rydych wedi newid pwy rydych yn rhoi gwybod i ni a
 checkYourAnswers.submit = Anfon
 
 # ----------  Payments Extended ------------
-paymentsExtended.title = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
-paymentsExtended.heading = Mae’ch taliadau Budd-dal Plant wedi cael eu hymestyn
+paymentsExtended.title = Mae CThEF wedi ymestyn eich Budd-dal Plant ar gyfer {0}
+paymentsExtended.heading = Mae CThEF wedi ymestyn eich Budd-dal Plant ar gyfer
 paymentsExtended.whatHappensNext.h2 = Yr hyn sy’n digwydd nesaf
 paymentsExtended.p1 = Bydd y taliadau Budd-dal Plant ar gyfer {0} yn cael eu talu tra bo’r plentyn hwnnw’n parhau ag addysg amser llawn nad yw’n addysg uwch. Byddwch yn cael y taliadau hyn am {1}.
 paymentsExtended.changeOfCircumstances = Mae’n rhaid i chi {0}.
