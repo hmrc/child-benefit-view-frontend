@@ -58,7 +58,7 @@ class ChangeAccountViewSpec extends ViewSpecBase {
     }
 
     "have a warning" in {
-      view.getElementById("warning-text").text() must include(messages("changeAccount.warning"))
+      view.getElementsByClass("govuk-warning-text").text() must include(messages("changeAccount.warning"))
     }
 
     "have a secondary heading" when {
