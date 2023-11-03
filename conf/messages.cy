@@ -13,6 +13,8 @@ site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn?
 site.opensInNewTab = (yn agor tab newydd)
 site.banner = Ni fydd nifer o wasanaethau ar gael o 12:00 prynhawn dydd Gwener, 23 Mehefin, tan 07:00 bore dydd Llun, 26 Mehefin.
 site.bannerLinkText = Dysgwch pa wasanaethau a fydd yn cael eu heffeithio
+site.error = Gwall
+site.warning = Rhybudd:
 
 # ---------- Date Section -----------------------
 
