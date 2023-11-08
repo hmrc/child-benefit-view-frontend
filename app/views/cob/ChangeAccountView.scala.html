@@ -27,7 +27,8 @@
         govukSummaryList: GovukSummaryList,
         link: Link,
         buttonLink: ButtonLink,
-        note: Notification
+        note: Notification,
+        warningText: Warning
 )
 
 @(claimantName: String, accountDetails: ClaimantBankAccountInformation)(implicit request: Request[_], messages: Messages)
@@ -85,13 +86,7 @@
 
     @para(messages("changeAccount.paragraph.1"))
 
-    <div class="govuk-warning-text" id="warning-text">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">Warning</span>
-            @messages("changeAccount.warning")
-        </strong>
-    </div>
+    @warningText(Html(messages("changeAccount.warning")))
 
     @para(messages("changeAccount.paragraph.2", formLink))
 
