@@ -55,7 +55,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionImpl @Inject() (
           .get(request.userId)
           .map(maybeData =>
             maybeData.fold[Either[Result, FtnaePaymentsExtendedPageDataRequest[A]]](
-              Left(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              Left(Redirect(routes.ServiceUnavailableController.onPageLoad.url))
             )(data => Right(FtnaePaymentsExtendedPageDataRequest(request.request, request.userId, request.nino, data)))
           )
 

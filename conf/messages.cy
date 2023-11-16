@@ -1,8 +1,6 @@
-label.back.link=Yn ôl
-
 service.name = Budd-dal Plant
 
-# ---------- Site Section -----------------------
+# ---------- Site Section -----------------------SS
 site.change = Newid
 site.no = Na
 site.yes = Iawn
@@ -16,7 +14,14 @@ site.bannerLinkText = Dysgwch pa wasanaethau a fydd yn cael eu heffeithio
 site.error = Gwall
 site.warning = Rhybudd:
 
+# ---------- Label Section -----------------------
+label.back.link = Yn ôl
+
+
 # ---------- Date Section -----------------------
+date.day = Diwrnod
+date.month = Mis
+date.year = Blwyddyn
 
 # ---------- Timeout Section --------------------
 timeout.title = Rydych ar fin cael eich allgofnodi

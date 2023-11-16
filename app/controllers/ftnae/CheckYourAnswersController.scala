@@ -28,6 +28,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.helpers.FtnaeControllerHelper
 import views.html.ftnae.CheckYourAnswersView
 
@@ -71,7 +72,8 @@ class CheckYourAnswersController @Inject() (
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
       {
 
-        val summaryRows = buildSummaryRows(request)
+//        val summaryRows = buildSummaryRows(request)
+        val summaryRows: Option[List[SummaryListRow]] = None
 
         firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
           case Right(()) =>

@@ -1,8 +1,4 @@
-label.back.link=Back
-
 service.name = Child Benefit
-appName = "sca-apply-chb-frontend"
-sca-apply-chb-frontend = Apply CHB Frontend
 
 # ---------- Site Section -----------------------
 site.back = Back
@@ -22,6 +18,9 @@ site.bannerLinkText = Find out which services are affected
 site.error = Error
 site.warning = Warning:
 
+# ---------- Label Section -----------------------
+label.back.link = Back
+
 # ---------- Date Section -----------------------
 date.day = Day
 date.month = Month
@@ -35,19 +34,6 @@ timeout.signOut = Sign out
 
 # ---------- Error Section ----------------------
 error.browser.title.prefix = Error:
-error.boolean = Please give an answer
-error.invalid_date = Give a correct date
-error.date.day_blank = Enter a day
-error.date.day_invalid = Give a correct day using numbers 1 to 31
-error.date.month_blank = Enter a month
-error.date.month_invalid = Give a correct month using numbers 1 to 12
-error.date.year_blank = Enter a year
-error.date.year_invalid = Give a correct year
-error.integer = Give an answer in whole numbers
-error.non_numeric = Give a value using only numbers
-error.number = Please enter a valid number
-error.required = Please enter a value
-error.summary.title = There is a problem
 
 # ---------- Journey Recovery Section -----------
 journeyRecovery.continue.title = Sorry, there is a problem with the service
