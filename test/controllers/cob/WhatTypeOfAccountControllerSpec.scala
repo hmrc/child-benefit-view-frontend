@@ -177,7 +177,6 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           when(mockSessionRepository.get(userAnswersId))
             .thenReturn(Future.successful(Some(userAnswers)))
 
-          // TODO figure out a better way of mocking this ugh
           when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
             .thenReturn(Future.successful(true))
 
@@ -250,7 +249,6 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           when(mockSessionRepository.get(userAnswersId))
             .thenReturn(Future.successful(Some(userAnswers)))
 
-          // TODO figure out a better way of mocking this ugh
           when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
             .thenReturn(Future.successful(true))
 
