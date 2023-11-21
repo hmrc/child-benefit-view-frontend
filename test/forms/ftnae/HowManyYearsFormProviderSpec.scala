@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
 import forms.behaviours.OptionFieldBehaviours
-import forms.ftnae.WhichYoungPersonFormProvider
+import models.ftnae.HowManyYears
 import play.api.data.FormError
 
-class WhichYoungPersonFormProviderSpec extends OptionFieldBehaviours {
+class HowManyYearsFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new WhichYoungPersonFormProvider()()
+  val form = new HowManyYearsFormProvider()()
 
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "whichYoungPerson.error.required"
+    val requiredKey = "howManyYears.error.required"
+
+    behave like optionsField[HowManyYears](
+      form,
+      fieldName,
+      validValues = HowManyYears.values,
+      invalidError = FormError(fieldName, "error.invalid")
+    )
 
     behave like mandatoryField(
       form,

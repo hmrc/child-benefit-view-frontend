@@ -14,33 +14,24 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
-import forms.behaviours.BooleanFieldBehaviours
-import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
+import forms.behaviours.OptionFieldBehaviours
 import play.api.data.FormError
 
-class WillCourseBeEmployerProvidedFormProviderSpec extends BooleanFieldBehaviours {
+class WhichYoungPersonFormProviderSpec extends OptionFieldBehaviours {
 
-  val requiredKey = "willCourseBeEmployerProvided.error.required"
-  val invalidKey  = "error.boolean"
-
-  val form = new WillCourseBeEmployerProvidedFormProvider()("claimant-name")
+  val form = new WhichYoungPersonFormProvider()()
 
   ".value" - {
 
-    val fieldName = "value"
-
-    behave like booleanField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, invalidKey, List("claimant-name"))
-    )
+    val fieldName   = "value"
+    val requiredKey = "whichYoungPerson.error.required"
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, List("claimant-name"))
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
 import forms.behaviours.BooleanFieldBehaviours
-import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import play.api.data.FormError
 
-class WillYoungPersonBeStayingFormProviderSpec extends BooleanFieldBehaviours {
+class WillCourseBeEmployerProvidedFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "willYoungPersonBeStaying.error.required"
+  val requiredKey = "willCourseBeEmployerProvided.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new WillYoungPersonBeStayingFormProvider()("claimant-name")
+  val form = new WillCourseBeEmployerProvidedFormProvider()("claimant-name")
 
   ".value" - {
 

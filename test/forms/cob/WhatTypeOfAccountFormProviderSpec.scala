@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package forms
+package forms.cob
 
-import forms.behaviours.BooleanFieldBehaviours
-import forms.ftnae.SchoolOrCollegeFormProvider
+import forms.behaviours.OptionFieldBehaviours
+import models.cob.{AccountType, JointAccountType}
 import play.api.data.FormError
 
-class SchoolOrCollegeFormProviderSpec extends BooleanFieldBehaviours {
+class WhatTypeOfAccountFormProviderSpec extends OptionFieldBehaviours {
 
-  val requiredKey = "schoolOrCollege.error.required"
-  val invalidKey  = "error.boolean"
+  val form = new WhatTypeOfAccountFormProvider()()
 
-  val form = new SchoolOrCollegeFormProvider()()
+  ".accountType" - {
 
-  ".value" - {
+    val fieldName   = AccountType.name
+    val requiredKey = "whatTypeOfAccount.error.accountTypeRequired"
 
-    val fieldName = "value"
-
-    behave like booleanField(
+    behave like optionsField[AccountType](
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      validValues = AccountType.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
     behave like mandatoryField(
@@ -43,4 +42,18 @@ class SchoolOrCollegeFormProviderSpec extends BooleanFieldBehaviours {
       requiredError = FormError(fieldName, requiredKey)
     )
   }
+
+  ".joint_account_type" - {
+
+    val fieldName = JointAccountType.name
+
+    behave like optionsField[JointAccountType](
+      form,
+      fieldName,
+      validValues = JointAccountType.values,
+      invalidError = FormError(fieldName, "error.invalid")
+    )
+
+  }
+
 }

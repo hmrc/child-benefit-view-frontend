@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
 import forms.behaviours.BooleanFieldBehaviours
-import forms.ftnae.TwelveHoursAWeekFormProvider
 import play.api.data.FormError
 
 class TwelveHoursAWeekFormProviderSpec extends BooleanFieldBehaviours {

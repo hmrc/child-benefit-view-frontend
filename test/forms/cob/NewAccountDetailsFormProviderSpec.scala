@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package forms
+package forms.cob
 
 import forms.behaviours.StringFieldBehaviours
-import forms.cob.NewAccountDetailsFormProvider
 import play.api.data.FormError
 
 class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {

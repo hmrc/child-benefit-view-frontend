@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
 import forms.behaviours.BooleanFieldBehaviours
-import forms.ftnae.LiveWithYouInUKFormProvider
 import play.api.data.FormError
 
-class LiveWithYouInUKFormProviderSpec extends BooleanFieldBehaviours {
+class SchoolOrCollegeFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "liveWithYouInUK.error.required"
+  val requiredKey = "schoolOrCollege.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new LiveWithYouInUKFormProvider()("claimant-name")
+  val form = new SchoolOrCollegeFormProvider()()
 
   ".value" - {
 
@@ -34,13 +33,13 @@ class LiveWithYouInUKFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey, List("claimant-name"))
+      invalidError = FormError(fieldName, invalidKey)
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey, List("claimant-name"))
+      requiredError = FormError(fieldName, requiredKey)
     )
   }
 }

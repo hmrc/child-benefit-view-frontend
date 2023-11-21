@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package forms
+package forms.ftnae
 
-import forms.behaviours.OptionFieldBehaviours
-import forms.ftnae.HowManyYearsFormProvider
-import models.ftnae.HowManyYears
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class HowManyYearsFormProviderSpec extends OptionFieldBehaviours {
+class WillYoungPersonBeStayingFormProviderSpec extends BooleanFieldBehaviours {
 
-  val form = new HowManyYearsFormProvider()()
+  val requiredKey = "willYoungPersonBeStaying.error.required"
+  val invalidKey  = "error.boolean"
+
+  val form = new WillYoungPersonBeStayingFormProvider()("claimant-name")
 
   ".value" - {
 
-    val fieldName   = "value"
-    val requiredKey = "howManyYears.error.required"
+    val fieldName = "value"
 
-    behave like optionsField[HowManyYears](
+    behave like booleanField(
       form,
       fieldName,
-      validValues = HowManyYears.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, invalidKey, List("claimant-name"))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, List("claimant-name"))
     )
   }
 }
