@@ -16,30 +16,28 @@
 
 package utils.navigation
 
-import base.SpecBase
-import controllers.routes
+import base.CBSpecBase
 import controllers.cob.{routes => cobroutes}
 import controllers.ftnae.{routes => ftnaeroutes}
-import models.cob.ConfirmNewAccountDetails.Yes
-import utils.pages._
+import controllers.routes
 import models._
-import models.cob.ConfirmNewAccountDetails._
+import models.cob.ConfirmNewAccountDetails.{Yes, _}
 import models.cob._
 import models.ftnae.HowManyYears
-import pages.cob._
-import org.mockito.MockitoSugar.mock
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
+import pages.cob._
 import pages.ftnae._
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.pages._
 
-class NavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
+class NavigatorSpec extends CBSpecBase {
 
   implicit val mockHeaderCarrier = mock[HeaderCarrier]
 
-  val navigator = new Navigator
+  val app = applicationBuilder().build()
+  val navigator = app.injector.instanceOf[Navigator]
 
   def fromOnePageToNextTest(fromPage: Page, toPageName: String, toCall: Call, userAnswers: UserAnswers, addendum: Option[String], mode: Mode) {
     s"must go from the ${fromPage.toString} page to the $toPageName page${addendum.fold("")(a => s" $a")}" in {
@@ -101,7 +99,7 @@ class NavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
       }
 
       "Change of Bank" - {
-        val normalModeCoBTable = Table(
+        val normalModeCoBTestCases = Table(
           ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
           (WhatTypeOfAccountPage, "newAccountDetails", defaultUA, None,
             cobroutes.NewAccountDetailsController.onPageLoad(NormalMode)),
@@ -113,14 +111,14 @@ class NavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             cobroutes.WhatTypeOfAccountController.onPageLoad(NormalMode))
         )
 
-        forAll(normalModeCoBTable) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+        forAll(normalModeCoBTestCases) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
           fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
         }
       }
 
       "FTNAE" - {
         "Happy Path" - {
-          val normalModeFTNAETable = Table(
+          val normalModeFTNAETestCases = Table(
             ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
             (WhichYoungPersonPage, "willYoungPersonBeStaying", happyPathFTNAEUA, Some(s"when a child's name is selected"),
               ftnaeroutes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)),
@@ -138,13 +136,13 @@ class NavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
               ftnaeroutes.CheckYourAnswersController.onPageLoad())
           )
 
-          forAll(normalModeFTNAETable) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+          forAll(normalModeFTNAETestCases) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
             fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
           }
         }
 
         "Kick Out Pages"- {
-          val normalModeFTNAEKickOutTable = Table(
+          val normalModeFTNAEKickOutTestCases = Table(
             ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
             (WhichYoungPersonPage, "whyYoungPersonNotListedPage", kickOutPathFTNAEUA, Some(selectedKickOut("Young Person not listed")),
               ftnaeroutes.WhyYoungPersonNotListedController.onPageLoad()),
@@ -161,7 +159,7 @@ class NavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
             (WillCourseBeEmployerProvidedPage, "useDifferentFormPage", kickOutPathFTNAEUA, yesSelectedKickOut,
               ftnaeroutes.NotEntitledCourseEmployerProvidedController.onPageLoad())
           )
-          forAll(normalModeFTNAEKickOutTable) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+          forAll(normalModeFTNAEKickOutTestCases) { (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
             fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
           }
         }

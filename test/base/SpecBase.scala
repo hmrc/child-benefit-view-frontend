@@ -20,6 +20,8 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 trait SpecBase
     extends AnyFreeSpec
@@ -28,3 +30,5 @@ trait SpecBase
     with OptionValues
     with ScalaFutures
     with IntegrationPatience
+    with MockitoSugar
+    with ScalaCheckPropertyChecks

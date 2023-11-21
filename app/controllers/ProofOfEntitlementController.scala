@@ -25,6 +25,7 @@ import play.api.{Configuration, Environment}
 import services.AuditService
 import uk.gov.hmrc.auth.core.AuthConnector
 import utils.helpers.ChildBenefitEntitlementHelper.formatChildBenefitEntitlement
+import views.ViewUtils
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
@@ -80,9 +81,7 @@ object ProofOfEntitlementController {
   def formatEntitlementDate(date: LocalDate, checkForSpecialAwardStartDate: Boolean = false)(implicit
       messages:                   Messages
   ): String = {
-    val formattedDate = date.format(
-      DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
-    )
+    val formattedDate = ViewUtils.formatDate(date)
 
     if (checkForSpecialAwardStartDate && specialAwardStartDates.contains(date)) {
       messages("proofOfEntitlement.onorbefore", formattedDate)
