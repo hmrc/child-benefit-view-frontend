@@ -23,6 +23,7 @@ import org.jsoup.Jsoup
 import org.scalactic.source.Position
 import org.scalatest.Assertion
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -32,7 +33,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite {
+class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite with ScalaCheckPropertyChecks {
   override implicit lazy val app: Application = applicationBuilder().build()
 
   val userAnswersId: String = "id"

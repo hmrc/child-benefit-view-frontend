@@ -19,7 +19,6 @@ package utils.helpers
 import play.api.libs.json.{JsString, JsSuccess, Reads, Writes}
 
 object Implicits {
-
   implicit val writes: Writes[Unit] = Writes[Unit] { _ =>
     JsString("")
   }

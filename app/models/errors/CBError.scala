@@ -16,7 +16,7 @@
 
 package models.errors
 
-sealed trait CBError {
+trait CBError {
   val statusCode: Int
   val message:    String
 }
