@@ -449,7 +449,7 @@ paymentsExtended.courseDuration.twoYears = 2 years
 # ----------  FTNAE switched off ------------
 ftnaeSwitchedOff.title = Sorry, the service is unavailable
 ftnaeSwitchedOff.heading = Sorry, the service is unavailable
-ftnaeSwitchedOff.p1 = You cannot use the online service to update your child's education details with HMRC.
+ftnaeSwitchedOff.p1 = You cannot use the online service to update your child''s education details with HMRC.
 ftnaeSwitchedOff.p2 = Instead you can use the CH297 online form to {0}
 ftnaeSwitchedOff.p2.linkText = tell us that your child is staying in approved education or training.
 
