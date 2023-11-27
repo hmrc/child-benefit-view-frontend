@@ -35,7 +35,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, entitlementResult}
+import utils.TestData.{NinoUser, testEntitlement}
 import views.html.ProofOfEntitlement
 
 import scala.concurrent.duration.DurationInt
@@ -101,7 +101,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
           .willReturn(
             aResponse()
               .withStatus(200)
-              .withBody(Json.toJson(entitlementResult).toString)
+              .withBody(Json.toJson(testEntitlement).toString)
           )
       )
 
@@ -120,7 +120,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(entitlementResult)(request, messages(application, request)).toString
+          view(testEntitlement)(request, messages(application, request)).toString
         )
       }
     }

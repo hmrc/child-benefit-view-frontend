@@ -1,13 +1,13 @@
 package views
 
-import base.SpecBase
+import base.{CBSpecBase, SpecBase}
 import org.mockito.MockitoSugar.when
 import play.api.data.Form
 import play.api.i18n.{Lang, Messages}
 
 import java.time.LocalDate
 
-class ViewUtilsSpec extends SpecBase {
+class ViewUtilsSpec extends CBSpecBase {
   implicit val messages: Messages = mock[Messages]
   val errorPrefixKey = "error.browser.title.prefix"
   val titleKey = "title.key"
@@ -43,8 +43,6 @@ class ViewUtilsSpec extends SpecBase {
 
 
   "View Utils Spec" - {
-    val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
-
     "title" - {
       val testNameForForm = (includeErrorPrefix: Boolean, includeSection: Boolean) =>
         s"For a form ${withOrWithout(includeErrorPrefix)} an Error Prefix and ${withOrWithout(includeSection)} a Section"

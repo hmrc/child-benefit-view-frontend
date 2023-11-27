@@ -36,6 +36,9 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 class BaseISpec extends WireMockSupport with GuiceOneAppPerSuite with ScalaCheckPropertyChecks {
   override implicit lazy val app: Application = applicationBuilder().build()
 
+  val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
+  val isOrIsNot = (bool: Boolean) => if (bool) "is" else "is not"
+
   val userAnswersId: String = "id"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)

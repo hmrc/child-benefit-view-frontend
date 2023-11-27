@@ -44,9 +44,6 @@ class ErrorHandlerSpec extends BaseISpec with EitherValues {
 
     val sut = new ErrorHandler(messagesApiMock, notFoundViewMock, errorTemplateMock)
 
-    val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
-    val isOrIsNot = (bool:Boolean) => if (bool) "is" else "is not"
-
     "notFoundTemplate" - {
       "GIVEN a notFoundView is provided to the ErrorHandler" - {
         "THEN this is view return as the notFoundTemplate" in {

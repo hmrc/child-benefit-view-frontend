@@ -53,6 +53,20 @@ trait ModelGenerators {
     }
 
   // Child Benefit Entitlements and associated model
+  implicit lazy val genChildBenefitEntitlement: Gen[ChildBenefitEntitlement] =
+    for {
+      claimant <- arbitrary[Claimant]
+      entitlementDate <- arbitrary[LocalDate]
+      paidAmountForEldestOrOnlyChild <- arbitrary[BigDecimal]
+      paidAmountForEachAdditionalChild <- arbitrary[BigDecimal]
+      children <- Gen.containerOf[List, Child](arbitrary(arbitraryChild)) suchThat (x => x.nonEmpty)
+    } yield ChildBenefitEntitlement(
+      claimant,
+      entitlementDate,
+      paidAmountForEldestOrOnlyChild,
+      paidAmountForEachAdditionalChild,
+      children
+    )
   implicit lazy val arbitraryChildBenefitEntitlement: Arbitrary[ChildBenefitEntitlement] =
     Arbitrary {
       for {
@@ -170,13 +184,13 @@ trait ModelGenerators {
   implicit lazy val arbitraryFirstForename: Arbitrary[FirstForename] =
     Arbitrary {
       for {
-        name <- arbitrary[String]
+        name <- stringOf(alphaChar)
       } yield FirstForename(name)
     }
   implicit lazy val arbitrarySurname: Arbitrary[Surname] =
     Arbitrary {
       for {
-        name <- arbitrary[String]
+        name <- stringOf(alphaChar)
       } yield Surname(name)
     }
   implicit lazy val arbitraryClaimantFinancialDetails: Arbitrary[ClaimantFinancialDetails] =

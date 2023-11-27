@@ -50,7 +50,7 @@ object TestData {
       |	}
       |""".stripMargin
 
-  val entitlementResult: ChildBenefitEntitlement = ChildBenefitEntitlement(
+  val testEntitlement: ChildBenefitEntitlement = ChildBenefitEntitlement(
     Claimant(
       name = FullName("John Doe"),
       awardValue = 500.00,
@@ -88,7 +88,7 @@ object TestData {
     )
   )
 
-  val claimantBankInformation: ClaimantBankInformation = ClaimantBankInformation(
+  val testClaimantBankInformation: ClaimantBankInformation = ClaimantBankInformation(
     firstForename = FirstForename("John"),
     surname = Surname("Doe"),
     dateOfBirth = LocalDate.of(1955, 1, 26),

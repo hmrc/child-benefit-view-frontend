@@ -16,6 +16,7 @@
 
 package base
 
+import generators.ModelGenerators
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -32,3 +33,4 @@ trait SpecBase
     with IntegrationPatience
     with MockitoSugar
     with ScalaCheckPropertyChecks
+    with ModelGenerators

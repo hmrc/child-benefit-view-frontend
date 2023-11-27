@@ -31,7 +31,7 @@ import testconfig.TestConfig._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
 import utils.Stubs._
-import utils.TestData.{LockedOutErrorResponse, NinoUser, NotFoundAccountError, claimantBankInformation}
+import utils.TestData.{LockedOutErrorResponse, NinoUser, NotFoundAccountError, testClaimantBankInformation}
 import views.html.ErrorTemplate
 import views.html.cob.ChangeAccountView
 
@@ -55,7 +55,7 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
         val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
         userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoStub(claimantBankInformation)
+        changeOfBankUserInfoStub(testClaimantBankInformation)
         verifyClaimantBankInfoStub()
 
         running(application) {
@@ -229,7 +229,7 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
           ).build()
 
           userLoggedInChildBenefitUser(NinoUser)
-          changeOfBankUserInfoStub(claimantBankInformation)
+          changeOfBankUserInfoStub(testClaimantBankInformation)
           verifyClaimantBankInfoStub()
 
           running(application) {
@@ -281,28 +281,28 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
 object ChangeAccountControllerSpec {
 
   val claimantBankInformationWithBuildingSocietyRollNumber: ClaimantBankInformation =
-    claimantBankInformation.copy(financialDetails =
-      claimantBankInformation.financialDetails.copy(bankAccountInformation =
-        claimantBankInformation.financialDetails.bankAccountInformation
+    testClaimantBankInformation.copy(financialDetails =
+      testClaimantBankInformation.financialDetails.copy(bankAccountInformation =
+        testClaimantBankInformation.financialDetails.bankAccountInformation
           .copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234")))
       )
     )
 
-  val claimantBankInformationWithHICBC: ClaimantBankInformation = claimantBankInformation.copy(financialDetails =
-    claimantBankInformation.financialDetails.copy(
+  val claimantBankInformationWithHICBC: ClaimantBankInformation = testClaimantBankInformation.copy(financialDetails =
+    testClaimantBankInformation.financialDetails.copy(
       adjustmentReasonCode = Some(AdjustmentReasonCode("28")),
       adjustmentEndDate = Some(LocalDate.now.plusYears(2))
     )
   )
 
   val claimantBankInformationWithEndDateInPast: ClaimantBankInformation =
-    claimantBankInformation.copy(
+    testClaimantBankInformation.copy(
       activeChildBenefitClaim = false,
-      financialDetails = claimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now.minusYears(1))
+      financialDetails = testClaimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now.minusYears(1))
     )
 
-  val claimantBankInformationWithEndDateToday: ClaimantBankInformation = claimantBankInformation.copy(financialDetails =
-    claimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now)
+  val claimantBankInformationWithEndDateToday: ClaimantBankInformation = testClaimantBankInformation.copy(financialDetails =
+    testClaimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now)
   )
 
 }

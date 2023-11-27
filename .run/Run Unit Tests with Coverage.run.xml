@@ -38,16 +38,6 @@
         <option name="INCLUDE" value="false" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="ftnae.*" />
-        <option name="ENABLED" value="true" />
-        <option name="INCLUDE" value="false" />
-      </pattern>
-      <pattern>
-        <option name="PATTERN" value="javascripts.*" />
-        <option name="ENABLED" value="true" />
-        <option name="INCLUDE" value="false" />
-      </pattern>
-      <pattern>
         <option name="PATTERN" value="prod.*" />
         <option name="ENABLED" value="true" />
         <option name="INCLUDE" value="false" />
@@ -79,16 +69,16 @@
         <option value="repositories.SessionRepositorySpec" />
         <option value="utils.BaseISpec" />
         <option value="utils.navigation.NavigatorSpec" />
-        <option value="utils.pages.WillCourseBeEmployerProvidedPageSpec" />
-        <option value="utils.pages.ExtendPaymentsPageSpec" />
-        <option value="utils.pages.LiveWithYouInUKPageSpec" />
-        <option value="utils.pages.SchoolOrCollegePageSpec" />
         <option value="utils.pages.HowManyYearsSpec" />
+        <option value="utils.pages.SchoolOrCollegePageSpec" />
         <option value="utils.pages.ConfirmNewAccountDetailsPageSpec" />
+        <option value="utils.pages.ExtendPaymentsPageSpec" />
+        <option value="utils.pages.WillCourseBeEmployerProvidedPageSpec" />
         <option value="utils.pages.TwelveHoursAWeekPageSpec" />
         <option value="utils.pages.WhichYoungPersonSpec" />
         <option value="utils.pages.WillYoungPersonBeStayingPageSpec" />
         <option value="utils.pages.NewAccountDetailsPageSpec" />
+        <option value="utils.pages.LiveWithYouInUKPageSpec" />
         <option value="utils.mappings.MappingsSpec" />
         <option value="utils.mappings.ConstraintsSpec" />
         <option value="utils.mappings.DateMappingsSpec" />

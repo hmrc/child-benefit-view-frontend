@@ -45,7 +45,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, claimantBankInformation}
+import utils.TestData.{NinoUser, testClaimantBankInformation}
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
@@ -73,7 +73,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
     override def retrieveBankClaimantInfo(implicit
         ec: ExecutionContext,
         hc: HeaderCarrier
-    ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(claimantBankInformation)
+    ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(testClaimantBankInformation)
 
     override def submitClaimantChangeOfBank(
         newBankAccountInfo: Option[NewAccountDetails],

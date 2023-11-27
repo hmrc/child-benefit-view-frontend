@@ -50,4 +50,7 @@ trait CBSpecBase extends SpecBase {
     val rightHtml = Jsoup.parse(transformation(right))
     leftHtml.html() mustBe rightHtml.html()
   }
+
+  val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
+  val isOrIsNot = (bool: Boolean) => if (bool) "is" else "is not"
 }

@@ -27,7 +27,7 @@ import services.PaymentHistoryPageVariant._
 import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, entitlementResult, NotFoundAccountError}
+import utils.TestData.{NinoUser, testEntitlement, NotFoundAccountError}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
@@ -37,7 +37,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
   "Payment history controller" - {
     "must return OK and render the correct view when entitlement contains payment with payments in last 2 years" in {
       userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryStub(entitlementResult)
+      entitlementsAndPaymentHistoryStub(testEntitlement)
 
       running(app) {
 
@@ -51,7 +51,7 @@ class PaymentHistoryControllerSpec extends BaseISpec {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(entitlementResult, InPaymentWithPaymentsInLastTwoYears)(request, messages(app, request)).toString
+          view(testEntitlement, InPaymentWithPaymentsInLastTwoYears)(request, messages(app, request)).toString
         )
       }
     }
@@ -244,28 +244,28 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 object PaymentHistoryControllerSpec {
 
   val entitlementResultWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(lastPaymentsInfo =
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(lastPaymentsInfo =
         Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 
-  val entitlementResultIsHIBICWithPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
-    entitlementResult.claimant.copy(adjustmentInformation =
+  val entitlementResultIsHIBICWithPaymentsInLastTwoYears: ChildBenefitEntitlement = testEntitlement.copy(claimant =
+    testEntitlement.claimant.copy(adjustmentInformation =
       Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
 
-  val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
-    entitlementResult.claimant.copy(
+  val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = testEntitlement.copy(claimant =
+    testEntitlement.claimant.copy(
       lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
 
   val entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
         lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
         adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
@@ -273,11 +273,11 @@ object PaymentHistoryControllerSpec {
     )
 
   val entitlementEndedButReceivedPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant = entitlementResult.claimant.copy(awardEndDate = LocalDate.now().minusDays(100)))
+    testEntitlement.copy(claimant = testEntitlement.claimant.copy(awardEndDate = LocalDate.now().minusDays(100)))
 
   val entitlementEndedButNoPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
         lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
