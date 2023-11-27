@@ -416,6 +416,13 @@ paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
 paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
 
+# ----------  FTNAE switched off ------------
+ftnaeSwitchedOff.title = TBC
+ftnaeSwitchedOff.heading = TBC
+ftnaeSwitchedOff.p1 = TBC
+ftnaeSwitchedOff.p2 = TBC
+ftnaeSwitchedOff.p2.linkText = TBC
+
 # ----------  External Links ------------
 external.link.formlink.child-benefit-16-19 = https://www.gov.uk/budd-dal-plant-16-19
 external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
