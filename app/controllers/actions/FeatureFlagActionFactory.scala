@@ -20,7 +20,9 @@ import config.FeatureAllowlistFilter
 import play.api.Configuration
 import play.api.mvc.Results.NotFound
 import play.api.mvc.{ActionFunction, MessagesRequest, Result}
+import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 import views.html.ErrorTemplate
+import views.html.ftnae.FtnaeSwitchedOffView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,12 +31,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class FeatureFlagActionFactory @Inject() (
     configuration: Configuration,
     errorTemplate: ErrorTemplate,
+    ftnaeSwitchedOffView: FtnaeSwitchedOffView,
     val allowList: FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {
 
-  private def whenEnabled(featureFlag: String): FeatureFlagAction =
+  //noinspection ScalaStyle                                                                                             //TODO: Remove noinspection
+  private def whenEnabled(featureFlag: String, specifiedView:
+  Option[BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]] = None): FeatureFlagAction =          //TODO: Fix formatting here
     new FeatureFlagAction {
       override def invokeBlock[A](
           request: MessagesRequest[A],
@@ -42,16 +47,32 @@ class FeatureFlagActionFactory @Inject() (
       ): Future[Result] = {
         val isFeatureEnabled =
           configuration.getOptional[Boolean](s"feature-flags.$featureFlag.enabled").getOrElse(false)
+
+        val featureDisabledView = specifiedView match {
+          case None =>
+            errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+                request,
+                request.messages
+              )
+          case Some(_) =>
+            ftnaeSwitchedOffView()(
+              request,
+              request.messages
+            )
+//          case Some(_) =>
+//            _()(
+//              request,#
+//              request.messages
+//            )
+        }
+
         if (isFeatureEnabled) {
           allowList(_ => block(request))(featureFlag, request)
         } else {
           allowList(_ =>
             Future.successful(
               NotFound(
-                errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
-                  request,
-                  request.messages
-                )
+                featureDisabledView
               )
             )
           )(featureFlag, request)
@@ -62,7 +83,7 @@ class FeatureFlagActionFactory @Inject() (
     }
 
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
-  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae")
+  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae", Some(ftnaeSwitchedOffView))
   val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")
   val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
 }
