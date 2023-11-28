@@ -417,11 +417,11 @@ paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
 
 # ----------  FTNAE switched off ------------
-ftnaeSwitchedOff.title = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
-ftnaeSwitchedOff.heading = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
-ftnaeSwitchedOff.p1 = Ni allwch ddefnyddio’r gwasanaeth ar-lein i ddiweddaru manylion addysg eich plentyn gyda CThEF.
-ftnaeSwitchedOff.p2 = Yn lle hynny, gallwch ddefnyddio ffurflen CH297 ar-lein i {0}
-ftnaeSwitchedOff.p2.linkText = roi gwybod i ni fod eich plentyn yn parhau â’i addysg neu hyfforddiant cymeradwy.
+ftnaeDisabled.title = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
+ftnaeDisabled.heading = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
+ftnaeDisabled.p1 = Ni allwch ddefnyddio’r gwasanaeth ar-lein i ddiweddaru manylion addysg eich plentyn gyda CThEF.
+ftnaeDisabled.p2 = Yn lle hynny, gallwch ddefnyddio ffurflen CH297 ar-lein i {0}
+ftnaeDisabled.p2.linkText = roi gwybod i ni fod eich plentyn yn parhau â’i addysg neu hyfforddiant cymeradwy.
 
 # ----------  External Links ------------
 external.link.formlink.child-benefit-16-19 = https://www.gov.uk/budd-dal-plant-16-19

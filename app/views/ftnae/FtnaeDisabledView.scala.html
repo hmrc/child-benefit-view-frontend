@@ -26,17 +26,17 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @para2Link = @{link( id = "continuing",
-    text = messages("ftnaeSwitchedOff.p2.linkText"),
+    text = messages("ftnaeDisabled.p2.linkText"),
     call = Call("GET", messages("external.link.formlink.ch297")),
     newTab = false
 )}
 
-@layout(pageTitle = titleNoForm(messages("ftnaeSwitchedOff.title"))) {
+@layout(pageTitle = titleNoForm(messages("ftnaeDisabled.title"))) {
 
-    @heading(messages("ftnaeSwitchedOff.heading"))
+    @heading(messages("ftnaeDisabled.heading"))
 
-    @para(messages("ftnaeSwitchedOff.p1"))
+    @para(messages("ftnaeDisabled.p1"))
 
-    @para(messages("ftnaeSwitchedOff.p2", para2Link))
+    @para(messages("ftnaeDisabled.p2", para2Link))
 
 }

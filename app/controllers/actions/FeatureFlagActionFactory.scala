@@ -22,17 +22,17 @@ import play.api.mvc.Results.NotFound
 import play.api.mvc.{ActionFunction, MessagesRequest, Result}
 import play.twirl.api.{BaseScalaTemplate, Format, HtmlFormat}
 import views.html.ErrorTemplate
-import views.html.ftnae.FtnaeSwitchedOffView
+import views.html.ftnae.FtnaeDisabledView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeatureFlagActionFactory @Inject() (
-    configuration:        Configuration,
-    errorTemplate:        ErrorTemplate,
-    ftnaeSwitchedOffView: FtnaeSwitchedOffView,
-    val allowList:        FeatureAllowlistFilter
+    configuration:     Configuration,
+    errorTemplate:     ErrorTemplate,
+    ftnaeDisabledView: FtnaeDisabledView,
+    val allowList:     FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {
@@ -55,8 +55,8 @@ class FeatureFlagActionFactory @Inject() (
               request,
               request.messages
             )
-          case _: Some[FtnaeSwitchedOffView] =>
-            ftnaeSwitchedOffView()(
+          case _: Some[FtnaeDisabledView] =>
+            ftnaeDisabledView()(
               request,
               request.messages
             )
@@ -79,7 +79,7 @@ class FeatureFlagActionFactory @Inject() (
     }
 
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
-  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae", Some(ftnaeSwitchedOffView))
+  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae", Some(ftnaeDisabledView))
   val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")
   val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
 }
