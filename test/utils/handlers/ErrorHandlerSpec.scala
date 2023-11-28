@@ -16,6 +16,7 @@
 
 package utils.handlers
 
+import base.BaseAppSpec
 import controllers.cob.{routes => cobRoutes}
 import controllers.ftnae.{routes => ftnaeroutes}
 import controllers.routes
@@ -27,11 +28,10 @@ import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AuditService
-import utils.BaseISpec
 import utils.handlers.ErrorHandlerSpec.resultUrl
 import views.html.{ErrorTemplate, NotFoundView}
 
-class ErrorHandlerSpec extends BaseISpec with EitherValues {
+class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
   "Error handler" - {
     implicit val auditServiceMock = mock[AuditService]
     implicit val fakeRequest      = FakeRequest(GET, "/")

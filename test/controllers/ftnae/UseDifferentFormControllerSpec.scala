@@ -16,13 +16,13 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.UseDifferentFormView
 
-class UseDifferentFormControllerSpec extends CBSpecBase {
+class UseDifferentFormControllerSpec extends BaseAppSpec {
 
   "UseDifferentForm Controller" - {
 

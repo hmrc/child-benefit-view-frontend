@@ -1,13 +1,13 @@
 package views
 
-import base.{CBSpecBase, SpecBase}
+import base.BaseSpec
 import org.mockito.MockitoSugar.when
 import play.api.data.Form
 import play.api.i18n.{Lang, Messages}
 
 import java.time.LocalDate
 
-class ViewUtilsSpec extends CBSpecBase {
+class ViewUtilsSpec extends BaseSpec {
   implicit val messages: Messages = mock[Messages]
   val errorPrefixKey = "error.browser.title.prefix"
   val titleKey = "title.key"

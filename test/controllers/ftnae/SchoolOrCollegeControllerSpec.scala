@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.SchoolOrCollegeFormProvider
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
@@ -34,7 +34,7 @@ import views.html.ftnae.SchoolOrCollegeView
 
 import scala.concurrent.Future
 
-class SchoolOrCollegeControllerSpec extends CBSpecBase with MockitoSugar {
+class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
   def onwardYesRoute = Call("GET", "/foo")
   def onwardNoRoute  = Call("GET", "/moo")

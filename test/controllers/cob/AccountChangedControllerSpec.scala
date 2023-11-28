@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
 import models.errors.ConnectorError
@@ -35,7 +36,6 @@ import services.ChangeOfBankService
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
@@ -44,7 +44,7 @@ import views.html.cob.AccountChangedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
   val mockSessionRepository = mock[SessionRepository]
   val mockCoBService        = mock[ChangeOfBankService]
 
@@ -62,25 +62,22 @@ class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with Scal
         "WHEN both the Change of Bank Submission and Cache Clear are successful" - {
           "THEN should return OK Result and the expected view" in {
             when(
-              mockCoBService.submitClaimantChangeOfBank(
-                any[Option[NewAccountDetails]],
-                any[BaseDataRequest[AnyContent]]
-              )(any[ExecutionContext], any[HeaderCarrier])
+              mockCoBService.submitClaimantChangeOfBank
+              (any[Option[NewAccountDetails]], any[BaseDataRequest[AnyContent]])(any[ExecutionContext], any[HeaderCarrier])
             ).thenReturn(CBEnvelope(successfulUpdateBankDetailsResponse))
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope(()))
 
             userLoggedInChildBenefitUser(NinoUser)
 
-            val application = applicationBuilder(
+            val application = applicationBuilderWithVerificationActions(
               config,
               userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get)
+            ).overrides(
+              bind[ChangeOfBankService].toInstance(mockCoBService),
+              bind[SessionRepository].toInstance(mockSessionRepository)
             )
-              .overrides(
-                bind[ChangeOfBankService].toInstance(mockCoBService),
-                bind[SessionRepository].toInstance(mockSessionRepository)
-              )
-              .build()
+            .build()
 
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)

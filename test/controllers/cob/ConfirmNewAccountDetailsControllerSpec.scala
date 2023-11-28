@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
@@ -42,7 +43,6 @@ import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.{NinoUser, testClaimantBankInformation}
@@ -53,7 +53,7 @@ import views.html.cob.ConfirmNewAccountDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -152,7 +152,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
               .get
               .set(NewAccountDetailsPage, newAccountDetails)
               .toOption
-            val application = applicationBuilder(config, userAnswers = userAnswers)
+            val application = applicationBuilderWithVerificationActions(config, userAnswers = userAnswers)
               .overrides(
                 bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
                 bind[SessionRepository].toInstance(mockSessionRepository),

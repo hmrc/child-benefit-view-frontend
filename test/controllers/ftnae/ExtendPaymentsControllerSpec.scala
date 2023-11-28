@@ -16,6 +16,7 @@
 
 package controllers.ftnae
 
+import base.BaseAppSpec
 import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.errors.{CBError, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError}
@@ -31,13 +32,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.ExtendPaymentsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExtendPaymentsControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
+class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
   def onwardRoute = Call("GET", "/foo")
 

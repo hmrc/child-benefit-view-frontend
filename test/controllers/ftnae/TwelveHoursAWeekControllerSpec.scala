@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.TwelveHoursAWeekFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
@@ -37,7 +37,7 @@ import views.html.ftnae.TwelveHoursAWeekView
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
+class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
   def onwardYesRoute = Call("GET", "/foo")
   def onwardNoRoute  = Call("GET", "/moo")
@@ -166,7 +166,7 @@ class TwelveHoursAWeekControllerSpec extends CBSpecBase with MockitoSugar {
         .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
-      val application = applicationBuilder(Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

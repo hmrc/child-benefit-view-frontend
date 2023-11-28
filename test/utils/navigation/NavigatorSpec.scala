@@ -16,15 +16,14 @@
 
 package utils.navigation
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import controllers.cob.{routes => cobroutes}
 import controllers.ftnae.{routes => ftnaeroutes}
 import controllers.routes
 import models._
-import models.cob.ConfirmNewAccountDetails.{Yes, _}
+import models.cob.ConfirmNewAccountDetails._
 import models.cob._
 import models.ftnae.HowManyYears
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.cob._
 import pages.ftnae._
 import play.api.libs.json.Json
@@ -32,7 +31,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.pages._
 
-class NavigatorSpec extends CBSpecBase {
+class NavigatorSpec extends BaseAppSpec {
 
   implicit val mockHeaderCarrier = mock[HeaderCarrier]
 

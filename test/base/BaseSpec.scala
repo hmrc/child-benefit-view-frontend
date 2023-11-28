@@ -16,40 +16,40 @@
 
 package base
 
-import controllers.actions._
+import generators.ModelGenerators
 import models.UserAnswers
-import org.jsoup.Jsoup
-import org.scalactic.source.Position
-import org.scalatest.Assertion
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.{OptionValues, TryValues}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
-trait CBSpecBase extends SpecBase {
+trait BaseSpec
+  extends AnyFreeSpec
+  with Matchers
+  with TryValues
+  with OptionValues
+  with ScalaFutures
+  with IntegrationPatience
+  with MockitoSugar
+  with ScalaCheckPropertyChecks
+  with ModelGenerators {
 
   val userAnswersId: String = "id"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+  def messages(app: Application, request: RequestHeader): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .overrides(
-        bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
-        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers))
-      )
-
-  protected def assertSameHtmlAfter(
-      transformation: String => String
-  )(left:             String, right: String)(implicit position: Position): Assertion = {
-    val leftHtml  = Jsoup.parse(transformation(left))
-    val rightHtml = Jsoup.parse(transformation(right))
-    leftHtml.html() mustBe rightHtml.html()
-  }
+  protected implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
 
   val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
   val isOrIsNot = (bool: Boolean) => if (bool) "is" else "is not"

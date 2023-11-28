@@ -16,15 +16,15 @@
 
 package controllers
 
+import base.BaseAppSpec
 import org.scalatest.EitherValues
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import views.html.templates.ServiceUnavailableTemplate
 
-class ServiceUnavailableControllerSpec extends BaseISpec with EitherValues {
+class ServiceUnavailableControllerSpec extends BaseAppSpec with EitherValues {
   "Service unavailable controller" - {
     "must render the correct view for a GET" in {
       val application = applicationBuilder().build()

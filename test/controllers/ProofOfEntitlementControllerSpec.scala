@@ -16,14 +16,13 @@
 
 package controllers
 
+import base.BaseAppSpec
 import cats.data.EitherT
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 import connectors.ChildBenefitEntitlementConnector
-import utils.handlers.ErrorHandler
 import models.CBEnvelope.CBEnvelope
 import models.entitlement._
 import models.errors.{CBError, ConnectorError}
-import org.mockito.MockitoSugar.mock
 import org.scalatest.EitherValues
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -32,16 +31,16 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.{NinoUser, testEntitlement}
+import utils.handlers.ErrorHandler
 import views.html.ProofOfEntitlement
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
-class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
+class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
   implicit val auditor: AuditService                        = mock[AuditService]
@@ -64,9 +63,10 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
           )
       }
 
-      val application = applicationBuilder(entitlementConnector =
-        bind[ChildBenefitEntitlementConnector].toInstance(failingChildBenefitEntitlementConnector)
-      ).build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[ChildBenefitEntitlementConnector].toInstance(failingChildBenefitEntitlementConnector)
+        ).build()
 
       running(application) {
         implicit val ec: ExecutionContextExecutor = application.actorSystem.getDispatcher

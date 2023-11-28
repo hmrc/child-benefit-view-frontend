@@ -16,42 +16,43 @@
 
 package controllers
 
+import base.BaseAppSpec
 import controllers.PaymentHistoryControllerSpec._
 import models.common.AdjustmentReasonCode
 import models.entitlement.{AdjustmentInformation, ChildBenefitEntitlement, LastPaymentFinancialInfo}
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{NOT_FOUND, OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, testEntitlement, NotFoundAccountError}
+import utils.TestData.{NinoUser, NotFoundAccountError, testEntitlement}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
 
-class PaymentHistoryControllerSpec extends BaseISpec {
+class PaymentHistoryControllerSpec extends BaseAppSpec {
 
   "Payment history controller" - {
     "must return OK and render the correct view when entitlement contains payment with payments in last 2 years" in {
       userLoggedInChildBenefitUser(NinoUser)
       entitlementsAndPaymentHistoryStub(testEntitlement)
 
-      running(app) {
+      val application = applicationBuilder().build()
+      running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.PaymentHistoryController.view.url).withSession("authToken" -> "Bearer 123")
 
-        val result = route(app, request).value
+        val result = route(application, request).value
 
-        val view = app.injector.instanceOf[PaymentHistory]
+        val view = application.injector.instanceOf[PaymentHistory]
 
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(testEntitlement, InPaymentWithPaymentsInLastTwoYears)(request, messages(app, request)).toString
+          view(testEntitlement, InPaymentWithPaymentsInLastTwoYears)(request, messages(application, request)).toString
         )
       }
     }
@@ -61,7 +62,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementResultWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -88,7 +88,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -115,7 +114,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -142,7 +140,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementEndedButReceivedPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -169,7 +166,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementEndedButNoPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -196,7 +192,6 @@ class PaymentHistoryControllerSpec extends BaseISpec {
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -223,10 +218,9 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 
     "must return 404 and render the no account found view when services return no found account" in {
       userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryFailureStub(NotFoundAccountError, status = 404)
+      entitlementsAndPaymentHistoryFailureStub(NotFoundAccountError, status = NOT_FOUND)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =

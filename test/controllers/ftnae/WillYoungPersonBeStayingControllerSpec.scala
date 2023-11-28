@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.WillYoungPersonBeStayingFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
@@ -37,7 +37,7 @@ import views.html.ftnae.WillYoungPersonBeStayingView
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSugar {
+class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSugar {
 
   def onwardYesRoute = Call("GET", "/foo")
   def onwardNoRoute  = Call("GET", "/moo")
@@ -165,10 +165,9 @@ class WillYoungPersonBeStayingControllerSpec extends CBSpecBase with MockitoSuga
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
-        .success
-        .value
+        .toOption
 
-      val application = applicationBuilder(Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = userAnswers).build()
 
       running(application) {
         val request =

@@ -16,6 +16,7 @@
 
 package controllers.ftnae
 
+import base.BaseAppSpec
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
@@ -32,7 +33,6 @@ import repositories.SessionRepository
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
@@ -41,7 +41,7 @@ import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
 
-class WhichYoungPersonControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
+class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
   def onwardRoute = Call("GET", "/foo")
 

@@ -16,15 +16,15 @@
 
 package controllers.auth
 
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.TestData.NinoUser
 import views.html.auth.SignedOutView
 
-class SignedOutControllerSpec extends BaseISpec {
+class SignedOutControllerSpec extends BaseAppSpec {
 
   "SignedOut Controller" - {
 

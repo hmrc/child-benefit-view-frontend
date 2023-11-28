@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount.JointHeldByClaimant
 import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
@@ -33,7 +34,6 @@ import repositories.SessionRepository
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
 import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
@@ -42,7 +42,7 @@ import views.html.cob.WhatTypeOfAccountView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
+class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
   implicit val mockExecutionContext = mock[ExecutionContext]
   implicit val mockHeaderCarrier    = mock[HeaderCarrier]
@@ -76,7 +76,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       "must respond OK and the correct view for GET" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers))
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers))
           .build()
 
         running(application) {
@@ -104,7 +104,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           .success
           .value
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -135,7 +135,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       "must return BAD_REQUEST for a POST if no existing data is found" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = None).build()
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = None).build()
 
         running(application) {
           val request =
@@ -158,7 +158,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           .value
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -193,7 +193,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -229,7 +229,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           .value
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)

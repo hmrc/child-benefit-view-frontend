@@ -16,6 +16,7 @@
 
 package controllers.ftnae
 
+import base.BaseAppSpec
 import models.ftnae.HowManyYears
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
@@ -24,14 +25,13 @@ import pages.ftnae._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testconfig.TestConfig
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 import viewmodels.checkAnswers.ftnae._
 import views.html.ftnae.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency with TableDrivenPropertyChecks {
+class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency with TableDrivenPropertyChecks {
   private val allAnsweredForFtnae = for {
     fa  <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
     sa  <- fa.set(WillYoungPersonBeStayingPage, true)

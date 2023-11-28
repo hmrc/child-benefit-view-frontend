@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import models.UserAnswers
 import models.common.NationalInsuranceNumber
 import models.requests.{IdentifierRequest, OptionalDataRequest}
@@ -24,13 +25,12 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import repositories.SessionRepository
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.BaseISpec
 import utils.TestData.NinoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DataRetrievalActionSpec extends BaseISpec with MockitoSugar {
+class DataRetrievalActionSpec extends BaseAppSpec with MockitoSugar {
 
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)

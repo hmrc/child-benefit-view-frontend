@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.HowManyYearsFormProvider
 import models.ftnae.HowManyYears
 import models.{CheckMode, UserAnswers}
@@ -35,7 +35,7 @@ import views.html.ftnae.HowManyYearsView
 
 import scala.concurrent.Future
 
-class HowManyYearsControllerSpec extends CBSpecBase with MockitoSugar {
+class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -53,7 +53,7 @@ class HowManyYearsControllerSpec extends CBSpecBase with MockitoSugar {
       val mockSessionRepository = mock[SessionRepository]
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
 
-      val application = applicationBuilder(userAnswers)
+      val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
           bind[SessionRepository].toInstance(mockSessionRepository)
         )
@@ -76,11 +76,11 @@ class HowManyYearsControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers           = UserAnswers(userAnswersId).set(HowManyYearsPage, HowManyYears.values.head).success.value
+      val userAnswers           = UserAnswers(userAnswersId).set(HowManyYearsPage, HowManyYears.values.head).toOption
       val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
 
-      val application = applicationBuilder(Some(userAnswers))
+      val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
           bind[SessionRepository].toInstance(mockSessionRepository)
         )
@@ -133,7 +133,7 @@ class HowManyYearsControllerSpec extends CBSpecBase with MockitoSugar {
 
       val userAnswers = emptyUserAnswers.set(TwelveHoursAWeekPage, true).toOption
 
-      val application = applicationBuilder(userAnswers)
+      val application = applicationBuilder(userAnswers = userAnswers)
         .build()
       running(application) {
         val request =

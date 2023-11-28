@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope
 import models.common.NationalInsuranceNumber
@@ -34,7 +35,6 @@ import play.api.test.FakeRequest
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import utils.BaseISpec
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 import utils.handlers.ErrorHandler
@@ -42,7 +42,7 @@ import utils.handlers.ErrorHandler
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class VerifyBarNotLockedActionSpec extends BaseISpec with MockitoSugar {
+class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   class Harness(cobConnector: ChangeOfBankConnector, errorHandler: ErrorHandler, auditService: AuditService)
       extends VerifyBarNotLockedActionImpl(cobConnector, errorHandler, auditService) {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = this.filter(request)

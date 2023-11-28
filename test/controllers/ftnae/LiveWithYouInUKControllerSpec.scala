@@ -16,7 +16,7 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.LiveWithYouInUKFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
@@ -37,7 +37,7 @@ import views.html.ftnae.LiveWithYouInUKView
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
+class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
   def onwardYesRoute = Call("GET", "/foo")
   def onwardNoRoute  = Call("GET", "/moo")
@@ -55,7 +55,7 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
       val userAnswers = emptyUserAnswers.set(WillCourseBeEmployerProvidedPage, true).toOption
 
-      val application = applicationBuilder(userAnswers).build()
+      val application = applicationBuilder(userAnswers = userAnswers).build()
 
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
@@ -74,12 +74,9 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(LiveWithYouInUKPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(LiveWithYouInUKPage, true).toOption
 
-      val application = applicationBuilder(Some(userAnswers))
-        .overrides(
-        )
-        .build()
+      val application = applicationBuilder(userAnswers = userAnswers).build()
 
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
@@ -173,10 +170,9 @@ class LiveWithYouInUKControllerSpec extends CBSpecBase with MockitoSugar {
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
-        .success
-        .value
+        .toOption
 
-      val application = applicationBuilder(Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = userAnswers).build()
 
       running(application) {
         val request =

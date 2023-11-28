@@ -16,7 +16,7 @@
 
 package services
 
-import base.CBSpecBase
+import base.BaseSpec
 import com.google.common.io.BaseEncoding
 import models.audit._
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
@@ -38,7 +38,7 @@ import utils.helpers.ClaimantBankInformationHelper
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
-class AuditServiceSpec extends CBSpecBase {
+class AuditServiceSpec extends BaseSpec {
 
   val auditConnector: AuditConnector = mock[AuditConnector]
   val sut: AuditService              = new AuditService(auditConnector)

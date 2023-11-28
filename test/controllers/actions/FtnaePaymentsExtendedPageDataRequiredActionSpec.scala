@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import models.common.NationalInsuranceNumber
 import models.ftnae.HowManyYears
 import models.requests.{BaseDataRequest, DataRequest, OptionalDataRequest, FtnaePaymentsExtendedPageDataRequest}
@@ -26,14 +27,13 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import repositories.FtnaePaymentsExtendedPageSessionRepository
-import utils.BaseISpec
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with MockitoSugar {
+class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with MockitoSugar {
 
   class Harness(ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository)
       extends FtnaePaymentsExtendedPageDataRequiredActionImpl(ftnaePaymentsExtendedPageSessionRepository) {

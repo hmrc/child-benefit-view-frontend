@@ -161,7 +161,6 @@ trait ModelGenerators {
         dateOfBirth           <- arbitrary[LocalDate]
         relationshipStartDate <- arbitrary[LocalDate]
         relationshipEndDate   <- arbitrary[Option[LocalDate]]
-        crnIndicator          <- arbitrary[Option[Int]]
       } yield Child(
         fullName,
         dateOfBirth,

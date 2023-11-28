@@ -16,7 +16,7 @@
 
 package services
 
-import base.CBSpecBase
+import base.BaseSpec
 import cats.implicits.catsSyntaxEitherId
 import connectors.ChangeOfBankConnector
 import controllers.{cob, routes}
@@ -42,7 +42,7 @@ import views.html.cob.ChangeAccountView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ChangeOfBankServiceSpec extends CBSpecBase {
+class ChangeOfBankServiceSpec extends BaseSpec {
   val cobConnector          = mock[ChangeOfBankConnector]
   val sessionRepository     = mock[SessionRepository]
   implicit val auditService = mock[AuditService]

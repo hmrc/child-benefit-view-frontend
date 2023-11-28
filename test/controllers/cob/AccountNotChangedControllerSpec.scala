@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
@@ -23,14 +24,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountNotChangedView
 
-class AccountNotChangedControllerSpec extends BaseISpec with ScalaCheckPropertyChecks {
+class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropertyChecks {
 
   "AccountNotChanged Controller" - {
 
@@ -40,7 +40,7 @@ class AccountNotChangedControllerSpec extends BaseISpec with ScalaCheckPropertyC
       "must return OK and the correct view for a GET" in {
         userLoggedInChildBenefitUser(NinoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)

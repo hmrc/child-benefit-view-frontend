@@ -16,18 +16,18 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.NinoUser
 import views.html.ErrorTemplate
 import views.html.cob.BARSLockOutView
 
-class BARSLockOutControllerSpec extends BaseISpec {
+class BARSLockOutControllerSpec extends BaseAppSpec {
 
   "BARSLockOut Controller" - {
 
