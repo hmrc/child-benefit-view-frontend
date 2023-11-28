@@ -29,17 +29,18 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeatureFlagActionFactory @Inject() (
-    configuration: Configuration,
-    errorTemplate: ErrorTemplate,
+    configuration:        Configuration,
+    errorTemplate:        ErrorTemplate,
     ftnaeSwitchedOffView: FtnaeSwitchedOffView,
-    val allowList: FeatureAllowlistFilter
+    val allowList:        FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {
 
-  //noinspection ScalaStyle                                                                                             //TODO: Remove noinspection
-  private def whenEnabled(featureFlag: String, specifiedView:
-  Option[BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]] = None): FeatureFlagAction =          //TODO: Fix formatting here
+  private def whenEnabled(
+      featureFlag:   String,
+      specifiedView: Option[BaseScalaTemplate[HtmlFormat.Appendable, Format[HtmlFormat.Appendable]]] = None
+  ): FeatureFlagAction =
     new FeatureFlagAction {
       override def invokeBlock[A](
           request: MessagesRequest[A],
@@ -51,19 +52,14 @@ class FeatureFlagActionFactory @Inject() (
         val featureDisabledView = specifiedView match {
           case None =>
             errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
-                request,
-                request.messages
-              )
-          case Some(_) =>
+              request,
+              request.messages
+            )
+          case _: Some[FtnaeSwitchedOffView] =>
             ftnaeSwitchedOffView()(
               request,
               request.messages
             )
-//          case Some(_) =>
-//            _()(
-//              request,#
-//              request.messages
-//            )
         }
 
         if (isFeatureEnabled) {
