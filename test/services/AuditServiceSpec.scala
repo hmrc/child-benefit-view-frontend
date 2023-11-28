@@ -41,12 +41,12 @@ import scala.concurrent.ExecutionContext
 class AuditServiceSpec extends CBSpecBase {
 
   val auditConnector: AuditConnector = mock[AuditConnector]
-  val auditor:        AuditService   = new AuditService(auditConnector)
+  val sut: AuditService              = new AuditService(auditConnector)
 
-  val testNino:   String        = "CA123456A"
-  val testCRN:    String        = "AC654321C"
-  val testStatus: String        = "testStatus"
-  val testReferrerValue: String = "/foo"
+  val testNino:   String           = "CA123456A"
+  val testCRN:    String           = "AC654321C"
+  val testStatus: String           = "testStatus"
+  val testReferrerValue: String    = "/foo"
   val testFingerprintValue: String = "testDeviceFingerprint"
 
   protected val request: Request[_] =
@@ -76,9 +76,9 @@ class AuditServiceSpec extends CBSpecBase {
           s"AND an entitlement ${isOrIsNot(withEntitlement)} provided" - {
             Mockito.reset(auditConnector)
             if (withEntitlement) {
-              auditor.auditProofOfEntitlement(testNino, testStatus, request, Some(testEntitlement))
+              sut.auditProofOfEntitlement(testNino, testStatus, request, Some(testEntitlement))
             } else {
-              auditor.auditProofOfEntitlement(testNino, testStatus, request)
+              sut.auditProofOfEntitlement(testNino, testStatus, request)
             }
 
 
@@ -149,7 +149,7 @@ class AuditServiceSpec extends CBSpecBase {
       val captor: ArgumentCaptor[ChangeOfBankAccountDetailsModel] =
         ArgumentCaptor.forClass(classOf[ChangeOfBankAccountDetailsModel])
 
-      auditor.auditChangeOfBankAccountDetails(testNino, testStatus, optionalDataRequest, testClaimantBankInformation)
+      sut.auditChangeOfBankAccountDetails(testNino, testStatus, optionalDataRequest, testClaimantBankInformation)
 
       "THEN the auditConnector is called with the ViewProofOfEntitlement Event Type" - {
         verify(auditConnector, times(1))
@@ -238,7 +238,7 @@ class AuditServiceSpec extends CBSpecBase {
         val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
           ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-        auditor.auditPaymentDetails(testNino, testStatus, optionalDataRequest, Some(testEntitlement))
+        sut.auditPaymentDetails(testNino, testStatus, optionalDataRequest, Some(testEntitlement))
 
         "THEN the auditConnector is called with the ViewPaymentDetails Event Type" - {
           verify(auditConnector, times(1))
@@ -300,7 +300,7 @@ class AuditServiceSpec extends CBSpecBase {
       val captor: ArgumentCaptor[FtnaeKickOutModel] =
         ArgumentCaptor.forClass(classOf[FtnaeKickOutModel])
 
-      auditor.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), courseDuration, answers)
+      sut.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), courseDuration, answers)
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(FtnaeKickOutModel.EventType), captor.capture())(

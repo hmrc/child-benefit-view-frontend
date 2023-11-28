@@ -16,7 +16,7 @@
 
 package generators
 
-import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
+import models.changeofbank.{AccountHolderName, BankAccountNumber, ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails, SortCode}
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
 import models.entitlement._
@@ -203,6 +203,25 @@ trait ModelGenerators {
   implicit lazy val arbitraryClaimantBankAccountInformation: Arbitrary[ClaimantBankAccountInformation] =
     Arbitrary {
       ClaimantBankAccountInformation(None, None, None, None)
+    }
+
+  implicit lazy val arbitraryAccountHolderName: Arbitrary[AccountHolderName] =
+    Arbitrary {
+      for {
+        accountHolderName <- alphaStr.suchThat(_.length > 0).map(_.take(ACCOUNT_HOLDER_MAX_LENGTH))
+      } yield AccountHolderName(accountHolderName)
+    }
+  implicit lazy val arbitrarySortCode: Arbitrary[SortCode] =
+    Arbitrary {
+      for {
+        sortCode <- numStr.map(_.take(ALLOWED_SORT_CODE_LENGTH))
+      } yield SortCode(sortCode)
+    }
+  implicit lazy val arbitraryBankAccountNumber: Arbitrary[BankAccountNumber] =
+    Arbitrary {
+      for {
+        accountNumber <- numStr.map(_.take(ALLOWED_ACCOUNT_NUMBER_LENGTH))
+      } yield BankAccountNumber(accountNumber)
     }
 
   val generateId: Arbitrary[String] =

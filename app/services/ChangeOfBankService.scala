@@ -56,7 +56,7 @@ class ChangeOfBankService @Inject() (
   def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
       hc:                         HeaderCarrier,
       ec:                         ExecutionContext
-  ): CBEnvelope[Unit] = {
+  ): CBEnvelope[Unit] =  {
 
     changeOfBankConnector
       .verifyClaimantBankAccount(
@@ -151,8 +151,8 @@ class ChangeOfBankService @Inject() (
 }
 
 object ChangeOfBankService {
-  private val today: LocalDate = LocalDate.now()
-  private val HICBCAdjustmentCode = "28"
+  val today: LocalDate = LocalDate.now()
+  val HICBCAdjustmentCode = "28"
 
   val awardEndDateIsInTheFuture: ClaimantBankInformation => Boolean =
     (claimantBankInformation: ClaimantBankInformation) =>
