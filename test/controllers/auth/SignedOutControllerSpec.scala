@@ -19,7 +19,7 @@ package controllers.auth
 import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.Stubs.userLoggedInChildBenefitUser
+import stubs.AuthStubs._
 import utils.HtmlMatcherUtils.removeNonce
 import utils.TestData.ninoUser
 import views.html.auth.SignedOutView
@@ -31,7 +31,7 @@ class SignedOutControllerSpec extends BaseAppSpec {
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = None).build()
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       running(application) {
         val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)

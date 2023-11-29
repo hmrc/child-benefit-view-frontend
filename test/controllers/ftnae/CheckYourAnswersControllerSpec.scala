@@ -24,9 +24,9 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import pages.ftnae._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import utils.HtmlMatcherUtils.removeNonce
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.ninoUser
 import viewmodels.checkAnswers.ftnae._
 import views.html.ftnae.CheckYourAnswersView
@@ -47,7 +47,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
     val config = TestConfig()
 
     "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
         .configure(
@@ -94,7 +94,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = None).configure().build()
 
@@ -134,7 +134,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
         )
       )
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
         {
@@ -166,7 +166,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
         )
       )
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
         {

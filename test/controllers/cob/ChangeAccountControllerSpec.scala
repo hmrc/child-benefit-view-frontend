@@ -29,7 +29,8 @@ import play.api.test.{CSRFTokenHelper, FakeRequest}
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
-import utils.Stubs._
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
 import utils.TestData.{lockedOutErrorResponse, ninoUser, notFoundAccountError, testClaimantBankInformation}
 import views.html.ErrorTemplate
 import views.html.cob.ChangeAccountView
@@ -53,7 +54,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(testClaimantBankInformation)
         verifyClaimantBankInfoStub()
 
@@ -78,7 +79,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return OK and render the correct view for ChB claimant who is in payment and has a non-standard bank account type" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
         verifyClaimantBankInfoStub()
 
@@ -106,7 +107,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoFailureStub(500, lockedOutErrorResponse)
 
         running(application) {
@@ -126,7 +127,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
         verifyClaimantBankInfoStub()
 
@@ -146,7 +147,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date in the past" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
         verifyClaimantBankInfoStub()
 
@@ -167,7 +168,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date is day of request" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
         verifyClaimantBankInfoStub()
 
@@ -187,8 +188,8 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       "must return SEE_OTHER and render the correct view for No ChB account found" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(ninoUser)
-        changeOfBankUserInfoFailureStub(result = notFoundAccountError)
+        userLoggedInIsChildBenefitUser(ninoUser)
+        changeOfBankUserInfoFailureStub(NOT_FOUND, notFoundAccountError)
         verifyClaimantBankInfoStub()
 
         running(application) {
@@ -227,7 +228,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
             verifyBarNotLockedAction = verificationBarAction
           ).build()
 
-          userLoggedInChildBenefitUser(ninoUser)
+          userLoggedInIsChildBenefitUser(ninoUser)
           changeOfBankUserInfoStub(testClaimantBankInformation)
           verifyClaimantBankInfoStub()
 
@@ -251,7 +252,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

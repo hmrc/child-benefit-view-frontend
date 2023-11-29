@@ -33,9 +33,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
 import services.{AuditService, ChangeOfBankService}
+import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.ninoUser
 import utils.handlers.ErrorHandler
 
@@ -66,7 +66,7 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
 
     "must move on with the request (open the gate) and return None" in {
 
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -97,7 +97,7 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
   "when claimant is HICBC but NOT WithAdjustmentEndDateInFuture, the action " - {
     "must move on with the request (open the gate) and return None" in {
 
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -127,7 +127,7 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
   "when claimant is HICBC AND WithAdjustmentEndDateInFuture, the action " - {
     "must NOT move on with the request (close the gate) and redirect to Hicbc opted out page" in {
 
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]

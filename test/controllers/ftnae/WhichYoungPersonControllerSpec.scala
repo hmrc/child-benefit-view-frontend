@@ -30,11 +30,11 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import stubs.AuthStubs._
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.ninoUser
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WhichYoungPersonView
@@ -105,7 +105,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .build()
 
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       running(application) {
         val request = FakeRequest(GET, whichYoungPersonRoute(NormalMode))

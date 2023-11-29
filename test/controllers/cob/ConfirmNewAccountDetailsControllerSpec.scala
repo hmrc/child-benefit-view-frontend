@@ -37,6 +37,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -44,7 +45,6 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.{ninoUser, testClaimantBankInformation}
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
@@ -145,7 +145,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN valid User Answers are retrieved" - {
           "THEN should return OK Result and the expected view" in {
-            userLoggedInChildBenefitUser(ninoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
             val userAnswers = UserAnswers(userAnswersId)
               .set(WhatTypeOfAccountPage, typeOfAccount)
@@ -185,7 +185,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
-            userLoggedInChildBenefitUser(ninoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

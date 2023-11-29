@@ -22,10 +22,10 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountNotChangedView
@@ -38,7 +38,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
@@ -99,7 +99,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(ninoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

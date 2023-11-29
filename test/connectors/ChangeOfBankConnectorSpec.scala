@@ -8,7 +8,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND}
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.Stubs._
+import stubs.ChildBenefitServiceStubs._
 import utils.TestData._
 
 import scala.concurrent.ExecutionContext

@@ -57,14 +57,14 @@ trait ModelGenerators {
     for {
       claimant <- arbitrary[Claimant]
       entitlementDate <- arbitrary[LocalDate]
-      paidAmountForEldestOrOnlyChild <- arbitrary[BigDecimal]
-      paidAmountForEachAdditionalChild <- arbitrary[BigDecimal]
+      paidAmountForEldestOrOnlyChild <- arbitrary[Double]
+      paidAmountForEachAdditionalChild <- arbitrary[Double]
       children <- Gen.containerOf[List, Child](arbitrary(arbitraryChild)) suchThat (x => x.nonEmpty)
     } yield ChildBenefitEntitlement(
       claimant,
       entitlementDate,
-      paidAmountForEldestOrOnlyChild,
-      paidAmountForEachAdditionalChild,
+      BigDecimal(paidAmountForEldestOrOnlyChild),
+      BigDecimal(paidAmountForEachAdditionalChild),
       children
     )
   implicit lazy val arbitraryChildBenefitEntitlement: Arbitrary[ChildBenefitEntitlement] =
@@ -72,14 +72,14 @@ trait ModelGenerators {
       for {
         claimant                         <- arbitrary[Claimant]
         entitlementDate                  <- arbitrary[LocalDate]
-        paidAmountForEldestOrOnlyChild   <- arbitrary[BigDecimal]
-        paidAmountForEachAdditionalChild <- arbitrary[BigDecimal]
+        paidAmountForEldestOrOnlyChild   <- arbitrary[Double]
+        paidAmountForEachAdditionalChild <- arbitrary[Double]
         children                         <- Gen.containerOf[List, Child](arbitrary(arbitraryChild)) suchThat (x => x.nonEmpty)
       } yield ChildBenefitEntitlement(
         claimant,
         entitlementDate,
-        paidAmountForEldestOrOnlyChild,
-        paidAmountForEachAdditionalChild,
+        BigDecimal(paidAmountForEldestOrOnlyChild),
+        BigDecimal(paidAmountForEachAdditionalChild),
         children
       )
     }
@@ -87,21 +87,21 @@ trait ModelGenerators {
     Arbitrary {
       for {
         fullName              <- arbitrary[FullName]
-        awardValue            <- arbitrary[BigDecimal]
+        awardValue            <- arbitrary[Double]
         awardStartDate        <- arbitrary[LocalDate]
         awardEndDate          <- arbitrary[LocalDate]
-        higherRateValue       <- arbitrary[BigDecimal]
-        standardRateValue     <- arbitrary[BigDecimal]
+        higherRateValue       <- arbitrary[Double]
+        standardRateValue     <- arbitrary[Double]
         lastPaymentInfo       <- Gen.containerOf[List, LastPaymentFinancialInfo](arbitrary(arbitraryLastPaymentFinancialInfo))
         fullAddress           <- arbitrary[FullAddress]
         adjustmentInformation <- arbitrary[Option[AdjustmentInformation]]
       } yield Claimant(
         fullName,
-        awardValue,
+        BigDecimal(awardValue),
         awardStartDate,
         awardEndDate,
-        higherRateValue,
-        standardRateValue,
+        BigDecimal(higherRateValue),
+        BigDecimal(standardRateValue),
         lastPaymentInfo,
         fullAddress,
         adjustmentInformation
@@ -110,16 +110,16 @@ trait ModelGenerators {
   implicit lazy val arbitraryFullName: Arbitrary[FullName] =
     Arbitrary {
       for {
-        givenName <- arbitrary[String]
-        surname   <- arbitrary[String]
+        givenName <- stringOf(alphaChar)
+        surname   <- stringOf(alphaChar)
       } yield FullName(s"$givenName $surname")
     }
   implicit lazy val arbitraryLastPaymentFinancialInfo: Arbitrary[LastPaymentFinancialInfo] =
     Arbitrary {
       for {
         creditDate   <- arbitrary[LocalDate]
-        creditAmount <- arbitrary[BigDecimal]
-      } yield LastPaymentFinancialInfo(creditDate, creditAmount)
+        creditAmount <- arbitrary[Double]
+      } yield LastPaymentFinancialInfo(creditDate, BigDecimal(creditAmount))
     }
   implicit lazy val arbitraryFullAddress: Arbitrary[FullAddress] =
     Arbitrary {

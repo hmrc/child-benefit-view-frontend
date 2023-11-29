@@ -33,9 +33,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
 import services.AuditService
+import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import utils.Stubs.userLoggedInChildBenefitUser
 import utils.TestData.ninoUser
 import utils.handlers.ErrorHandler
 
@@ -53,7 +53,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   "when bar not locked is verified from connector, the action" - {
 
     "must move on with the request (open the gate) and return None" in {
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -81,7 +81,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   "when bar not locked is NOT verified from connector, the action" - {
     "must NOT move on with the request (close the gate) and redirect to Bar Locked Page" in {
 
-      userLoggedInChildBenefitUser(ninoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
