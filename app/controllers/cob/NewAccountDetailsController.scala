@@ -145,7 +145,7 @@ class NewAccountDetailsController @Inject() (
   ): Future[Result] =
     error match {
       case ClaimantIsLockedOutOfChangeOfBank(_, _) => lockedOutRedirect
-      case PriorityBacsVerificationError(_, _)     => verificationError
+      case PriorityBARSVerificationError(_, _)     => verificationError
       case e                                       => noBacsRelatedError(e)
     }
 

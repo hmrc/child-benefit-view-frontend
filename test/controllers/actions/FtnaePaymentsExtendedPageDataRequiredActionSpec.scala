@@ -28,7 +28,7 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import repositories.FtnaePaymentsExtendedPageSessionRepository
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -58,7 +58,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
     "when there is no data in the cache" - {
 
       "must check FtnaePaymentsExtendedPage session repository userAnswers to 'None' in the request" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
         when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(None)
@@ -75,7 +75,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
 
       "must NOT call ftnaePaymentsExtendedPageSessionRepository and pass the userAnswers object over to the data required request" in {
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
@@ -95,7 +95,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
 
       "must build a userAnswers object and add it to the request" in {
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
         when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(Some(allAnsweredForFtnae.get))

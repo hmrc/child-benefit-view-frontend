@@ -26,6 +26,7 @@ object AppDependencies {
     "com.typesafe.play"      %% "play-test"               % PlayVersion.current,
     "org.mockito"            %% "mockito-scala"           % "1.16.42",
     "org.scalacheck"         %% "scalacheck"              % "1.15.4",
+    "org.scalamock"          %% "scalamock"               % "5.1.0",
     "uk.gov.hmrc"            %% "bootstrap-test-play-28"  % HMRCBoostrapPlayVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-28" % HMRCMongoPlayVersion,
     "com.vladsch.flexmark"    % "flexmark-all"            % "0.62.2",

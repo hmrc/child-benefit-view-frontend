@@ -19,10 +19,7 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
-        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers)),
-        //        bind[VerifyBarNotLockedAction].toInstance(FakeVerifyBarNotLockedAction(verify = true)),
-        //        bind[VerifyHICBCAction].toInstance(FakeVerifyHICBCAction(verify = true)),
-        //        bind[ChildBenefitEntitlementConnector].to[DefaultChildBenefitEntitlementConnector]
+        bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers))
       )
 
   protected def applicationBuilderWithVerificationActions(

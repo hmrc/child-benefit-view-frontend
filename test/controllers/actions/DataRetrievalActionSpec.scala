@@ -25,7 +25,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import repositories.SessionRepository
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,7 +41,7 @@ class DataRetrievalActionSpec extends BaseAppSpec with MockitoSugar {
     "when there is no data in the cache" - {
 
       "must set userAnswers to 'None' in the request" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val sessionRepository = mock[SessionRepository]
         when(sessionRepository.get("id")) thenReturn Future(None)
@@ -58,7 +58,7 @@ class DataRetrievalActionSpec extends BaseAppSpec with MockitoSugar {
     "when there is data in the cache" - {
 
       "must build a userAnswers object and add it to the request" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val sessionRepository = mock[SessionRepository]
         when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))

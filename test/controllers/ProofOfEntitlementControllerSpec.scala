@@ -33,7 +33,7 @@ import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, testEntitlement}
+import utils.TestData.{ninoUser, testEntitlement}
 import utils.handlers.ErrorHandler
 import views.html.ProofOfEntitlement
 
@@ -49,7 +49,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
   "Proof of entitlement controller" - {
     "must return SEE_OTHER and redirect to the service down view for a GET when getting entitlement fails" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       val failingChildBenefitEntitlementConnector = new ChildBenefitEntitlementConnector {
         override def getChildBenefitEntitlement(implicit
@@ -94,7 +94,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
     }
 
     "must return OK and render the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       stubFor(
         get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))

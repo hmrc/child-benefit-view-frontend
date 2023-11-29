@@ -45,7 +45,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, testClaimantBankInformation}
+import utils.TestData.{ninoUser, testClaimantBankInformation}
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
@@ -145,7 +145,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN valid User Answers are retrieved" - {
           "THEN should return OK Result and the expected view" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInChildBenefitUser(ninoUser)
 
             val userAnswers = UserAnswers(userAnswersId)
               .set(WhatTypeOfAccountPage, typeOfAccount)
@@ -185,7 +185,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

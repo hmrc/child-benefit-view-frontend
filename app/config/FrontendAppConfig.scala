@@ -25,24 +25,24 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
-  val host:        String = configuration.get[String]("host")
-  val appName:     String = configuration.get[String]("appName")
-  val loginUrl:    String = configuration.get[String]("urls.login")
-  val signOutUrl:  String = configuration.get[String]("urls.signOut")
-  val ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
-  val timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
-  val countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
-  val cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-  val languageTranslationEnabled: Boolean =
+  def host:        String = configuration.get[String]("host")
+  def appName:     String = configuration.get[String]("appName")
+  def loginUrl:    String = configuration.get[String]("urls.login")
+  def signOutUrl:  String = configuration.get[String]("urls.signOut")
+  def ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
+  def timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
+  def countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
+  def cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  def languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
-  val showOutageBanner: Boolean = configuration.get[Boolean]("features.showOutageBanner")
+  def showOutageBanner: Boolean = configuration.get[Boolean]("features.showOutageBanner")
 
-  val scaWrapperEnabled: Boolean =
+  def scaWrapperEnabled: Boolean =
     configuration.get[Boolean]("features.sca-wrapper-enabled")
 
-  private val contactHost = configuration.get[String]("contact-frontend.host")
-  private val childBenefitServiceBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
-  private val exitSurveyBaseUrl:          String = configuration.get[String]("microservice.services.feedback-frontend.url")
+  private def contactHost = configuration.get[String]("contact-frontend.host")
+  private def childBenefitServiceBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
+  private def exitSurveyBaseUrl:          String = configuration.get[String]("microservice.services.feedback-frontend.url")
 
   def childBenefitEntitlementUrl: String =
     s"$childBenefitServiceBaseUrl/child-benefit-service/view-entitlements-and-payments"
@@ -78,7 +78,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))
 
-  val confidenceLevel: ConfidenceLevel =
+  def confidenceLevel: ConfidenceLevel =
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)

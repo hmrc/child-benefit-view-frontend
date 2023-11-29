@@ -35,7 +35,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WhichYoungPersonView
 
@@ -105,7 +105,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .build()
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       running(application) {
         val request = FakeRequest(GET, whichYoungPersonRoute(NormalMode))

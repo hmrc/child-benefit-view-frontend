@@ -38,7 +38,7 @@ import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountChangedView
 
@@ -68,7 +68,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope(()))
 
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInChildBenefitUser(ninoUser)
 
             val application = applicationBuilderWithVerificationActions(
               config,
@@ -209,7 +209,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

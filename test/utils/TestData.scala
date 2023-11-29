@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 object TestData {
 
-  val NinoUser: String =
+  val ninoUser: String =
     """
       |{
       |	"nino": "This",
@@ -34,7 +34,15 @@ object TestData {
       |}
       |""".stripMargin
 
-  val NotFoundAccountError: String =
+  def genericCBError(status: Int, description: String):String =
+    s"""
+      |{
+      |		"status": $status,
+      |		"description": "$description"
+      |	}
+      |""".stripMargin
+
+  val notFoundAccountError: String =
     """
       |{
       |		"status": 404,
@@ -42,11 +50,21 @@ object TestData {
       |	}
       |""".stripMargin
 
-  val LockedOutErrorResponse: String =
+  val lockedOutErrorDescription = "[BAR locked] - The maximum number of retries reached when calling BAR"
+  val lockedOutErrorResponse: String =
     s"""
       |{
       |		"status": 500,
-      |		"description": "[BAR locked] - The maximum number of retries reached when calling BAR"
+      |		"description": "$lockedOutErrorDescription"
+      |	}
+      |""".stripMargin
+
+  val barsFailureErrorDescription = "[Priority] - A unit test BARS failure has occurred"
+  val barsFailureErrorResponse: String =
+    s"""
+      |{
+      |		"status": 404,
+      |		"description": "$barsFailureErrorDescription"
       |	}
       |""".stripMargin
 

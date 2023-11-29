@@ -27,7 +27,7 @@ import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, 
 import services.PaymentHistoryPageVariant._
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, NotFoundAccountError, testEntitlement}
+import utils.TestData.{ninoUser, notFoundAccountError, testEntitlement}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
@@ -36,7 +36,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
   "Payment history controller" - {
     "must return OK and render the correct view when entitlement contains payment with payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(testEntitlement)
 
       val application = applicationBuilder().build()
@@ -58,7 +58,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement contains payment without payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
@@ -84,7 +84,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC with payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
@@ -110,7 +110,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC without payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
@@ -136,7 +136,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended but received payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButReceivedPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
@@ -162,7 +162,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended and no payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButNoPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
@@ -188,7 +188,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended, claimant is HICBIC and no payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast)
 
       val application = applicationBuilder().build()
@@ -217,8 +217,8 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return 404 and render the no account found view when services return no found account" in {
-      userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryFailureStub(NotFoundAccountError, status = NOT_FOUND)
+      userLoggedInChildBenefitUser(ninoUser)
+      entitlementsAndPaymentHistoryFailureStub(notFoundAccountError, status = NOT_FOUND)
 
       val application = applicationBuilder().build()
       running(application) {

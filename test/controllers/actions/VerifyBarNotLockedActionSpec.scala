@@ -36,7 +36,7 @@ import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import utils.handlers.ErrorHandler
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,7 +53,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   "when bar not locked is verified from connector, the action" - {
 
     "must move on with the request (open the gate) and return None" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -81,7 +81,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   "when bar not locked is NOT verified from connector, the action" - {
     "must NOT move on with the request (close the gate) and redirect to Bar Locked Page" in {
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]

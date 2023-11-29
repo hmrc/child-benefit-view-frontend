@@ -37,13 +37,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs._
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.NoAccountFoundView
 
 class NoAccountFoundControllerSpec extends BaseAppSpec {
   "NoAccountFoundController" - {
     "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

@@ -16,8 +16,8 @@
 
 package generators
 
-import models.changeofbank.{AccountHolderName, BankAccountNumber, ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails, SortCode}
-import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
+import models.changeofbank.{AccountHolderName, AccountHolderType, BankAccountNumber, BankDetails, ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails, SortCode}
+import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankAccountRequest, VerifyBankAccountRequest}
 import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
 import models.entitlement._
 import models.ftnae.HowManyYears
@@ -204,6 +204,10 @@ trait ModelGenerators {
       ClaimantBankAccountInformation(None, None, None, None)
     }
 
+  implicit lazy val arbitraryAccountHolderType: Arbitrary[AccountHolderType] =
+    Arbitrary {
+      Gen.oneOf(AccountHolderType.values)
+    }
   implicit lazy val arbitraryAccountHolderName: Arbitrary[AccountHolderName] =
     Arbitrary {
       for {
@@ -222,6 +226,32 @@ trait ModelGenerators {
         accountNumber <- numStr.map(_.take(ALLOWED_ACCOUNT_NUMBER_LENGTH))
       } yield BankAccountNumber(accountNumber)
     }
+
+  implicit lazy val arbitraryVerifyBankAccountRequest: Arbitrary[VerifyBankAccountRequest] =
+    Arbitrary {
+      for {
+        accountHolderName <- arbitrary[AccountHolderName]
+        sortCode          <- arbitrary[SortCode]
+        bankAccountNumber <- arbitrary[BankAccountNumber]
+      } yield VerifyBankAccountRequest(accountHolderName, sortCode, bankAccountNumber)
+    }
+
+  implicit lazy val arbitraryBankDetails: Arbitrary[BankDetails] =
+    Arbitrary {
+      for {
+        accountHolderType <- arbitrary[AccountHolderType]
+        accountHolderName <- arbitrary[AccountHolderName]
+        bankAccountNumber <- arbitrary[BankAccountNumber]
+        sortCode          <- arbitrary[SortCode]
+      } yield BankDetails(accountHolderType, accountHolderName, bankAccountNumber, sortCode)
+    }
+  implicit lazy val arbitraryUpdateBankAccountRequest: Arbitrary[UpdateBankAccountRequest] = {
+    Arbitrary {
+      for {
+        bankDetails <- arbitrary[BankDetails]
+      } yield UpdateBankAccountRequest(bankDetails)
+    }
+  }
 
   val generateId: Arbitrary[String] =
     Arbitrary {

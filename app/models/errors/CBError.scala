@@ -26,7 +26,7 @@ final case class PaymentHistoryValidationError(statusCode: Int, message: String)
 final case class ChangeOfBankValidationError(statusCode: Int, message: String = "change of bank validation failed")
     extends CBError
 
-final case class PriorityBacsVerificationError(statusCode: Int, message: String) extends CBError
+final case class PriorityBARSVerificationError(statusCode: Int, message: String) extends CBError
 final case class ClaimantIsLockedOutOfChangeOfBank(
     statusCode: Int,
     message:    String

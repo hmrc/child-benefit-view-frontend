@@ -19,6 +19,7 @@ package utils
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.changeofbank.ClaimantBankInformation
+import models.cob.UpdateBankDetailsResponse
 import models.entitlement.ChildBenefitEntitlement
 import play.api.libs.json.Json
 
@@ -116,7 +117,7 @@ object Stubs {
 
   def verifyClaimantBankInfoStub(): StubMapping =
     stubFor(
-      get(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
+      put(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
         .willReturn(
           aResponse()
             .withStatus(200)
@@ -126,7 +127,47 @@ object Stubs {
 
   def verifyClaimantBankInfoFailureStub(status: Int = 403, result: String): StubMapping =
     stubFor(
-      get(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
+      put(urlEqualTo("/child-benefit-service/verify-claimant-bank-account"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
+  def verifyBARNotLockedStub(): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/verify-bar-not-locked"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(true).toString)
+        )
+    )
+
+  def verifyBARNotLockedFailureStub(status: Int, result: String): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/verify-bar-not-locked"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
+  def updateBankAccountStub(result: UpdateBankDetailsResponse): StubMapping =
+    stubFor(
+      put(urlEqualTo("/child-benefit-service/update-claimant-bank-account"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(result).toString)
+        )
+    )
+
+  def updateBankAccountFailureStub(status: Int, result: String): StubMapping =
+    stubFor(
+      put(urlEqualTo("/child-benefit-service/update-claimant-bank-account"))
         .willReturn(
           aResponse()
             .withStatus(status)

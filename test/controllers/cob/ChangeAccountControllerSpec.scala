@@ -22,22 +22,21 @@ import controllers.cob
 import controllers.cob.ChangeAccountControllerSpec._
 import models.changeofbank._
 import models.common.AdjustmentReasonCode
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, Request}
-import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.api.test.Helpers._
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
 import utils.Stubs._
-import utils.TestData.{LockedOutErrorResponse, NinoUser, NotFoundAccountError, testClaimantBankInformation}
+import utils.TestData.{lockedOutErrorResponse, ninoUser, notFoundAccountError, testClaimantBankInformation}
 import views.html.ErrorTemplate
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
 
-class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChecks {
+class ChangeAccountControllerSpec extends BaseAppSpec {
 
   "ChangeAccount Controller" - {
 
@@ -54,7 +53,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(testClaimantBankInformation)
         verifyClaimantBankInfoStub()
 
@@ -79,7 +78,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return OK and render the correct view for ChB claimant who is in payment and has a non-standard bank account type" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
         verifyClaimantBankInfoStub()
 
@@ -107,8 +106,8 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoFailureStub(500, LockedOutErrorResponse)
+        userLoggedInChildBenefitUser(ninoUser)
+        changeOfBankUserInfoFailureStub(500, lockedOutErrorResponse)
 
         running(application) {
           implicit val request: Request[AnyContentAsEmpty.type] =
@@ -127,7 +126,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
         verifyClaimantBankInfoStub()
 
@@ -147,7 +146,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date in the past" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
         verifyClaimantBankInfoStub()
 
@@ -168,7 +167,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date is day of request" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
         verifyClaimantBankInfoStub()
 
@@ -188,8 +187,8 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       "must return SEE_OTHER and render the correct view for No ChB account found" in {
         val application: Application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoFailureStub(result = NotFoundAccountError)
+        userLoggedInChildBenefitUser(ninoUser)
+        changeOfBankUserInfoFailureStub(result = notFoundAccountError)
         verifyClaimantBankInfoStub()
 
         running(application) {
@@ -228,7 +227,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
             verifyBarNotLockedAction = verificationBarAction
           ).build()
 
-          userLoggedInChildBenefitUser(NinoUser)
+          userLoggedInChildBenefitUser(ninoUser)
           changeOfBankUserInfoStub(testClaimantBankInformation)
           verifyClaimantBankInfoStub()
 
@@ -252,7 +251,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec with ScalaCheckPropertyChe
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

@@ -22,7 +22,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.HtmlMatcherUtils.removeNonce
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 class JourneyRecoveryControllerSpec extends BaseAppSpec {
@@ -32,7 +32,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when a relative continue Url is supplied" - {
 
       "must return OK and the continue view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()
         running(application) {
@@ -59,7 +59,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when an absolute continue Url is supplied" - {
 
       "must return OK and the start again view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()
         running(application) {
@@ -83,7 +83,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when no continue Url is supplied" - {
 
       "must return OK and the start again view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()
         running(application) {

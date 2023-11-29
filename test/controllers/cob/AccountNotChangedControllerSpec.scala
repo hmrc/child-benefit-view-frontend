@@ -26,7 +26,7 @@ import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountNotChangedView
 
@@ -38,7 +38,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
@@ -99,7 +99,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

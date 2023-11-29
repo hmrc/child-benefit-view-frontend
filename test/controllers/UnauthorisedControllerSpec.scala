@@ -21,7 +21,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.Stubs.userLoggedInChildBenefitUser
 import utils.HtmlMatcherUtils.removeNonce
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.UnauthorisedView
 
 class UnauthorisedControllerSpec extends BaseAppSpec {
@@ -29,7 +29,7 @@ class UnauthorisedControllerSpec extends BaseAppSpec {
   "Unauthorised Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

@@ -23,7 +23,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status}
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 
 class AuthControllerSpec extends BaseAppSpec {
 
@@ -33,7 +33,7 @@ class AuthControllerSpec extends BaseAppSpec {
 
   "AuthController" - {
     "redirect to /gg/sign-out with continue to the feedback survey" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       val request = FakeRequest(GET, routes.AuthController.signOut().url)
         .withSession(("authToken", "Bearer 123"))

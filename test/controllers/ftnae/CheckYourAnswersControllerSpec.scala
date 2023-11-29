@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import testconfig.TestConfig
 import utils.HtmlMatcherUtils.removeNonce
 import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import viewmodels.checkAnswers.ftnae._
 import views.html.ftnae.CheckYourAnswersView
 
@@ -47,7 +47,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
     val config = TestConfig()
 
     "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
         .configure(
@@ -93,7 +93,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
       }
     }
 
-    "must redirect to Service Unavailable for a GET if no existing data is found" in {
+    "must redirect to Journey Recovery for a GET if no existing data is found" in {
       userLoggedInChildBenefitUser(NinoUser)
 
       val application = applicationBuilder(config, userAnswers = None).configure().build()
@@ -105,7 +105,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
+        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
