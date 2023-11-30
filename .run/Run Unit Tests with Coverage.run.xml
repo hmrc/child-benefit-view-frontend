@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Unit Tests with Coverage" type="ScalaTestRunConfiguration" factoryName="ScalaTest" editBeforeRun="true" show_console_on_std_err="false" show_console_on_std_out="false">
     <module name="child-benefit-view-frontend" />
-    <extension name="coverage">
+    <extension name="coverage" sample_coverage="false">
       <pattern>
         <option name="PATTERN" value="app.*" />
         <option name="ENABLED" value="true" />
@@ -38,7 +38,7 @@
         <option name="INCLUDE" value="false" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="prod.*" />
+        <option name="PATTERN" value="ftnae.*" />
         <option name="ENABLED" value="true" />
         <option name="INCLUDE" value="false" />
       </pattern>
@@ -52,11 +52,6 @@
         <option name="ENABLED" value="true" />
         <option name="INCLUDE" value="false" />
       </pattern>
-      <pattern>
-        <option name="PATTERN" value="ftnae.*" />
-        <option name="ENABLED" value="true" />
-        <option name="INCLUDE" value="false" />
-      </pattern>
     </extension>
     <option name="allowRunningInParallel" value="false" />
     <option name="projectPathOnTarget" />
@@ -66,28 +61,20 @@
     <option name="testKind" value="All in package" />
     <option name="classBuf">
       <list>
-        <option value="models.WithNameSpec" />
-        <option value="models.EnumerableSpec" />
-        <option value="models.RichJsValueSpec" />
-        <option value="models.HowManyYearsSpec" />
-        <option value="models.WhatTypeOfAccountSpec" />
-        <option value="models.ConfirmNewAccountDetailsSpec" />
-        <option value="models.entitlement.ChildSpec" />
-        <option value="services.AuditServiceSpec" />
-        <option value="services.FtnaeServiceSpec" />
-        <option value="services.ChangeOfBankServiceSpec" />
+        <option value="connectors.FtnaeConnectorSpec" />
+        <option value="connectors.ChangeOfBankConnectorSpec" />
+        <option value="connectors.ChildBenefitEntitlementConnectorSpec" />
         <option value="repositories.SessionRepositorySpec" />
-        <option value="utils.BaseISpec" />
         <option value="utils.navigation.NavigatorSpec" />
-        <option value="utils.pages.NewAccountDetailsPageSpec" />
-        <option value="utils.pages.HowManyYearsSpec" />
-        <option value="utils.pages.ExtendPaymentsPageSpec" />
-        <option value="utils.pages.LiveWithYouInUKPageSpec" />
-        <option value="utils.pages.WhichYoungPersonSpec" />
-        <option value="utils.pages.WillCourseBeEmployerProvidedPageSpec" />
-        <option value="utils.pages.WillYoungPersonBeStayingPageSpec" />
-        <option value="utils.pages.SchoolOrCollegePageSpec" />
         <option value="utils.pages.TwelveHoursAWeekPageSpec" />
+        <option value="utils.pages.LiveWithYouInUKPageSpec" />
+        <option value="utils.pages.NewAccountDetailsPageSpec" />
+        <option value="utils.pages.WhichYoungPersonSpec" />
+        <option value="utils.pages.WillYoungPersonBeStayingPageSpec" />
+        <option value="utils.pages.HowManyYearsSpec" />
+        <option value="utils.pages.SchoolOrCollegePageSpec" />
+        <option value="utils.pages.ExtendPaymentsPageSpec" />
+        <option value="utils.pages.WillCourseBeEmployerProvidedPageSpec" />
         <option value="utils.pages.ConfirmNewAccountDetailsPageSpec" />
         <option value="utils.mappings.MappingsSpec" />
         <option value="utils.mappings.ConstraintsSpec" />
@@ -135,6 +122,20 @@
         <option value="controllers.ftnae.WillYoungPersonBeStayingControllerSpec" />
         <option value="controllers.ftnae.WillCourseBeEmployerProvidedControllerSpec" />
         <option value="controllers.ftnae.NotEntitledCourseEmployerProvidedControllerSpec" />
+        <option value="views.ViewUtilsSpec" />
+        <option value="views.cob.ChangeAccountViewSpec" />
+        <option value="views.cob.HICBCOptedOutPaymentsViewSpec" />
+        <option value="views.cob.ConfirmNewAccountDetailsViewSpec" />
+        <option value="models.WithNameSpec" />
+        <option value="models.EnumerableSpec" />
+        <option value="models.RichJsValueSpec" />
+        <option value="models.HowManyYearsSpec" />
+        <option value="models.WhatTypeOfAccountSpec" />
+        <option value="models.ConfirmNewAccountDetailsSpec" />
+        <option value="models.entitlement.ChildSpec" />
+        <option value="services.AuditServiceSpec" />
+        <option value="services.FtnaeServiceSpec" />
+        <option value="services.ChangeOfBankServiceSpec" />
         <option value="forms.ftnae.HowManyYearsFormProviderSpec" />
         <option value="forms.ftnae.LiveWithYouInUKFormProviderSpec" />
         <option value="forms.ftnae.SchoolOrCollegeFormProviderSpec" />
@@ -146,10 +147,6 @@
         <option value="forms.behaviours.OptionFieldBehaviours" />
         <option value="forms.cob.NewAccountDetailsFormProviderSpec" />
         <option value="forms.cob.WhatTypeOfAccountFormProviderSpec" />
-        <option value="views.ViewUtilsSpec" />
-        <option value="views.cob.ChangeAccountViewSpec" />
-        <option value="views.cob.HICBCOptedOutPaymentsViewSpec" />
-        <option value="views.cob.ConfirmNewAccountDetailsViewSpec" />
       </list>
     </option>
     <option name="shortenClasspath" value="NONE" />

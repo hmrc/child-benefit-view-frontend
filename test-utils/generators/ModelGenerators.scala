@@ -18,9 +18,9 @@ package generators
 
 import models.changeofbank.{AccountHolderName, AccountHolderType, BankAccountNumber, BankDetails, ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails, SortCode}
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankAccountRequest, VerifyBankAccountRequest}
-import models.common.{AddressLine, AddressPostcode, FirstForename, Surname}
+import models.common.{AddressLine, AddressPostcode, ChildReferenceNumber, FirstForename, Surname}
 import models.entitlement._
-import models.ftnae.HowManyYears
+import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimantInfo, FtnaeQuestionAndAnswer, FtnaeResponse, HowManyYears, SecondForename}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen}
@@ -31,7 +31,7 @@ trait ModelGenerators {
 
   implicit lazy val arbitraryHowManyYears: Arbitrary[HowManyYears] = {
     Arbitrary {
-      Gen.oneOf(HowManyYears.values.toSeq)
+      Gen.oneOf(HowManyYears.values)
     }
   }
   private val ACCOUNT_HOLDER_MAX_LENGTH     = 30
@@ -153,7 +153,6 @@ trait ModelGenerators {
     Arbitrary {
       None
     }
-
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
       for {
@@ -168,7 +167,6 @@ trait ModelGenerators {
         relationshipEndDate
       )
     }
-
   // Claimant Bank Information and associated models
   implicit lazy val arbitraryClaimantBankInformation: Arbitrary[ClaimantBankInformation] =
     Arbitrary {
@@ -185,6 +183,12 @@ trait ModelGenerators {
       for {
         name <- stringOf(alphaChar)
       } yield FirstForename(name)
+    }
+  implicit lazy val arbitrarySecondForename: Arbitrary[SecondForename] =
+    Arbitrary {
+      for {
+        name <- stringOf(alphaChar)
+      } yield SecondForename(name)
     }
   implicit lazy val arbitrarySurname: Arbitrary[Surname] =
     Arbitrary {
@@ -203,7 +207,6 @@ trait ModelGenerators {
     Arbitrary {
       ClaimantBankAccountInformation(None, None, None, None)
     }
-
   implicit lazy val arbitraryAccountHolderType: Arbitrary[AccountHolderType] =
     Arbitrary {
       Gen.oneOf(AccountHolderType.values)
@@ -226,7 +229,6 @@ trait ModelGenerators {
         accountNumber <- numStr.map(_.take(ALLOWED_ACCOUNT_NUMBER_LENGTH))
       } yield BankAccountNumber(accountNumber)
     }
-
   implicit lazy val arbitraryVerifyBankAccountRequest: Arbitrary[VerifyBankAccountRequest] =
     Arbitrary {
       for {
@@ -235,7 +237,6 @@ trait ModelGenerators {
         bankAccountNumber <- arbitrary[BankAccountNumber]
       } yield VerifyBankAccountRequest(accountHolderName, sortCode, bankAccountNumber)
     }
-
   implicit lazy val arbitraryBankDetails: Arbitrary[BankDetails] =
     Arbitrary {
       for {
@@ -252,6 +253,60 @@ trait ModelGenerators {
       } yield UpdateBankAccountRequest(bankDetails)
     }
   }
+  implicit lazy val arbitraryChildReferenceNumber: Arbitrary[ChildReferenceNumber] =
+    Arbitrary {
+      for {
+        prefix <- alphaStr suchThat (s => s.length >= 2)
+        numerical <- numStr suchThat (s => s.length >= 6)
+      } yield ChildReferenceNumber(s"${prefix.take(2)}${numerical.take(6)}")
+    }
+  implicit lazy val arbitraryCourseDuration: Arbitrary[CourseDuration] =
+    Arbitrary {
+      Gen.oneOf(CourseDuration.OneYear, CourseDuration.TwoYear)
+    }
+  implicit lazy val arbitraryFtnaeQuestionAndAnswer: Arbitrary[FtnaeQuestionAndAnswer] =
+    Arbitrary {
+      for {
+        question <- alphaStr
+        answer <- alphaStr
+      } yield FtnaeQuestionAndAnswer(question, answer)
+    }
+  implicit lazy val arbitraryFtnaeClaimantInfo: Arbitrary[FtnaeClaimantInfo] =
+  Arbitrary {
+    for {
+      firstname <- arbitrary[FirstForename]
+      surname <- arbitrary[Surname]
+    } yield FtnaeClaimantInfo(firstname, surname)
+  }
+  implicit lazy val arbitraryChildDetails: Arbitrary[ChildDetails] =
+    Arbitrary {
+      for {
+        courseDuration <- arbitrary[CourseDuration]
+        crn <- arbitrary[ChildReferenceNumber]
+        dateOfBirth <- arbitrary[LocalDate]
+        whichYoungPerson <- alphaStr
+        ftnaeQA <- Gen.containerOf[List, FtnaeQuestionAndAnswer](arbitrary[FtnaeQuestionAndAnswer]) suchThat(x => x.nonEmpty)
+
+      } yield ChildDetails(courseDuration, crn, dateOfBirth, whichYoungPerson, ftnaeQA)
+    }
+  implicit lazy val arbitraryFtnaeChildInfo: Arbitrary[FtnaeChildInfo] =
+    Arbitrary {
+      for {
+        crn <- arbitrary[ChildReferenceNumber]
+        firstName <- arbitrary[FirstForename]
+        midName <- arbitrary[SecondForename]
+        lastName <- arbitrary[Surname]
+        dateOfBirth <- arbitrary[LocalDate]
+        claimEndDate <- arbitrary[LocalDate]
+      } yield FtnaeChildInfo(crn, firstName, Some(midName), lastName, dateOfBirth, claimEndDate)
+    }
+  implicit lazy val arbitraryFtnaeResponse: Arbitrary[FtnaeResponse] =
+    Arbitrary {
+      for {
+        claimant <- arbitrary[FtnaeClaimantInfo]
+        children <- Gen.containerOf[List, FtnaeChildInfo](arbitrary[FtnaeChildInfo]) suchThat(x => x.nonEmpty)
+      } yield FtnaeResponse(claimant, children)
+    }
 
   val generateId: Arbitrary[String] =
     Arbitrary {

@@ -3,7 +3,6 @@ package base
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.sun.xml.internal.ws.api.pipe.Stubs
 import org.scalatest.{Assertion, BeforeAndAfterAll, BeforeAndAfterEach}
 
 import java.util.concurrent.TimeUnit

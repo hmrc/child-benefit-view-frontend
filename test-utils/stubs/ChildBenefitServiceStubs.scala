@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.changeofbank.ClaimantBankInformation
 import models.cob.UpdateBankDetailsResponse
 import models.entitlement.ChildBenefitEntitlement
+import models.ftnae.{ChildDetails, FtnaeResponse}
 import play.api.libs.json.Json
 
 object ChildBenefitServiceStubs {
@@ -119,4 +120,45 @@ object ChildBenefitServiceStubs {
             .withBody(result)
         )
     )
+
+  def getFtnaeAccountDetailsStub(result: FtnaeResponse): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/retrieve-ftnae-account-information"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(result).toString)
+        )
+    )
+
+  def getFtnaeAccountDetailsFailureStub(status: Int, result: String): StubMapping =
+    stubFor(
+      get(urlEqualTo("/child-benefit-service/retrieve-ftnae-account-information"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
+  def uploadFtnaeDetailsStub(result: ChildDetails) =
+    stubFor(
+      put(urlEqualTo("/child-benefit-service/update-child-information/ftnae"))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.toJson(result).toString)
+        )
+    )
+
+  def uploadFtnaeDetailsFailureStub(status: Int, result: String): StubMapping =
+    stubFor(
+      put(urlEqualTo("/child-benefit-service/update-child-information/ftnae"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(result)
+        )
+    )
+
 }

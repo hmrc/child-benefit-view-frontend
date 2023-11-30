@@ -32,14 +32,14 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
           }
         }
       }
-    }
-    "GIVEN the HttpClient receives a CBErrorResponse" - {
-      "THEN a ConnectorError with the matched status and description is returned" in {
-        val expectedMessage = "Unit Test other failure expected message"
-        entitlementsAndPaymentHistoryFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
+      "GIVEN the HttpClient receives a CBErrorResponse" - {
+        "THEN a ConnectorError with the matched status and description is returned" in {
+          val expectedMessage = "Unit Test other failure expected message"
+          entitlementsAndPaymentHistoryFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-        whenReady(sut.getChildBenefitEntitlement.value) { result =>
-          result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+          whenReady(sut.getChildBenefitEntitlement.value) { result =>
+            result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+          }
         }
       }
     }

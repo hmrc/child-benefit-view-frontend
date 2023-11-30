@@ -68,6 +68,22 @@ object TestData {
       |	}
       |""".stripMargin
 
+  val ftnaeNoChBAccountErrorResponse: String =
+    """
+      |{
+      |		"status": 404,
+      |		"description": "No ChB Account"
+      |	}
+      |""".stripMargin
+
+  val ftnaeCannotFindYoungPersonErrorResponse: String =
+    """
+      |{
+      |		"status": 404,
+      |		"description": "Can not find young person"
+      |	}
+      |""".stripMargin
+
   val testEntitlement: ChildBenefitEntitlement = ChildBenefitEntitlement(
     Claimant(
       name = FullName("John Doe"),
