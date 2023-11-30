@@ -1,10 +1,14 @@
 service.name = Budd-dal Plant
 
-# ---------- Site Section -----------------------SS
+# ---------- Site Section -----------------------
+site.back = Yn ôl
+site.remove = Tynnu
 site.change = Newid
 site.no = Na
 site.yes = Iawn
 site.continue = Yn eich blaen
+site.start = Dechrau nawr
+site.startAgain = Dechrau eto
 site.signIn = Mewngofnodi
 site.govuk = GOV.UK
 site.technicalProblemMessage = A yw’r dudalen hon yn gweithio’n iawn?
@@ -33,6 +37,14 @@ timeout.signOut = Allgofnodi
 error.browser.title.prefix = Gwall:
 
 # ---------- Journey Recovery Section -----------
+journeyRecovery.continue.title = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth
+journeyRecovery.continue.heading = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth
+journeyRecovery.continue.guidance = Nid oeddem yn gallu cadw’ch ateb diwethaf. I fynd yn eich blaen, mae angen i chi roi cynnig arall arni.
+journeyRecovery.continue.button = Rhowch gynnig arall arni
+journeyRecovery.startAgain.title = Rhowch gynnig arall arni
+journeyRecovery.startAgain.heading = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth
+journeyRecovery.startAgain.guidance = Mae’n ddrwg gennym, ond mae problem gyda’r gwasanaeth
+journeyRecovery.startAgain.button = Dechrau eto
 
 # ---------- Signed Out Section -----------------
 signedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
@@ -137,6 +149,9 @@ notFound.explanation1 = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod 
 notFound.explanation2 = Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 
 # ---------- Page Not Found Section -------------
+pageNotFound.title = Heb ddod o hyd i’r dudalen
+pageNotFound.heading = Ni ellir dod o hyd i’r dudalen hon
+pageNotFound.paragraph1 = Gwiriwch eich bod wedi nodi’r cyfeiriad gwe cywir.
 
 # ---------- Change Account Section -------------
 changeAccount.title = Caiff eich Budd-dal Plant ei dalu i’r cyfrif hwn
@@ -303,7 +318,6 @@ extendPayments.bulletPoint10 = ar gwrs sy’n cael ei ddarparu gan ysgol neu gol
 extendPayments.bulletPoint11 = yn byw gyda chi yn y DU
 extendPayments.p4 = Defnyddiwch ffurflen wahanol i wneud cais {0}.
 extendPayments.p4.linkText = os bydd ei amgylchiadau’n wahanol
-extendPayments.govuk.link = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy
 
 # ----------  Young person not listed for FTNAE ------------
 whyYoungPersonNotListed.title = Pam nad yw’r person ifanc wedi’i restru

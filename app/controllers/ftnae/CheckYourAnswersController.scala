@@ -71,9 +71,7 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] = {
     (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
       {
-
-//        val summaryRows = buildSummaryRows(request)
-        val summaryRows: Option[List[SummaryListRow]] = None
+        val summaryRows = buildSummaryRows(request)
 
         firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
           case Right(()) =>

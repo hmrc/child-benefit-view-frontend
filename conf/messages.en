@@ -38,10 +38,12 @@ error.browser.title.prefix = Error:
 # ---------- Journey Recovery Section -----------
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
-journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
+journeyRecovery.continue.guidance = We were unable to save your last answer. To continue, you need to try again.
+journeyRecovery.continue.button = Try again
 journeyRecovery.startAgain.title = Sorry, there is a problem with the service
 journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
-journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
+journeyRecovery.startAgain.guidance = There is an issue with this service so we have been unable to save your answers. To continue, you will have to start again.
+journeyRecovery.startAgain.button = Start again
 
 # ---------- Signed Out Section -----------------
 signedOut.title = For your security, we signed you out

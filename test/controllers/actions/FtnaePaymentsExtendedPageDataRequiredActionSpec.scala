@@ -67,7 +67,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
         val result = action
           .callTransform(OptionalDataRequest(fakeRequest, "id", nino, None))
           .futureValue
-        result mustBe Left(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad()))
+        result mustBe Left(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad.url))
       }
     }
 
