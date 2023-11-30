@@ -9,11 +9,11 @@ import scala.io.Source
 
 class MessagesSpec extends AnyFreeSpec with Matchers {
 
-  private val MatchSingleQuoteOnly = """\w+'{1}\w+""".r
+  private val MatchSingleQuoteOnly   = """\w+'{1}\w+""".r
   private val MatchBacktickQuoteOnly = """`+""".r
 
   private val englishMessages = parseMessages("conf/messages.en").filterNot(message => message._1.startsWith("pdf"))
-  private val welshMessages = parseMessages("conf/messages.cy")
+  private val welshMessages   = parseMessages("conf/messages.cy")
 
   "All message files" - {
     "have the same set of keys" in {
@@ -46,22 +46,24 @@ class MessagesSpec extends AnyFreeSpec with Matchers {
     }
 
   private def assertNonEmpty(label: String, messages: Map[String, String]): Unit =
-    messages.foreach { case (key: String, value: String) =>
-      withClue(
-        s"In $label, there is an empty value for the key:[$key][$value]"
-      ) {
-        value.trim.isEmpty mustBe false
-      }
+    messages.foreach {
+      case (key: String, value: String) =>
+        withClue(
+          s"In $label, there is an empty value for the key:[$key][$value]"
+        ) {
+          value.trim.isEmpty mustBe false
+        }
     }
 
   private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]): Unit =
-    messages.foreach { case (key: String, value: String) =>
-      withClue(
-        s"In $label, there is an unescaped or invalid quote:[$key][$value]"
-      ) {
-        MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
-        MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
-      }
+    messages.foreach {
+      case (key: String, value: String) =>
+        withClue(
+          s"In $label, there is an unescaped or invalid quote:[$key][$value]"
+        ) {
+          MatchSingleQuoteOnly.findFirstIn(value).isDefined mustBe false
+          MatchBacktickQuoteOnly.findFirstIn(value).isDefined mustBe false
+        }
     }
 
   private def listMissingMessageKeys(header: String, missingKeys: Set[String]) = {
