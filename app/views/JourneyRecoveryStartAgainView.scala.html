@@ -32,7 +32,8 @@
     @para(messages("journeyRecovery.startAgain.guidance"))
 
     @govukButton(
-        ButtonViewModel(messages("site.startAgain"))
+        ButtonViewModel(messages("journeyRecovery.startAgain.button"))
+            .asLink(controllers.routes.ProofOfEntitlementController.view.url)
             .withAttribute("id", "start-again-button")
     )
 }
