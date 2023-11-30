@@ -18,23 +18,30 @@ package controllers.actions
 
 import config.FeatureAllowlistFilter
 import play.api.Configuration
+import play.api.i18n.Messages
 import play.api.mvc.Results.NotFound
 import play.api.mvc.{ActionFunction, MessagesRequest, Result}
+import play.twirl.api.HtmlFormat
 import views.html.ErrorTemplate
+import views.html.ftnae.FtnaeDisabledView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeatureFlagActionFactory @Inject() (
-    configuration: Configuration,
-    errorTemplate: ErrorTemplate,
-    val allowList: FeatureAllowlistFilter
+    configuration:     Configuration,
+    errorTemplate:     ErrorTemplate,
+    ftnaeDisabledView: FtnaeDisabledView,
+    val allowList:     FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {
 
-  private def whenEnabled(featureFlag: String): FeatureFlagAction =
+  private def whenEnabled(
+      featureFlag:   String,
+      specifiedView: Option[(MessagesRequest[_], Messages) => HtmlFormat.Appendable] = None
+  ): FeatureFlagAction =
     new FeatureFlagAction {
       override def invokeBlock[A](
           request: MessagesRequest[A],
@@ -42,16 +49,21 @@ class FeatureFlagActionFactory @Inject() (
       ): Future[Result] = {
         val isFeatureEnabled =
           configuration.getOptional[Boolean](s"feature-flags.$featureFlag.enabled").getOrElse(false)
+
+        val featureDisabledView = specifiedView.fold(
+          errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
+            request,
+            request.messages
+          )
+        )(value => value(request, request.messages))
+
         if (isFeatureEnabled) {
           allowList(_ => block(request))(featureFlag, request)
         } else {
           allowList(_ =>
             Future.successful(
               NotFound(
-                errorTemplate("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
-                  request,
-                  request.messages
-                )
+                featureDisabledView
               )
             )
           )(featureFlag, request)
@@ -62,9 +74,10 @@ class FeatureFlagActionFactory @Inject() (
     }
 
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
-  val ftnaeEnabled:        FeatureFlagAction = whenEnabled("ftnae")
-  val addChildEnabled:     FeatureFlagAction = whenEnabled("add-child")
-  val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
+  val ftnaeEnabled: FeatureFlagAction =
+    whenEnabled("ftnae", Some((request, messages) => ftnaeDisabledView()(request, messages)))
+  val addChildEnabled: FeatureFlagAction = whenEnabled("add-child")
+  val hicbcEnabled:    FeatureFlagAction = whenEnabled("hicbc")
 }
 
 trait FeatureFlagAction extends ActionFunction[MessagesRequest, MessagesRequest]

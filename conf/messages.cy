@@ -416,6 +416,13 @@ paymentsExtended.feedback.link.text = llenwch yr arolwg adborth
 paymentsExtended.courseDuration.oneYear = 1 flwyddyn
 paymentsExtended.courseDuration.twoYears = 2 flynedd
 
+# ----------  FTNAE switched off ------------
+ftnaeDisabled.title = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
+ftnaeDisabled.heading = Mae’n ddrwg gennym, ond nid yw’r gwasanaeth ar gael
+ftnaeDisabled.p1 = Ni allwch ddefnyddio’r gwasanaeth ar-lein i ddiweddaru manylion addysg eich plentyn gyda CThEF.
+ftnaeDisabled.p2 = Yn lle hynny, gallwch ddefnyddio ffurflen CH297 ar-lein i {0}
+ftnaeDisabled.p2.linkText = roi gwybod i ni fod eich plentyn yn parhau â’i addysg neu hyfforddiant cymeradwy.
+
 # ----------  External Links ------------
 external.link.formlink.child-benefit-16-19 = https://www.gov.uk/budd-dal-plant-16-19
 external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297.cy

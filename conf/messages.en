@@ -446,6 +446,13 @@ paymentsExtended.feedback.link.text = take the feedback survey
 paymentsExtended.courseDuration.oneYear = 1 year
 paymentsExtended.courseDuration.twoYears = 2 years
 
+# ----------  FTNAE switched off ------------
+ftnaeDisabled.title = Sorry, the service is unavailable
+ftnaeDisabled.heading = Sorry, the service is unavailable
+ftnaeDisabled.p1 = You cannot use the online service to update your child''s education details with HMRC.
+ftnaeDisabled.p2 = Instead you can use the CH297 online form to {0}
+ftnaeDisabled.p2.linkText = tell us that your child is staying in approved education or training.
+
 # ----------  External Links ------------
 external.link.formlink.child-benefit-16-19 = https://www.gov.uk/child-benefit-16-19
 external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-benefit-child-continuing-in-approved-education-or-training-ch297
