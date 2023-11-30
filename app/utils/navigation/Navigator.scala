@@ -65,9 +65,7 @@ class Navigator @Inject() () {
 
   private def navigateWhichYoungPerson(userAnswers: UserAnswers, mode: Mode): Call = {
     val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
-//    val test: Option[String] = None
 
-//    test match {
     userAnswers.get(WhichYoungPersonPage) match {
       case Some(YOUNG_PERSON_NOT_DISPLAYED_INDEX) =>
         controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad()
