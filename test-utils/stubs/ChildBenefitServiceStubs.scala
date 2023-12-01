@@ -53,6 +53,8 @@ object ChildBenefitServiceStubs {
 
   def dropChangeOfBankStub(): StubMapping =
     deleteSuccessStub("/child-benefit-service/drop-change-bank-cache")
+  def dropChangeOfBankFailureStub(status: Int, result: String): StubMapping =
+    deleteFailureStub("/child-benefit-service/drop-change-bank-cache", status, result)
 
   private def getSuccessStub(url: String): StubMapping = getSuccessStub(url, true)
   private def getSuccessStub[T](url: String, result: T)(implicit writes: Writes[T]): StubMapping =

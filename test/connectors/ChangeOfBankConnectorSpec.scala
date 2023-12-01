@@ -10,7 +10,7 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND}
+import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.libs.json.Writes
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
@@ -27,7 +27,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
   val mockHttpClient = mock[HttpClient]
   val mockAppConfig = mock[FrontendAppConfig]
-//  when(mockAppConfig.changeOfBankUserInfoUrl).thenReturn("unit-test/change-of-back/user-info")
   val sutWithMocks = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
 
   "ChangeOfBankConnector" - {
@@ -100,6 +99,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
+          }
+        }
+      }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          changeOfBankUserInfoFailureStub(OK, invalidJsonResponse)
+
+          whenReady (sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
+            result mustBe a[Left[ConnectorError, ClaimantBankInformation]]
+            result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }
       }
@@ -183,6 +192,18 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           }
         }
       }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          forAll(arbitrary[VerifyBankAccountRequest]) { verifyBankAccountRequest =>
+            verifyClaimantBankAccountFailureStub(OK, invalidJsonResponse)
+
+            whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+              result mustBe a[Left[ConnectorError, Unit]]
+              result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
+            }
+          }
+        }
+      }
     }
 
     "verifyBARNotLocked" - {
@@ -252,6 +273,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
+          }
+        }
+      }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          verifyBARNotLockedFailureStub(OK, invalidJsonResponse)
+
+          whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
+            result mustBe a[Left[ConnectorError, Unit]]
+            result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }
       }
@@ -335,6 +366,18 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           }
         }
       }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          forAll(arbitrary[UpdateBankAccountRequest]) { updateBankAccountRequest =>
+            updateBankAccountFailureStub(OK, invalidJsonResponse)
+
+            whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
+              result mustBe a[Left[ConnectorError, UpdateBankDetailsResponse]]
+              result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
+            }
+          }
+        }
+      }
     }
 
     "dropChangeOfBankCache" - {
@@ -374,6 +417,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
+          }
+        }
+      }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          dropChangeOfBankFailureStub(OK, invalidJsonResponse)
+
+          whenReady(sutWithStubs.dropChangeOfBankCache.value) { result =>
+            result mustBe a[Left[ConnectorError, Unit]]
+            result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }
       }

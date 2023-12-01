@@ -34,7 +34,12 @@ object TestData {
       |}
       |""".stripMargin
 
-  def genericCBError(status: Int, description: String):String =
+  def invalidJsonResponse: String =
+    """
+      | Invalid: This is not valid Json
+      |""".stripMargin
+
+  def genericCBError(status: Int, description: String): String =
     s"""
       |{
       |		"status": $status,

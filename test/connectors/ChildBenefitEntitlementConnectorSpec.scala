@@ -9,10 +9,10 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Status.INTERNAL_SERVER_ERROR
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
-import utils.TestData.genericCBError
+import utils.TestData.{genericCBError, invalidJsonResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -76,6 +76,18 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
               whenReady(sutWithMocks.getChildBenefitEntitlement.value) { result =>
                 result mustBe Left(ConnectorError(responseCode, message))
               }
+            }
+          }
+        }
+      }
+      "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+        "THEN an expected ConnectorError is returned" in {
+          forAll(arbitrary[ChildBenefitEntitlement]) { childBenefitEntitlement =>
+            entitlementsAndPaymentHistoryFailureStub(OK, invalidJsonResponse)
+
+            whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
+              result mustBe a[Left[ConnectorError, ChildBenefitEntitlement]]
+              result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
             }
           }
         }

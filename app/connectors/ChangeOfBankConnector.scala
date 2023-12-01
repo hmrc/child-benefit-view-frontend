@@ -73,6 +73,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
           }
       )
     }
+
   def verifyClaimantBankAccount(verifyBankAccountRequest: VerifyBankAccountRequest)(implicit
       ec:                                                 ExecutionContext,
       hc:                                                 HeaderCarrier
