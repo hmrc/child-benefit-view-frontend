@@ -10,7 +10,7 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.Writes
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
@@ -109,6 +109,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           whenReady (sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
             result mustBe a[Left[ConnectorError, ClaimantBankInformation]]
             result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
+          }
+        }
+      }
+      "GIVEN the HttpClient received a successful response that is valid Json but does not validate as the return type" - {
+        "THEN an expected ConnectorError is returned" in {
+          changeOfBankUserInfoFailureStub(OK, validNotMatchingJsonResponse)
+
+          whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
+            result mustBe a[Left[ConnectorError, ClaimantBankInformation]]
+            result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
           }
         }
       }
@@ -374,6 +384,18 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
               result mustBe a[Left[ConnectorError, UpdateBankDetailsResponse]]
               result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
+            }
+          }
+        }
+      }
+      "GIVEN the HttpClient received a successful response that is valid Json but does not validate as the return type" - {
+        "THEN an expected ConnectorError is returned" in {
+          forAll(arbitrary[UpdateBankAccountRequest]) { updateBankAccountRequest =>
+            updateBankAccountFailureStub(OK, validNotMatchingJsonResponse)
+
+            whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
+              result mustBe a[Left[ConnectorError, UpdateBankDetailsResponse]]
+              result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
             }
           }
         }

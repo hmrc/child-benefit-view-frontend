@@ -39,6 +39,15 @@ object TestData {
       | Invalid: This is not valid Json
       |""".stripMargin
 
+  def validNotMatchingJsonResponse: String =
+    """
+      |{
+      |   "status": 200,
+      |   "field": "some value",
+      |   "anotherField": "some other value"
+      |}
+      |""".stripMargin
+
   def genericCBError(status: Int, description: String): String =
     s"""
       |{
