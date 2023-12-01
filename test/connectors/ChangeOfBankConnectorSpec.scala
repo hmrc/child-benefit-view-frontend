@@ -1,24 +1,34 @@
 package connectors
 
 import base.BaseAppSpec
+import config.FrontendAppConfig
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
-import models.errors.{ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
+import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
+import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
+import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND}
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.libs.json.Writes
 import stubs.ChildBenefitServiceStubs._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
 import utils.TestData._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
-  implicit val executionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier = new HeaderCarrier()
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val hc = new HeaderCarrier()
 
   override implicit lazy val app = applicationBuilder().build()
-  val sut = app.injector.instanceOf[ChangeOfBankConnector]
+  val sutWithStubs = app.injector.instanceOf[ChangeOfBankConnector]
+
+  val mockHttpClient = mock[HttpClient]
+  val mockAppConfig = mock[FrontendAppConfig]
+//  when(mockAppConfig.changeOfBankUserInfoUrl).thenReturn("unit-test/change-of-back/user-info")
+  val sutWithMocks = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
 
   "ChangeOfBankConnector" - {
     "getChangeOfBankClaimantInfo" - {
@@ -27,7 +37,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           forAll(arbitrary[ClaimantBankInformation]) { claimantBankInformation =>
             changeOfBankUserInfoStub(claimantBankInformation)
 
-            whenReady(sut.getChangeOfBankClaimantInfo.value) { result =>
+            whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
               result mustBe Right(claimantBankInformation)
             }
           }
@@ -38,7 +48,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected ClaimantIsLockedOutOfChangeOfBank is returned" in {
             changeOfBankUserInfoFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-            whenReady(sut.getChangeOfBankClaimantInfo.value) { result =>
+            whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
               result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
             }
           }
@@ -47,7 +57,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected PriorityBARSVerificationError is returned" in {
             changeOfBankUserInfoFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-            whenReady(sut.getChangeOfBankClaimantInfo.value) { result =>
+            whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
               result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
             }
           }
@@ -57,8 +67,38 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             val expectedMessage = "Unit Test other failure expected message"
             changeOfBankUserInfoFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-            whenReady(sut.getChangeOfBankClaimantInfo.value) { result =>
+            whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
               result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+            }
+          }
+        }
+      }
+      "GIVEN the HttpClient experiences an exception" - {
+        "AND the exception is of type HttpException" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.GET
+                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed new HttpException(message, responseCode))
+
+              whenReady(sutWithMocks.getChangeOfBankClaimantInfo.value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+        "AND the exception is of type UpstreamErrorResponse" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.GET
+                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+
+              whenReady(sutWithMocks.getChangeOfBankClaimantInfo.value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
             }
           }
         }
@@ -71,7 +111,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           forAll(arbitrary[VerifyBankAccountRequest]) { verifyBankAccountRequest =>
             verifyClaimantBankInfoStub()
 
-            whenReady(sut.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+            whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
               result mustBe Right(())
             }
           }
@@ -83,7 +123,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             forAll(arbitrary[VerifyBankAccountRequest]) { verifyBankAccountRequest =>
               verifyClaimantBankInfoFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-              whenReady(sut.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
                 result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
               }
             }
@@ -94,7 +134,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             forAll(arbitrary[VerifyBankAccountRequest]) { verifyBankAccountRequest =>
               verifyClaimantBankInfoFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-              whenReady(sut.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
                 result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
               }
             }
@@ -106,8 +146,38 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
               val expectedMessage = "Unit Test other failure expected message"
               verifyClaimantBankInfoFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-              whenReady(sut.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
                 result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+              }
+            }
+          }
+        }
+      }
+      "GIVEN the HttpClient experiences an exception" - {
+        "AND the exception is of type HttpException" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[VerifyBankAccountRequest]) { (responseCode, message, verifyBankAccountRequest) =>
+              when(mockHttpClient.PUT
+                (any[String], any[VerifyBankAccountRequest], any[Seq[(String, String)]])
+                (any[Writes[VerifyBankAccountRequest]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed new HttpException(message, responseCode))
+
+              whenReady(sutWithMocks.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+        "AND the exception is of type UpstreamErrorResponse" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[VerifyBankAccountRequest]) { (responseCode, message, verifyBankAccountRequest) =>
+              when(mockHttpClient.PUT
+                (any[String], any[VerifyBankAccountRequest], any[Seq[(String, String)]])
+                (any[Writes[VerifyBankAccountRequest]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+
+              whenReady(sutWithMocks.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
               }
             }
           }
@@ -120,7 +190,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "THEN the a Unit response is returned" in {
           verifyBARNotLockedStub()
 
-          whenReady(sut.verifyBARNotLocked.value) { result =>
+          whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
             result mustBe Right(())
           }
         }
@@ -130,7 +200,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected ClaimantIsLockedOutOfChangeOfBank is returned" in {
             verifyBARNotLockedFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-            whenReady(sut.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
               result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
             }
           }
@@ -139,7 +209,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected PriorityBARSVerificationError is returned" in {
             verifyBARNotLockedFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-            whenReady(sut.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
               result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
             }
           }
@@ -149,8 +219,38 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             val expectedMessage = "Unit Test other failure expected message"
             verifyBARNotLockedFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-            whenReady(sut.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
               result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+            }
+          }
+        }
+      }
+      "GIVEN the HttpClient experiences an exception" - {
+        "AND the exception is of type HttpException" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.GET
+                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed new HttpException(message, responseCode))
+
+              whenReady(sutWithMocks.verifyBARNotLocked.value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+        "AND the exception is of type UpstreamErrorResponse" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.GET
+                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+
+              whenReady(sutWithMocks.verifyBARNotLocked.value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
             }
           }
         }
@@ -163,7 +263,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           forAll(arbitrary[UpdateBankAccountRequest]) { updateBankAccountRequest =>
             updateBankAccountStub(UpdateBankDetailsResponse("Success"))
 
-            whenReady(sut.updateBankAccount(updateBankAccountRequest).value) { result =>
+            whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
               result mustBe Right(UpdateBankDetailsResponse("Success"))
             }
           }
@@ -175,7 +275,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             forAll(arbitrary[UpdateBankAccountRequest]) { updateBankAccountRequest =>
               updateBankAccountFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-              whenReady(sut.updateBankAccount(updateBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
                 result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
               }
             }
@@ -186,7 +286,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             forAll(arbitrary[UpdateBankAccountRequest]) { updateBankAccountRequest =>
               updateBankAccountFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-              whenReady(sut.updateBankAccount(updateBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
                 result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
               }
             }
@@ -198,13 +298,89 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
               val expectedMessage = "Unit Test other failure expected message"
               updateBankAccountFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-              whenReady(sut.updateBankAccount(updateBankAccountRequest).value) { result =>
+              whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
                 result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
               }
             }
           }
         }
       }
+      "GIVEN the HttpClient experiences an exception" - {
+        "AND the exception is of type HttpException" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[UpdateBankAccountRequest]) { (responseCode, message, updateBankAccountRequest) =>
+              when(mockHttpClient.PUT
+                (any[String], any[UpdateBankAccountRequest], any[Seq[(String, String)]])
+                (any[Writes[UpdateBankAccountRequest]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed new HttpException(message, responseCode))
+
+              whenReady(sutWithMocks.updateBankAccount(updateBankAccountRequest).value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+        "AND the exception is of type UpstreamErrorResponse" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[UpdateBankAccountRequest]) { (responseCode, message, updateBankAccountRequest) =>
+              when(mockHttpClient.PUT
+                (any[String], any[UpdateBankAccountRequest], any[Seq[(String, String)]])
+                (any[Writes[UpdateBankAccountRequest]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+
+              whenReady(sutWithMocks.updateBankAccount(updateBankAccountRequest).value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+      }
+    }
+
+    "dropChangeOfBankCache" - {
+      "GIVEN the HttpClient receives a successful response" - {
+        "THEN the a Unit response is returned" in {
+          dropChangeOfBankStub()
+
+          whenReady(sutWithStubs.dropChangeOfBankCache().value) { result =>
+            result mustBe Right(())
+          }
+        }
+      }
+      "GIVEN the HttpClient experiences an exception" - {
+        "AND the exception is of type HttpException" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.DELETE
+                (any[String], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed new HttpException(message, responseCode))
+
+              whenReady(sutWithMocks.dropChangeOfBankCache().value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+        "AND the exception is of type UpstreamErrorResponse" - {
+          "THEN a ConnectorError is returned with the matching details" in {
+            forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.DELETE
+                (any[String], any[Seq[(String, String)]])
+                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+
+              whenReady(sutWithMocks.dropChangeOfBankCache().value) { result =>
+                result mustBe Left(ConnectorError(responseCode, message))
+              }
+            }
+          }
+        }
+      }
+    }
+
+    "Exception Recovery" - {
+
     }
   }
 }

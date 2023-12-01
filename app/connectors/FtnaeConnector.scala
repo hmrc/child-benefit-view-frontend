@@ -95,7 +95,7 @@ class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
 }
 
 object FtnaeConnector {
-  private val claimantInfoLogMessage = (code: Int, message: String) =>
+  val claimantInfoLogMessage = (code: Int, message: String) =>
     s"unable to retrieve Ftnae Response: code=$code message=$message"
 
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r

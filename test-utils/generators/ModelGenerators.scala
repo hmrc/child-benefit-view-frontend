@@ -16,7 +16,7 @@
 
 package generators
 
-import models.changeofbank.{AccountHolderName, AccountHolderType, BankAccountNumber, BankDetails, ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails, SortCode}
+import models.changeofbank._
 import models.cob.{ConfirmNewAccountDetails, NewAccountDetails, UpdateBankAccountRequest, VerifyBankAccountRequest}
 import models.common.{AddressLine, AddressPostcode, ChildReferenceNumber, FirstForename, Surname}
 import models.entitlement._
@@ -24,6 +24,7 @@ import models.ftnae.{ChildDetails, CourseDuration, FtnaeChildInfo, FtnaeClaimant
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen}
+import play.api.http.Status._
 
 import java.time.LocalDate
 
@@ -314,4 +315,8 @@ trait ModelGenerators {
         id <- alphaNumStr.suchThat(_.length >= 25).map(_.take(25))
       } yield id
     }
+
+  val randomFailureStatusCode: Gen[Int] =
+    Gen.oneOf(BAD_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, INTERNAL_SERVER_ERROR, NOT_IMPLEMENTED, SERVICE_UNAVAILABLE)
+
 }

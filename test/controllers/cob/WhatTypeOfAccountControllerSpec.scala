@@ -150,7 +150,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
       "must redirect to the next page when valid data is submitted" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(200, """""""")
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
@@ -190,7 +190,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
       "must fail to validate when no joint account type is selected" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(200, """""""")
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
@@ -221,7 +221,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
       "must redirect to the next page when a joint account with a joint type is submitted" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(200, """""""")
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)

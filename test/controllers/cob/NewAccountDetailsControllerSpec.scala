@@ -99,7 +99,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(200, """""")
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
         val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
           .overrides(
@@ -140,7 +140,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
       "must redirect to the next page when valid data is submitted" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(200, """""""")
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
@@ -174,7 +174,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
       "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(404, "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}")
+        verifyClaimantBankAccountFailureStub(NOT_FOUND, "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}")
 
         val mockSessionRepository = mock[SessionRepository]
 
@@ -222,8 +222,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
       "must Redirect to Can not verify account Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccount(
-          500,
+        verifyClaimantBankAccountFailureStub(
+          INTERNAL_SERVER_ERROR,
           lockedOutErrorResponse
         )
 
