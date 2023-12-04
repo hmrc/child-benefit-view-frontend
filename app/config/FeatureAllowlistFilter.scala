@@ -17,6 +17,7 @@
 package config
 
 import com.google.inject.Inject
+import config.FeatureAllowlistFilter._
 import play.api.Configuration
 import play.api.mvc.Results.{Forbidden, Redirect}
 import play.api.mvc.{Call, RequestHeader, Result}
@@ -24,37 +25,39 @@ import play.api.mvc.{Call, RequestHeader, Result}
 import scala.concurrent.Future
 
 class FeatureAllowlistFilter @Inject() (config: Configuration) {
+  def apply(f: RequestHeader => Future[Result])(feature: String, rh: RequestHeader): Future[Result] =
+    if (config.get[Boolean](s"feature-flags.$feature.allowlist.enabled")) {
+      rh.headers
+        .get(trueClient)
+        .fold(noHeaderAction(feature, config))(ip =>
+          if (allowlist(feature, config).contains(ip))
+            f(rh)
+          else if (rh.uri == destination(feature, config).url)
+            Future.successful(Forbidden)
+          else
+            Future.successful(Redirect(destination(feature, config)))
+        )
+    } else {
+      f(rh)
+    }
+}
 
+object FeatureAllowlistFilter {
   val trueClient = "True-Client-IP"
 
-  val allowlist: String => Seq[String] = (feature: String) =>
+  val noHeaderAction: (String, Configuration) => Future[Result] =
+    (feature: String, config: Configuration) => Future.successful(Redirect(destination(feature, config)))
+
+  val destination: (String, Configuration) => Call = (feature: String, config: Configuration) => {
+    val path = config.get[String](s"feature-flags.$feature.allowlist.destination")
+    Call("GET", path)
+  }
+
+  val allowlist: (String, Configuration) => Seq[String] = (feature: String, config: Configuration) =>
     config
       .get[String](s"feature-flags.$feature.allowlist.ips")
       .split(",")
       .toIndexedSeq
       .map(_.trim)
       .filter(_.nonEmpty)
-
-  val destination: String => Call = (feature: String) => {
-    val path = config.get[String](s"feature-flags.$feature.allowlist.destination")
-    Call("GET", path)
-  }
-
-  val noHeaderAction: String => Future[Result] = (feature: String) => Future.successful(Redirect(destination(feature)))
-
-  def apply(f: RequestHeader => Future[Result])(feature: String, rh: RequestHeader): Future[Result] =
-    if (config.get[Boolean](s"feature-flags.$feature.allowlist.enabled")) {
-      rh.headers
-        .get(trueClient)
-        .fold(noHeaderAction(feature))(ip =>
-          if (allowlist(feature).contains(ip))
-            f(rh)
-          else if (rh.uri == destination(feature).url)
-            Future.successful(Forbidden)
-          else
-            Future.successful(Redirect(destination(feature)))
-        )
-    } else {
-      f(rh)
-    }
 }
