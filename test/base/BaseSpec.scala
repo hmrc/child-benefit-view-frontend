@@ -16,7 +16,7 @@
 
 package base
 
-import generators.ModelGenerators
+import generators.{Generators, ModelGenerators}
 import models.UserAnswers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -40,6 +40,7 @@ trait BaseSpec
   with IntegrationPatience
   with MockitoSugar
   with ScalaCheckPropertyChecks
+  with Generators
   with ModelGenerators {
 
   val userAnswersId: String = "id"
