@@ -23,6 +23,8 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.util.{Failure, Success}
+
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
   def host:        String = configuration.get[String]("host")
@@ -70,7 +72,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def exitSurveyUrl: String = s"$exitSurveyBaseUrl/feedback/CHIB"
 
-  def feedbackUrl(): String = s"$contactHost/contact/beta-feedback?service=CHIB"
+  def feedbackUrl: String = s"$contactHost/contact/beta-feedback?service=CHIB"
 
   def reportTechnicalProblemUrl(uri: String): String =
     s"$contactHost/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${SafeRedirectUrl(contactHost + uri).encodedUrl}"
@@ -82,5 +84,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
-
 }
