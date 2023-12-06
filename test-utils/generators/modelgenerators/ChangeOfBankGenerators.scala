@@ -2,7 +2,9 @@ package generators.modelgenerators
 
 import generators.DataGenerators
 import models.changeofbank.{AccountHolderName, BankAccountNumber, BuildingSocietyRollNumber, SortCode}
+import models.common.AdjustmentReasonCode
 import org.scalacheck.Arbitrary
+import org.scalacheck.Gen.alphaStr
 
 trait ChangeOfBankGenerators extends DataGenerators {
   implicit lazy val arbitraryAccountHolderName: Arbitrary[AccountHolderName] =
@@ -29,5 +31,10 @@ trait ChangeOfBankGenerators extends DataGenerators {
         numerical <- generateBuildingSocietyNumber
       } yield BuildingSocietyRollNumber(numerical)
     }
-
+  implicit lazy val arbitraryAdjustmentReasonCode: Arbitrary[AdjustmentReasonCode] =
+    Arbitrary {
+      for {
+        code <- alphaStr
+      } yield AdjustmentReasonCode(code)
+    }
 }
