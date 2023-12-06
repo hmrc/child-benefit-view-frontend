@@ -174,7 +174,10 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
       "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
         userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccountFailureStub(NOT_FOUND, "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}")
+        verifyClaimantBankAccountFailureStub(
+          NOT_FOUND,
+          "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}"
+        )
 
         val mockSessionRepository = mock[SessionRepository]
 
@@ -261,7 +264,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       "must return a Bad Request and errors when invalid data is submitted" in {
         userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =
@@ -287,7 +291,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       "must return OK for a GET if no existing data is found" in {
         userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
@@ -301,7 +306,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       "must return BAD_REQUEST for a POST if no existing data is found" in {
         userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =

@@ -27,7 +27,7 @@ import utils.TestData.ninoUser
 
 class AuthControllerSpec extends BaseAppSpec {
 
-  val application = applicationBuilder().build()
+  val application     = applicationBuilder().build()
   lazy val controller = application.injector.instanceOf[AuthController]
   lazy val appConfig  = application.injector.instanceOf[FrontendAppConfig]
 

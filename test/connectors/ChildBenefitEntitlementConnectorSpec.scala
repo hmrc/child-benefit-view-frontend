@@ -18,14 +18,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val executionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier = new HeaderCarrier()
+  implicit val headerCarrier    = new HeaderCarrier()
 
   override implicit lazy val app = applicationBuilder().build()
-  val sutWithStubs = app.injector.instanceOf[ChildBenefitEntitlementConnector]
+  val sutWithStubs               = app.injector.instanceOf[ChildBenefitEntitlementConnector]
 
   val mockHttpClient = mock[HttpClient]
-  val mockAppConfig = mock[FrontendAppConfig]
-  val sutWithMocks = new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
+  val mockAppConfig  = mock[FrontendAppConfig]
+  val sutWithMocks   = new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
 
   "ChildBenefitEntitlementConnector" - {
     "getChildBenefitEntitlement" - {
@@ -43,7 +43,10 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
       "GIVEN the HttpClient receives a CBErrorResponse" - {
         "THEN a ConnectorError with the matched status and description is returned" in {
           val expectedMessage = "Unit Test other failure expected message"
-          entitlementsAndPaymentHistoryFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
+          entitlementsAndPaymentHistoryFailureStub(
+            INTERNAL_SERVER_ERROR,
+            genericCBError(INTERNAL_SERVER_ERROR, expectedMessage)
+          )
 
           whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
             result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
@@ -54,9 +57,12 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-              when(mockHttpClient.GET
-                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
-                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              when(
+                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
+                  any[HttpReads[Either[CBError, _]]],
+                  any[HeaderCarrier],
+                  any[ExecutionContext]
+                )
               ).thenReturn(Future failed new HttpException(message, responseCode))
 
               whenReady(sutWithMocks.getChildBenefitEntitlement.value) { result =>
@@ -68,9 +74,12 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-              when(mockHttpClient.GET
-                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
-                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              when(
+                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
+                  any[HttpReads[Either[CBError, _]]],
+                  any[HeaderCarrier],
+                  any[ExecutionContext]
+                )
               ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
 
               whenReady(sutWithMocks.getChildBenefitEntitlement.value) { result =>

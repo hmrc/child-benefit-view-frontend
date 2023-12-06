@@ -191,8 +191,8 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
 
     "ErrorHandler companion object" - {
       "logMessage" - {
-        val expectedMessage = "Unit Test testing log message"
-        val expectedCode = 404
+        val expectedMessage     = "Unit Test testing log message"
+        val expectedCode        = 404
         val expectedAuditOrigin = "Unit Test Origin"
 
         "GIVEN a message value is provided" - {
@@ -206,9 +206,9 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
 
           forAll(containMessageTestCases) { (withCode, withAuditOrigin) =>
             s"THEN the message value appears in the returned message ${withOrWithout(withCode)} code and ${withOrWithout(withAuditOrigin)} audit origin" in {
-              val code = if(withCode) Some(expectedCode) else None
-              val auditOrigin = if(withAuditOrigin) Some(expectedAuditOrigin) else None
-              val result = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
+              val code        = if (withCode) Some(expectedCode) else None
+              val auditOrigin = if (withAuditOrigin) Some(expectedAuditOrigin) else None
+              val result      = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
 
               result.contains(expectedMessage) mustBe true
             }
@@ -221,9 +221,9 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
           s"GIVEN that a code ${isOrIsNot(withCode)} provided" - {
             forAll(trueFalseTestCases) { withAuditOrigin =>
               s"THEN the code appears in the returned message ${withOrWithout(withAuditOrigin)} an audit origin" in {
-                val code = if (withCode) Some(expectedCode) else None
+                val code        = if (withCode) Some(expectedCode) else None
                 val auditOrigin = if (withAuditOrigin) Some(expectedAuditOrigin) else None
-                val result = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
+                val result      = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
 
                 result.contains(s"$expectedCode") mustBe withCode
               }
@@ -235,9 +235,9 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
           s"GIVEN that an audit origin ${isOrIsNot(withAuditOrigin)} provided" - {
             forAll(trueFalseTestCases) { withCode =>
               s"THEN the audit origin appears in the returned message ${withOrWithout(withCode)} a code" in {
-                val code = if (withCode) Some(expectedCode) else None
+                val code        = if (withCode) Some(expectedCode) else None
                 val auditOrigin = if (withAuditOrigin) Some(expectedAuditOrigin) else None
-                val result = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
+                val result      = ErrorHandler.logMessage(expectedMessage, code, auditOrigin)
 
                 result.contains(expectedAuditOrigin) mustBe withAuditOrigin
               }
@@ -251,7 +251,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
 
 final case object UnitTestError extends CBError {
   override val statusCode = NOT_IMPLEMENTED
-  override val message = "Unit Test error"
+  override val message    = "Unit Test error"
 }
 
 object ErrorHandlerSpec {

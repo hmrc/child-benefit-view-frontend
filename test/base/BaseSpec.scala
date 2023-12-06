@@ -16,7 +16,7 @@
 
 package base
 
-import generators.{Generators, ModelGenerators}
+import generators.Generators
 import models.UserAnswers
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -32,26 +32,29 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 trait BaseSpec
-  extends AnyFreeSpec
-  with Matchers
-  with TryValues
-  with OptionValues
-  with ScalaFutures
-  with IntegrationPatience
-  with MockitoSugar
-  with ScalaCheckPropertyChecks
-  with Generators
-  with ModelGenerators {
+    extends AnyFreeSpec
+    with Matchers
+    with TryValues
+    with OptionValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar
+    with ScalaCheckPropertyChecks
+    with Generators {
 
   val userAnswersId: String = "id"
 
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
-  def messages(app: Application, request: RequestHeader): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+  def messages(app: Application, request: RequestHeader): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(request)
 
-  protected implicit def hc(implicit rh: RequestHeader): HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
+  protected implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
+    HeaderCarrierConverter.fromRequestAndSession(rh, rh.session)
 
   val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
-  val isOrIsNot = (bool: Boolean) => if (bool) "is" else "is not"
+  val isOrIsNot     = (bool: Boolean) => if (bool) "is" else "is not"
+
+  val trueFalseCases = Table("value", true, false)
 }

@@ -13,7 +13,7 @@ object ChildBenefitServiceStubs {
 
   def verifyClaimantBankAccountStub(): StubMapping =
     putSuccessStub("/child-benefit-service/verify-claimant-bank-account")
-  def verifyClaimantBankAccountFailureStub(status: Int, result: String) : StubMapping =
+  def verifyClaimantBankAccountFailureStub(status: Int, result: String): StubMapping =
     putFailureStub("/child-benefit-service/verify-claimant-bank-account", status, result)
 
   def entitlementsAndPaymentHistoryStub(result: ChildBenefitEntitlement): StubMapping =
@@ -56,7 +56,7 @@ object ChildBenefitServiceStubs {
   def dropChangeOfBankFailureStub(status: Int, result: String): StubMapping =
     deleteFailureStub("/child-benefit-service/drop-change-bank-cache", status, result)
 
-  private def getSuccessStub(url: String): StubMapping = getSuccessStub(url, true)
+  private def getSuccessStub(url:    String): StubMapping = getSuccessStub(url, true)
   private def getSuccessStub[T](url: String, result: T)(implicit writes: Writes[T]): StubMapping =
     stubFor(
       get(urlEqualTo(url))
@@ -76,7 +76,7 @@ object ChildBenefitServiceStubs {
         )
     )
 
-  private def putSuccessStub(url: String): StubMapping = putSuccessStub(url, OK, true)
+  private def putSuccessStub(url:    String): StubMapping = putSuccessStub(url, OK, true)
   private def putSuccessStub[T](url: String, result: T)(implicit writes: Writes[T]): StubMapping =
     putSuccessStub(url, OK, result)
   private def putSuccessStub[T](url: String, status: Int, result: T)(implicit writes: Writes[T]): StubMapping =
@@ -98,7 +98,7 @@ object ChildBenefitServiceStubs {
         )
     )
 
-  private def deleteSuccessStub(url: String): StubMapping = deleteSuccessStub(url, true)
+  private def deleteSuccessStub(url:    String): StubMapping = deleteSuccessStub(url, true)
   private def deleteSuccessStub[T](url: String, result: T)(implicit writes: Writes[T]): StubMapping =
     stubFor(
       delete(urlEqualTo(url))

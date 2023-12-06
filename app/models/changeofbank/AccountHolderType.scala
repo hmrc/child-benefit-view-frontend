@@ -21,7 +21,7 @@ import play.api.libs.json.{JsonValidationError, Reads, Writes}
 
 sealed trait AccountHolderType
 
-object AccountHolderType extends Enumerable.Implicits{
+object AccountHolderType extends Enumerable.Implicits {
   case object Claimant    extends AccountHolderType
   case object Joint       extends AccountHolderType
   case object SomeoneElse extends AccountHolderType

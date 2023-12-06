@@ -41,12 +41,12 @@ import scala.concurrent.ExecutionContext
 class AuditServiceSpec extends BaseSpec {
 
   val auditConnector: AuditConnector = mock[AuditConnector]
-  val sut: AuditService              = new AuditService(auditConnector)
+  val sut:            AuditService   = new AuditService(auditConnector)
 
-  val testNino:   String           = "CA123456A"
-  val testCRN:    String           = "AC654321C"
-  val testStatus: String           = "testStatus"
-  val testReferrerValue: String    = "/foo"
+  val testNino:             String = "CA123456A"
+  val testCRN:              String = "AC654321C"
+  val testStatus:           String = "testStatus"
+  val testReferrerValue:    String = "/foo"
   val testFingerprintValue: String = "testDeviceFingerprint"
 
   protected val request: Request[_] =
@@ -81,7 +81,6 @@ class AuditServiceSpec extends BaseSpec {
               sut.auditProofOfEntitlement(testNino, testStatus, request)
             }
 
-
             "THEN the auditConnector is called with the ViewProofOfEntitlement Event Type" - {
               verify(auditConnector, times(1))
                 .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
@@ -92,43 +91,67 @@ class AuditServiceSpec extends BaseSpec {
 
               val capturedEvent = captor.getValue
 
-              forAll(Table(
-                ("fieldName", "fieldValue", "expectedResult"),
-                ("Nino", capturedEvent.nino, testNino),
-                ("Status", capturedEvent.status, testStatus),
-                ("Referrer", capturedEvent.referrer, testReferrerValue),
-                ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
-              )) { (fieldName, fieldValue, expectedResult) =>
-                testForCapturedValue(s"event (${withOrWithout(withEntitlement)} entitlement)", fieldName, fieldValue, expectedResult)
+              forAll(
+                Table(
+                  ("fieldName", "fieldValue", "expectedResult"),
+                  ("Nino", capturedEvent.nino, testNino),
+                  ("Status", capturedEvent.status, testStatus),
+                  ("Referrer", capturedEvent.referrer, testReferrerValue),
+                  ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
+                )
+              ) { (fieldName, fieldValue, expectedResult) =>
+                testForCapturedValue(
+                  s"event (${withOrWithout(withEntitlement)} entitlement)",
+                  fieldName,
+                  fieldValue,
+                  expectedResult
+                )
               }
 
-
-              val capturedEntitlementDetails: Option[ClaimantEntitlementDetails] = capturedEvent.claimantEntitlementDetails
+              val capturedEntitlementDetails: Option[ClaimantEntitlementDetails] =
+                capturedEvent.claimantEntitlementDetails
               if (withEntitlement) {
                 val entitlementDetails = capturedEntitlementDetails.get
 
-                forAll(Table(
-                  ("fieldName", "fieldValue", "expectedResult"),
-                  ("Name", entitlementDetails.name, testEntitlement.claimant.name.value),
-                  ("Address", entitlementDetails.address, testEntitlement.claimant.fullAddress.toSingleLineString),
-                  ("Start date", LocalDate.parse(entitlementDetails.start), testEntitlement.claimant.awardStartDate),
-                  ("End date", LocalDate.parse(entitlementDetails.end), testEntitlement.claimant.awardEndDate),
-                  ("number of children", entitlementDetails.children.length, testEntitlement.children.length)
-                )) { (fieldName, fieldValue, expectedResult) =>
+                forAll(
+                  Table(
+                    ("fieldName", "fieldValue", "expectedResult"),
+                    ("Name", entitlementDetails.name, testEntitlement.claimant.name.value),
+                    ("Address", entitlementDetails.address, testEntitlement.claimant.fullAddress.toSingleLineString),
+                    ("Start date", LocalDate.parse(entitlementDetails.start), testEntitlement.claimant.awardStartDate),
+                    ("End date", LocalDate.parse(entitlementDetails.end), testEntitlement.claimant.awardEndDate),
+                    ("number of children", entitlementDetails.children.length, testEntitlement.children.length)
+                  )
+                ) { (fieldName, fieldValue, expectedResult) =>
                   testForCapturedValue("entitlement details", fieldName, fieldValue, expectedResult)
                 }
 
                 val capturedChild: Option[Child] = capturedEntitlementDetails.map(_.children.last)
                 val child = capturedChild.get
 
-                forAll(Table(
-                  ("fieldName", "fieldValue", "expectedResult"),
-                  ("Name", child.name, testEntitlement.children.last.name),
-                  ("Date of Birth", child.dateOfBirth, testEntitlement.children.last.dateOfBirth),
-                  ("relationship Start Date", child.relationshipStartDate, testEntitlement.children.head.relationshipStartDate),
-                  ("relationship End Date", child.relationshipEndDate, testEntitlement.children.head.relationshipEndDate)
-                )) { (fieldName, fieldValue, expectedResult) =>
-                  testForCapturedValue(s"claimant child (${withOrWithout(withEntitlement)} entitlement)", fieldName, fieldValue, expectedResult)
+                forAll(
+                  Table(
+                    ("fieldName", "fieldValue", "expectedResult"),
+                    ("Name", child.name, testEntitlement.children.last.name),
+                    ("Date of Birth", child.dateOfBirth, testEntitlement.children.last.dateOfBirth),
+                    (
+                      "relationship Start Date",
+                      child.relationshipStartDate,
+                      testEntitlement.children.head.relationshipStartDate
+                    ),
+                    (
+                      "relationship End Date",
+                      child.relationshipEndDate,
+                      testEntitlement.children.head.relationshipEndDate
+                    )
+                  )
+                ) { (fieldName, fieldValue, expectedResult) =>
+                  testForCapturedValue(
+                    s"claimant child (${withOrWithout(withEntitlement)} entitlement)",
+                    fieldName,
+                    fieldValue,
+                    expectedResult
+                  )
                 }
               } else {
                 "AND the event is sent without entitlement details" in {
@@ -159,71 +182,93 @@ class AuditServiceSpec extends BaseSpec {
             any[Writes[ChangeOfBankAccountDetailsModel]]()
           )
 
-        val capturedEvent = captor.getValue
+        val capturedEvent               = captor.getValue
         val capturedPersonalInformation = capturedEvent.personalInformation
-        val capturedBankDetails = capturedEvent.bankDetails
-        val capturedViewDetails = capturedEvent.viewDetails
+        val capturedBankDetails         = capturedEvent.bankDetails
+        val capturedViewDetails         = capturedEvent.viewDetails
 
         val formattedBankAccountInformation =
           ClaimantBankInformationHelper.formatBankAccountInformation(testClaimantBankInformation)
 
-        forAll(Table(
-          ("fieldName", "fieldValue", "expectedResult"),
-          ("Nino", capturedEvent.nino, testNino),
-          ("Status", capturedEvent.status, testStatus),
-          ("Referrer", capturedEvent.referrer, testReferrerValue),
-          ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
-        )) { (fieldName, fieldValue, expectedResult) =>
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            ("Nino", capturedEvent.nino, testNino),
+            ("Status", capturedEvent.status, testStatus),
+            ("Referrer", capturedEvent.referrer, testReferrerValue),
+            ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
           testForCapturedValue("event", fieldName, fieldValue, expectedResult)
         }
 
-        forAll(Table(
-          ("fieldName", "fieldValue", "expectedResult"),
-          ("Name", capturedPersonalInformation.name, s"${testClaimantBankInformation.firstForename.value} ${testClaimantBankInformation.surname.value}"),
-          ("Date of Birth", capturedPersonalInformation.dateOfBirth, testClaimantBankInformation.dateOfBirth),
-          ("Nino", capturedPersonalInformation.nino, testNino)
-        )) { (fieldName, fieldValue, expectedResult) =>
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            (
+              "Name",
+              capturedPersonalInformation.name,
+              s"${testClaimantBankInformation.firstForename.value} ${testClaimantBankInformation.surname.value}"
+            ),
+            ("Date of Birth", capturedPersonalInformation.dateOfBirth, testClaimantBankInformation.dateOfBirth),
+            ("Nino", capturedPersonalInformation.nino, testNino)
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
           testForCapturedValue("Personal Information", fieldName, fieldValue, expectedResult)
         }
 
-        forAll(Table(
-          ("fieldName", "fieldValue", "expectedResult"),
-          ("First Name", capturedBankDetails.firstname, formattedBankAccountInformation.firstForename.value),
-          ("Surname", capturedBankDetails.surname, formattedBankAccountInformation.surname.value),
-          (
-            "Account Holder Name",
-            capturedBankDetails.accountHolderName,
-            formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName
-          ),
-          ("Account Number", capturedBankDetails.accountNumber, formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber),
-          ("Sort Code", capturedBankDetails.sortCode, formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode),
-          (
-            "Building Society Roll Number",
-            capturedBankDetails.buildingSocietyRollNumber,
-            testClaimantBankInformation.financialDetails.bankAccountInformation.buildingSocietyRollNumber
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            ("First Name", capturedBankDetails.firstname, formattedBankAccountInformation.firstForename.value),
+            ("Surname", capturedBankDetails.surname, formattedBankAccountInformation.surname.value),
+            (
+              "Account Holder Name",
+              capturedBankDetails.accountHolderName,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName
+            ),
+            (
+              "Account Number",
+              capturedBankDetails.accountNumber,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber
+            ),
+            (
+              "Sort Code",
+              capturedBankDetails.sortCode,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode
+            ),
+            (
+              "Building Society Roll Number",
+              capturedBankDetails.buildingSocietyRollNumber,
+              testClaimantBankInformation.financialDetails.bankAccountInformation.buildingSocietyRollNumber
+            )
           )
-        )) { (fieldName, fieldValue, expectedResult) =>
+        ) { (fieldName, fieldValue, expectedResult) =>
           testForCapturedValue("Bank Details", fieldName, fieldValue, expectedResult)
         }
 
-        forAll(Table(
-          ("fieldName", "fieldValue", "expectedResult"),
-          (
-            "Account Holder Name",
-            capturedViewDetails.accountHolderName,
-            formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName.map(_.value).get
-          ),
-          (
-            "Account Number",
-            capturedViewDetails.accountNumber,
-            formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber.map(_.number).get
-          ),
-          (
-            "Sort Code",
-            capturedViewDetails.sortCode,
-            formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            (
+              "Account Holder Name",
+              capturedViewDetails.accountHolderName,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName.map(_.value).get
+            ),
+            (
+              "Account Number",
+              capturedViewDetails.accountNumber,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber
+                .map(_.number)
+                .get
+            ),
+            (
+              "Sort Code",
+              capturedViewDetails.sortCode,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
+            )
           )
-        )) { (fieldName, fieldValue, expectedResult) =>
+        ) { (fieldName, fieldValue, expectedResult) =>
           testForCapturedValue("View Details", fieldName, fieldValue, expectedResult)
         }
       }
@@ -248,28 +293,35 @@ class AuditServiceSpec extends BaseSpec {
               any[Writes[ViewPaymentDetailsModel]]()
             )
 
-          val capturedEvent = captor.getValue
+          val capturedEvent         = captor.getValue
           val capturedFinancialInfo = capturedEvent.payments
 
-          forAll(Table(
-            ("fieldName", "fieldValue", "expectedResult"),
-            ("Nino", capturedEvent.nino, testNino),
-            ("Status", capturedEvent.status, testStatus),
-            ("Referrer", capturedEvent.referrer, testReferrerValue),
-            ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue),
-            ("Number of Payments Visible to User", capturedEvent.numberOfPaymentsVisibleToUser, testEntitlement.claimant.lastPaymentsInfo.length)
-          )) { (fieldName, fieldValue, expectedResult) =>
+          forAll(
+            Table(
+              ("fieldName", "fieldValue", "expectedResult"),
+              ("Nino", capturedEvent.nino, testNino),
+              ("Status", capturedEvent.status, testStatus),
+              ("Referrer", capturedEvent.referrer, testReferrerValue),
+              ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue),
+              (
+                "Number of Payments Visible to User",
+                capturedEvent.numberOfPaymentsVisibleToUser,
+                testEntitlement.claimant.lastPaymentsInfo.length
+              )
+            )
+          ) { (fieldName, fieldValue, expectedResult) =>
             testForCapturedValue("event", fieldName, fieldValue, expectedResult)
           }
 
-
           capturedFinancialInfo.zip(testEntitlement.claimant.lastPaymentsInfo).zipWithIndex.foreach {
             case ((resultInfo, expectedInfo), index) =>
-              forAll(Table(
-                ("fieldName", "fieldValue", "expectedResult"),
-                ("Credit Date", resultInfo.creditDate, expectedInfo.creditDate),
-                ("Credit Amount", resultInfo.creditAmount, expectedInfo.creditAmount)
-              )) { (fieldName, fieldValue, expectedResult) =>
+              forAll(
+                Table(
+                  ("fieldName", "fieldValue", "expectedResult"),
+                  ("Credit Date", resultInfo.creditDate, expectedInfo.creditDate),
+                  ("Credit Amount", resultInfo.creditAmount, expectedInfo.creditAmount)
+                )
+              ) { (fieldName, fieldValue, expectedResult) =>
                 testForCapturedValue(s"Payments ($index)", fieldName, fieldValue, expectedResult)
               }
           }

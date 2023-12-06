@@ -66,7 +66,8 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
       val application = applicationBuilder()
         .overrides(
           bind[ChildBenefitEntitlementConnector].toInstance(failingChildBenefitEntitlementConnector)
-        ).build()
+        )
+        .build()
 
       running(application) {
         implicit val ec: ExecutionContextExecutor = application.actorSystem.getDispatcher

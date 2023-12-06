@@ -19,14 +19,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val executionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier = new HeaderCarrier()
+  implicit val headerCarrier    = new HeaderCarrier()
 
   override implicit lazy val app = applicationBuilder().build()
-  val sutWithStubs = app.injector.instanceOf[FtnaeConnector]
+  val sutWithStubs               = app.injector.instanceOf[FtnaeConnector]
 
   val mockHttpClient = mock[HttpClient]
-  val mockAppConfig = mock[FrontendAppConfig]
-  val sutWithMocks = new FtnaeConnector(mockHttpClient, mockAppConfig)
+  val mockAppConfig  = mock[FrontendAppConfig]
+  val sutWithMocks   = new FtnaeConnector(mockHttpClient, mockAppConfig)
 
   "FtnaeConnector" - {
     "getFtnaeAccountDetails" - {
@@ -63,7 +63,10 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "AND the response does not match any predetermined CBErrorResponse" - {
           "THEN a ConnectorError with the matched status and description is returned" in {
             val expectedMessage = "Unit Test other failure expected message"
-            getFtnaeAccountDetailsFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
+            getFtnaeAccountDetailsFailureStub(
+              INTERNAL_SERVER_ERROR,
+              genericCBError(INTERNAL_SERVER_ERROR, expectedMessage)
+            )
 
             whenReady(sutWithStubs.getFtnaeAccountDetails.value) { result =>
               result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
@@ -75,9 +78,12 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-              when(mockHttpClient.GET
-                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
-                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              when(
+                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
+                  any[HttpReads[Either[CBError, _]]],
+                  any[HeaderCarrier],
+                  any[ExecutionContext]
+                )
               ).thenReturn(Future failed new HttpException(message, responseCode))
 
               whenReady(sutWithMocks.getFtnaeAccountDetails.value) { result =>
@@ -89,9 +95,12 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-              when(mockHttpClient.GET
-                (any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])
-                (any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
+              when(
+                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
+                  any[HttpReads[Either[CBError, _]]],
+                  any[HeaderCarrier],
+                  any[ExecutionContext]
+                )
               ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
 
               whenReady(sutWithMocks.getFtnaeAccountDetails.value) { result =>
@@ -162,7 +171,10 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError with the matched status and description is returned" in {
             forAll(arbitrary[ChildDetails]) { childDetails =>
               val expectedMessage = "Unit Test other failure expected message"
-              uploadFtnaeDetailsFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
+              uploadFtnaeDetailsFailureStub(
+                INTERNAL_SERVER_ERROR,
+                genericCBError(INTERNAL_SERVER_ERROR, expectedMessage)
+              )
 
               whenReady(sutWithStubs.uploadFtnaeDetails(childDetails).value) { result =>
                 result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
@@ -174,29 +186,39 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       "GIVEN the HttpClient experiences an exception" - {
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
-            forAll(randomFailureStatusCode, alphaStr, arbitrary[ChildDetails]) { (responseCode, message, childDetails) =>
-              when(mockHttpClient.PUT
-              (any[String], any[ChildDetails], any[Seq[(String, String)]])
-              (any[Writes[ChildDetails]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
-              ).thenReturn(Future failed new HttpException(message, responseCode))
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[ChildDetails]) {
+              (responseCode, message, childDetails) =>
+                when(
+                  mockHttpClient.PUT(any[String], any[ChildDetails], any[Seq[(String, String)]])(
+                    any[Writes[ChildDetails]],
+                    any[HttpReads[Either[CBError, _]]],
+                    any[HeaderCarrier],
+                    any[ExecutionContext]
+                  )
+                ).thenReturn(Future failed new HttpException(message, responseCode))
 
-              whenReady(sutWithMocks.uploadFtnaeDetails(childDetails).value) { result =>
-                result mustBe Left(ConnectorError(responseCode, message))
-              }
+                whenReady(sutWithMocks.uploadFtnaeDetails(childDetails).value) { result =>
+                  result mustBe Left(ConnectorError(responseCode, message))
+                }
             }
           }
         }
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
-            forAll(randomFailureStatusCode, alphaStr, arbitrary[ChildDetails]) { (responseCode, message, childDetails) =>
-              when(mockHttpClient.PUT
-              (any[String], any[ChildDetails], any[Seq[(String, String)]])
-              (any[Writes[ChildDetails]], any[HttpReads[Either[CBError, _]]], any[HeaderCarrier], any[ExecutionContext])
-              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+            forAll(randomFailureStatusCode, alphaStr, arbitrary[ChildDetails]) {
+              (responseCode, message, childDetails) =>
+                when(
+                  mockHttpClient.PUT(any[String], any[ChildDetails], any[Seq[(String, String)]])(
+                    any[Writes[ChildDetails]],
+                    any[HttpReads[Either[CBError, _]]],
+                    any[HeaderCarrier],
+                    any[ExecutionContext]
+                  )
+                ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
 
-              whenReady(sutWithMocks.uploadFtnaeDetails(childDetails).value) { result =>
-                result mustBe Left(ConnectorError(responseCode, message))
-              }
+                whenReady(sutWithMocks.uploadFtnaeDetails(childDetails).value) { result =>
+                  result mustBe Left(ConnectorError(responseCode, message))
+                }
             }
           }
         }

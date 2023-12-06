@@ -10,9 +10,9 @@ import play.api.inject.guice.GuiceApplicationBuilder
 
 trait BaseAppSpec extends BaseSpec with WireMockSupport {
   protected def applicationBuilder(
-      config: Map[String, Any] = Map(),
+      config:      Map[String, Any] = Map(),
       userAnswers: Option[UserAnswers] = None
-    ): GuiceApplicationBuilder =
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .configure(defaultWireMockConfig ++ config)
       .overrides(
@@ -23,11 +23,11 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
       )
 
   protected def applicationBuilderWithVerificationActions(
-     config: Map[String, Any] = Map(),
-     userAnswers: Option[UserAnswers] = None,
-     verifyBarNotLockedAction: VerifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verify = true),
-     verifyHICBCAction: VerifyHICBCAction = FakeVerifyHICBCAction(verify = true)
-   ): GuiceApplicationBuilder = {
+      config:                   Map[String, Any] = Map(),
+      userAnswers:              Option[UserAnswers] = None,
+      verifyBarNotLockedAction: VerifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verify = true),
+      verifyHICBCAction:        VerifyHICBCAction = FakeVerifyHICBCAction(verify = true)
+  ): GuiceApplicationBuilder = {
     applicationBuilder(config, userAnswers)
       .overrides(
         bind[VerifyBarNotLockedAction].toInstance(verifyBarNotLockedAction),
@@ -36,9 +36,9 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
   }
 
   protected def assertSameHtmlAfter(
-                                     transformation: String => String
-                                   )(left: String, right: String)(implicit position: Position): Assertion = {
-    val leftHtml = Jsoup.parse(transformation(left))
+      transformation: String => String
+  )(left:             String, right: String)(implicit position: Position): Assertion = {
+    val leftHtml  = Jsoup.parse(transformation(left))
     val rightHtml = Jsoup.parse(transformation(right))
     leftHtml.html() mustBe rightHtml.html()
   }

@@ -167,7 +167,6 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     }
   }
 
-
   private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
 
   implicit val reads: Reads[Unit] = Reads[Unit] { _ =>

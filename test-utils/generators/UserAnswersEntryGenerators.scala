@@ -20,8 +20,8 @@ import models.cob.{ConfirmNewAccountDetails, NewAccountDetails}
 import models.ftnae.HowManyYears
 import org.scalacheck.Arbitrary
 import org.scalacheck.Arbitrary.arbitrary
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
-import pages.ftnae.{ExtendPaymentsPage, HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
+import pages.cob._
+import pages.ftnae._
 import play.api.libs.json.{JsValue, Json}
 
 trait UserAnswersEntryGenerators extends PageGenerators with ModelGenerators {

@@ -56,7 +56,7 @@ class ChangeOfBankService @Inject() (
   def validate(accountHolderName: AccountHolderName, sortCode: SortCode, bankAccountNumber: BankAccountNumber)(implicit
       hc:                         HeaderCarrier,
       ec:                         ExecutionContext
-  ): CBEnvelope[Unit] =  {
+  ): CBEnvelope[Unit] = {
 
     changeOfBankConnector
       .verifyClaimantBankAccount(

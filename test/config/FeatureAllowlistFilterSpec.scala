@@ -10,23 +10,23 @@ import scala.concurrent.Future
 private class FeatureAllowlistFilterSpec extends BaseAppSpec {
   val rh: RequestHeader = mock[RequestHeader]
 
-  val expectedResult: Result = Ok("Unit test block result")
-  val unitTestBlock: RequestHeader => Future[Result] = (_ :RequestHeader) => Future successful expectedResult
+  val expectedResult: Result                          = Ok("Unit test block result")
+  val unitTestBlock:  RequestHeader => Future[Result] = (_: RequestHeader) => Future successful expectedResult
 
   val allFeaturesTestCases = Table("featureName", "change-of-bank", "ftnae", "add-child", "hicbc")
 
-  val featureFlagKey = (featureName: String) => s"feature-flags.$featureName.enabled"
-  val featureAllowListEnabledKey = (featureName: String) => s"feature-flags.$featureName.allowlist.enabled"
-  val featureAllowListDestinationKey = (featureName: String) => s"feature-flags.$featureName.allowlist.destination"
+  val featureFlagKey                   = (featureName: String) => s"feature-flags.$featureName.enabled"
+  val featureAllowListEnabledKey       = (featureName: String) => s"feature-flags.$featureName.allowlist.enabled"
+  val featureAllowListDestinationKey   = (featureName: String) => s"feature-flags.$featureName.allowlist.destination"
   val featureAllowListDestinationValue = (featureName: String) => s"https://$featureName.unit-test.com"
-  val featureAllowListIPsKey = (featureName: String) => s"feature-flags.$featureName.allowlist.ips"
+  val featureAllowListIPsKey           = (featureName: String) => s"feature-flags.$featureName.allowlist.ips"
 
   "FeatureAllowlistFilter" - {
     forAll(allFeaturesTestCases) { featureName =>
       s"GIVEN the feature $featureName is disabled" - {
         "THEN the provided block runs regardless" in {
           val application = applicationBuilder(Map(featureFlagKey(featureName) -> false)).build()
-          val sut = application.injector.instanceOf[FeatureAllowlistFilter]
+          val sut         = application.injector.instanceOf[FeatureAllowlistFilter]
 
           whenReady(sut(unitTestBlock)(featureName, rh)) { result =>
             result mustBe expectedResult
@@ -35,17 +35,19 @@ private class FeatureAllowlistFilterSpec extends BaseAppSpec {
       }
 
       s"GIVEN the feature $featureName is enabled" - {
-        val expectedIP = "123.456.78.90"
+        val expectedIP    = "123.456.78.90"
         val alternativeIP = "09.87.654.321"
         "AND the feature's allowlist is enabled" - {
           "AND the request is not provided with a True-Client-IP" - {
             "THEN a Redirect to the feature's destination is returned" in {
               when(rh.headers)
                 .thenReturn(Headers())
-              val application = applicationBuilder(Map(
-                featureAllowListEnabledKey(featureName) -> true,
-                featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName)
-              )).build()
+              val application = applicationBuilder(
+                Map(
+                  featureAllowListEnabledKey(featureName)     -> true,
+                  featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName)
+                )
+              ).build()
               val sut = application.injector.instanceOf[FeatureAllowlistFilter]
 
               whenReady(sut(unitTestBlock)(featureName, rh)) { result =>
@@ -58,11 +60,13 @@ private class FeatureAllowlistFilterSpec extends BaseAppSpec {
               "THEN the provided block runs and returns it's result" in {
                 when(rh.headers)
                   .thenReturn(Headers((FeatureAllowlistFilter.trueClient, expectedIP)))
-                val application = applicationBuilder(Map(
-                  featureFlagKey(featureName) -> true,
-                  featureAllowListEnabledKey(featureName) -> true,
-                  featureAllowListIPsKey(featureName) -> List(expectedIP, alternativeIP).mkString(", ")
-                )).build()
+                val application = applicationBuilder(
+                  Map(
+                    featureFlagKey(featureName)             -> true,
+                    featureAllowListEnabledKey(featureName) -> true,
+                    featureAllowListIPsKey(featureName)     -> List(expectedIP, alternativeIP).mkString(", ")
+                  )
+                ).build()
                 val sut = application.injector.instanceOf[FeatureAllowlistFilter]
 
                 whenReady(sut(unitTestBlock)(featureName, rh)) { result =>
@@ -77,12 +81,14 @@ private class FeatureAllowlistFilterSpec extends BaseAppSpec {
                     .thenReturn(Headers((FeatureAllowlistFilter.trueClient, expectedIP)))
                   when(rh.uri)
                     .thenReturn(featureAllowListDestinationValue(featureName))
-                  val application = applicationBuilder(Map(
-                    featureFlagKey(featureName) -> true,
-                    featureAllowListEnabledKey(featureName) -> true,
-                    featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName),
-                    featureAllowListIPsKey(featureName) -> alternativeIP
-                  )).build()
+                  val application = applicationBuilder(
+                    Map(
+                      featureFlagKey(featureName)                 -> true,
+                      featureAllowListEnabledKey(featureName)     -> true,
+                      featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName),
+                      featureAllowListIPsKey(featureName)         -> alternativeIP
+                    )
+                  ).build()
                   val sut = application.injector.instanceOf[FeatureAllowlistFilter]
 
                   whenReady(sut(unitTestBlock)(featureName, rh)) { result =>
@@ -96,12 +102,14 @@ private class FeatureAllowlistFilterSpec extends BaseAppSpec {
                     .thenReturn(Headers((FeatureAllowlistFilter.trueClient, expectedIP)))
                   when(rh.uri)
                     .thenReturn("")
-                  val application = applicationBuilder(Map(
-                    featureFlagKey(featureName) -> true,
-                    featureAllowListEnabledKey(featureName) -> true,
-                    featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName),
-                    featureAllowListIPsKey(featureName) -> alternativeIP
-                  )).build()
+                  val application = applicationBuilder(
+                    Map(
+                      featureFlagKey(featureName)                 -> true,
+                      featureAllowListEnabledKey(featureName)     -> true,
+                      featureAllowListDestinationKey(featureName) -> featureAllowListDestinationValue(featureName),
+                      featureAllowListIPsKey(featureName)         -> alternativeIP
+                    )
+                  ).build()
                   val sut = application.injector.instanceOf[FeatureAllowlistFilter]
 
                   whenReady(sut(unitTestBlock)(featureName, rh)) { result =>
@@ -114,10 +122,12 @@ private class FeatureAllowlistFilterSpec extends BaseAppSpec {
         }
         "AND the feature's allowlist is disabled" - {
           "THEN the provided block runs regardless" in {
-            val application = applicationBuilder(Map(
-              featureFlagKey(featureName) -> true,
-              featureAllowListEnabledKey(featureName) -> false
-            )).build()
+            val application = applicationBuilder(
+              Map(
+                featureFlagKey(featureName)             -> true,
+                featureAllowListEnabledKey(featureName) -> false
+              )
+            ).build()
             val sut = application.injector.instanceOf[FeatureAllowlistFilter]
 
             whenReady(sut(unitTestBlock)(featureName, rh)) { result =>

@@ -46,12 +46,15 @@ class ErrorHandler @Inject() (
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
+      rh:                                       Request[_]
+  ): Html =
     error(pageTitle, heading, message)
 
-  def handleError(error: CBError, auditOrigin: Option[String] = None)
-                 (implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext)
-  : Result = {
+  def handleError(
+      error:               CBError,
+      auditOrigin:         Option[String] = None
+  )(implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
 
     error match {
       case ce: ConnectorError =>
@@ -63,15 +66,31 @@ class ErrorHandler @Inject() (
         logger.error(logMessage(s"payment history validation error: $message", Some(code), auditOrigin))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case FtnaeNoCHBAccountError =>
-        logger.warn(logMessage("Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}", Some(FtnaeNoCHBAccountError.statusCode), auditOrigin))
+        logger.warn(
+          logMessage(
+            "Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
+            Some(FtnaeNoCHBAccountError.statusCode),
+            auditOrigin
+          )
+        )
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
       case FtnaeCannotFindYoungPersonError =>
-        logger.warn(logMessage(
-          s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}", Some(FtnaeCannotFindYoungPersonError.statusCode), auditOrigin
-        ))
+        logger.warn(
+          logMessage(
+            s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}",
+            Some(FtnaeCannotFindYoungPersonError.statusCode),
+            auditOrigin
+          )
+        )
         Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad())
       case FtnaeChildUserAnswersNotRetrieved =>
-        logger.error(logMessage(s"Ftnae error: ${FtnaeChildUserAnswersNotRetrieved.message}", Some(FtnaeChildUserAnswersNotRetrieved.statusCode), auditOrigin))
+        logger.error(
+          logMessage(
+            s"Ftnae error: ${FtnaeChildUserAnswersNotRetrieved.message}",
+            Some(FtnaeChildUserAnswersNotRetrieved.statusCode),
+            auditOrigin
+          )
+        )
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case _ =>
         logger.error(logMessage("unknown error occurred", None, auditOrigin))
@@ -84,9 +103,12 @@ object ErrorHandler {
   def logMessage(message: String, code: Option[Int], auditOrigin: Option[String]) =
     s"Failed to load: source=${auditOrigin.getOrElse("unknown")} code=${code.getOrElse("N/A")} message=$message"
 
-  private def handleConnectorError(error: ConnectorError, auditOrigin: Option[String], logger: RequestLogger)
-                                  (implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext)
-  : Result = {
+  private def handleConnectorError(error: ConnectorError, auditOrigin: Option[String], logger: RequestLogger)(implicit
+      auditService:                       AuditService,
+      request:                            Request[_],
+      hc:                                 HeaderCarrier,
+      ec:                                 ExecutionContext
+  ): Result = {
     error match {
       case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
         logger.info(logMessage("cb account not found", Some(NOT_FOUND), auditOrigin))
@@ -101,9 +123,11 @@ object ErrorHandler {
     }
   }
 
-  private def fireAuditEvent(auditOrigin: Option[String], request: Request[_])
-                            (implicit auditService: AuditService, hc: HeaderCarrier, ec: ExecutionContext)
-  : Unit = {
+  private def fireAuditEvent(auditOrigin: Option[String], request: Request[_])(implicit
+      auditService:                       AuditService,
+      hc:                                 HeaderCarrier,
+      ec:                                 ExecutionContext
+  ): Unit = {
     if (auditOrigin.contains("proofOfEntitlement")) {
       auditService.auditProofOfEntitlement(
         "Unknown",

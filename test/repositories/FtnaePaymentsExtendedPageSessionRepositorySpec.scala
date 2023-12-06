@@ -15,12 +15,15 @@ import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
 import scala.concurrent.ExecutionContext
 
-class FtnaePaymentsExtendedPageSessionRepositorySpec extends BaseSpec with DefaultPlayMongoRepositorySupport[UserAnswers] with BeforeAndAfterEach {
+class FtnaePaymentsExtendedPageSessionRepositorySpec
+    extends BaseSpec
+    with DefaultPlayMongoRepositorySupport[UserAnswers]
+    with BeforeAndAfterEach {
   val mockConfig = mock[FrontendAppConfig]
   val ttlSeconds = 123
   when(mockConfig.cacheTtl).thenReturn(ttlSeconds)
 
-  val instant = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  val instant   = Instant.now.truncatedTo(ChronoUnit.MILLIS)
   val stubClock = Clock.fixed(instant, ZoneId.systemDefault)
 
   private val userAnswers = UserAnswers("id", Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
@@ -48,7 +51,7 @@ class FtnaePaymentsExtendedPageSessionRepositorySpec extends BaseSpec with Defau
     }
     "keepAlive" - {
       "GIVEN a record already exists in the collection" - {
-        "WHEN keepAlive is called"- {
+        "WHEN keepAlive is called" - {
           "THEN lastUpdated is set to 'now' and the record updated" in {
             await(insert(userAnswers))
             val expectedResult = userAnswers.copy(lastUpdated = instant)
@@ -73,7 +76,7 @@ class FtnaePaymentsExtendedPageSessionRepositorySpec extends BaseSpec with Defau
           }
         }
       }
-      "GIVEN a record with the request id does not exist in the collection"- {
+      "GIVEN a record with the request id does not exist in the collection" - {
         "THEN None is returned" in {
           whenReady(repository.get(userAnswers.id)) { result =>
             result mustBe None

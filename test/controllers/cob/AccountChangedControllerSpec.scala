@@ -62,8 +62,10 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
         "WHEN both the Change of Bank Submission and Cache Clear are successful" - {
           "THEN should return OK Result and the expected view" in {
             when(
-              mockCoBService.submitClaimantChangeOfBank
-              (any[Option[NewAccountDetails]], any[BaseDataRequest[AnyContent]])(any[ExecutionContext], any[HeaderCarrier])
+              mockCoBService.submitClaimantChangeOfBank(
+                any[Option[NewAccountDetails]],
+                any[BaseDataRequest[AnyContent]]
+              )(any[ExecutionContext], any[HeaderCarrier])
             ).thenReturn(CBEnvelope(successfulUpdateBankDetailsResponse))
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope(()))
@@ -76,8 +78,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             ).overrides(
               bind[ChangeOfBankService].toInstance(mockCoBService),
               bind[SessionRepository].toInstance(mockSessionRepository)
-            )
-            .build()
+            ).build()
 
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)

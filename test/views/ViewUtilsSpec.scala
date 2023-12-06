@@ -10,16 +10,16 @@ import java.time.LocalDate
 class ViewUtilsSpec extends BaseSpec {
   implicit val messages: Messages = mock[Messages]
   val errorPrefixKey = "error.browser.title.prefix"
-  val titleKey = "title.key"
-  val sectionKey = "section.key"
+  val titleKey       = "title.key"
+  val sectionKey     = "section.key"
   val serviceNameKey = "service.name"
-  val govUkKey = "site.govuk"
+  val govUkKey       = "site.govuk"
 
   val expectedErrorPrefix = "Error:"
-  val expectedTitle = "Unit Test Page Title"
-  val expectedSection = "Unit Test Section"
+  val expectedTitle       = "Unit Test Page Title"
+  val expectedSection     = "Unit Test Section"
   val expectedServiceName = "Service Name"
-  val expectedGovUk = "Gov UK"
+  val expectedGovUk       = "Gov UK"
 
   when(messages.lang).thenReturn(Lang.defaultLang)
   when(messages(errorPrefixKey)).thenReturn(expectedErrorPrefix)
@@ -41,7 +41,6 @@ class ViewUtilsSpec extends BaseSpec {
   when(formWithAllErrors.hasErrors).thenReturn(true)
   when(formWithAllErrors.hasGlobalErrors).thenReturn(true)
 
-
   "View Utils Spec" - {
     "title" - {
       val testNameForForm = (includeErrorPrefix: Boolean, includeSection: Boolean) =>
@@ -49,32 +48,32 @@ class ViewUtilsSpec extends BaseSpec {
       val titleTestCases = Table(
         ("includeErrorPrefix", "includeSection", "form"),
         (false, false, formWithoutErrors),
-        (false, true,  formWithoutErrors),
-        (true,  false, formWithLocalErrors),
-        (true,  true,  formWithLocalErrors)
+        (false, true, formWithoutErrors),
+        (true, false, formWithLocalErrors),
+        (true, true, formWithLocalErrors)
       )
 
       forAll(titleTestCases) { (includeErrorPrefix, includeSection, form) =>
         val testName = testNameForForm(includeErrorPrefix, includeSection)
-        val section  = if(includeSection) Some(sectionKey) else None
-        val result = ViewUtils.title(form, titleKey, section)
+        val section  = if (includeSection) Some(sectionKey) else None
+        val result   = ViewUtils.title(form, titleKey, section)
         testTitle(testName, result, includeErrorPrefix, includeSection)
       }
     }
 
     "titleNoForm" - {
-      val testNameForNoForm = (includeSection: Boolean) =>
-        s"For without a form and ${withOrWithout(includeSection)} a Section"
+      val testNameForNoForm =
+        (includeSection: Boolean) => s"For without a form and ${withOrWithout(includeSection)} a Section"
       val titleNoFormTestCases = Table(
         "includeSection",
         false,
-        true,
+        true
       )
 
       forAll(titleNoFormTestCases) { includeSection =>
         val testName = testNameForNoForm(includeSection)
-        val section = if (includeSection) Some(sectionKey) else None
-        val result = ViewUtils.titleNoForm(titleKey, section)
+        val section  = if (includeSection) Some(sectionKey) else None
+        val result   = ViewUtils.titleNoForm(titleKey, section)
         testTitle(testName, result, errorPrefix = false, section = includeSection)
       }
     }
@@ -126,15 +125,15 @@ class ViewUtilsSpec extends BaseSpec {
 
     "errorPrefix" - {
       val errorPrefixTestCases = Table(
-        ("expectedName",              "formDescription",         "form",               "expectedResult"),
-        ("an empty string",           "no errors",     formWithoutErrors,    ""),
-        ("the expected error prefix", "local errors",  formWithLocalErrors,  s"$expectedErrorPrefix "),
+        ("expectedName", "formDescription", "form", "expectedResult"),
+        ("an empty string", "no errors", formWithoutErrors, ""),
+        ("the expected error prefix", "local errors", formWithLocalErrors, s"$expectedErrorPrefix "),
         ("the expected error prefix", "global errors", formWithGlobalErrors, s"$expectedErrorPrefix "),
-        ("the expected error prefix", "all errors",    formWithAllErrors,    s"$expectedErrorPrefix ")
+        ("the expected error prefix", "all errors", formWithAllErrors, s"$expectedErrorPrefix ")
       )
 
       forAll(errorPrefixTestCases) { (name, description, form, result) =>
-      s"GIVEN a form with $description THEN $name should be returned" in {
+        s"GIVEN a form with $description THEN $name should be returned" in {
           ViewUtils.errorPrefix(form) mustBe result
         }
       }
@@ -143,11 +142,11 @@ class ViewUtilsSpec extends BaseSpec {
     "formatDate" - {
       "must return a date in the format d MMMM yyyy" in {
         val testDate = LocalDate.now()
-        val result = ViewUtils.formatDate(testDate)
+        val result   = ViewUtils.formatDate(testDate)
 
-        val expectedDate = testDate.getDayOfMonth
+        val expectedDate  = testDate.getDayOfMonth
         val expectedMonth = testDate.getMonth
-        val expectedYear = testDate.getYear
+        val expectedYear  = testDate.getYear
         result.toUpperCase mustBe s"$expectedDate $expectedMonth $expectedYear"
       }
     }
@@ -173,11 +172,11 @@ class ViewUtilsSpec extends BaseSpec {
 
       val twoScaleTestCases = Table(
         ("testName", "testValue", "expectedResult"),
-        ("No decimals",          "1",          "1.00"),
-        ("One decimal place",    "2.3",        "2.30"),
-        ("Two decimal places",   "4.56",       "4.56"),
-        ("Three decimal places", "7.891",      "7.89"),
-        ("Many decimal places",  "1.23456789", "1.23")
+        ("No decimals", "1", "1.00"),
+        ("One decimal place", "2.3", "2.30"),
+        ("Two decimal places", "4.56", "4.56"),
+        ("Three decimal places", "7.891", "7.89"),
+        ("Many decimal places", "1.23456789", "1.23")
       )
 
       "must always return a two scale decimal" - {

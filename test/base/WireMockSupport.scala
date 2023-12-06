@@ -19,7 +19,6 @@ trait WireMockSupport extends BaseSpec with BeforeAndAfterEach with BeforeAndAft
     "microservice.services.child-benefit-entitlement.port" -> wiremockPort
   )
 
-
   private val stubHost = "localhost"
 
   protected val wiremockBaseUrl: String = s"http://localhost:$wiremockPort"

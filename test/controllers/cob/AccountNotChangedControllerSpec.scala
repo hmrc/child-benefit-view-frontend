@@ -40,7 +40,8 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       "must return OK and the correct view for a GET" in {
         userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
