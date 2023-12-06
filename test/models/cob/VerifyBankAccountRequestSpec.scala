@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 class VerifyBankAccountRequestSpec extends BaseSpec {
   "VerifyBankAccountRequest" - {
     "GIVEN a valid account holder name, sort code and bank account number" - {
-      "THEN the expected UpdateBankDetailsResponse is returned" in {
+      "THEN the expected VerifyBankAccountRequest is returned" in {
         forAll(arbitrary[AccountHolderName], arbitrary[SortCode], arbitrary[BankAccountNumber]) {
           (accountHolderName, sortCode, bankAccountNumber) =>
           val result = VerifyBankAccountRequest(accountHolderName, sortCode, bankAccountNumber)

@@ -84,13 +84,8 @@ trait EntitlementGenerators extends DataGenerators {
   implicit lazy val arbitraryPostcode: Arbitrary[AddressPostcode] =
     Arbitrary {
       for {
-        a1 <- stringOf(alphaChar)
-        a2 <- stringOf(alphaChar)
-        n1 <- choose[Int](1, 99)
-        a3 <- stringOf(alphaChar)
-        n2 <- choose[Int](1, 9)
-        n3 <- choose[Int](1, 9)
-      } yield AddressPostcode(s"$a1$a2$n1 $a3$n2$n3")
+        postcode <- generatePostCode
+      } yield AddressPostcode(postcode)
     }
   implicit lazy val arbitraryAdjustmentInformation: Arbitrary[Option[AdjustmentInformation]] =
     Arbitrary {

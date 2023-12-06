@@ -1,7 +1,7 @@
 package generators
 
 import org.scalacheck.{Arbitrary, Gen}
-import org.scalacheck.Gen.{alphaChar, alphaNumStr, alphaStr, numStr, stringOf}
+import org.scalacheck.Gen.{alphaChar, alphaNumStr, alphaStr, choose, numStr, stringOf}
 
 trait DataGenerators {
   private val MAX_ID_LENGTH = 20
@@ -41,4 +41,14 @@ trait DataGenerators {
   private val MAX_ADDRESS_LINE_LENGTH = 30
   val generateAddressLine: Gen[String] =
     alphaStr.suchThat(_.length >= MIN_ADDRESS_LINE_LENGTH).map(_.take(MAX_ADDRESS_LINE_LENGTH))
+
+  val generatePostCode: Gen[String] =
+    for {
+      a1 <- stringOf(alphaChar)
+      a2 <- stringOf(alphaChar)
+      n1 <- choose[Int](1, 99)
+      a3 <- stringOf(alphaChar)
+      n2 <- choose[Int](1, 9)
+      n3 <- choose[Int](1, 9)
+    } yield s"$a1$a2$n1 $a3$n2$n3"
 }

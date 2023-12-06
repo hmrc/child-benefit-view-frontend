@@ -26,6 +26,8 @@ import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.helpers
+import utils.helpers.YoungPersonTitleHelper
 
 class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -82,7 +84,7 @@ class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with Ftna
 
       val request: DataRequest[AnyContent] = DataRequest(fakeRequest, "", NationalInsuranceNumber("XXX"), userAnswers)
 
-      YoungPersonTitleHelper(request)
+      helpers.YoungPersonTitleHelper(request)
         .firstNameFromConcatenatedChildNames() mustBe None
     }
 
@@ -101,7 +103,7 @@ class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with Ftna
 
       val request: DataRequest[AnyContent] = DataRequest(fakeRequest, "", NationalInsuranceNumber("XXX"), userAnswers)
 
-      YoungPersonTitleHelper(request)
+      helpers.YoungPersonTitleHelper(request)
         .firstNameFromConcatenatedChildNames() mustBe None
     }
 
