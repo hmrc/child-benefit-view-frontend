@@ -1,10 +1,10 @@
 package generators.modelgenerators
 
 import generators.DataGenerators
-import models.common.{AddressLine, AddressPostcode}
+import models.common.{AddressLine, AddressPostcode, AdjustmentReasonCode}
 import models.entitlement._
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen.{alphaChar, choose, stringOf}
+import org.scalacheck.Gen.{alphaChar, alphaStr, choose, stringOf}
 import org.scalacheck.{Arbitrary, Gen}
 
 import java.time.LocalDate
@@ -87,7 +87,7 @@ trait EntitlementGenerators extends DataGenerators {
         postcode <- generatePostCode
       } yield AddressPostcode(postcode)
     }
-  implicit lazy val arbitraryAdjustmentInformation: Arbitrary[Option[AdjustmentInformation]] =
+  implicit lazy val arbitraryNoAdjustmentInformation: Arbitrary[Option[AdjustmentInformation]] =
     Arbitrary {
       None
     }
@@ -102,4 +102,19 @@ trait EntitlementGenerators extends DataGenerators {
       } yield Child(name, dateOfBirth, relationStart, relationEnd)
     }
 
+  implicit lazy val arbitraryAdjustmentInformation: Arbitrary[AdjustmentInformation] = {
+    Arbitrary {
+      for {
+        code <- arbitrary[AdjustmentReasonCode]
+        endDate <- arbitrary[LocalDate]
+      } yield AdjustmentInformation(code, endDate)
+    }
+  }
+
+  implicit lazy val arbitraryAdjustmentReasonCode: Arbitrary[AdjustmentReasonCode] =
+    Arbitrary {
+      for {
+        reason <- alphaStr
+      } yield AdjustmentReasonCode(reason)
+    }
 }

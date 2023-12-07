@@ -16,43 +16,37 @@
 
 package models.entitlement
 
-import models.common.NationalInsuranceNumber
-import org.scalatest.OptionValues
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import base.BaseSpec
+import org.scalacheck.Arbitrary.arbitrary
 import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-class ChildSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
-
-  val childJson =
-    """{
-      | "dateOfBirth": "2021-01-01",
-      | "name": "Test Name",
-      | "relationshipStartDate": "2021-01-01"
-      |}
-      |""".stripMargin
+class ChildSpec extends BaseSpec {
   "Child" - {
+    "GIVEN a valid name, date of birth and relationship start date" - {
+      forAll(trueFalseCases) { withEndDate =>
+        s"AND a relationship end date ${isOrIsNot(withEndDate)} provided" - {
+          "THEN the expected Child is returned" in {
+            forAll(arbitrary[FullName], arbitrary[LocalDate], arbitrary[LocalDate], arbitrary[LocalDate]) {
+              (name, dateOfBirth, relationshipStartDate, relationshipEndDate) =>
+              val result = Child(name, dateOfBirth, relationshipStartDate, if(withEndDate) Some(relationshipEndDate) else None)
 
-    "must deserialise valid values" in {
-      val expectedChild = Child(
-        FullName("Test Name"),
-        LocalDate.of(2021, 1, 1),
-        LocalDate.of(2021, 1, 1),
-        None
-      )
-
-      Json.parse(childJson).as[Child] mustEqual expectedChild
+              result.name mustBe name
+              result.dateOfBirth mustBe dateOfBirth
+              result.relationshipStartDate mustBe relationshipStartDate
+              result.relationshipEndDate mustBe (if(withEndDate) Some(relationshipEndDate) else None)
+            }
+          }
+        }
+      }
     }
-
-    "must deserialise missing values" in {
-      val expectedChild =
-        Child(FullName("Test Name"), LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 1), None)
-
-      Json.parse(childJson).as[Child] mustEqual expectedChild
+    "format: should successfully format to JSON" in {
+      forAll(arbitrary[FullName], arbitrary[LocalDate], arbitrary[LocalDate], arbitrary[LocalDate]) {
+        (name, dateOfBirth, relationshipStartDate, relationshipEndDate) =>
+        val child = Child(name, dateOfBirth, relationshipStartDate, Some(relationshipEndDate))
+        Json.toJson(child)
+      }
     }
-
   }
 }

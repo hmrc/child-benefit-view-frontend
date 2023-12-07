@@ -9,16 +9,16 @@ trait DataGenerators {
 
   private val NINO_NUMERIC_LENGTH = 6
   val generateNino: Gen[String] = for {
-    pre1    <- stringOf(alphaChar)
-    pre2    <- stringOf(alphaChar)
+    pre1    <- alphaChar
+    pre2    <- alphaChar
     numeric <- numStr.suchThat(_.length >= NINO_NUMERIC_LENGTH)
-    suffix  <- stringOf(alphaChar)
-  } yield s"$pre1$pre2${numeric.take(NINO_NUMERIC_LENGTH)}$suffix"
+    suffix  <- alphaChar
+  } yield s"${pre1.toUpper}${pre2.toUpper}${numeric.take(NINO_NUMERIC_LENGTH)}${suffix.toUpper}"
   val generateReferenceNumber: Gen[String] = for {
-    pre1    <- stringOf(alphaChar)
-    pre2    <- stringOf(alphaChar)
+    pre1    <- alphaChar
+    pre2    <- alphaChar
     numeric <- numStr.suchThat(_.length >= NINO_NUMERIC_LENGTH)
-  } yield s"$pre1$pre2${numeric.take(NINO_NUMERIC_LENGTH)}"
+  } yield s"${pre1.toUpper}${pre2.toUpper}${numeric.take(NINO_NUMERIC_LENGTH)}"
 
   private val MAX_NAME_LENGTH = 30
   val generateName: Gen[String] = alphaStr.map(_.take(MAX_NAME_LENGTH))
@@ -44,10 +44,10 @@ trait DataGenerators {
 
   val generatePostCode: Gen[String] =
     for {
-      a1 <- stringOf(alphaChar)
-      a2 <- stringOf(alphaChar)
+      a1 <- alphaChar
+      a2 <- alphaChar
       n1 <- choose[Int](1, 99)
-      a3 <- stringOf(alphaChar)
+      a3 <- alphaChar
       n2 <- choose[Int](1, 9)
       n3 <- choose[Int](1, 9)
     } yield s"$a1$a2$n1 $a3$n2$n3"

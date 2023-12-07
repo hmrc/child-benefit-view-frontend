@@ -31,10 +31,4 @@ trait ChangeOfBankGenerators extends DataGenerators {
         numerical <- generateBuildingSocietyNumber
       } yield BuildingSocietyRollNumber(numerical)
     }
-  implicit lazy val arbitraryAdjustmentReasonCode: Arbitrary[AdjustmentReasonCode] =
-    Arbitrary {
-      for {
-        code <- alphaStr
-      } yield AdjustmentReasonCode(code)
-    }
 }
