@@ -55,6 +55,7 @@ trait BaseSpec
 
   val withOrWithout = (bool: Boolean) => if (bool) "with" else "without"
   val isOrIsNot     = (bool: Boolean) => if (bool) "is" else "is not"
+  val areOrAreNot   = (bool: Boolean) => if (bool) "are" else "are not"
 
   val trueFalseCases = Table("value", true, false)
 }

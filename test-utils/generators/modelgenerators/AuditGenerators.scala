@@ -1,7 +1,7 @@
 package generators.modelgenerators
 
 import generators.DataGenerators
-import models.audit.{BankDetails, ClaimantEntitlementDetails, PersonalInformation, ViewDetails}
+import models.audit._
 import models.changeofbank.{AccountHolderName, BankAccountNumber, BuildingSocietyRollNumber, SortCode}
 import models.entitlement.Child
 import org.scalacheck.Arbitrary
