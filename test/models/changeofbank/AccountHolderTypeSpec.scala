@@ -4,7 +4,7 @@ import base.BaseSpec
 import play.api.libs.json.JsString
 
 class AccountHolderTypeSpec extends BaseSpec {
-  "AccountHolderTypeSpec" - {
+  "AccountHolderType" - {
     val accountHolderToJSTestCases = Table(
       ("accountHolderType", "stringRepresentation"),
       (AccountHolderType.Claimant, "CLAIMANT"),
