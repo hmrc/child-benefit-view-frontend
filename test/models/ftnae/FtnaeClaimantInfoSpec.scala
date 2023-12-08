@@ -9,20 +9,18 @@ class FtnaeClaimantInfoSpec extends BaseSpec {
   "FtnaeClaimantInfo" - {
     "GIVEN a valid name and surname" - {
       "THEN the expected FtnaeClaimantInfo is returned" in {
-        forAll(arbitrary[FirstForename], arbitrary[Surname]) {
-          (forename, surname) =>
-            val result = FtnaeClaimantInfo(forename, surname)
+        forAll(arbitrary[FirstForename], arbitrary[Surname]) { (forename, surname) =>
+          val result = FtnaeClaimantInfo(forename, surname)
 
-            result.name mustBe forename
-            result.surname mustBe surname
+          result.name mustBe forename
+          result.surname mustBe surname
         }
       }
     }
     "format: should successfully format to JSON" in {
-      forAll(arbitrary[FirstForename], arbitrary[Surname]) {
-        (forename, surname) =>
-          val ftnaeClaimantInfo = FtnaeClaimantInfo(forename, surname)
-          Json.toJson(ftnaeClaimantInfo)
+      forAll(arbitrary[FirstForename], arbitrary[Surname]) { (forename, surname) =>
+        val ftnaeClaimantInfo = FtnaeClaimantInfo(forename, surname)
+        Json.toJson(ftnaeClaimantInfo)
       }
     }
   }

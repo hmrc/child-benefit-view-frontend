@@ -17,7 +17,7 @@ trait CoBGenerators extends DataGenerators with ChangeOfBankGenerators {
     Arbitrary {
       for {
         accountHolder <- generateName
-        sortCode <- generateSortCode
+        sortCode      <- generateSortCode
         accountNumber <- generateAccountNumber
       } yield NewAccountDetails(accountHolder, sortCode, accountNumber)
     }
@@ -32,7 +32,7 @@ trait CoBGenerators extends DataGenerators with ChangeOfBankGenerators {
     Arbitrary {
       for {
         accountHolderName <- arbitrary[AccountHolderName]
-        sortCode <- arbitrary[SortCode]
+        sortCode          <- arbitrary[SortCode]
         bankAccountNumber <- arbitrary[BankAccountNumber]
       } yield VerifyBankAccountRequest(accountHolderName, sortCode, bankAccountNumber)
     }

@@ -12,14 +12,13 @@ class IdentifierRequestSpec extends BaseSpec {
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "unit-test/route")
     "GIVEN a valid request, national insurance number, whether the user is an individual and an internal id" - {
       "THEN the expected IdentifierRequest is returned" in {
-        forAll(arbitrary[NationalInsuranceNumber], arbitrary[Boolean], generateId) {
-          (nino, isIndividual, internalId) =>
-            val result = IdentifierRequest(request, nino, isIndividual, internalId)
+        forAll(arbitrary[NationalInsuranceNumber], arbitrary[Boolean], generateId) { (nino, isIndividual, internalId) =>
+          val result = IdentifierRequest(request, nino, isIndividual, internalId)
 
-            result.request mustBe request
-            result.nino mustBe nino
-            result.isIndividual mustBe isIndividual
-            result.internalId mustBe internalId
+          result.request mustBe request
+          result.nino mustBe nino
+          result.isIndividual mustBe isIndividual
+          result.internalId mustBe internalId
         }
       }
     }

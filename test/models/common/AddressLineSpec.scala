@@ -8,16 +8,16 @@ class AddressLineSpec extends BaseSpec {
     "GIVEN a valid value" - {
       "THEN the expected AddressLine is returned" in {
         forAll(generateAddressLine) { value =>
-            val result = AddressLine(value)
+          val result = AddressLine(value)
 
-            result.value mustBe value
+          result.value mustBe value
         }
       }
     }
     "format: should successfully format to JSON" in {
       forAll(generateAddressLine) { value =>
-          val addressLine = AddressLine(value)
-          Json.toJson(addressLine)
+        val addressLine = AddressLine(value)
+        Json.toJson(addressLine)
       }
     }
   }

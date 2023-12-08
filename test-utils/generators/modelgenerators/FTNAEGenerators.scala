@@ -13,11 +13,12 @@ trait FTNAEGenerators extends DataGenerators with CommonGenerators {
   implicit lazy val arbitraryChildDetails: Arbitrary[ChildDetails] =
     Arbitrary {
       for {
-        courseDuration <- arbitrary[CourseDuration]
-        crn <- arbitrary[ChildReferenceNumber]
-        dateOfBirth <- arbitrary[LocalDate]
+        courseDuration   <- arbitrary[CourseDuration]
+        crn              <- arbitrary[ChildReferenceNumber]
+        dateOfBirth      <- arbitrary[LocalDate]
         whichYoungPerson <- generateName
-        ftnaeQA <- Gen.containerOf[List, FtnaeQuestionAndAnswer](arbitrary[FtnaeQuestionAndAnswer]) suchThat (x => x.nonEmpty)
+        ftnaeQA <-
+          Gen.containerOf[List, FtnaeQuestionAndAnswer](arbitrary[FtnaeQuestionAndAnswer]) suchThat (x => x.nonEmpty)
 
       } yield ChildDetails(courseDuration, crn, dateOfBirth, whichYoungPerson, ftnaeQA)
     }
@@ -28,11 +29,11 @@ trait FTNAEGenerators extends DataGenerators with CommonGenerators {
   implicit lazy val arbitraryFtnaeChildInfo: Arbitrary[FtnaeChildInfo] =
     Arbitrary {
       for {
-        crn <- arbitrary[ChildReferenceNumber]
-        firstName <- arbitrary[FirstForename]
-        midName <- arbitrary[SecondForename]
-        lastName <- arbitrary[Surname]
-        dateOfBirth <- arbitrary[LocalDate]
+        crn          <- arbitrary[ChildReferenceNumber]
+        firstName    <- arbitrary[FirstForename]
+        midName      <- arbitrary[SecondForename]
+        lastName     <- arbitrary[Surname]
+        dateOfBirth  <- arbitrary[LocalDate]
         claimEndDate <- arbitrary[LocalDate]
       } yield FtnaeChildInfo(crn, firstName, Some(midName), lastName, dateOfBirth, claimEndDate)
     }
@@ -40,14 +41,14 @@ trait FTNAEGenerators extends DataGenerators with CommonGenerators {
     Arbitrary {
       for {
         firstname <- arbitrary[FirstForename]
-        surname <- arbitrary[Surname]
+        surname   <- arbitrary[Surname]
       } yield FtnaeClaimantInfo(firstname, surname)
     }
   implicit lazy val arbitraryFtnaeQuestionAndAnswer: Arbitrary[FtnaeQuestionAndAnswer] =
     Arbitrary {
       for {
         question <- alphaStr
-        answer <- alphaStr
+        answer   <- alphaStr
       } yield FtnaeQuestionAndAnswer(question, answer)
     }
   implicit lazy val arbitraryFtnaeResponse: Arbitrary[FtnaeResponse] =

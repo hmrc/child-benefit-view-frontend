@@ -27,8 +27,7 @@ object CourseDuration {
   object OneYear extends WithName("ONE_YEAR") with CourseDuration
   object TwoYear extends WithName("TWO_YEAR") with CourseDuration
 
-  val values: Seq[CourseDuration]
-  = Seq(OneYear, TwoYear)
+  val values: Seq[CourseDuration] = Seq(OneYear, TwoYear)
 
   implicit val reads: Reads[CourseDuration] = JsPath
     .read[String]

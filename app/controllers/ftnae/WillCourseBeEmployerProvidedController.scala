@@ -49,7 +49,8 @@ class WillCourseBeEmployerProvidedController @Inject() (
     with I18nSupport {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName: String = helpers.YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
+    val displayName: String =
+      helpers.YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =

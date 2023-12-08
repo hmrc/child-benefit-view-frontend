@@ -10,8 +10,13 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
   "ChildBenefitEntitlement" - {
     "GIVEN a valid claimant, entitlement date, first payment, additional payment and a list of children" - {
       "THEN the expected ChildBenefitEntitlement is returned" in {
-        forAll(arbitrary[Claimant], arbitrary[LocalDate], arbitrary[BigDecimal], arbitrary[BigDecimal], arbitrary[List[Child]]) {
-          (claimant, entitlementDate, firstPayment, additionalPayments, children) =>
+        forAll(
+          arbitrary[Claimant],
+          arbitrary[LocalDate],
+          arbitrary[BigDecimal],
+          arbitrary[BigDecimal],
+          arbitrary[List[Child]]
+        ) { (claimant, entitlementDate, firstPayment, additionalPayments, children) =>
           val result = ChildBenefitEntitlement(claimant, entitlementDate, firstPayment, additionalPayments, children)
 
           result.claimant mustBe claimant
@@ -23,9 +28,15 @@ class ChildBenefitEntitlementSpec extends BaseSpec {
       }
     }
     "format: should successfully format to JSON" in {
-      forAll(arbitrary[Claimant], arbitrary[LocalDate], arbitrary[BigDecimal], arbitrary[BigDecimal], arbitrary[List[Child]]) {
-        (claimant, entitlementDate, firstPayment, additionalPayments, children) =>
-        val childBenefitEntitlement = ChildBenefitEntitlement(claimant, entitlementDate, firstPayment, additionalPayments, children)
+      forAll(
+        arbitrary[Claimant],
+        arbitrary[LocalDate],
+        arbitrary[BigDecimal],
+        arbitrary[BigDecimal],
+        arbitrary[List[Child]]
+      ) { (claimant, entitlementDate, firstPayment, additionalPayments, children) =>
+        val childBenefitEntitlement =
+          ChildBenefitEntitlement(claimant, entitlementDate, firstPayment, additionalPayments, children)
         Json.toJson(childBenefitEntitlement)
       }
     }

@@ -31,7 +31,7 @@ class CourseDurationSpec extends BaseSpec {
     "toMessage" - {
       "GIVEN a set of CourseDuration paired with it's individual messageKey" - {
         implicit val mockMessages = mock[Messages]
-        def messageForValue(value: CourseDuration) = s"expected message for ${value.toString}"
+        def messageForValue(value:       CourseDuration) = s"expected message for ${value.toString}"
         def setupMessages(individualKey: String, courseDuration: CourseDuration) =
           when(mockMessages(s"paymentsExtended.courseDuration.$individualKey"))
             .thenReturn(messageForValue(courseDuration))

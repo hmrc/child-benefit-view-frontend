@@ -82,17 +82,17 @@ trait EntitlementGenerators extends DataGenerators with CommonGenerators {
   implicit lazy val arbitraryChild: Arbitrary[Child] =
     Arbitrary {
       for {
-        name <- arbitrary[FullName]
-        dateOfBirth <- arbitrary[LocalDate]
+        name          <- arbitrary[FullName]
+        dateOfBirth   <- arbitrary[LocalDate]
         relationStart <- arbitrary[LocalDate]
-        relationEnd <- arbitrary[Option[LocalDate]]
+        relationEnd   <- arbitrary[Option[LocalDate]]
       } yield Child(name, dateOfBirth, relationStart, relationEnd)
     }
 
   implicit lazy val arbitraryAdjustmentInformation: Arbitrary[AdjustmentInformation] = {
     Arbitrary {
       for {
-        code <- arbitrary[AdjustmentReasonCode]
+        code    <- arbitrary[AdjustmentReasonCode]
         endDate <- arbitrary[LocalDate]
       } yield AdjustmentInformation(code, endDate)
     }

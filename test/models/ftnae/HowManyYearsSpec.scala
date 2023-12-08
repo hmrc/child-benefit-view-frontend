@@ -13,7 +13,7 @@ class HowManyYearsSpec extends BaseSpec {
 
         val result = HowManyYears.values
 
-        result must contain theSameElementsAs(expectedHowManyYears)
+        result must contain theSameElementsAs (expectedHowManyYears)
       }
     }
     "options" - {
@@ -33,9 +33,7 @@ class HowManyYearsSpec extends BaseSpec {
           item.content mustBe Text(messageForValue(expectedOrderedSeq(index)))
           item.value mustBe Some(expectedOrderedSeq(index).toString)
           item.id mustBe Some(s"value_$index")
-        }
-
-        )
+        })
       }
     }
   }

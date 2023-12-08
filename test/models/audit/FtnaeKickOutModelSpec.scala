@@ -15,20 +15,25 @@ class FtnaeKickOutModelSpec extends BaseSpec {
         forAll(trueFalseCases) { withDuration =>
           forAll(trueFalseCases) { withDateOfBirth =>
             forAll(trueFalseCases) { withName =>
-              s"AND child reference number ${isOrIsNot(withCRN)} provided - course duration ${isOrIsNot(withDuration)
-              } provided - date of birth ${isOrIsNot(withDateOfBirth)} provided - name ${isOrIsNot(withName)} provided" - {
+              s"AND child reference number ${isOrIsNot(withCRN)} provided - course duration ${isOrIsNot(
+                withDuration
+              )} provided - date of birth ${isOrIsNot(withDateOfBirth)} provided - name ${isOrIsNot(withName)} provided" - {
                 "THEN the expected ClaimantEntitlementDetails is returned" in {
                   forAll(
-                    generateNino, alphaStr, arbitrary[List[FtnaeQuestionAndAnswer]],
-                    generateReferenceNumber, arbitrary[LocalDate], generateName
+                    generateNino,
+                    alphaStr,
+                    arbitrary[List[FtnaeQuestionAndAnswer]],
+                    generateReferenceNumber,
+                    arbitrary[LocalDate],
+                    generateName
                   ) { (nino, arbitraryString, ftnaeQuestionsAndAnswers, referenceNumber, dateOfBirth, name) =>
                     val result = FtnaeKickOutModel(
                       nino,
                       arbitraryString,
-                      if(withCRN) Some(referenceNumber) else None,
-                      if(withDuration) Some(arbitraryString) else None,
-                      if(withDateOfBirth) Some(dateOfBirth.toString) else None,
-                      if(withName) Some(name) else None,
+                      if (withCRN) Some(referenceNumber) else None,
+                      if (withDuration) Some(arbitraryString) else None,
+                      if (withDateOfBirth) Some(dateOfBirth.toString) else None,
+                      if (withName) Some(name) else None,
                       ftnaeQuestionsAndAnswers
                     )
 
@@ -49,11 +54,21 @@ class FtnaeKickOutModelSpec extends BaseSpec {
     }
     "format: should successfully format to JSON" in {
       forAll(
-        generateNino, alphaStr, arbitrary[List[FtnaeQuestionAndAnswer]],
-        generateReferenceNumber, arbitrary[LocalDate], generateName
+        generateNino,
+        alphaStr,
+        arbitrary[List[FtnaeQuestionAndAnswer]],
+        generateReferenceNumber,
+        arbitrary[LocalDate],
+        generateName
       ) { (nino, arbitraryString, ftnaeQuestionsAndAnswers, referenceNumber, dateOfBirth, name) =>
         val ftnaeKickOutModel = FtnaeKickOutModel(
-          nino, arbitraryString, Some(referenceNumber), Some(arbitraryString), Some(dateOfBirth.toString), Some(name), ftnaeQuestionsAndAnswers
+          nino,
+          arbitraryString,
+          Some(referenceNumber),
+          Some(arbitraryString),
+          Some(dateOfBirth.toString),
+          Some(name),
+          ftnaeQuestionsAndAnswers
         )
         Json.toJson(ftnaeKickOutModel)
       }

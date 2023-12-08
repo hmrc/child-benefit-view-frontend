@@ -9,17 +9,17 @@ class FtnaeQuestionAndAnswerSpec extends BaseSpec {
     "GIVEN a valid question and answer" - {
       "THEN the expected FtnaeQuestionAndAnswer is returned" in {
         forAll(alphaStr, alphaStr) { (question, answer) =>
-            val result = FtnaeQuestionAndAnswer(question, answer)
+          val result = FtnaeQuestionAndAnswer(question, answer)
 
-            result.question mustBe question
-            result.answer mustBe answer
+          result.question mustBe question
+          result.answer mustBe answer
         }
       }
     }
     "format: should successfully format to JSON" in {
       forAll(alphaStr, alphaStr) { (question, answer) =>
         val ftnaeQuestionAndAnswer = FtnaeQuestionAndAnswer(question, answer)
-          Json.toJson(ftnaeQuestionAndAnswer)
+        Json.toJson(ftnaeQuestionAndAnswer)
       }
     }
   }

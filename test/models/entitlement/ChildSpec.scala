@@ -30,12 +30,13 @@ class ChildSpec extends BaseSpec {
           "THEN the expected Child is returned" in {
             forAll(arbitrary[FullName], arbitrary[LocalDate], arbitrary[LocalDate], arbitrary[LocalDate]) {
               (name, dateOfBirth, relationshipStartDate, relationshipEndDate) =>
-              val result = Child(name, dateOfBirth, relationshipStartDate, if(withEndDate) Some(relationshipEndDate) else None)
+                val result =
+                  Child(name, dateOfBirth, relationshipStartDate, if (withEndDate) Some(relationshipEndDate) else None)
 
-              result.name mustBe name
-              result.dateOfBirth mustBe dateOfBirth
-              result.relationshipStartDate mustBe relationshipStartDate
-              result.relationshipEndDate mustBe (if(withEndDate) Some(relationshipEndDate) else None)
+                result.name mustBe name
+                result.dateOfBirth mustBe dateOfBirth
+                result.relationshipStartDate mustBe relationshipStartDate
+                result.relationshipEndDate mustBe (if (withEndDate) Some(relationshipEndDate) else None)
             }
           }
         }
@@ -44,8 +45,8 @@ class ChildSpec extends BaseSpec {
     "format: should successfully format to JSON" in {
       forAll(arbitrary[FullName], arbitrary[LocalDate], arbitrary[LocalDate], arbitrary[LocalDate]) {
         (name, dateOfBirth, relationshipStartDate, relationshipEndDate) =>
-        val child = Child(name, dateOfBirth, relationshipStartDate, Some(relationshipEndDate))
-        Json.toJson(child)
+          val child = Child(name, dateOfBirth, relationshipStartDate, Some(relationshipEndDate))
+          Json.toJson(child)
       }
     }
   }

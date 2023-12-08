@@ -20,5 +20,6 @@ class SecondForenameSpec extends BaseSpec {
         val secondForename = SecondForename(value)
         Json.toJson(secondForename)
       }
-    }}
+    }
+  }
 }

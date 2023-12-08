@@ -14,22 +14,28 @@ class FtnaeChildInfoSpec extends BaseSpec {
         s"AND a mid name ${isOrIsNot(withMidName)} provided" - {
           "THEN the expected FtnaeChildInfo is returned" in {
             forAll(
-              arbitrary[ChildReferenceNumber], arbitrary[FirstForename], arbitrary[SecondForename],
-              arbitrary[Surname], arbitrary[LocalDate], arbitrary[LocalDate]
-            ) {
-              (referenceNumber, firstName, midName, surname, dateOfBirth, endDate) =>
-                val result = FtnaeChildInfo(
-                  referenceNumber, firstName,
-                  if(withMidName) Some(midName) else None,
-                  surname, dateOfBirth, endDate
-                )
+              arbitrary[ChildReferenceNumber],
+              arbitrary[FirstForename],
+              arbitrary[SecondForename],
+              arbitrary[Surname],
+              arbitrary[LocalDate],
+              arbitrary[LocalDate]
+            ) { (referenceNumber, firstName, midName, surname, dateOfBirth, endDate) =>
+              val result = FtnaeChildInfo(
+                referenceNumber,
+                firstName,
+                if (withMidName) Some(midName) else None,
+                surname,
+                dateOfBirth,
+                endDate
+              )
 
-                result.crn mustBe referenceNumber
-                result.name mustBe firstName
-                result.midName mustBe (if(withMidName) Some(midName) else None)
-                result.lastName mustBe surname
-                result.dateOfBirth mustBe dateOfBirth
-                result.currentClaimEndDate mustBe endDate
+              result.crn mustBe referenceNumber
+              result.name mustBe firstName
+              result.midName mustBe (if (withMidName) Some(midName) else None)
+              result.lastName mustBe surname
+              result.dateOfBirth mustBe dateOfBirth
+              result.currentClaimEndDate mustBe endDate
             }
           }
         }
@@ -37,12 +43,15 @@ class FtnaeChildInfoSpec extends BaseSpec {
     }
     "format: should successfully format to JSON" in {
       forAll(
-        arbitrary[ChildReferenceNumber], arbitrary[FirstForename], arbitrary[SecondForename],
-        arbitrary[Surname], arbitrary[LocalDate], arbitrary[LocalDate]
-      ) {
-        (referenceNumber, firstName, midName, surname, dateOfBirth, endDate) =>
-          val ftnaeChildInfo = FtnaeChildInfo(referenceNumber, firstName, Some(midName), surname, dateOfBirth, endDate)
-          Json.toJson(ftnaeChildInfo)
+        arbitrary[ChildReferenceNumber],
+        arbitrary[FirstForename],
+        arbitrary[SecondForename],
+        arbitrary[Surname],
+        arbitrary[LocalDate],
+        arbitrary[LocalDate]
+      ) { (referenceNumber, firstName, midName, surname, dateOfBirth, endDate) =>
+        val ftnaeChildInfo = FtnaeChildInfo(referenceNumber, firstName, Some(midName), surname, dateOfBirth, endDate)
+        Json.toJson(ftnaeChildInfo)
       }
     }
   }

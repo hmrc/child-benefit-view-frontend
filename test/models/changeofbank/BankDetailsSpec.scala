@@ -8,8 +8,12 @@ class BankDetailsSpec extends BaseSpec {
   "BankDetails" - {
     "GIVEN a valid account holder type, account holder name, account number and sort code" - {
       "THEN the expected BackAccountNumber is returned" in {
-        forAll(arbitrary[AccountHolderType], arbitrary[AccountHolderName], arbitrary[BankAccountNumber], arbitrary[SortCode]) {
-          (accountHolderType, accountHolderName, bankAccountNumber, sortCode) =>
+        forAll(
+          arbitrary[AccountHolderType],
+          arbitrary[AccountHolderName],
+          arbitrary[BankAccountNumber],
+          arbitrary[SortCode]
+        ) { (accountHolderType, accountHolderName, bankAccountNumber, sortCode) =>
           val result = BankDetails(accountHolderType, accountHolderName, bankAccountNumber, sortCode)
 
           result.accountHolderType mustBe accountHolderType
@@ -20,10 +24,14 @@ class BankDetailsSpec extends BaseSpec {
       }
     }
     "format: should successfully format to JSON" in {
-      forAll(arbitrary[AccountHolderType], arbitrary[AccountHolderName], arbitrary[BankAccountNumber], arbitrary[SortCode]) {
-        (accountHolderType, accountHolderName, bankAccountNumber, sortCode) =>
-          val bankDetails = BankDetails(accountHolderType, accountHolderName, bankAccountNumber, sortCode)
-          Json.toJson(bankDetails)
+      forAll(
+        arbitrary[AccountHolderType],
+        arbitrary[AccountHolderName],
+        arbitrary[BankAccountNumber],
+        arbitrary[SortCode]
+      ) { (accountHolderType, accountHolderName, bankAccountNumber, sortCode) =>
+        val bankDetails = BankDetails(accountHolderType, accountHolderName, bankAccountNumber, sortCode)
+        Json.toJson(bankDetails)
       }
     }
   }

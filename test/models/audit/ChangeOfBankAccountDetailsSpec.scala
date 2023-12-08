@@ -34,8 +34,9 @@ class ChangeOfBankAccountDetailsSpec extends BaseSpec {
         forAll(trueFalseCases) { withAccountNumber =>
           forAll(trueFalseCases) { withSortCode =>
             forAll(trueFalseCases) { withBuildingSocietyNumber =>
-              s"AND account holder name ${isOrIsNot(withAccountHolderName)} provided - account number ${isOrIsNot(withAccountNumber)
-              } provided - sort code ${isOrIsNot(withSortCode)} provided - building society number ${isOrIsNot(withBuildingSocietyNumber)} provided" - {
+              s"AND account holder name ${isOrIsNot(withAccountHolderName)} provided - account number ${isOrIsNot(
+                withAccountNumber
+              )} provided - sort code ${isOrIsNot(withSortCode)} provided - building society number ${isOrIsNot(withBuildingSocietyNumber)} provided" - {
                 "THEN the expected BankDetails is returned" in {
                   forAll(
                     generateName,
@@ -56,10 +57,12 @@ class ChangeOfBankAccountDetailsSpec extends BaseSpec {
 
                     result.firstname mustBe firstname
                     result.surname mustBe surname
-                    result.accountHolderName mustBe (if(withAccountHolderName) Some(accountHolderName) else None)
-                    result.accountNumber mustBe (if(withAccountNumber) Some(bankAccountNumber) else None)
-                    result.sortCode mustBe (if(withSortCode) Some(sortCode) else None)
-                    result.buildingSocietyRollNumber mustBe (if(withBuildingSocietyNumber) Some(buildingSocietyRollNumber) else None)
+                    result.accountHolderName mustBe (if (withAccountHolderName) Some(accountHolderName) else None)
+                    result.accountNumber mustBe (if (withAccountNumber) Some(bankAccountNumber) else None)
+                    result.sortCode mustBe (if (withSortCode) Some(sortCode) else None)
+                    result.buildingSocietyRollNumber mustBe (if (withBuildingSocietyNumber)
+                                                               Some(buildingSocietyRollNumber)
+                                                             else None)
                   }
                 }
               }

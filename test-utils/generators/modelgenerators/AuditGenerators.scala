@@ -9,10 +9,7 @@ import org.scalacheck.Arbitrary.arbitrary
 
 import java.time.LocalDate
 
-trait AuditGenerators
-  extends ChangeOfBankGenerators
-    with EntitlementGenerators
-    with DataGenerators {
+trait AuditGenerators extends ChangeOfBankGenerators with EntitlementGenerators with DataGenerators {
 
   implicit lazy val arbitraryPersonalInformation: Arbitrary[PersonalInformation] =
     Arbitrary {
@@ -54,12 +51,12 @@ trait AuditGenerators
   implicit lazy val arbitraryClaimantEntitlementDetails: Arbitrary[ClaimantEntitlementDetails] =
     Arbitrary {
       for {
-        name <- generateName
-        address <- generateAddressLine
-        amount <- arbitrary[Double]
+        name      <- generateName
+        address   <- generateAddressLine
+        amount    <- arbitrary[Double]
         startDate <- arbitrary[LocalDate]
-        endDate <- arbitrary[LocalDate]
-        children <- arbitrary[Seq[Child]]
+        endDate   <- arbitrary[LocalDate]
+        children  <- arbitrary[Seq[Child]]
       } yield ClaimantEntitlementDetails(name, address, amount, startDate.toString, endDate.toString, children)
     }
 }

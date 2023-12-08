@@ -84,7 +84,8 @@ class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with Ftna
 
       val request: DataRequest[AnyContent] = DataRequest(fakeRequest, "", NationalInsuranceNumber("XXX"), userAnswers)
 
-      helpers.YoungPersonTitleHelper(request)
+      helpers
+        .YoungPersonTitleHelper(request)
         .firstNameFromConcatenatedChildNames() mustBe None
     }
 
@@ -103,7 +104,8 @@ class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with Ftna
 
       val request: DataRequest[AnyContent] = DataRequest(fakeRequest, "", NationalInsuranceNumber("XXX"), userAnswers)
 
-      helpers.YoungPersonTitleHelper(request)
+      helpers
+        .YoungPersonTitleHelper(request)
         .firstNameFromConcatenatedChildNames() mustBe None
     }
 

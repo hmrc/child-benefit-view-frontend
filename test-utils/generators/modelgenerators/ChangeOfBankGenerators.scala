@@ -31,7 +31,7 @@ trait ChangeOfBankGenerators extends DataGenerators with CommonGenerators {
         accountHolderType <- Arbitrary.arbitrary[AccountHolderType]
         accountHolderName <- arbitrary[AccountHolderName]
         bankAccountNumber <- arbitrary[BankAccountNumber]
-        sortCode <- arbitrary[SortCode]
+        sortCode          <- arbitrary[SortCode]
       } yield BankDetails(accountHolderType, accountHolderName, bankAccountNumber, sortCode)
     }
   implicit lazy val arbitraryBuildingSocietyRollNumber: Arbitrary[BuildingSocietyRollNumber] =
@@ -43,26 +43,26 @@ trait ChangeOfBankGenerators extends DataGenerators with CommonGenerators {
   implicit lazy val arbitraryClaimantBankAccountInformation: Arbitrary[ClaimantBankAccountInformation] =
     Arbitrary {
       for {
-        name <- arbitrary[AccountHolderName]
-        sortCode <- arbitrary[SortCode]
+        name          <- arbitrary[AccountHolderName]
+        sortCode      <- arbitrary[SortCode]
         accountNumber <- arbitrary[BankAccountNumber]
-        rollNumber <- arbitrary[BuildingSocietyRollNumber]
+        rollNumber    <- arbitrary[BuildingSocietyRollNumber]
       } yield ClaimantBankAccountInformation(Some(name), Some(sortCode), Some(accountNumber), Some(rollNumber))
     }
   implicit lazy val arbitraryClaimantBankInformation: Arbitrary[ClaimantBankInformation] =
     Arbitrary {
       for {
-        firstForename <- arbitrary[FirstForename]
-        surname <- arbitrary[Surname]
-        dateOfBirth <- arbitrary[LocalDate]
-        activeClaim <- arbitrary[Boolean]
+        firstForename    <- arbitrary[FirstForename]
+        surname          <- arbitrary[Surname]
+        dateOfBirth      <- arbitrary[LocalDate]
+        activeClaim      <- arbitrary[Boolean]
         financialDetails <- arbitrary[ClaimantFinancialDetails]
       } yield ClaimantBankInformation(firstForename, surname, dateOfBirth, activeClaim, financialDetails)
     }
   implicit lazy val arbitraryClaimantFinancialDetails: Arbitrary[ClaimantFinancialDetails] =
     Arbitrary {
       for {
-        awardEndDate <- arbitrary[LocalDate]
+        awardEndDate            <- arbitrary[LocalDate]
         claimantBankInformation <- arbitrary[ClaimantBankAccountInformation]
       } yield ClaimantFinancialDetails(awardEndDate, None, None, claimantBankInformation)
     }

@@ -8,11 +8,16 @@ import play.api.libs.json.Json
 import java.time.LocalDate
 
 class ClaimantBankInformationSpec extends BaseSpec {
-  "ClaimantBankInformationSpec" -  {
+  "ClaimantBankInformationSpec" - {
     "GIVEN a valid first forename, surname, date of birth, whether they have an active child benefit claim and financial details" - {
       "THEN the expected ClaimantBankInformationSpec is returned" in {
-        forAll(arbitrary[FirstForename], arbitrary[Surname], arbitrary[LocalDate], arbitrary[Boolean], arbitrary[ClaimantFinancialDetails]) {
-          (firstForename, surname, dateOfBirth, hasClaim, financialDetails) =>
+        forAll(
+          arbitrary[FirstForename],
+          arbitrary[Surname],
+          arbitrary[LocalDate],
+          arbitrary[Boolean],
+          arbitrary[ClaimantFinancialDetails]
+        ) { (firstForename, surname, dateOfBirth, hasClaim, financialDetails) =>
           val result = ClaimantBankInformation(firstForename, surname, dateOfBirth, hasClaim, financialDetails)
 
           result.firstForename mustBe firstForename
@@ -24,9 +29,15 @@ class ClaimantBankInformationSpec extends BaseSpec {
       }
     }
     "format: should successfully format to JSON" in {
-      forAll(arbitrary[FirstForename], arbitrary[Surname], arbitrary[LocalDate], arbitrary[Boolean], arbitrary[ClaimantFinancialDetails]) {
-        (firstForename, surname, dateOfBirth, hasClaim, financialDetails) =>
-        val claimantBankInformation = ClaimantBankInformation(firstForename, surname, dateOfBirth, hasClaim, financialDetails)
+      forAll(
+        arbitrary[FirstForename],
+        arbitrary[Surname],
+        arbitrary[LocalDate],
+        arbitrary[Boolean],
+        arbitrary[ClaimantFinancialDetails]
+      ) { (firstForename, surname, dateOfBirth, hasClaim, financialDetails) =>
+        val claimantBankInformation =
+          ClaimantBankInformation(firstForename, surname, dateOfBirth, hasClaim, financialDetails)
         Json.toJson(claimantBankInformation)
       }
     }
