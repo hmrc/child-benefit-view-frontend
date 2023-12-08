@@ -14,46 +14,46 @@
  * limitations under the License.
  */
 
-package models
+package models.cob
 
-import models.ftnae.HowManyYears
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.OptionValues
-import play.api.libs.json.{JsError, JsString, Json}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import play.api.libs.json._
 
-class HowManyYearsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class WhatTypeOfAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "HowManyYears" - {
-
+  "WhatTypeOfAccount" - {
     "must deserialise valid values" in {
+      val gen = Gen.oneOf(WhatTypeOfAccount.values.toSeq)
 
-      val gen = Gen.oneOf(HowManyYears.values.toSeq)
-
-      forAll(gen) { howManyYears =>
-        JsString(howManyYears.toString).validate[HowManyYears].asOpt.value mustEqual howManyYears
+      forAll(gen) { whatTypeOfAccount =>
+        JsString(whatTypeOfAccount.toString)
+          .validate[WhatTypeOfAccount]
+          .asOpt
+          .value mustEqual whatTypeOfAccount
       }
     }
 
     "must fail to deserialise invalid values" in {
-
-      val gen = arbitrary[String] suchThat (!HowManyYears.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!WhatTypeOfAccount.values.map(_.toString).contains(_))
 
       forAll(gen) { invalidValue =>
-        JsString(invalidValue).validate[HowManyYears] mustEqual JsError("error.invalid")
+        JsString(invalidValue).validate[WhatTypeOfAccount] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
+      val gen = Gen.oneOf(WhatTypeOfAccount.values.toSeq)
 
-      val gen = Gen.oneOf(HowManyYears.values.toSeq)
-
-      forAll(gen) { howManyYears =>
-        Json.toJson(howManyYears) mustEqual JsString(howManyYears.toString)
+      forAll(gen) { whatTypeOfAccount: WhatTypeOfAccount =>
+        Json.toJson(whatTypeOfAccount) mustEqual JsString(whatTypeOfAccount.toString)
       }
     }
+
   }
+
 }

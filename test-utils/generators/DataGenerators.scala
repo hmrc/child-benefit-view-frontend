@@ -1,7 +1,7 @@
 package generators
 
-import org.scalacheck.{Arbitrary, Gen}
-import org.scalacheck.Gen.{alphaChar, alphaNumStr, alphaStr, choose, numStr, stringOf}
+import org.scalacheck.Gen
+import org.scalacheck.Gen.{alphaChar, alphaNumStr, alphaStr, choose, numStr}
 
 trait DataGenerators {
   private val MAX_ID_LENGTH = 20

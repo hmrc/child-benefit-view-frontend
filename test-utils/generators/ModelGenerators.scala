@@ -17,16 +17,8 @@
 package generators
 
 import generators.modelgenerators._
-import models.changeofbank._
-import models.cob._
-import models.common._
-import models.ftnae._
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen._
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Gen
 import play.api.http.Status._
-
-import java.time.LocalDate
 
 trait ModelGenerators
     extends DataGenerators
