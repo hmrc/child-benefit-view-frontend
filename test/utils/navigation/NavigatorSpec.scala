@@ -29,6 +29,7 @@ import pages.ftnae._
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import utils.pages._
 
 class NavigatorSpec extends BaseAppSpec {
@@ -325,22 +326,22 @@ class NavigatorSpec extends BaseAppSpec {
 
     "Journey Recovery" - {
       val journeyRecoveryTable = Table(
-        "Page to start from",
-        WhichYoungPersonPage,
-        WillYoungPersonBeStayingPage,
-        SchoolOrCollegePage,
-        TwelveHoursAWeekPage,
-        HowManyYearsPage,
-        WillCourseBeEmployerProvidedPage,
-        LiveWithYouInUKPage,
-        ConfirmNewAccountDetailsPage
+        ("Page to start from", "return Call"),
+        (WhichYoungPersonPage, ftnaeroutes.WhichYoungPersonController.onPageLoad(NormalMode)),
+        (WillYoungPersonBeStayingPage, ftnaeroutes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)),
+        (SchoolOrCollegePage, ftnaeroutes.SchoolOrCollegeController.onPageLoad(NormalMode)),
+        (TwelveHoursAWeekPage, ftnaeroutes.TwelveHoursAWeekController.onPageLoad(NormalMode)),
+        (HowManyYearsPage, ftnaeroutes.HowManyYearsController.onPageLoad(NormalMode)),
+        (WillCourseBeEmployerProvidedPage, ftnaeroutes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode)),
+        (LiveWithYouInUKPage, ftnaeroutes.LiveWithYouInUKController.onPageLoad(NormalMode)),
+        (ConfirmNewAccountDetailsPage, cobroutes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode))
       )
 
-      forAll(journeyRecoveryTable) { fromPage =>
+      forAll(journeyRecoveryTable) { (fromPage, returnCall) =>
         fromOnePageToNextTest(
           fromPage,
           "journeyRecovery",
-          routes.JourneyRecoveryController.onPageLoad(),
+          routes.JourneyRecoveryController.onPageLoad(Some(RedirectUrl(returnCall.url))),
           defaultUA,
           recovery,
           NormalMode

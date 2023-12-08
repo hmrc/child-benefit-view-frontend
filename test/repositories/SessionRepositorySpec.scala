@@ -46,7 +46,7 @@ class SessionRepositorySpec
         val lastUpdatedIndex = indices.find(_.get("name").contains(BsonString("lastUpdatedIdx")))
 
         lastUpdatedIndex.get("key").toString mustBe """{"lastUpdated": 1}"""
-        lastUpdatedIndex.get("expireAfterSeconds") mustBe BsonInt64(ttlSeconds)
+        lastUpdatedIndex.get("expireAfterSeconds").toString must include(s"{value=$ttlSeconds}")
       }
     }
     "keepAlive" - {
@@ -98,7 +98,7 @@ class SessionRepositorySpec
         }
         "AND set is called again with a second set of UserAnswers with the same Id" - {
           "THEN the value is upserted and replaces the original" in {
-            repository.set(userAnswers)
+            await(repository.set(userAnswers))
             whenReady(find(Filters.equal("_id", userAnswers.id))) { result =>
               result.headOption mustBe Some(userAnswers.copy(lastUpdated = instant))
             }
