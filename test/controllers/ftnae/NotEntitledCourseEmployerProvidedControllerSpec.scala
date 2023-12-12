@@ -16,13 +16,13 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.NotEntitledCourseEmployerProvidedView
 
-class NotEntitledCourseEmployerProvidedControllerSpec extends CBSpecBase {
+class NotEntitledCourseEmployerProvidedControllerSpec extends BaseAppSpec {
 
   "NotEntitledCourseEmployerProvided Controller" - {
 

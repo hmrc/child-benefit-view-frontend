@@ -17,7 +17,7 @@
 package utils.handlers
 
 import controllers.cob
-import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, FtnaeCannotFindYoungPersonError, FtnaeChildUserAnswersNotRetrieved, FtnaeNoCHBAccountError, PaymentHistoryValidationError}
+import models.errors._
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
@@ -26,6 +26,7 @@ import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import utils.handlers.ErrorHandler._
 import utils.logging.RequestLogger
 import views.html.{ErrorTemplate, NotFoundView}
 
@@ -54,31 +55,22 @@ class ErrorHandler @Inject() (
       error:               CBError,
       auditOrigin:         Option[String] = None
   )(implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
-    def logMessage(message: String, code: Option[Int]) =
-      s"Failed to load: source=${auditOrigin.getOrElse("unknown")} code=${code.getOrElse("N/A")} message=$message"
 
     error match {
-      case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
-        logger.info(logMessage("cb account not found", Some(NOT_FOUND)))
-        fireAuditEvent(auditOrigin, auditService, request)
-        Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
-      case e if e.statusCode == INTERNAL_SERVER_ERROR =>
-        logger.error(logMessage(e.message, Some(INTERNAL_SERVER_ERROR)))
-        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
-      case ConnectorError(code, message) =>
-        logger.error(logMessage(s"connector error: $message", Some(code)))
-        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case ce: ConnectorError =>
+        handleConnectorError(ce, auditOrigin, logger)
       case ClaimantIsLockedOutOfChangeOfBank(code, message) =>
-        logger.info(logMessage(s"claimant is locked out due to bars failure: $message", Some(code)))
+        logger.info(logMessage(s"claimant is locked out due to bars failure: $message", Some(code), auditOrigin))
         Redirect(cob.routes.BARSLockOutController.onPageLoad())
       case PaymentHistoryValidationError(code, message) =>
-        logger.error(logMessage(s"payment history validation error: $message", Some(code)))
+        logger.error(logMessage(s"payment history validation error: $message", Some(code), auditOrigin))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case FtnaeNoCHBAccountError =>
         logger.warn(
           logMessage(
-            s"Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
-            Some(FtnaeNoCHBAccountError.statusCode)
+            "Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
+            Some(FtnaeNoCHBAccountError.statusCode),
+            auditOrigin
           )
         )
         Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
@@ -86,7 +78,8 @@ class ErrorHandler @Inject() (
         logger.warn(
           logMessage(
             s"Ftnae can not find young person error: ${FtnaeCannotFindYoungPersonError.message}",
-            Some(FtnaeCannotFindYoungPersonError.statusCode)
+            Some(FtnaeCannotFindYoungPersonError.statusCode),
+            auditOrigin
           )
         )
         Redirect(controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad())
@@ -94,17 +87,44 @@ class ErrorHandler @Inject() (
         logger.error(
           logMessage(
             s"Ftnae error: ${FtnaeChildUserAnswersNotRetrieved.message}",
-            Some(FtnaeChildUserAnswersNotRetrieved.statusCode)
+            Some(FtnaeChildUserAnswersNotRetrieved.statusCode),
+            auditOrigin
           )
         )
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
       case _ =>
-        logger.error(logMessage("unknown error occurred", None))
+        logger.error(logMessage("unknown error occurred", None, auditOrigin))
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+    }
+  }
+}
+
+object ErrorHandler {
+  def logMessage(message: String, code: Option[Int], auditOrigin: Option[String]) =
+    s"Failed to load: source=${auditOrigin.getOrElse("unknown")} code=${code.getOrElse("N/A")} message=$message"
+
+  private def handleConnectorError(error: ConnectorError, auditOrigin: Option[String], logger: RequestLogger)(implicit
+      auditService:                       AuditService,
+      request:                            Request[_],
+      hc:                                 HeaderCarrier,
+      ec:                                 ExecutionContext
+  ): Result = {
+    error match {
+      case ConnectorError(NOT_FOUND, message) if message.contains("NOT_FOUND_CB_ACCOUNT") =>
+        logger.info(logMessage("cb account not found", Some(NOT_FOUND), auditOrigin))
+        fireAuditEvent(auditOrigin, request)
+        Redirect(controllers.routes.NoAccountFoundController.onPageLoad)
+      case ConnectorError(INTERNAL_SERVER_ERROR, message) =>
+        logger.error(logMessage(message, Some(INTERNAL_SERVER_ERROR), auditOrigin))
+        Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
+      case ConnectorError(code, message) =>
+        logger.error(logMessage(s"connector error: $message", Some(code), auditOrigin))
         Redirect(controllers.routes.ServiceUnavailableController.onPageLoad)
     }
   }
 
-  private def fireAuditEvent(auditOrigin: Option[String], auditService: AuditService, request: Request[_])(implicit
+  private def fireAuditEvent(auditOrigin: Option[String], request: Request[_])(implicit
+      auditService:                       AuditService,
       hc:                                 HeaderCarrier,
       ec:                                 ExecutionContext
   ): Unit = {

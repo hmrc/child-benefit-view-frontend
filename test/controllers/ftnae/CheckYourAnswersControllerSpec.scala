@@ -16,6 +16,7 @@
 
 package controllers.ftnae
 
+import base.BaseAppSpec
 import models.ftnae.HowManyYears
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
@@ -23,15 +24,14 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 import pages.ftnae._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AuthStubs._
 import testconfig.TestConfig
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import viewmodels.checkAnswers.ftnae._
 import views.html.ftnae.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency with TableDrivenPropertyChecks {
+class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency with TableDrivenPropertyChecks {
   private val allAnsweredForFtnae = for {
     fa  <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
     sa  <- fa.set(WillYoungPersonBeStayingPage, true)
@@ -47,7 +47,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
     val config = TestConfig()
 
     "must return OK and the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
         .configure(
@@ -94,7 +94,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
     }
 
     "must redirect to Service Unavailable for a GET if no existing data is found" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = None).configure().build()
 
@@ -134,7 +134,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
         )
       )
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
         {
@@ -166,7 +166,7 @@ class CheckYourAnswersControllerSpec extends BaseISpec with SummaryListFluency w
         )
       )
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
         {

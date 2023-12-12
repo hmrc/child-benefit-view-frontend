@@ -151,8 +151,8 @@ class ChangeOfBankService @Inject() (
 }
 
 object ChangeOfBankService {
-  private val today: LocalDate = LocalDate.now()
-  private val HICBCAdjustmentCode = "28"
+  val today: LocalDate = LocalDate.now()
+  val HICBCAdjustmentCode = "28"
 
   val awardEndDateIsInTheFuture: ClaimantBankInformation => Boolean =
     (claimantBankInformation: ClaimantBankInformation) =>

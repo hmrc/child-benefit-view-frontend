@@ -24,7 +24,7 @@ import java.time.LocalDate
 
 object TestData {
 
-  val NinoUser: String =
+  val ninoUser: String =
     """
       |{
       |	"nino": "This",
@@ -34,7 +34,29 @@ object TestData {
       |}
       |""".stripMargin
 
-  val NotFoundAccountError: String =
+  def invalidJsonResponse: String =
+    """
+      | Invalid: This is not valid Json
+      |""".stripMargin
+
+  def validNotMatchingJsonResponse: String =
+    """
+      |{
+      |   "status": 200,
+      |   "field": "some value",
+      |   "anotherField": "some other value"
+      |}
+      |""".stripMargin
+
+  def genericCBError(status: Int, description: String): String =
+    s"""
+      |{
+      |		"status": $status,
+      |		"description": "$description"
+      |	}
+      |""".stripMargin
+
+  val notFoundAccountError: String =
     """
       |{
       |		"status": 404,
@@ -42,15 +64,41 @@ object TestData {
       |	}
       |""".stripMargin
 
-  val LockedOutErrorResponse: String =
+  val lockedOutErrorDescription = "[BAR locked] - The maximum number of retries reached when calling BAR"
+  val lockedOutErrorResponse: String =
     s"""
       |{
       |		"status": 500,
-      |		"description": "[BAR locked] - The maximum number of retries reached when calling BAR"
+      |		"description": "$lockedOutErrorDescription"
       |	}
       |""".stripMargin
 
-  val entitlementResult: ChildBenefitEntitlement = ChildBenefitEntitlement(
+  val barsFailureErrorDescription = "[Priority] - A unit test BARS failure has occurred"
+  val barsFailureErrorResponse: String =
+    s"""
+      |{
+      |		"status": 404,
+      |		"description": "$barsFailureErrorDescription"
+      |	}
+      |""".stripMargin
+
+  val ftnaeNoChBAccountErrorResponse: String =
+    """
+      |{
+      |		"status": 404,
+      |		"description": "No ChB Account"
+      |	}
+      |""".stripMargin
+
+  val ftnaeCannotFindYoungPersonErrorResponse: String =
+    """
+      |{
+      |		"status": 404,
+      |		"description": "Can not find young person"
+      |	}
+      |""".stripMargin
+
+  val testEntitlement: ChildBenefitEntitlement = ChildBenefitEntitlement(
     Claimant(
       name = FullName("John Doe"),
       awardValue = 500.00,
@@ -88,7 +136,7 @@ object TestData {
     )
   )
 
-  val claimantBankInformation: ClaimantBankInformation = ClaimantBankInformation(
+  val testClaimantBankInformation: ClaimantBankInformation = ClaimantBankInformation(
     firstForename = FirstForename("John"),
     surname = Surname("Doe"),
     dateOfBirth = LocalDate.of(1955, 1, 26),

@@ -16,34 +16,33 @@
 
 package controllers
 
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AuthStubs._
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
-class JourneyRecoveryControllerSpec extends BaseISpec {
+class JourneyRecoveryControllerSpec extends BaseAppSpec {
 
   "JourneyRecovery Controller" - {
 
     "when a relative continue Url is supplied" - {
 
       "must return OK and the continue view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
+        val application = applicationBuilder().build()
         running(application) {
           val continueUrl = RedirectUrl("/foo")
           val request = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
             .withSession(("authToken", "Bearer 123"))
 
-          val result = route(app, request).value
+          val result = route(application, request).value
 
-          val continueView = app.injector.instanceOf[JourneyRecoveryContinueView]
+          val continueView = application.injector.instanceOf[JourneyRecoveryContinueView]
 
           status(result) mustEqual OK
           assertSameHtmlAfter(removeNonce)(
@@ -60,18 +59,17 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
     "when an absolute continue Url is supplied" - {
 
       "must return OK and the start again view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
+        val application = applicationBuilder().build()
         running(application) {
           val continueUrl = RedirectUrl("https://foo.com")
           val request = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(Some(continueUrl)).url)
             .withSession(("authToken", "Bearer 123"))
 
-          val result = route(app, request).value
+          val result = route(application, request).value
 
-          val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
+          val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
           assertSameHtmlAfter(removeNonce)(
@@ -85,17 +83,16 @@ class JourneyRecoveryControllerSpec extends BaseISpec {
     "when no continue Url is supplied" - {
 
       "must return OK and the start again view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(userAnswers = None).build()
-
+        val application = applicationBuilder().build()
         running(application) {
           val request = FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad().url)
             .withSession(("authToken", "Bearer 123"))
 
-          val result = route(app, request).value
+          val result = route(application, request).value
 
-          val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
+          val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
           assertSameHtmlAfter(removeNonce)(

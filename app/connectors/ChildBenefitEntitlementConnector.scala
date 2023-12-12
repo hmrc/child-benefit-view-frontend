@@ -20,6 +20,7 @@ import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
+import connectors.DefaultChildBenefitEntitlementConnector.logMessage
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBErrorResponse, ConnectorError}
@@ -44,9 +45,6 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
 
   private val logger = new RequestLogger(this.getClass)
 
-  val logMessage = (code: Int, message: String) =>
-    s"unable to retrieve Child Benefit Entitlement: code=$code message=$message"
-
   def getChildBenefitEntitlement(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier
@@ -68,4 +66,9 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
 
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): ConnectorError =
     ConnectorError(status, upstreamError.description)
+}
+
+object DefaultChildBenefitEntitlementConnector {
+  val logMessage = (code: Int, message: String) =>
+    s"unable to retrieve Child Benefit Entitlement: code=$code message=$message"
 }

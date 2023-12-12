@@ -33,16 +33,6 @@ object ConfirmNewAccountDetails extends Enumerable.Implicits {
     No
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] =
-    values.zipWithIndex.map {
-      case (value, index) =>
-        RadioItem(
-          content = Text(messages(s"confirmNewAccountDetails.${value.toString}")),
-          value = Some(value.toString),
-          id = Some(s"value_$index")
-        )
-    }
-
   implicit val enumerable: Enumerable[ConfirmNewAccountDetails] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

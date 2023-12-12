@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
@@ -36,16 +37,15 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, claimantBankInformation}
+import utils.TestData.{ninoUser, testClaimantBankInformation}
 import utils.handlers.ErrorHandler
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
@@ -53,7 +53,7 @@ import views.html.cob.ConfirmNewAccountDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -73,7 +73,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
     override def retrieveBankClaimantInfo(implicit
         ec: ExecutionContext,
         hc: HeaderCarrier
-    ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(claimantBankInformation)
+    ): CBEnvelope[ClaimantBankInformation] = CBEnvelope(testClaimantBankInformation)
 
     override def submitClaimantChangeOfBank(
         newBankAccountInfo: Option[NewAccountDetails],
@@ -145,14 +145,14 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
 
         "WHEN valid User Answers are retrieved" - {
           "THEN should return OK Result and the expected view" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
             val userAnswers = UserAnswers(userAnswersId)
               .set(WhatTypeOfAccountPage, typeOfAccount)
               .get
               .set(NewAccountDetailsPage, newAccountDetails)
               .toOption
-            val application = applicationBuilder(config, userAnswers = userAnswers)
+            val application = applicationBuilderWithVerificationActions(config, userAnswers = userAnswers)
               .overrides(
                 bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
                 bind[SessionRepository].toInstance(mockSessionRepository),
@@ -185,7 +185,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

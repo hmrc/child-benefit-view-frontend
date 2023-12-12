@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
-import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBacsVerificationError}
+import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
 import play.api.http.Status
 import play.api.libs.json.{JsSuccess, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
@@ -74,11 +74,6 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
       )
     }
 
-  private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
-
-  implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
-    JsSuccess(())
-  }
   def verifyClaimantBankAccount(verifyBankAccountRequest: VerifyBankAccountRequest)(implicit
       ec:                                                 ExecutionContext,
       hc:                                                 HeaderCarrier
@@ -172,6 +167,12 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     }
   }
 
+  private def extractMainError(message: String): String = mainError.findFirstIn(message).fold(message)(identity)
+
+  implicit val reads: Reads[Unit] = Reads[Unit] { _ =>
+    JsSuccess(())
+  }
+
   override def fromUpstreamErrorToCBError(status: Int, upstreamError: CBErrorResponse): CBError = {
     val extractedMainErrorMessage = extractMainError(upstreamError.description)
     status match {
@@ -179,7 +180,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
         ClaimantIsLockedOutOfChangeOfBank(Status.FORBIDDEN, upstreamError.description)
 
       case Status.NOT_FOUND if extractedMainErrorMessage.toUpperCase().trim.startsWith("PRIORITY") =>
-        PriorityBacsVerificationError(status, upstreamError.description)
+        PriorityBARSVerificationError(status, upstreamError.description)
 
       case _ => ConnectorError(status, upstreamError.description)
     }

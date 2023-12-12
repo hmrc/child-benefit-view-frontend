@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount.JointHeldByClaimant
 import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
@@ -33,16 +34,16 @@ import repositories.SessionRepository
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.navigation.{FakeNavigator, Navigator}
-import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
-import utils.TestData.NinoUser
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
+import utils.TestData.ninoUser
 import views.html.cob.WhatTypeOfAccountView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
+class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
   implicit val mockExecutionContext = mock[ExecutionContext]
   implicit val mockHeaderCarrier    = mock[HeaderCarrier]
@@ -74,9 +75,9 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must respond OK and the correct view for GET" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers))
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers))
           .build()
 
         running(application) {
@@ -97,14 +98,14 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val userAnswers: UserAnswers = UserAnswers(userAnswersId)
           .set(WhatTypeOfAccountPage, JointHeldByClaimant)
           .success
           .value
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -133,9 +134,9 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       }
 
       "must return BAD_REQUEST for a POST if no existing data is found" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = None).build()
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = None).build()
 
         running(application) {
           val request =
@@ -148,8 +149,8 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       }
 
       "must redirect to the next page when valid data is submitted" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(200, """""""")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
@@ -158,7 +159,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           .value
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -188,12 +189,12 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       }
 
       "must fail to validate when no joint account type is selected" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(200, """""""")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -219,8 +220,8 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
       }
 
       "must redirect to the next page when a joint account with a joint type is submitted" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(200, """""""")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
@@ -229,7 +230,7 @@ class WhatTypeOfAccountControllerSpec extends BaseISpec with MockitoSugar {
           .value
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)

@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
 import models.errors.ConnectorError
@@ -32,19 +33,18 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import services.ChangeOfBankService
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.AccountChangedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
   val mockSessionRepository = mock[SessionRepository]
   val mockCoBService        = mock[ChangeOfBankService]
 
@@ -70,17 +70,15 @@ class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with Scal
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope(()))
 
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
-            val application = applicationBuilder(
+            val application = applicationBuilderWithVerificationActions(
               config,
               userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get)
-            )
-              .overrides(
-                bind[ChangeOfBankService].toInstance(mockCoBService),
-                bind[SessionRepository].toInstance(mockSessionRepository)
-              )
-              .build()
+            ).overrides(
+              bind[ChangeOfBankService].toInstance(mockCoBService),
+              bind[SessionRepository].toInstance(mockSessionRepository)
+            ).build()
 
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
@@ -212,7 +210,7 @@ class AccountChangedControllerSpec extends BaseISpec with MockitoSugar with Scal
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
-            userLoggedInChildBenefitUser(NinoUser)
+            userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

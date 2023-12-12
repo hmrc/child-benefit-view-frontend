@@ -16,6 +16,7 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import forms.cob.NewAccountDetailsFormProvider
 import models.cob.{NewAccountDetails, WhatTypeOfAccount}
@@ -34,17 +35,17 @@ import repositories.SessionRepository
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import utils.Stubs.{userLoggedInChildBenefitUser, verifyClaimantBankAccount}
-import utils.TestData.{LockedOutErrorResponse, NinoUser}
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
+import utils.TestData.{lockedOutErrorResponse, ninoUser}
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate
 import views.html.cob.NewAccountDetailsView
 
 import scala.concurrent.Future
 
-class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with ScalaCheckPropertyChecks {
+class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -76,9 +77,9 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswers)).build()
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
@@ -97,10 +98,10 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(200, """""")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
-        val application = applicationBuilder(config, userAnswers = Some(userAnswers))
+        val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -138,12 +139,12 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must redirect to the next page when valid data is submitted" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(200, """""""")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -172,13 +173,16 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(404, "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}")
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountFailureStub(
+          NOT_FOUND,
+          "{\"status\": 404, \"description\": \"[priority2] - Sort Code Not Found\"}"
+        )
 
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -220,16 +224,16 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must Redirect to Can not verify account Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
-        userLoggedInChildBenefitUser(NinoUser)
-        verifyClaimantBankAccount(
-          500,
-          LockedOutErrorResponse
+        userLoggedInIsChildBenefitUser(ninoUser)
+        verifyClaimantBankAccountFailureStub(
+          INTERNAL_SERVER_ERROR,
+          lockedOutErrorResponse
         )
 
         val mockSessionRepository = mock[SessionRepository]
 
         val application =
-          applicationBuilder(config, userAnswers = Some(userAnswers))
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
             .overrides(
               bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
               bind[SessionRepository].toInstance(mockSessionRepository)
@@ -258,9 +262,10 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =
@@ -284,9 +289,10 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must return OK for a GET if no existing data is found" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
@@ -298,9 +304,10 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       }
 
       "must return BAD_REQUEST for a POST if no existing data is found" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswersNoAccountDetails)).build()
 
         running(application) {
           val request =
@@ -353,7 +360,7 @@ class NewAccountDetailsControllerSpec extends BaseISpec with MockitoSugar with S
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

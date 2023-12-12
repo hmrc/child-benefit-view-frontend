@@ -16,27 +16,82 @@
 
 package utils.navigation
 
-import base.SpecBase
+import base.BaseAppSpec
+import controllers.cob.{routes => cobroutes}
+import controllers.ftnae.{routes => ftnaeroutes}
 import controllers.routes
-import models.cob.ConfirmNewAccountDetails.Yes
-import utils.pages._
 import models._
 import models.cob.ConfirmNewAccountDetails._
 import models.cob._
 import models.ftnae.HowManyYears
 import pages.cob._
-import pages.cob._
-import org.mockito.MockitoSugar.mock
-import pages.cob.{ConfirmNewAccountDetailsPage, NewAccountDetailsPage}
-import pages.ftnae.{HowManyYearsPage, LiveWithYouInUKPage, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage, WillYoungPersonBeStayingPage}
+import pages.ftnae._
 import play.api.libs.json.Json
+import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
+import utils.pages._
 
-class NavigatorSpec extends SpecBase {
+class NavigatorSpec extends BaseAppSpec {
 
   implicit val mockHeaderCarrier = mock[HeaderCarrier]
 
-  val navigator = new Navigator
+  val app       = applicationBuilder().build()
+  val navigator = app.injector.instanceOf[Navigator]
+
+  def fromOnePageToNextTest(
+      fromPage:    Page,
+      toPageName:  String,
+      toCall:      Call,
+      userAnswers: UserAnswers,
+      addendum:    Option[String],
+      mode:        Mode
+  ) {
+    s"must go from the ${fromPage.toString} page to the $toPageName page${addendum.fold("")(a => s" $a")}" in {
+      navigator.nextPage(
+        fromPage,
+        mode,
+        userAnswers
+      ) mustBe toCall
+    }
+  }
+
+  val defaultUA                 = UserAnswers("id")
+  val newAccountDetailsUA       = UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+  val confirmedAccountDetailsUA = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, Yes).get
+  val rejectedAccountDetailsUA  = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, No).get
+
+  val happyPathFTNAECreator = for {
+    a <- defaultUA.set(WhichYoungPersonPage, "John Doe")
+    b <- a.set(WillYoungPersonBeStayingPage, true)
+    c <- b.set(SchoolOrCollegePage, true)
+    d <- c.set(TwelveHoursAWeekPage, true)
+    e <- d.set(HowManyYearsPage, HowManyYears.Twoyears)
+    f <- e.set(WillCourseBeEmployerProvidedPage, false)
+    g <- f.set(LiveWithYouInUKPage, true)
+  } yield g
+  val happyPathFTNAEUA = happyPathFTNAECreator.success.value
+
+  val kickOutPathFTNAECreator = for {
+    a <- defaultUA.set(WhichYoungPersonPage, "0")
+    b <- a.set(WillYoungPersonBeStayingPage, false)
+    c <- b.set(SchoolOrCollegePage, false)
+    d <- c.set(TwelveHoursAWeekPage, false)
+    e <- d.set(HowManyYearsPage, HowManyYears.Other)
+    f <- e.set(WillCourseBeEmployerProvidedPage, true)
+    g <- f.set(LiveWithYouInUKPage, false)
+  } yield g
+  val kickOutPathFTNAEUA = kickOutPathFTNAECreator.success.value
+
+  val selected        = (select: String) => s"when $select is selected"
+  val kickOut         = (message: String) => s"$message (Kick Out)"
+  val selectedKickOut = (select: String) => kickOut(selected(select))
+
+  val recovery           = Some("when no valid value is selected")
+  val yesSelected        = Some(selected("Yes"))
+  val yesSelectedKickOut = Some(selectedKickOut(yesSelected.get))
+  val noSelected         = Some(selected("No"))
+  val noSelectedKickOut  = Some(selectedKickOut(noSelected.get))
 
   "Navigator" - {
 
@@ -52,164 +107,164 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ServiceUnavailableController.onPageLoad
       }
 
-      "must go from WhatTypeOfAccount to NewAccountDetailsPage page" in {
-        navigator.nextPage(
-          WhatTypeOfAccountPage,
-          NormalMode,
-          UserAnswers("id")
-        ) mustBe controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode)
+      "Change of Bank" - {
+        val normalModeCoBTestCases = Table(
+          ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
+          (
+            WhatTypeOfAccountPage,
+            "newAccountDetails",
+            defaultUA,
+            None,
+            cobroutes.NewAccountDetailsController.onPageLoad(NormalMode)
+          ),
+          (
+            NewAccountDetailsPage,
+            "confirmNewAccountDetails",
+            newAccountDetailsUA,
+            None,
+            cobroutes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
+          ),
+          (
+            ConfirmNewAccountDetailsPage,
+            "accountChanged",
+            confirmedAccountDetailsUA,
+            yesSelected,
+            cobroutes.AccountChangedController.onPageLoad()
+          ),
+          (
+            ConfirmNewAccountDetailsPage,
+            "whatTypeofAccount",
+            rejectedAccountDetailsUA,
+            noSelected,
+            cobroutes.WhatTypeOfAccountController.onPageLoad(NormalMode)
+          )
+        )
+
+        forAll(normalModeCoBTestCases) {
+          (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+            fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
+        }
       }
 
-      "must go from NewAccountDetails to ConfirmNewAccountDetails page" in {
-        navigator.nextPage(
-          NewAccountDetailsPage,
-          NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
-        ) mustBe controllers.cob.routes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode)
-      }
+      "FTNAE" - {
+        "Happy Path" - {
+          val normalModeFTNAETestCases = Table(
+            ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
+            (
+              WhichYoungPersonPage,
+              "willYoungPersonBeStaying",
+              happyPathFTNAEUA,
+              Some(s"when a child's name is selected"),
+              ftnaeroutes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
+            ),
+            (
+              WillYoungPersonBeStayingPage,
+              "schoolOrCollegePage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.SchoolOrCollegeController.onPageLoad(NormalMode)
+            ),
+            (
+              SchoolOrCollegePage,
+              "twelveHoursAWeekPage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.TwelveHoursAWeekController.onPageLoad(NormalMode)
+            ),
+            (
+              TwelveHoursAWeekPage,
+              "howManyYearsPage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.HowManyYearsController.onPageLoad(NormalMode)
+            ),
+            (
+              HowManyYearsPage,
+              "willCourseBeEmployerProvidedPage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode)
+            ),
+            (
+              WillCourseBeEmployerProvidedPage,
+              "liveWithYouInUKPage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.LiveWithYouInUKController.onPageLoad(NormalMode)
+            ),
+            (
+              LiveWithYouInUKPage,
+              "checkYourAnswersPage",
+              happyPathFTNAEUA,
+              yesSelected,
+              ftnaeroutes.CheckYourAnswersController.onPageLoad()
+            )
+          )
 
-      "must go from ConfirmNewAccountDetails to AccountChanged page" in {
-        navigator.nextPage(
-          ConfirmNewAccountDetailsPage,
-          NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
-            .set(ConfirmNewAccountDetailsPage, Yes)
-            .get
-        ) mustBe controllers.cob.routes.AccountChangedController.onPageLoad()
-      }
+          forAll(normalModeFTNAETestCases) {
+            (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+              fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
+          }
+        }
 
-      "must go from ConfirmNewAccountDetails back to WhatTypeOfAccount page when No is selected" in {
-        navigator.nextPage(
-          ConfirmNewAccountDetailsPage,
-          NormalMode,
-          UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
-            .set(ConfirmNewAccountDetailsPage, No)
-            .get
-        ) mustBe controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode)
-      }
-
-      val emptyUserAnswers = UserAnswers("id")
-      val allAnsweredForFtnae = for {
-        fa  <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
-        sa  <- fa.set(WillYoungPersonBeStayingPage, true)
-        ta  <- sa.set(SchoolOrCollegePage, true)
-        fa  <- ta.set(TwelveHoursAWeekPage, true)
-        fia <- fa.set(HowManyYearsPage, HowManyYears.Twoyears)
-        sa  <- fia.set(WillCourseBeEmployerProvidedPage, false)
-        sea <- sa.set(LiveWithYouInUKPage, true)
-      } yield sea
-
-      "must go from WhichYoungPersonPage to WillYoungPersonBeStayingPage" in {
-
-        navigator.nextPage(
-          WhichYoungPersonPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)
-      }
-
-      "must go from WillYoungPersonBeStayingPage to SchoolOrCollegePage " in {
-        navigator.nextPage(
-          WillYoungPersonBeStayingPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode)
-      }
-
-      "must go from SchoolOrCollegePage to TwelveHoursAWeekPage " in {
-        navigator.nextPage(
-          SchoolOrCollegePage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(NormalMode)
-      }
-
-      "must go from TwelveHoursAWeekPage to HowManyYearsPage " in {
-        navigator.nextPage(
-          TwelveHoursAWeekPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.HowManyYearsController.onPageLoad(NormalMode)
-      }
-
-      "must go from HowManyYearsPage to WillCourseBeEmployerProvidedPage " in {
-        navigator.nextPage(
-          HowManyYearsPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode)
-      }
-
-      "must go from WillCourseBeEmployerProvidedPage to LiveWithYouInUKPage" in {
-        navigator.nextPage(
-          WillCourseBeEmployerProvidedPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.LiveWithYouInUKController.onPageLoad(NormalMode)
-      }
-
-      "must go from LiveWithYouInUKPage to CheckYourAnswersPage" in {
-        navigator.nextPage(
-          LiveWithYouInUKPage,
-          NormalMode,
-          allAnsweredForFtnae.success.value
-        ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
-      }
-
-      "must be kicked out from WhichYoungPersonPage to WhyYoungPersonNotListedPage" in {
-        navigator.nextPage(
-          WhichYoungPersonPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(WhichYoungPersonPage, "0")).success.value
-        ) mustBe controllers.ftnae.routes.WhyYoungPersonNotListedController.onPageLoad()
-      }
-
-      "must be kicked out from WillYoungPersonBeStayingPage to UseDifferentFormPage" in {
-        navigator.nextPage(
-          WillYoungPersonBeStayingPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(WillYoungPersonBeStayingPage, false)).success.value
-        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
-      }
-
-      "must be kicked out from SchoolOrCollegePage to UseDifferentFormPage" in {
-        navigator.nextPage(
-          SchoolOrCollegePage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(SchoolOrCollegePage, false)).success.value
-        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
-      }
-
-      "must be kicked out from TwelveHoursAWeekPage to NotEntitledPage" in {
-        navigator.nextPage(
-          TwelveHoursAWeekPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(TwelveHoursAWeekPage, false)).success.value
-        ) mustBe controllers.ftnae.routes.NotEntitledController.onPageLoad()
-      }
-
-      "must be kicked out from HowManyYearsPage to UseDifferentFormPage" in {
-        navigator.nextPage(
-          HowManyYearsPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(HowManyYearsPage, HowManyYears.Other)).success.value
-        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
-      }
-
-      "must be kicked out from LiveWithYouInUKPage to UseDifferentFormPage" in {
-        navigator.nextPage(
-          LiveWithYouInUKPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(LiveWithYouInUKPage, false)).success.value
-        ) mustBe controllers.ftnae.routes.UseDifferentFormController.onPageLoad()
-      }
-
-      "must be kicked out from WillCourseBeEmployerProvidedPage to " in {
-        navigator.nextPage(
-          WillCourseBeEmployerProvidedPage,
-          NormalMode,
-          allAnsweredForFtnae.flatMap(_.set(WillCourseBeEmployerProvidedPage, true)).success.value
-        ) mustBe controllers.ftnae.routes.NotEntitledCourseEmployerProvidedController.onPageLoad()
+        "Kick Out Pages" - {
+          val normalModeFTNAEKickOutTestCases = Table(
+            ("Page to start from", "Expected page", "User Answers override", "Test name addendum", "Expected Call"),
+            (
+              WhichYoungPersonPage,
+              "whyYoungPersonNotListedPage",
+              kickOutPathFTNAEUA,
+              Some(selectedKickOut("Young Person not listed")),
+              ftnaeroutes.WhyYoungPersonNotListedController.onPageLoad()
+            ),
+            (
+              WillYoungPersonBeStayingPage,
+              "useDifferentFormPage",
+              kickOutPathFTNAEUA,
+              noSelectedKickOut,
+              ftnaeroutes.UseDifferentFormController.onPageLoad()
+            ),
+            (
+              SchoolOrCollegePage,
+              "useDifferentFormPage",
+              kickOutPathFTNAEUA,
+              noSelectedKickOut,
+              ftnaeroutes.UseDifferentFormController.onPageLoad()
+            ),
+            (
+              TwelveHoursAWeekPage,
+              "notEntitledPage",
+              kickOutPathFTNAEUA,
+              noSelectedKickOut,
+              ftnaeroutes.NotEntitledController.onPageLoad()
+            ),
+            (
+              HowManyYearsPage,
+              "useDifferentFormPage",
+              kickOutPathFTNAEUA,
+              Some(selected("Other")),
+              ftnaeroutes.UseDifferentFormController.onPageLoad()
+            ),
+            (
+              LiveWithYouInUKPage,
+              "useDifferentFormPage",
+              kickOutPathFTNAEUA,
+              noSelectedKickOut,
+              ftnaeroutes.UseDifferentFormController.onPageLoad()
+            ),
+            (
+              WillCourseBeEmployerProvidedPage,
+              "useDifferentFormPage",
+              kickOutPathFTNAEUA,
+              yesSelectedKickOut,
+              ftnaeroutes.NotEntitledCourseEmployerProvidedController.onPageLoad()
+            )
+          )
+          forAll(normalModeFTNAEKickOutTestCases) {
+            (fromPage, toPageName, userAnswersOverride, addendum: Option[String], toCall) =>
+              fromOnePageToNextTest(fromPage, toPageName, toCall, userAnswersOverride, addendum, NormalMode)
+          }
+        }
       }
     }
 
@@ -223,6 +278,74 @@ class NavigatorSpec extends SpecBase {
           CheckMode,
           UserAnswers("id")
         ) mustBe controllers.ftnae.routes.CheckYourAnswersController.onPageLoad()
+      }
+
+      "Change of Bank" - {
+        val checkModeModeFTNAECoBTable = Table(
+          "Page to start from",
+          WhatTypeOfAccountPage,
+          NewAccountDetailsPage
+        )
+
+        forAll(checkModeModeFTNAECoBTable) { (fromPage) =>
+          fromOnePageToNextTest(
+            fromPage,
+            "confirmNewDetails",
+            cobroutes.ConfirmNewAccountDetailsController.onPageLoad(CheckMode),
+            newAccountDetailsUA,
+            Some("(Check Mode)"),
+            CheckMode
+          )
+        }
+      }
+
+      "FTNAE" - {
+        val checkModeModeFTNAETable = Table(
+          "Page to start from",
+          WhichYoungPersonPage,
+          WillYoungPersonBeStayingPage,
+          SchoolOrCollegePage,
+          TwelveHoursAWeekPage,
+          HowManyYearsPage,
+          LiveWithYouInUKPage,
+          WillCourseBeEmployerProvidedPage
+        )
+
+        forAll(checkModeModeFTNAETable) { (fromPage) =>
+          fromOnePageToNextTest(
+            fromPage,
+            "checkAnswersPage",
+            ftnaeroutes.CheckYourAnswersController.onPageLoad(),
+            happyPathFTNAEUA,
+            Some("(Check Mode)"),
+            CheckMode
+          )
+        }
+      }
+    }
+
+    "Journey Recovery" - {
+      val journeyRecoveryTable = Table(
+        ("Page to start from", "return Call"),
+        (WhichYoungPersonPage, ftnaeroutes.WhichYoungPersonController.onPageLoad(NormalMode)),
+        (WillYoungPersonBeStayingPage, ftnaeroutes.WillYoungPersonBeStayingController.onPageLoad(NormalMode)),
+        (SchoolOrCollegePage, ftnaeroutes.SchoolOrCollegeController.onPageLoad(NormalMode)),
+        (TwelveHoursAWeekPage, ftnaeroutes.TwelveHoursAWeekController.onPageLoad(NormalMode)),
+        (HowManyYearsPage, ftnaeroutes.HowManyYearsController.onPageLoad(NormalMode)),
+        (WillCourseBeEmployerProvidedPage, ftnaeroutes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode)),
+        (LiveWithYouInUKPage, ftnaeroutes.LiveWithYouInUKController.onPageLoad(NormalMode)),
+        (ConfirmNewAccountDetailsPage, cobroutes.ConfirmNewAccountDetailsController.onPageLoad(NormalMode))
+      )
+
+      forAll(journeyRecoveryTable) { (fromPage, returnCall) =>
+        fromOnePageToNextTest(
+          fromPage,
+          "journeyRecovery",
+          routes.JourneyRecoveryController.onPageLoad(Some(RedirectUrl(returnCall.url))),
+          defaultUA,
+          recovery,
+          NormalMode
+        )
       }
     }
   }

@@ -55,8 +55,9 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
       )
 
     val entDetails: Option[ClaimantEntitlementDetails] = {
-      if (entitlement.isEmpty) None
-      else {
+      if (entitlement.isEmpty) {
+        None
+      } else {
         val cbe: ChildBenefitEntitlement = entitlement.get
         Some(
           ClaimantEntitlementDetails(

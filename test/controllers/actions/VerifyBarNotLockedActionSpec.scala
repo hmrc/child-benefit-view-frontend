@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import connectors.ChangeOfBankConnector
 import models.CBEnvelope
 import models.common.NationalInsuranceNumber
@@ -32,17 +33,16 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
 import services.AuditService
+import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import utils.BaseISpec
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import utils.handlers.ErrorHandler
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class VerifyBarNotLockedActionSpec extends BaseISpec with MockitoSugar {
+class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
   class Harness(cobConnector: ChangeOfBankConnector, errorHandler: ErrorHandler, auditService: AuditService)
       extends VerifyBarNotLockedActionImpl(cobConnector, errorHandler, auditService) {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = this.filter(request)
@@ -53,7 +53,7 @@ class VerifyBarNotLockedActionSpec extends BaseISpec with MockitoSugar {
   "when bar not locked is verified from connector, the action" - {
 
     "must move on with the request (open the gate) and return None" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -81,7 +81,7 @@ class VerifyBarNotLockedActionSpec extends BaseISpec with MockitoSugar {
   "when bar not locked is NOT verified from connector, the action" - {
     "must NOT move on with the request (close the gate) and redirect to Bar Locked Page" in {
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobConnector          = mock[ChangeOfBankConnector]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]

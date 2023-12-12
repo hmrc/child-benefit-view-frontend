@@ -16,52 +16,53 @@
 
 package controllers
 
+import base.BaseAppSpec
 import controllers.PaymentHistoryControllerSpec._
 import models.common.AdjustmentReasonCode
 import models.entitlement.{AdjustmentInformation, ChildBenefitEntitlement, LastPaymentFinancialInfo}
-import play.api.http.Status.{OK, SEE_OTHER}
+import play.api.http.Status.{NOT_FOUND, OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.Stubs.{entitlementsAndPaymentHistoryFailureStub, entitlementsAndPaymentHistoryStub, userLoggedInChildBenefitUser}
-import utils.TestData.{NinoUser, entitlementResult, NotFoundAccountError}
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
+import utils.TestData.{ninoUser, notFoundAccountError, testEntitlement}
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
 
-class PaymentHistoryControllerSpec extends BaseISpec {
+class PaymentHistoryControllerSpec extends BaseAppSpec {
 
   "Payment history controller" - {
     "must return OK and render the correct view when entitlement contains payment with payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryStub(entitlementResult)
+      userLoggedInIsChildBenefitUser(ninoUser)
+      entitlementsAndPaymentHistoryStub(testEntitlement)
 
-      running(app) {
+      val application = applicationBuilder().build()
+      running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.PaymentHistoryController.view.url).withSession("authToken" -> "Bearer 123")
 
-        val result = route(app, request).value
+        val result = route(application, request).value
 
-        val view = app.injector.instanceOf[PaymentHistory]
+        val view = application.injector.instanceOf[PaymentHistory]
 
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(entitlementResult, InPaymentWithPaymentsInLastTwoYears)(request, messages(app, request)).toString
+          view(testEntitlement, InPaymentWithPaymentsInLastTwoYears)(request, messages(application, request)).toString
         )
       }
     }
 
     "must return OK and render the correct view when entitlement contains payment without payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -84,11 +85,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC with payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -111,11 +111,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC without payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -138,11 +137,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return OK and render the correct view when entitlement ended but received payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButReceivedPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -165,11 +163,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return OK and render the correct view when entitlement ended and no payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButNoPaymentsInLastTwoYears)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -192,11 +189,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return OK and render the correct view when entitlement ended, claimant is HICBIC and no payments in last 2 years" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -222,11 +218,10 @@ class PaymentHistoryControllerSpec extends BaseISpec {
     }
 
     "must return 404 and render the no account found view when services return no found account" in {
-      userLoggedInChildBenefitUser(NinoUser)
-      entitlementsAndPaymentHistoryFailureStub(NotFoundAccountError, status = 404)
+      userLoggedInIsChildBenefitUser(ninoUser)
+      entitlementsAndPaymentHistoryFailureStub(NOT_FOUND, notFoundAccountError)
 
       val application = applicationBuilder().build()
-
       running(application) {
 
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
@@ -244,28 +239,28 @@ class PaymentHistoryControllerSpec extends BaseISpec {
 object PaymentHistoryControllerSpec {
 
   val entitlementResultWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(lastPaymentsInfo =
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(lastPaymentsInfo =
         Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )
     )
 
-  val entitlementResultIsHIBICWithPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
-    entitlementResult.claimant.copy(adjustmentInformation =
+  val entitlementResultIsHIBICWithPaymentsInLastTwoYears: ChildBenefitEntitlement = testEntitlement.copy(claimant =
+    testEntitlement.claimant.copy(adjustmentInformation =
       Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
 
-  val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = entitlementResult.copy(claimant =
-    entitlementResult.claimant.copy(
+  val entitlementResultIsHIBICWithoutPaymentsInLastTwoYears: ChildBenefitEntitlement = testEntitlement.copy(claimant =
+    testEntitlement.claimant.copy(
       lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
       adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
     )
   )
 
   val entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
         lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400)),
         adjustmentInformation = Some(AdjustmentInformation(AdjustmentReasonCode("28"), LocalDate.now.plusDays(10)))
@@ -273,11 +268,11 @@ object PaymentHistoryControllerSpec {
     )
 
   val entitlementEndedButReceivedPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant = entitlementResult.claimant.copy(awardEndDate = LocalDate.now().minusDays(100)))
+    testEntitlement.copy(claimant = testEntitlement.claimant.copy(awardEndDate = LocalDate.now().minusDays(100)))
 
   val entitlementEndedButNoPaymentsInLastTwoYears: ChildBenefitEntitlement =
-    entitlementResult.copy(claimant =
-      entitlementResult.claimant.copy(
+    testEntitlement.copy(claimant =
+      testEntitlement.claimant.copy(
         awardEndDate = LocalDate.now().minusDays(100),
         lastPaymentsInfo = Seq(LastPaymentFinancialInfo(creditDate = LocalDate.now.minusYears(4), 400))
       )

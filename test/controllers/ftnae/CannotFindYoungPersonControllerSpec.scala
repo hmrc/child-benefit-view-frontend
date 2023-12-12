@@ -16,20 +16,19 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.CannotFindYoungPersonView
 
-class CannotFindYoungPersonControllerSpec extends CBSpecBase {
+class CannotFindYoungPersonControllerSpec extends BaseAppSpec {
 
   "CannotFindYoungPerson Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad().url)
 

@@ -16,18 +16,18 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.CannotVerifyAccountView
 
-class CannotVerifyAccountControllerSpec extends BaseISpec {
+class CannotVerifyAccountControllerSpec extends BaseAppSpec {
 
   "CannotVerifyAccount Controller" - {
 
@@ -35,9 +35,10 @@ class CannotVerifyAccountControllerSpec extends BaseISpec {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
-        val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
         running(application) {
           val request = FakeRequest(GET, controllers.cob.routes.CannotVerifyAccountController.onPageLoad().url)
@@ -58,7 +59,7 @@ class CannotVerifyAccountControllerSpec extends BaseISpec {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 

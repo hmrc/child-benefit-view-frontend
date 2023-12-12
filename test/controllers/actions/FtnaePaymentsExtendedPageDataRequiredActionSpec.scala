@@ -16,9 +16,10 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import models.common.NationalInsuranceNumber
 import models.ftnae.HowManyYears
-import models.requests.{BaseDataRequest, DataRequest, OptionalDataRequest, FtnaePaymentsExtendedPageDataRequest}
+import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageDataRequest, OptionalDataRequest}
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae._
@@ -26,14 +27,13 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc.{AnyContent, Result}
 import play.api.test.FakeRequest
 import repositories.FtnaePaymentsExtendedPageSessionRepository
-import utils.BaseISpec
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import stubs.AuthStubs._
+import utils.TestData.ninoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with MockitoSugar {
+class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with MockitoSugar {
 
   class Harness(ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository)
       extends FtnaePaymentsExtendedPageDataRequiredActionImpl(ftnaePaymentsExtendedPageSessionRepository) {
@@ -58,7 +58,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
     "when there is no data in the cache" - {
 
       "must check FtnaePaymentsExtendedPage session repository userAnswers to 'None' in the request" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
         when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(None)
@@ -75,7 +75,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
 
       "must NOT call ftnaePaymentsExtendedPageSessionRepository and pass the userAnswers object over to the data required request" in {
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
@@ -95,7 +95,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseISpec with Moc
 
       "must build a userAnswers object and add it to the request" in {
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
         when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(Some(allAnsweredForFtnae.get))

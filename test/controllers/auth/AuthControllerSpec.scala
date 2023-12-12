@@ -16,23 +16,24 @@
 
 package controllers.auth
 
+import base.BaseAppSpec
 import config.FrontendAppConfig
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status}
+import stubs.AuthStubs._
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
-import utils.BaseISpec
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 
-class AuthControllerSpec extends BaseISpec {
+class AuthControllerSpec extends BaseAppSpec {
 
-  lazy val controller = app.injector.instanceOf[AuthController]
-  lazy val appConfig  = app.injector.instanceOf[FrontendAppConfig]
+  val application     = applicationBuilder().build()
+  lazy val controller = application.injector.instanceOf[AuthController]
+  lazy val appConfig  = application.injector.instanceOf[FrontendAppConfig]
 
   "AuthController" - {
     "redirect to /gg/sign-out with continue to the feedback survey" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val request = FakeRequest(GET, routes.AuthController.signOut().url)
         .withSession(("authToken", "Bearer 123"))

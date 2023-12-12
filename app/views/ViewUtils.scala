@@ -39,20 +39,18 @@ import services.PaymentHistoryPageVariant._
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import scala.math.BigDecimal.RoundingMode
 
 object ViewUtils {
 
   def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
-    titleNoForm(
-      title = s"${errorPrefix(form)} ${messages(title)}",
-      section = section
-    )
+    s"${errorPrefix(form)}${titleNoForm(title, section)}"
 
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
+    if (form.hasErrors || form.hasGlobalErrors) s"${messages("error.browser.title.prefix")} " else ""
   }
 
   def formatDate(
@@ -64,7 +62,7 @@ object ViewUtils {
   }
 
   def formatMoney(amount: BigDecimal, currency: String = "£"): String =
-    f"$currency${amount.setScale(2)}"
+    f"$currency${amount.setScale(2, RoundingMode.HALF_EVEN)}"
 
   def navigatePaymentHistory(pageVariant: PaymentHistoryPageVariant): String =
     pageVariant match {

@@ -19,13 +19,14 @@ package controllers.ftnae
 import controllers.actions._
 import forms.ftnae.LiveWithYouInUKFormProvider
 import models.Mode
-import models.common.YoungPersonTitleHelper
 import models.requests.DataRequest
 import pages.ftnae.LiveWithYouInUKPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.helpers
+import utils.helpers.YoungPersonTitleHelper
 import utils.navigation.Navigator
 import views.html.ftnae.LiveWithYouInUKView
 
@@ -48,7 +49,8 @@ class LiveWithYouInUKController @Inject() (
     with I18nSupport {
 
   def form[A](implicit request: DataRequest[A]) = {
-    val displayName: String = YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
+    val displayName: String =
+      helpers.YoungPersonTitleHelper(request).firstNameFromConcatenatedChildNames().getOrElse("N/A")
     formProvider(displayName)
   }
 

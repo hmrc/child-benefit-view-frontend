@@ -16,14 +16,13 @@
 
 package controllers
 
+import base.BaseAppSpec
 import cats.data.EitherT
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 import connectors.ChildBenefitEntitlementConnector
-import utils.handlers.ErrorHandler
 import models.CBEnvelope.CBEnvelope
 import models.entitlement._
 import models.errors.{CBError, ConnectorError}
-import org.mockito.MockitoSugar.mock
 import org.scalatest.EitherValues
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -31,17 +30,17 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AuditService
+import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.{NinoUser, entitlementResult}
+import utils.TestData.{ninoUser, testEntitlement}
+import utils.handlers.ErrorHandler
 import views.html.ProofOfEntitlement
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
-class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
+class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
   implicit val auditor: AuditService                        = mock[AuditService]
@@ -50,7 +49,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
 
   "Proof of entitlement controller" - {
     "must return SEE_OTHER and redirect to the service down view for a GET when getting entitlement fails" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       val failingChildBenefitEntitlementConnector = new ChildBenefitEntitlementConnector {
         override def getChildBenefitEntitlement(implicit
@@ -64,9 +63,11 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
           )
       }
 
-      val application = applicationBuilder(entitlementConnector =
-        bind[ChildBenefitEntitlementConnector].toInstance(failingChildBenefitEntitlementConnector)
-      ).build()
+      val application = applicationBuilder()
+        .overrides(
+          bind[ChildBenefitEntitlementConnector].toInstance(failingChildBenefitEntitlementConnector)
+        )
+        .build()
 
       running(application) {
         implicit val ec: ExecutionContextExecutor = application.actorSystem.getDispatcher
@@ -94,14 +95,14 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
     }
 
     "must return OK and render the correct view for a GET" in {
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
 
       stubFor(
         get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))
           .willReturn(
             aResponse()
               .withStatus(200)
-              .withBody(Json.toJson(entitlementResult).toString)
+              .withBody(Json.toJson(testEntitlement).toString)
           )
       )
 
@@ -120,7 +121,7 @@ class ProofOfEntitlementControllerSpec extends BaseISpec with EitherValues {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeNonce)(
           contentAsString(result),
-          view(entitlementResult)(request, messages(application, request)).toString
+          view(testEntitlement)(request, messages(application, request)).toString
         )
       }
     }

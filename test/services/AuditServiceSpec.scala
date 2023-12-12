@@ -16,38 +16,43 @@
 
 package services
 
+import base.BaseSpec
+import com.google.common.io.BaseEncoding
 import models.audit._
-import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.common.{ChildReferenceNumber, FirstForename, NationalInsuranceNumber, Surname}
 import models.entitlement.Child
 import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{times, verify}
-import org.mockito.MockitoSugar.mock
 import org.mockito.{ArgumentCaptor, Mockito}
-import org.scalatestplus.play.PlaySpec
 import play.api.i18n.Messages
 import play.api.libs.json.Writes
-import play.api.mvc.{Headers, Request}
+import play.api.mvc.{Cookie, Headers, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TestData.{claimantBankInformation, entitlementResult}
+import utils.TestData.{testClaimantBankInformation, testEntitlement}
+import utils.helpers.ClaimantBankInformationHelper
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 
-class AuditServiceSpec extends PlaySpec {
+class AuditServiceSpec extends BaseSpec {
 
   val auditConnector: AuditConnector = mock[AuditConnector]
-  val auditor:        AuditService   = new AuditService(auditConnector)
+  val sut:            AuditService   = new AuditService(auditConnector)
 
-  val testNino:   String = "CA123456A"
-  val testCRN:    String = "AC654321C"
-  val testStatus: String = "testStatus"
+  val testNino:             String = "CA123456A"
+  val testCRN:              String = "AC654321C"
+  val testStatus:           String = "testStatus"
+  val testReferrerValue:    String = "/foo"
+  val testFingerprintValue: String = "testDeviceFingerprint"
+
   protected val request: Request[_] =
-    FakeRequest().withHeaders(Headers(("referer", "/foo")))
+    FakeRequest()
+      .withHeaders(Headers(("referer", testReferrerValue)))
+      .withCookies(Cookie("mdtpdf", BaseEncoding.base64().encode(testFingerprintValue.toCharArray.map(c => c.toByte))))
   protected val optionalDataRequest: OptionalDataRequest[_] =
     OptionalDataRequest(request, "123", NationalInsuranceNumber(testNino), None)
 
@@ -55,139 +60,277 @@ class AuditServiceSpec extends PlaySpec {
   protected implicit val hc:       HeaderCarrier    = HeaderCarrier()
   protected implicit val messages: Messages         = mock[Messages]
 
-  val entitlementDetails: Option[ClaimantEntitlementDetails] =
-    Some(
-      ClaimantEntitlementDetails(
-        name = entitlementResult.claimant.name.value,
-        address = entitlementResult.claimant.fullAddress.toSingleLineString,
-        amount = entitlementResult.claimant.awardValue,
-        start = LocalDate.of(2022, 1, 1).toString,
-        end = LocalDate.of(2038, 1, 1).toString,
-        children =
-          for (child <- entitlementResult.children)
-            yield Child(
-              name = child.name,
-              dateOfBirth = child.dateOfBirth,
-              relationshipStartDate = LocalDate.of(2022, 1, 1),
-              relationshipEndDate = Some(LocalDate.of(2038, 1, 1))
-            )
-      )
-    )
-
-  "auditProofOfEntitlement" should {
-    "fire event" in {
-      Mockito.reset(auditConnector)
-
-      val captor: ArgumentCaptor[ViewProofOfEntitlementModel] =
-        ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
-
-      auditor.auditProofOfEntitlement(testNino, testStatus, request, Some(entitlementResult))
-
-      verify(auditConnector, times(1))
-        .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
-          any[HeaderCarrier](),
-          any[ExecutionContext](),
-          any[Writes[ViewProofOfEntitlementModel]]()
-        )
-
-      val capturedEvent = captor.getValue
-      val capturedEntitlementDetails: ClaimantEntitlementDetails = capturedEvent.claimantEntitlementDetails.get
-      val capturedChild:              Child                      = capturedEntitlementDetails.children.last
-
-      capturedEvent.nino mustBe testNino
-      capturedEvent.status mustBe testStatus
-      capturedEvent.referrer mustBe "/foo"
-      capturedEvent.deviceFingerprint mustBe "-"
-
-      capturedEntitlementDetails.name mustBe "John Doe"
-      capturedEntitlementDetails.address mustBe "Addressline1 Addressline2 Addressline3 Addressline4 Addressline5 SS1 7JJ"
-      LocalDate.parse(capturedEntitlementDetails.start) mustBe LocalDate.now()
-      LocalDate.parse(capturedEntitlementDetails.end) mustBe LocalDate.now().plusYears(3)
-      capturedEntitlementDetails.children.length mustBe 1
-
-      capturedChild.name.value mustBe "Full Name"
-      capturedChild.dateOfBirth.toString mustBe "2012-01-01"
-      capturedChild.relationshipStartDate.toString mustBe "2013-01-01"
-      capturedChild.relationshipEndDate.get.toString mustBe "2016-01-01"
-
+  def testForCapturedValue[T](beingChecked: String, fieldName: String, fieldValue: T, expectedResult: T): Unit = {
+    s"AND the $beingChecked is sent with the provided $fieldName" in {
+      fieldValue mustBe expectedResult
     }
   }
-  "auditChangeOfBankAccountDetails" should {
-    "fire event" in {
 
+  "auditProofOfEntitlement" - {
+    "GIVEN a ChildBenefitEntitlement" - {
+      "WHEN an audit call is made for auditProofOfEntitlement" - {
+        val captor: ArgumentCaptor[ViewProofOfEntitlementModel] =
+          ArgumentCaptor.forClass(classOf[ViewProofOfEntitlementModel])
+
+        forAll(Table("withEntitlement", true, false)) { withEntitlement =>
+          s"AND an entitlement ${isOrIsNot(withEntitlement)} provided" - {
+            Mockito.reset(auditConnector)
+            if (withEntitlement) {
+              sut.auditProofOfEntitlement(testNino, testStatus, request, Some(testEntitlement))
+            } else {
+              sut.auditProofOfEntitlement(testNino, testStatus, request)
+            }
+
+            "THEN the auditConnector is called with the ViewProofOfEntitlement Event Type" - {
+              verify(auditConnector, times(1))
+                .sendExplicitAudit(eqTo(ViewProofOfEntitlementModel.EventType), captor.capture())(
+                  any[HeaderCarrier](),
+                  any[ExecutionContext](),
+                  any[Writes[ViewProofOfEntitlementModel]]()
+                )
+
+              val capturedEvent = captor.getValue
+
+              forAll(
+                Table(
+                  ("fieldName", "fieldValue", "expectedResult"),
+                  ("Nino", capturedEvent.nino, testNino),
+                  ("Status", capturedEvent.status, testStatus),
+                  ("Referrer", capturedEvent.referrer, testReferrerValue),
+                  ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
+                )
+              ) { (fieldName, fieldValue, expectedResult) =>
+                testForCapturedValue(
+                  s"event (${withOrWithout(withEntitlement)} entitlement)",
+                  fieldName,
+                  fieldValue,
+                  expectedResult
+                )
+              }
+
+              val capturedEntitlementDetails: Option[ClaimantEntitlementDetails] =
+                capturedEvent.claimantEntitlementDetails
+              if (withEntitlement) {
+                val entitlementDetails = capturedEntitlementDetails.get
+
+                forAll(
+                  Table(
+                    ("fieldName", "fieldValue", "expectedResult"),
+                    ("Name", entitlementDetails.name, testEntitlement.claimant.name.value),
+                    ("Address", entitlementDetails.address, testEntitlement.claimant.fullAddress.toSingleLineString),
+                    ("Start date", LocalDate.parse(entitlementDetails.start), testEntitlement.claimant.awardStartDate),
+                    ("End date", LocalDate.parse(entitlementDetails.end), testEntitlement.claimant.awardEndDate),
+                    ("number of children", entitlementDetails.children.length, testEntitlement.children.length)
+                  )
+                ) { (fieldName, fieldValue, expectedResult) =>
+                  testForCapturedValue("entitlement details", fieldName, fieldValue, expectedResult)
+                }
+
+                val capturedChild: Option[Child] = capturedEntitlementDetails.map(_.children.last)
+                val child = capturedChild.get
+
+                forAll(
+                  Table(
+                    ("fieldName", "fieldValue", "expectedResult"),
+                    ("Name", child.name, testEntitlement.children.last.name),
+                    ("Date of Birth", child.dateOfBirth, testEntitlement.children.last.dateOfBirth),
+                    (
+                      "relationship Start Date",
+                      child.relationshipStartDate,
+                      testEntitlement.children.head.relationshipStartDate
+                    ),
+                    (
+                      "relationship End Date",
+                      child.relationshipEndDate,
+                      testEntitlement.children.head.relationshipEndDate
+                    )
+                  )
+                ) { (fieldName, fieldValue, expectedResult) =>
+                  testForCapturedValue(
+                    s"claimant child (${withOrWithout(withEntitlement)} entitlement)",
+                    fieldName,
+                    fieldValue,
+                    expectedResult
+                  )
+                }
+              } else {
+                "AND the event is sent without entitlement details" in {
+                  capturedEntitlementDetails mustBe None
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  "auditChangeOfBankAccountDetails" - {
+    "WHEN an audit call is made for ChangeOfBankAccountDetails" - {
       Mockito.reset(auditConnector)
 
       val captor: ArgumentCaptor[ChangeOfBankAccountDetailsModel] =
         ArgumentCaptor.forClass(classOf[ChangeOfBankAccountDetailsModel])
 
-      auditor.auditChangeOfBankAccountDetails(testNino, testStatus, optionalDataRequest, claimantBankInformation)
+      sut.auditChangeOfBankAccountDetails(testNino, testStatus, optionalDataRequest, testClaimantBankInformation)
 
-      verify(auditConnector, times(1))
-        .sendExplicitAudit(eqTo(ChangeOfBankAccountDetailsModel.EventType), captor.capture())(
-          any[HeaderCarrier](),
-          any[ExecutionContext](),
-          any[Writes[ChangeOfBankAccountDetailsModel]]()
-        )
+      "THEN the auditConnector is called with the ViewProofOfEntitlement Event Type" - {
+        verify(auditConnector, times(1))
+          .sendExplicitAudit(eqTo(ChangeOfBankAccountDetailsModel.EventType), captor.capture())(
+            any[HeaderCarrier](),
+            any[ExecutionContext](),
+            any[Writes[ChangeOfBankAccountDetailsModel]]()
+          )
 
-      val capturedEvent = captor.getValue
+        val capturedEvent               = captor.getValue
+        val capturedPersonalInformation = capturedEvent.personalInformation
+        val capturedBankDetails         = capturedEvent.bankDetails
+        val capturedViewDetails         = capturedEvent.viewDetails
 
-      val capturedPersonalInformation = capturedEvent.personalInformation
-      val capturedBankDetails         = capturedEvent.bankDetails
-      val capturedViewDetails         = capturedEvent.viewDetails
+        val formattedBankAccountInformation =
+          ClaimantBankInformationHelper.formatBankAccountInformation(testClaimantBankInformation)
 
-      capturedEvent.nino mustBe testNino
-      capturedEvent.status mustBe testStatus
-      capturedEvent.referrer mustBe "/foo"
-      capturedEvent.deviceFingerprint mustBe "-"
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            ("Nino", capturedEvent.nino, testNino),
+            ("Status", capturedEvent.status, testStatus),
+            ("Referrer", capturedEvent.referrer, testReferrerValue),
+            ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue)
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
+          testForCapturedValue("event", fieldName, fieldValue, expectedResult)
+        }
 
-      capturedPersonalInformation.name mustBe "John Doe"
-      capturedPersonalInformation.dateOfBirth mustBe LocalDate.of(1955, 1, 26)
-      capturedPersonalInformation.nino mustBe "CA123456A"
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            (
+              "Name",
+              capturedPersonalInformation.name,
+              s"${testClaimantBankInformation.firstForename.value} ${testClaimantBankInformation.surname.value}"
+            ),
+            ("Date of Birth", capturedPersonalInformation.dateOfBirth, testClaimantBankInformation.dateOfBirth),
+            ("Nino", capturedPersonalInformation.nino, testNino)
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
+          testForCapturedValue("Personal Information", fieldName, fieldValue, expectedResult)
+        }
 
-      capturedBankDetails.firstname mustBe "John"
-      capturedBankDetails.surname mustBe "Doe"
-      capturedBankDetails.accountHolderName mustBe Some(
-        AccountHolderName("Mr J Doe")
-      )
-      capturedBankDetails.accountNumber mustBe Some(
-        BankAccountNumber(s"${messages("changeAccount.table.ending.in")} 5678")
-      )
-      capturedBankDetails.sortCode mustBe Some(SortCode("11-22-33"))
-      capturedBankDetails.buildingSocietyRollNumber mustBe None
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            ("First Name", capturedBankDetails.firstname, formattedBankAccountInformation.firstForename.value),
+            ("Surname", capturedBankDetails.surname, formattedBankAccountInformation.surname.value),
+            (
+              "Account Holder Name",
+              capturedBankDetails.accountHolderName,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName
+            ),
+            (
+              "Account Number",
+              capturedBankDetails.accountNumber,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber
+            ),
+            (
+              "Sort Code",
+              capturedBankDetails.sortCode,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode
+            ),
+            (
+              "Building Society Roll Number",
+              capturedBankDetails.buildingSocietyRollNumber,
+              testClaimantBankInformation.financialDetails.bankAccountInformation.buildingSocietyRollNumber
+            )
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
+          testForCapturedValue("Bank Details", fieldName, fieldValue, expectedResult)
+        }
 
-      capturedViewDetails.accountHolderName mustBe "Mr J Doe"
-      capturedViewDetails.accountNumber mustBe s"${messages("changeAccount.table.ending.in")} 5678"
-      capturedViewDetails.sortCode mustBe "11-22-33"
+        forAll(
+          Table(
+            ("fieldName", "fieldValue", "expectedResult"),
+            (
+              "Account Holder Name",
+              capturedViewDetails.accountHolderName,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.accountHolderName.map(_.value).get
+            ),
+            (
+              "Account Number",
+              capturedViewDetails.accountNumber,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber
+                .map(_.number)
+                .get
+            ),
+            (
+              "Sort Code",
+              capturedViewDetails.sortCode,
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
+            )
+          )
+        ) { (fieldName, fieldValue, expectedResult) =>
+          testForCapturedValue("View Details", fieldName, fieldValue, expectedResult)
+        }
+      }
     }
   }
-  "auditPaymentDetails" should {
-    "fire event" in {
-      Mockito.reset(auditConnector)
 
-      val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
-        ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
+  "auditPaymentDetails" - {
+    "GIVEN a ChildBenefitEntitlement" - {
+      "WHEN an audit call is made for PaymentDetails" - {
+        Mockito.reset(auditConnector)
 
-      auditor.auditPaymentDetails(testNino, testStatus, request, Some(entitlementResult))
+        val captor: ArgumentCaptor[ViewPaymentDetailsModel] =
+          ArgumentCaptor.forClass(classOf[ViewPaymentDetailsModel])
 
-      verify(auditConnector, times(1))
-        .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.EventType), captor.capture())(
-          any[HeaderCarrier](),
-          any[ExecutionContext](),
-          any[Writes[ViewPaymentDetailsModel]]()
-        )
+        sut.auditPaymentDetails(testNino, testStatus, optionalDataRequest, Some(testEntitlement))
 
-      val capturedEvent = captor.getValue
+        "THEN the auditConnector is called with the ViewPaymentDetails Event Type" - {
+          verify(auditConnector, times(1))
+            .sendExplicitAudit(eqTo(ViewPaymentDetailsModel.EventType), captor.capture())(
+              any[HeaderCarrier](),
+              any[ExecutionContext](),
+              any[Writes[ViewPaymentDetailsModel]]()
+            )
 
-      capturedEvent.nino mustBe testNino
-      capturedEvent.status mustBe testStatus
-      capturedEvent.referrer mustBe "/foo"
-      capturedEvent.deviceFingerprint mustBe "-"
-      capturedEvent.numberOfPaymentsVisibleToUser mustBe 5
+          val capturedEvent         = captor.getValue
+          val capturedFinancialInfo = capturedEvent.payments
 
+          forAll(
+            Table(
+              ("fieldName", "fieldValue", "expectedResult"),
+              ("Nino", capturedEvent.nino, testNino),
+              ("Status", capturedEvent.status, testStatus),
+              ("Referrer", capturedEvent.referrer, testReferrerValue),
+              ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue),
+              (
+                "Number of Payments Visible to User",
+                capturedEvent.numberOfPaymentsVisibleToUser,
+                testEntitlement.claimant.lastPaymentsInfo.length
+              )
+            )
+          ) { (fieldName, fieldValue, expectedResult) =>
+            testForCapturedValue("event", fieldName, fieldValue, expectedResult)
+          }
+
+          capturedFinancialInfo.zip(testEntitlement.claimant.lastPaymentsInfo).zipWithIndex.foreach {
+            case ((resultInfo, expectedInfo), index) =>
+              forAll(
+                Table(
+                  ("fieldName", "fieldValue", "expectedResult"),
+                  ("Credit Date", resultInfo.creditDate, expectedInfo.creditDate),
+                  ("Credit Amount", resultInfo.creditAmount, expectedInfo.creditAmount)
+                )
+              ) { (fieldName, fieldValue, expectedResult) =>
+                testForCapturedValue(s"Payments ($index)", fieldName, fieldValue, expectedResult)
+              }
+          }
+        }
+      }
     }
   }
 
-  "auditFTNAEKickOut" should {
+  "auditFTNAEKickOut" - {
     "fire event" in {
       Mockito.reset(auditConnector)
       val childInfo: FtnaeChildInfo = FtnaeChildInfo(
@@ -209,7 +352,7 @@ class AuditServiceSpec extends PlaySpec {
       val captor: ArgumentCaptor[FtnaeKickOutModel] =
         ArgumentCaptor.forClass(classOf[FtnaeKickOutModel])
 
-      auditor.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), courseDuration, answers)
+      sut.auditFtnaeKickOut(testNino, testStatus, Some(childInfo), courseDuration, answers)
 
       verify(auditConnector, times(1))
         .sendExplicitAudit(eqTo(FtnaeKickOutModel.EventType), captor.capture())(

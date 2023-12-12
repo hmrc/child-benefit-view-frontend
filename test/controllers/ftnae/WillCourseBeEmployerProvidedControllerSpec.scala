@@ -16,14 +16,13 @@
 
 package controllers.ftnae
 
-import base.CBSpecBase
+import base.BaseAppSpec
 import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse, HowManyYears}
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, SchoolOrCollegePage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
+import pages.ftnae._
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -37,7 +36,7 @@ import views.html.ftnae.WillCourseBeEmployerProvidedView
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with MockitoSugar {
+class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
   def onwardYesRoute = Call("GET", "/foo")
   def onwardNoRoute  = Call("GET", "/moo")
@@ -60,7 +59,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
 
       val application =
-        applicationBuilder(userAnswers)
+        applicationBuilder(userAnswers = userAnswers)
           .overrides(
             bind[SessionRepository].toInstance(mockSessionRepository)
           )
@@ -89,7 +88,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
 
-      val application = applicationBuilder(Some(userAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[Navigator].toInstance(new FakeNavigator(onwardYesRoute)),
           bind[SessionRepository].toInstance(mockSessionRepository)
@@ -196,7 +195,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends CBSpecBase with Mockito
 
       when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
 
-      val application = applicationBuilder(Some(userAnswers))
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
           bind[SessionRepository].toInstance(mockSessionRepository)
         )

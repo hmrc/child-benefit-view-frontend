@@ -16,14 +16,20 @@
 
 package models.changeofbank
 
+import models.Enumerable
 import play.api.libs.json.{JsonValidationError, Reads, Writes}
 
 sealed trait AccountHolderType
 
-object AccountHolderType {
+object AccountHolderType extends Enumerable.Implicits {
   case object Claimant    extends AccountHolderType
   case object Joint       extends AccountHolderType
   case object SomeoneElse extends AccountHolderType
+
+  val values: List[AccountHolderType] = List(Claimant, Joint, SomeoneElse)
+
+  implicit val enumerable: Enumerable[AccountHolderType] =
+    Enumerable(values.map(v => v.toString -> v): _*)
 
   implicit val reads: Reads[AccountHolderType] =
     implicitly[Reads[String]]

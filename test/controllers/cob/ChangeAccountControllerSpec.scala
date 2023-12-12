@@ -16,28 +16,28 @@
 
 package controllers.cob
 
+import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import controllers.cob
 import controllers.cob.ChangeAccountControllerSpec._
 import models.changeofbank._
 import models.common.AdjustmentReasonCode
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, Request}
-import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.api.test.Helpers._
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
-import utils.Stubs._
-import utils.TestData.{LockedOutErrorResponse, NinoUser, NotFoundAccountError, claimantBankInformation}
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
+import utils.TestData.{lockedOutErrorResponse, ninoUser, notFoundAccountError, testClaimantBankInformation}
 import views.html.ErrorTemplate
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
 
-class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyChecks {
+class ChangeAccountControllerSpec extends BaseAppSpec {
 
   "ChangeAccount Controller" - {
 
@@ -52,10 +52,11 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and render the correct view for ChB claimant who is in payment and has a standard bank account type" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoStub(claimantBankInformation)
+        userLoggedInIsChildBenefitUser(ninoUser)
+        changeOfBankUserInfoStub(testClaimantBankInformation)
         verifyClaimantBankInfoStub()
 
         running(application) {
@@ -77,9 +78,10 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return OK and render the correct view for ChB claimant who is in payment and has a non-standard bank account type" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
         verifyClaimantBankInfoStub()
 
@@ -105,10 +107,11 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return SEE_OTHER and render the correct view for ChB claimant who is currently locked out of the service due to 3 x BARS failures in 24-hours" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoFailureStub(500, LockedOutErrorResponse)
+        userLoggedInIsChildBenefitUser(ninoUser)
+        changeOfBankUserInfoFailureStub(500, lockedOutErrorResponse)
 
         running(application) {
           implicit val request: Request[AnyContentAsEmpty.type] =
@@ -125,9 +128,10 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
         verifyClaimantBankInfoStub()
 
@@ -145,9 +149,10 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date in the past" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
         verifyClaimantBankInfoStub()
 
@@ -166,9 +171,10 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return SEE_OTHER and render the correct view for a terminated ChB claim with an end date is day of request" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
         verifyClaimantBankInfoStub()
 
@@ -186,10 +192,11 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       }
 
       "must return SEE_OTHER and render the correct view for No ChB account found" in {
-        val application: Application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
+        val application: Application =
+          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
-        userLoggedInChildBenefitUser(NinoUser)
-        changeOfBankUserInfoFailureStub(result = NotFoundAccountError)
+        userLoggedInIsChildBenefitUser(ninoUser)
+        changeOfBankUserInfoFailureStub(NOT_FOUND, notFoundAccountError)
         verifyClaimantBankInfoStub()
 
         running(application) {
@@ -228,8 +235,8 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
             verifyBarNotLockedAction = verificationBarAction
           ).build()
 
-          userLoggedInChildBenefitUser(NinoUser)
-          changeOfBankUserInfoStub(claimantBankInformation)
+          userLoggedInIsChildBenefitUser(ninoUser)
+          changeOfBankUserInfoStub(testClaimantBankInformation)
           verifyClaimantBankInfoStub()
 
           running(application) {
@@ -252,7 +259,7 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
-        userLoggedInChildBenefitUser(NinoUser)
+        userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()
 
@@ -281,28 +288,29 @@ class ChangeAccountControllerSpec extends BaseISpec with ScalaCheckPropertyCheck
 object ChangeAccountControllerSpec {
 
   val claimantBankInformationWithBuildingSocietyRollNumber: ClaimantBankInformation =
-    claimantBankInformation.copy(financialDetails =
-      claimantBankInformation.financialDetails.copy(bankAccountInformation =
-        claimantBankInformation.financialDetails.bankAccountInformation
+    testClaimantBankInformation.copy(financialDetails =
+      testClaimantBankInformation.financialDetails.copy(bankAccountInformation =
+        testClaimantBankInformation.financialDetails.bankAccountInformation
           .copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234")))
       )
     )
 
-  val claimantBankInformationWithHICBC: ClaimantBankInformation = claimantBankInformation.copy(financialDetails =
-    claimantBankInformation.financialDetails.copy(
+  val claimantBankInformationWithHICBC: ClaimantBankInformation = testClaimantBankInformation.copy(financialDetails =
+    testClaimantBankInformation.financialDetails.copy(
       adjustmentReasonCode = Some(AdjustmentReasonCode("28")),
       adjustmentEndDate = Some(LocalDate.now.plusYears(2))
     )
   )
 
   val claimantBankInformationWithEndDateInPast: ClaimantBankInformation =
-    claimantBankInformation.copy(
+    testClaimantBankInformation.copy(
       activeChildBenefitClaim = false,
-      financialDetails = claimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now.minusYears(1))
+      financialDetails = testClaimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now.minusYears(1))
     )
 
-  val claimantBankInformationWithEndDateToday: ClaimantBankInformation = claimantBankInformation.copy(financialDetails =
-    claimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now)
-  )
+  val claimantBankInformationWithEndDateToday: ClaimantBankInformation =
+    testClaimantBankInformation.copy(financialDetails =
+      testClaimantBankInformation.financialDetails.copy(awardEndDate = LocalDate.now)
+    )
 
 }

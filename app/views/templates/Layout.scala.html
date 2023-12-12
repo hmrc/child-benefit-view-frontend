@@ -82,7 +82,7 @@
     isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
     backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
     signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
-    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl())),
+    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
     additionalHeadBlock = Some(customAdditionalHeadBlock),
     additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
 )(new Html(List(infoBanner, contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))

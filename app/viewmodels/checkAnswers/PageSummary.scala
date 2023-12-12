@@ -16,6 +16,12 @@
 
 package viewmodels.checkAnswers
 
+import models.UserAnswers
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+
 trait PageSummary {
   val keyName: String
+
+  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow]
 }

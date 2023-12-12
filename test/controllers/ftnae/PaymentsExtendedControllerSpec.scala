@@ -16,6 +16,7 @@
 
 package controllers.ftnae
 
+import base.BaseAppSpec
 import connectors.FtnaeConnector
 import models.CBEnvelope
 import models.common.ChildReferenceNumber
@@ -34,14 +35,13 @@ import repositories.SessionRepository
 import services.FtnaeService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.BaseISpec
 import utils.HtmlMatcherUtils.removeNonce
 import views.html.ftnae.PaymentsExtendedView
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class PaymentsExtendedControllerSpec extends BaseISpec with MockitoSugar with FtnaeFixture {
+class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
   val mockFtnaeService      = mock[FtnaeService]
   val mockFtnaeConnector    = mock[FtnaeConnector]

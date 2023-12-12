@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import base.BaseAppSpec
 import models.CBEnvelope
 import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformation, ClaimantFinancialDetails}
 import models.common.{AdjustmentReasonCode, FirstForename, NationalInsuranceNumber, Surname}
@@ -32,17 +33,16 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
 import services.{AuditService, ChangeOfBankService}
+import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpVerbs.GET
-import utils.BaseISpec
-import utils.Stubs.userLoggedInChildBenefitUser
-import utils.TestData.NinoUser
+import utils.TestData.ninoUser
 import utils.handlers.ErrorHandler
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
+class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
   class Harness(cobService: ChangeOfBankService, errorHandler: ErrorHandler, auditService: AuditService)
       extends VerifyHICBCActionImpl(cobService, errorHandler, auditService) {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = this.filter(request)
@@ -66,7 +66,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
 
     "must move on with the request (open the gate) and return None" in {
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -97,7 +97,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
   "when claimant is HICBC but NOT WithAdjustmentEndDateInFuture, the action " - {
     "must move on with the request (open the gate) and return None" in {
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
@@ -127,7 +127,7 @@ class VerifyHICBCActionSpec extends BaseISpec with MockitoSugar {
   "when claimant is HICBC AND WithAdjustmentEndDateInFuture, the action " - {
     "must NOT move on with the request (close the gate) and redirect to Hicbc opted out page" in {
 
-      userLoggedInChildBenefitUser(NinoUser)
+      userLoggedInIsChildBenefitUser(ninoUser)
       val cobService            = mock[ChangeOfBankService]
       val errorHandler          = mock[ErrorHandler]
       implicit val auditService = mock[AuditService]
