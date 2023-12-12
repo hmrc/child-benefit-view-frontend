@@ -48,7 +48,7 @@ class ExtendPaymentsController @Inject() (
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData).async { implicit request =>
       val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
         ftnaeResponse <- ftnaeService.getFtnaeInformation()
         updatedAnswers <- CBEnvelope.fromF(
