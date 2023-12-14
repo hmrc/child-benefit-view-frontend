@@ -1,7 +1,6 @@
 package models.errors
 
 import base.BaseSpec
-import org.scalacheck.Gen.alphaStr
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 
 class CBErrorSpec extends BaseSpec {

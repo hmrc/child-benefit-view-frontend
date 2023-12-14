@@ -15,7 +15,7 @@
  *@
 
 @import components._
-@import models.cob.{AccountType, JointAccountType}
+@import models.cob.WhatTypeOfAccount
 
 @this(
     layout: templates.NewLayoutProvider,
@@ -30,34 +30,10 @@
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
 
-@inner = {
-  @govukRadios(
-    RadiosViewModel(
-      field = form(JointAccountType.name),
-      legend = LegendViewModel("").withCssClass("hidden"),
-      items = Seq(
-        RadioItem(
-          content = Text(JointAccountType.HeldByClaimant.message),
-          value = Some(JointAccountType.HeldByClaimant.toString),
-        ),
-        RadioItem(
-          content = Text(JointAccountType.NotHeldByClaimant.message),
-          value = Some(JointAccountType.NotHeldByClaimant.toString),
-        )
-      )
-    )
-  )
-}
-
 @layout(pageTitle = title(form, messages("whatTypeOfAccount.title"))) {
 
   @if(form.errors.nonEmpty) {
-      @govukErrorSummary(
-        ErrorSummaryViewModel(
-          form,
-          errorLinkOverrides = Map(AccountType.name -> "WhatTypeOfAccount.Sole.toString")
-        )
-      )
+      @govukErrorSummary(ErrorSummaryViewModel(form))
   }
 
   @formHelper(
@@ -67,22 +43,25 @@
 
     @govukRadios(
       RadiosViewModel(
-        field = form(AccountType.name),
+        field = form("value"),
         legend = LegendViewModel(messages("whatTypeOfAccount.heading")).asPageHeading(),
         items = Seq(
-          RadioItem(
-            content = Text(AccountType.Sole.message),
-            value = Some(AccountType.Sole.toString)
-          ),
-          RadioItem(
-            content = Text(messages("whatTypeOfAccount.options.joint")),
-            value = Some(AccountType.Joint.toString),
-            conditionalHtml = Some(inner)
-          ),
-          RadioItem(
-            content = Text(AccountType.CreditUnion.message),
-            value = Some(AccountType.CreditUnion.toString)
-          )
+            RadioItem(
+                content = Text(WhatTypeOfAccount.Sole.message),
+                value = Some(WhatTypeOfAccount.Sole.toString)
+            ),
+            RadioItem(
+                content = Text(WhatTypeOfAccount.JointHeldByClaimant.message),
+                value = Some(WhatTypeOfAccount.JointHeldByClaimant.toString)
+            ),
+            RadioItem(
+                content = Text(WhatTypeOfAccount.JointNotHeldByClaimant.message),
+                value = Some(WhatTypeOfAccount.JointNotHeldByClaimant.toString)
+            ),
+            RadioItem(
+                content = Text(WhatTypeOfAccount.CreditUnion.message),
+                value = Some(WhatTypeOfAccount.CreditUnion.toString)
+            )
         )
       )
     )
@@ -92,5 +71,4 @@
     )
 
   }
-
 }

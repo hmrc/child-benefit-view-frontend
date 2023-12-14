@@ -16,9 +16,8 @@
 
 package forms.cob
 
-import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
-import play.api.data.Forms._
-import play.api.data.{Form, Mapping}
+import models.cob.WhatTypeOfAccount
+import play.api.data.Form
 import utils.mappings.Mappings
 
 import javax.inject.Inject
@@ -27,48 +26,6 @@ class WhatTypeOfAccountFormProvider @Inject() extends Mappings {
 
   def apply(): Form[WhatTypeOfAccount] =
     Form(
-      radioButtonMapping.transform(
-        { case (a, b) => bind(a, b) },
-        unbind
-      )
+      "value" -> enumerable[WhatTypeOfAccount]("whatTypeOfAccount.error.accountTypeRequired")
     )
-
-  lazy val radioButtonMapping: Mapping[(AccountType, Option[JointAccountType])] =
-    tuple(
-      AccountType.name ->
-        enumerable[AccountType]("whatTypeOfAccount.error.accountTypeRequired"),
-      JointAccountType.name ->
-        optional(enumerable[JointAccountType]("whatTypeOfAccount.error.jointTypeRequired"))
-    ).verifying(
-      "whatTypeOfAccount.error.jointTypeRequired",
-      {
-        case (AccountType.Sole, _)          => true
-        case (AccountType.Joint, jointType) => jointType.isDefined
-        case (AccountType.CreditUnion, _)   => true
-      }
-    )
-
-  private def bind(
-      accountType:    AccountType,
-      heldByClaimant: Option[JointAccountType]
-  ): WhatTypeOfAccount =
-    (accountType, heldByClaimant) match {
-      case (AccountType.Sole, _) => WhatTypeOfAccount.Sole
-      case (AccountType.Joint, Some(JointAccountType.HeldByClaimant)) =>
-        WhatTypeOfAccount.JointHeldByClaimant
-      case (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant)) =>
-        WhatTypeOfAccount.JointNotHeldByClaimant
-      case (AccountType.CreditUnion, _) => WhatTypeOfAccount.CreditUnion
-    }
-
-  private def unbind(whatAccountType: WhatTypeOfAccount): (AccountType, Option[JointAccountType]) =
-    whatAccountType match {
-      case WhatTypeOfAccount.Sole => (AccountType.Sole, None)
-      case WhatTypeOfAccount.JointHeldByClaimant =>
-        (AccountType.Joint, Some(JointAccountType.HeldByClaimant))
-      case WhatTypeOfAccount.JointNotHeldByClaimant =>
-        (AccountType.Joint, Some(JointAccountType.NotHeldByClaimant))
-      case WhatTypeOfAccount.CreditUnion => (AccountType.CreditUnion, None)
-    }
-
 }

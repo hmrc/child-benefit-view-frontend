@@ -19,7 +19,7 @@ package controllers.cob
 import base.BaseAppSpec
 import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount.JointHeldByClaimant
-import models.cob.{WhatTypeOfAccount, AccountType, JointAccountType}
+import models.cob.WhatTypeOfAccount
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.reset
 import org.mockito.MockitoSugar.when
@@ -148,47 +148,51 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
         }
       }
 
-      "must redirect to the next page when valid data is submitted" in {
-        userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccountStub()
-        val mockSessionRepository = mock[SessionRepository]
+      "must redirect to the next page when a valid what type of account is submitted" - {
+        WhatTypeOfAccount.values.foreach { wTOA =>
+          s"What Type of Account: ${wTOA.toString}" in {
+            userLoggedInIsChildBenefitUser(ninoUser)
+            verifyClaimantBankAccountStub()
+            val mockSessionRepository = mock[SessionRepository]
 
-        val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-          .set(WhatTypeOfAccountPage, WhatTypeOfAccount.Sole)
-          .success
-          .value
+            val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
+              .set(WhatTypeOfAccountPage, wTOA)
+              .success
+              .value
 
-        val application =
-          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
-            .overrides(
-              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-              bind[SessionRepository].toInstance(mockSessionRepository)
-            )
-            .build()
-
-        running(application) {
-          val request =
-            CSRFTokenHelper.addCSRFToken(
-              FakeRequest(POST, whatTypeOfAccountRoute)
-                .withFormUrlEncodedBody(
-                  (AccountType.name -> "sole")
+            val application =
+              applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
+                .overrides(
+                  bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+                  bind[SessionRepository].toInstance(mockSessionRepository)
                 )
-                .withSession("authToken" -> "Bearer 123")
-            )
-          when(mockSessionRepository.get(userAnswersId))
-            .thenReturn(Future.successful(Some(userAnswers)))
+                .build()
 
-          when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
-            .thenReturn(Future.successful(true))
+            running(application) {
+              val request =
+                CSRFTokenHelper.addCSRFToken(
+                  FakeRequest(POST, whatTypeOfAccountRoute)
+                    .withFormUrlEncodedBody(
+                      ("value" -> wTOA.toString)
+                    )
+                    .withSession("authToken" -> "Bearer 123")
+                )
+              when(mockSessionRepository.get(userAnswersId))
+                .thenReturn(Future.successful(Some(userAnswers)))
 
-          val result = route(application, request).value
+              when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
+                .thenReturn(Future.successful(true))
 
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustBe onwardRoute.url
+              val result = route(application, request).value
+
+              status(result) mustEqual SEE_OTHER
+              redirectLocation(result).value mustBe onwardRoute.url
+            }
+          }
         }
       }
 
-      "must fail to validate when no joint account type is selected" in {
+      "must fail to validate when no what type of account is selected" in {
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
@@ -205,9 +209,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
           val request =
             CSRFTokenHelper.addCSRFToken(
               FakeRequest(POST, whatTypeOfAccountRoute)
-                .withFormUrlEncodedBody(
-                  (AccountType.name -> "joint")
-                )
+                .withFormUrlEncodedBody()
                 .withSession("authToken" -> "Bearer 123")
             )
           when(mockSessionRepository.get(userAnswersId))
@@ -218,50 +220,6 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
           status(result) mustEqual BAD_REQUEST
         }
       }
-
-      "must redirect to the next page when a joint account with a joint type is submitted" in {
-        userLoggedInIsChildBenefitUser(ninoUser)
-        verifyClaimantBankAccountStub()
-        val mockSessionRepository = mock[SessionRepository]
-
-        val expectedUserAnswers: UserAnswers = UserAnswers(userAnswersId)
-          .set(WhatTypeOfAccountPage, WhatTypeOfAccount.JointHeldByClaimant)
-          .success
-          .value
-
-        val application =
-          applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers))
-            .overrides(
-              bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-              bind[SessionRepository].toInstance(mockSessionRepository)
-            )
-            .build()
-
-        running(application) {
-          val request =
-            CSRFTokenHelper.addCSRFToken(
-              FakeRequest(POST, whatTypeOfAccountRoute)
-                .withFormUrlEncodedBody(
-                  (AccountType.name      -> "joint"),
-                  (JointAccountType.name -> "held_by_claimant")
-                )
-                .withSession("authToken" -> "Bearer 123")
-            )
-          when(mockSessionRepository.get(userAnswersId))
-            .thenReturn(Future.successful(Some(userAnswers)))
-
-          when(mockSessionRepository.set(userAnswers.copy(data = expectedUserAnswers.data)))
-            .thenReturn(Future.successful(true))
-
-          val result = route(application, request).value
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result).value mustBe onwardRoute.url
-        }
-      }
-
     }
-
   }
-
 }

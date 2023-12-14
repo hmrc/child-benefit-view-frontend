@@ -187,7 +187,7 @@ whatTypeOfAccount.options.joint = Cyfrif ar y cyd
 whatTypeOfAccount.options.creditUnion = Cyfrif undeb credyd
 whatTypeOfAccount.options.jointHeldByClaimant = rydych yn rhannu’r cyfrif â rhywun
 whatTypeOfAccount.options.jointNotHeldByClaimant = nid chi yw deiliad y cyfrif
-whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigolyn’, ‘Cyfrif ar y cyd’ neu ‘Cyfrif undeb credyd’
+whatTypeOfAccount.error.accountTypeRequired = Dewiswch ‘Cyfrif unigolyn’, ‘Cyfrif ar y cyd rydych yn rhannu’r cyfrif â rhywun’, ‘Cyfrif ar y cyd nid chi yw deiliad y cyfrif’ neu ‘Cyfrif undeb credyd’
 whatTypeOfAccount.error.jointTypeRequired = Dewiswch ‘Rydych yn rhannu’r cyfrif â rhywun’ neu ‘Nid chi yw deiliad y cyfrif’
 
 # ---------- Account Not Changed Section --------
