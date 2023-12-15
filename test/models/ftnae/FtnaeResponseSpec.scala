@@ -2,7 +2,6 @@ package models.ftnae
 
 import base.BaseSpec
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalacheck.Gen.alphaStr
 import play.api.libs.json.Json
 
 class FtnaeResponseSpec extends BaseSpec {

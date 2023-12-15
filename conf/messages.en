@@ -186,7 +186,7 @@ whatTypeOfAccount.options.joint = Joint account
 whatTypeOfAccount.options.creditUnion = Credit union account
 whatTypeOfAccount.options.jointHeldByClaimant = you share with someone
 whatTypeOfAccount.options.jointNotHeldByClaimant = not held by you
-whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’, ‘Joint account’ or ‘Credit union account’
+whatTypeOfAccount.error.accountTypeRequired = Select ‘Sole account’, ‘Joint account you share with someone’, ‘Joint account not held by you’ or ‘Credit union account’
 whatTypeOfAccount.error.jointTypeRequired = Select ‘you share with someone’ or ‘not held by you’ 
 
 # ---------- Account Not Changed Section --------

@@ -4,15 +4,15 @@ import base.BaseSpec
 import config.FrontendAppConfig
 import models.UserAnswers
 import org.mockito.Mockito.when
-import org.mongodb.scala.bson.{BsonInt64, BsonString}
+import org.mongodb.scala.bson.BsonString
 import org.mongodb.scala.model.Filters
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.Json
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
-import java.time.{Clock, Instant, ZoneId}
 import java.time.temporal.ChronoUnit
+import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.ExecutionContext
 
 class FtnaePaymentsExtendedPageSessionRepositorySpec
