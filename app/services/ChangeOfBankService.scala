@@ -83,7 +83,7 @@ class ChangeOfBankService @Inject() (
         request.nino.nino,
         "Successful",
         request,
-        viewClaimantInfo
+        claimantInfo
       )
       childBenefitPage
     }
