@@ -230,12 +230,12 @@ class AuditServiceSpec extends BaseSpec {
             (
               "Account Number",
               capturedBankDetails.accountNumber,
-              formattedBankAccountInformation.financialDetails.bankAccountInformation.bankAccountNumber
+              testClaimantBankInformation.financialDetails.bankAccountInformation.bankAccountNumber
             ),
             (
               "Sort Code",
               capturedBankDetails.sortCode,
-              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode
+              testClaimantBankInformation.financialDetails.bankAccountInformation.sortCode
             ),
             (
               "Building Society Roll Number",
@@ -265,7 +265,7 @@ class AuditServiceSpec extends BaseSpec {
             (
               "Sort Code",
               capturedViewDetails.sortCode,
-              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
+              testClaimantBankInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
             )
           )
         ) { (fieldName, fieldValue, expectedResult) =>

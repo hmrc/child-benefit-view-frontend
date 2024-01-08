@@ -106,8 +106,8 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
       formattedClaimantInfo.firstForename.value,
       formattedClaimantInfo.surname.value,
       formattedClaimantInfo.financialDetails.bankAccountInformation.accountHolderName,
-      formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber,
-      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode,
+      claimantInfo.financialDetails.bankAccountInformation.bankAccountNumber,
+      claimantInfo.financialDetails.bankAccountInformation.sortCode,
       formattedClaimantInfo.financialDetails.bankAccountInformation.buildingSocietyRollNumber
     )
 
@@ -116,7 +116,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
         .fold(claimantName)(_.value),
       formattedClaimantInfo.financialDetails.bankAccountInformation.bankAccountNumber
         .fold("Account not found")(_.number),
-      formattedClaimantInfo.financialDetails.bankAccountInformation.sortCode
+      claimantInfo.financialDetails.bankAccountInformation.sortCode
         .fold("Sort not found")(_.value)
     )
 
