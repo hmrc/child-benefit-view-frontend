@@ -49,7 +49,7 @@ class FtnaePaymentsExtendedPageSessionRepositorySpec
   override lazy val repository = new FtnaePaymentsExtendedPageSessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
-    deleteAll()
+    await(deleteAll())
   }
 
   "SessionRepository" - {

@@ -49,7 +49,7 @@ class SessionRepositorySpec
   override lazy val repository = new SessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
-    deleteAll()
+    await(deleteAll())
   }
 
   "SessionRepository" - {
