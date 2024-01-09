@@ -42,7 +42,7 @@ class Navigator @Inject() () {
     case WillCourseBeEmployerProvidedPage =>
       (userAnswers, mode) => navigateWillCourseBeEmployerProvided(userAnswers, mode)
     case LiveWithYouInUKPage => (userAnswers, mode) => navigateLiveWithYouIntheUK(userAnswers, mode)
-    case _ => (_, _) => controllers.routes.ServiceUnavailableController.onPageLoad
+    case _                   => (_, _) => controllers.routes.ServiceUnavailableController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {

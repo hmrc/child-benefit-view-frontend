@@ -50,9 +50,6 @@ class SessionRepositorySpec
 
   override protected def beforeEach() = {
     await(deleteAll())
-
-    val opt: Option[String] = Some("dfgjklfhd")
-    val x: Unit = opt.fold(())(s => s.charAt(3))
   }
 
   "SessionRepository" - {
