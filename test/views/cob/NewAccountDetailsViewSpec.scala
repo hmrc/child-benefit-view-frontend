@@ -24,21 +24,21 @@ import models.NormalMode
 import models.cob.WhatTypeOfAccount
 
 class NewAccountDetailsViewSpec extends ViewSpecBase {
-    "New Account Details View" should {
-        "have autocomplete enabled on the name input" in {
-            val form = inject[NewAccountDetailsFormProvider].apply()
-            val view = inject[NewAccountDetailsView].apply(form, NormalMode, WhatTypeOfAccount.Sole)(request, messages)
-            val dom = Jsoup.parse(view.toString())
-            val input = dom.getElementsByAttributeValue("name", "newAccountHoldersName")
-            input.attr("autocomplete") mustBe "name"
-        }
-        
-        "disable spellchecking on the name input" in {
-            val form = inject[NewAccountDetailsFormProvider].apply()
-            val view = inject[NewAccountDetailsView].apply(form, NormalMode, WhatTypeOfAccount.Sole)(request, messages)
-            val dom = Jsoup.parse(view.toString())
-            val input = dom.getElementsByAttributeValue("name", "newAccountHoldersName")
-            input.attr("spellcheck") mustBe "false"
-        }
+  "New Account Details View" should {
+    "have autocomplete enabled on the name input" in {
+      val form  = inject[NewAccountDetailsFormProvider].apply()
+      val view  = inject[NewAccountDetailsView].apply(form, NormalMode, WhatTypeOfAccount.Sole)(request, messages)
+      val dom   = Jsoup.parse(view.toString())
+      val input = dom.getElementsByAttributeValue("name", "newAccountHoldersName")
+      input.attr("autocomplete") mustBe "name"
     }
+
+    "disable spellchecking on the name input" in {
+      val form  = inject[NewAccountDetailsFormProvider].apply()
+      val view  = inject[NewAccountDetailsView].apply(form, NormalMode, WhatTypeOfAccount.Sole)(request, messages)
+      val dom   = Jsoup.parse(view.toString())
+      val input = dom.getElementsByAttributeValue("name", "newAccountHoldersName")
+      input.attr("spellcheck") mustBe "false"
+    }
+  }
 }
