@@ -265,7 +265,7 @@ class AuditServiceSpec extends BaseSpec {
             (
               "Sort Code",
               capturedViewDetails.sortCode,
-              testClaimantBankInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
+              formattedBankAccountInformation.financialDetails.bankAccountInformation.sortCode.map(_.value).get
             )
           )
         ) { (fieldName, fieldValue, expectedResult) =>
