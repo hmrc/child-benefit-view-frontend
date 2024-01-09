@@ -26,9 +26,10 @@ A series of composed actions that will filter messages based on feature flags th
 Identifier action, allowing for further transformation and composition as required
  */
 class FeatureFlagComposedActions @Inject() (
-    controllerComponents: MessagesControllerComponents,
-    featureFlags:         FeatureFlagActionFactory,
-    identify:             IdentifierAction
+    controllerComponents:  MessagesControllerComponents,
+    featureFlags:          FeatureFlagActionFactory,
+    identify:              IdentifierAction,
+    ftnaeIdentifierAction: FtnaeIdentifierAction
 ) {
   private def actionStart: ActionBuilder[MessagesRequest, AnyContent] =
     controllerComponents.messagesActionBuilder.compose(controllerComponents.actionBuilder)
@@ -38,9 +39,7 @@ class FeatureFlagComposedActions @Inject() (
 
   def changeBankAction = featureAction(featureFlags.changeOfBankEnabled)
 
-  def ftnaeAction = featureAction(featureFlags.ftnaeEnabled)
-
-  def addChildAction = featureAction(featureFlags.addChildEnabled)
+  def ftnaeAction = actionStart andThen ftnaeIdentifierAction
 
   def hicbcAction = featureAction(featureFlags.hicbcEnabled)
 }

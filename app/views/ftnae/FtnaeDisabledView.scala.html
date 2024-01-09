@@ -23,7 +23,7 @@
     para: ParagraphBody
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(hideWrapperBanner: Boolean)(implicit request: Request[_], messages: Messages)
 
 @para2Link = @{link( id = "continuing",
     text = messages("ftnaeDisabled.p2.linkText"),
@@ -31,7 +31,7 @@
     newTab = false
 )}
 
-@layout(pageTitle = titleNoForm(messages("ftnaeDisabled.title")), showBackLink = false) {
+@layout(pageTitle = titleNoForm(messages("ftnaeDisabled.title")), showBackLink = false, hideBanner = hideWrapperBanner) {
 
     @heading(messages("ftnaeDisabled.heading"))
 
