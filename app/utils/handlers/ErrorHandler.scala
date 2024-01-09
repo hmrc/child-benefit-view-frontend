@@ -68,7 +68,7 @@ class ErrorHandler @Inject() (
       case FtnaeNoCHBAccountError =>
         logger.warn(
           logMessage(
-            "Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
+            s"Ftnae No Chb Account error: ${FtnaeNoCHBAccountError.message}",
             Some(FtnaeNoCHBAccountError.statusCode),
             auditOrigin
           )

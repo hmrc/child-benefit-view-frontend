@@ -26,7 +26,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.helpers
-import utils.helpers.YoungPersonTitleHelper
 import utils.navigation.Navigator
 import views.html.ftnae.WillCourseBeEmployerProvidedView
 

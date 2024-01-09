@@ -66,7 +66,7 @@ object ConfirmNewAccountDetailsController {
       getAnswerSummary[WhatTypeOfAccount](
         userAnswers.get(WhatTypeOfAccountPage),
         "accountType",
-        a => a.message,
+        a => a.message(),
         routes.WhatTypeOfAccountController.onPageLoad(CheckMode)
       ),
       getAnswerSummary[NewAccountDetails](

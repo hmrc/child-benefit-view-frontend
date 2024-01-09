@@ -34,12 +34,12 @@ package config
 
 import com.google.inject.AbstractModule
 import controllers.actions._
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 import views.html.templates.{LayoutProvider, NewLayoutProvider, OldLayoutProvider}
 
 import java.time.{Clock, ZoneOffset}
 
-class Module(environment: Environment, config: Configuration) extends AbstractModule {
+class Module(config: Configuration) extends AbstractModule {
 
   val scaWrapperEnabled: Boolean = config.getOptional[Boolean]("features.sca-wrapper-enabled").getOrElse(false)
 
