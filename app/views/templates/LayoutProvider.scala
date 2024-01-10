@@ -37,7 +37,8 @@ trait LayoutProvider {
       dataLayer:                      Option[DataLayer] = None,
       removePhoneNumbersAsHyperlinks: Boolean = false,
       scripts:                        Option[Html] = None,
-      stylesheets:                    Option[Html] = None
+      stylesheets:                    Option[Html] = None,
+      hideBanner:                     Boolean = false
   )(contentBlock:                     Html)(implicit
       request:                        Request[_],
       messages:                       Messages
@@ -55,7 +56,8 @@ class OldLayoutProvider @Inject() (layout: views.html.templates.Layout) extends 
       dataLayer:                      Option[DataLayer],
       removePhoneNumbersAsHyperlinks: Boolean,
       scripts:                        Option[Html],
-      stylesheets:                    Option[Html]
+      stylesheets:                    Option[Html],
+      hideBanner:                     Boolean
   )(contentBlock:                     Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     layout(pageTitle, showBackLink, showSignOut, timeout, dataLayer, removePhoneNumbersAsHyperlinks)(contentBlock)
   }
@@ -77,7 +79,8 @@ class NewLayoutProvider @Inject() (
       dataLayer:                      Option[DataLayer],
       removePhoneNumbersAsHyperlinks: Boolean,
       scripts:                        Option[Html],
-      stylesheets:                    Option[Html]
+      stylesheets:                    Option[Html],
+      hideBanner:                     Boolean
   )(contentBlock:                     Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
     wrapperService.layout(
       disableSessionExpired = !timeout,
@@ -89,7 +92,7 @@ class NewLayoutProvider @Inject() (
       fullWidth = false,
       bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
       showSignOutInHeader = false,
-      hideMenuBar = false
+      hideMenuBar = hideBanner
     )(messages, HeaderCarrierConverter.fromRequest(request), request)
   }
 }

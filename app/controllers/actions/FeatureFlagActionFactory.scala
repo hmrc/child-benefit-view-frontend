@@ -74,10 +74,7 @@ class FeatureFlagActionFactory @Inject() (
     }
 
   val changeOfBankEnabled: FeatureFlagAction = whenEnabled("change-of-bank")
-  val ftnaeEnabled: FeatureFlagAction =
-    whenEnabled("ftnae", Some((request, messages) => ftnaeDisabledView()(request, messages)))
-  val addChildEnabled: FeatureFlagAction = whenEnabled("add-child")
-  val hicbcEnabled:    FeatureFlagAction = whenEnabled("hicbc")
+  val hicbcEnabled:        FeatureFlagAction = whenEnabled("hicbc")
 }
 
 trait FeatureFlagAction extends ActionFunction[MessagesRequest, MessagesRequest]
