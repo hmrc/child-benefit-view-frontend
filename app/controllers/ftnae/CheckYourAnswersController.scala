@@ -69,7 +69,7 @@ class CheckYourAnswersController @Inject() (
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 
   def onPageLoad(): Action[AnyContent] = {
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData) { implicit request =>
       {
         val summaryRows = buildSummaryRows(request)
 

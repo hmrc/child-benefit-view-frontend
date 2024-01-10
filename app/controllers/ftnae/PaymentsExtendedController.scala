@@ -44,7 +44,7 @@ class PaymentsExtendedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData).async { implicit request =>
       val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
 
       ftnaeService

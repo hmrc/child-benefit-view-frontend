@@ -44,7 +44,7 @@ class NotEntitledCourseEmployerProvidedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData) { implicit request =>
       auditService.auditFtnaeKickOut(
         request.nino.nino,
         "Success",
