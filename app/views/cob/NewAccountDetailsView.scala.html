@@ -69,6 +69,8 @@
                 field = form("newAccountHoldersName"),
                 label = LabelViewModel(messages("newAccountDetails.newAccountHoldersName"))
             )
+            .withAutocomplete("name")
+            .withSpellcheck(false)
             .withWidth(Full)
             .withHint(
               HintViewModel(
