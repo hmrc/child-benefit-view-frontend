@@ -56,11 +56,11 @@ object AuthStubs {
         )
     )
 
-  def userNotLoggedIn(error: String): StubMapping =
+  def userNotLoggedIn(): StubMapping =
     stubFor(
       post(urlEqualTo("/auth/authorise"))
         .willReturn(
-          serverError.withHeader("WWW-Authenticate", s"""MDTP detail="$error"""")
+          unauthorized.withHeader("WWW-Authenticate", s"""MDTP detail="Session record not found"""")
         )
     )
 }

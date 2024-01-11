@@ -5,8 +5,8 @@
         </encoder>
     </appender>
 
-    <logger name="controllers.actions" level="INFO" />
-    <logger name="WireMock" level="ERROR" />
+    <logger name="controllers.actions" level="WARN" />
+    <logger name="WireMock" level="WARN" />
     
     <root level="OFF">
         <appender-ref ref="CONSOLE"/>

@@ -34,6 +34,15 @@ object TestData {
       |}
       |""".stripMargin
 
+  val userWithNoNino: String =
+    """
+      |{
+      |	"affinityGroup": "Individual",
+      |	"internalId": "Int-8612ba91-5581-411d-9d32-fb2de937a565",
+      | "confidenceLevel": "200"
+      |}
+      |""".stripMargin
+
   def invalidJsonResponse: String =
     """
       | Invalid: This is not valid Json
