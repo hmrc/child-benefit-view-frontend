@@ -21,6 +21,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.CannotFindYoungPersonView
+import utils.TestData
+import stubs.AuthStubs
 
 class CannotFindYoungPersonControllerSpec extends BaseAppSpec {
 
@@ -31,6 +33,8 @@ class CannotFindYoungPersonControllerSpec extends BaseAppSpec {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

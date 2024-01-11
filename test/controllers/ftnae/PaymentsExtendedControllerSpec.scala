@@ -40,6 +40,12 @@ import views.html.ftnae.PaymentsExtendedView
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
+import stubs.AuthStubs
+import utils.TestData
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.sca.config.AppConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import com.github.tomakehurst.wiremock.client.WireMock
 
 class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -84,6 +90,9 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
+
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -123,7 +132,8 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

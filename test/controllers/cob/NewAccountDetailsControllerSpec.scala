@@ -345,6 +345,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           ).build()
 
           running(application) {
+            userLoggedInIsChildBenefitUser(ninoUser)
             val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
 
             val result = route(application, request).value

@@ -34,6 +34,8 @@ import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.HowManyYearsView
 
 import scala.concurrent.Future
+import utils.TestData
+import stubs.AuthStubs
 
 class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -61,6 +63,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, howManyYearsRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -88,7 +92,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, howManyYearsRoute)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[HowManyYearsView]
 
         val result = route(application, request).value
@@ -121,7 +126,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, howManyYearsRoute)
             .withFormUrlEncodedBody(("value", HowManyYears.values.head.toString))
-
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
@@ -139,7 +145,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, howManyYearsRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
-
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
         val view = application.injector.instanceOf[HowManyYearsView]
@@ -160,7 +167,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, howManyYearsRoute)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
@@ -176,7 +184,8 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, howManyYearsRoute)
             .withFormUrlEncodedBody(("value", HowManyYears.values.head.toString))
-
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

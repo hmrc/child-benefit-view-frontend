@@ -85,7 +85,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
           running(application) {
             val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
               .withSession("authToken" -> "Bearer 123")
-
+            userLoggedInIsChildBenefitUser(ninoUser)
             val result = route(application, request).value
 
             status(result) mustEqual resultStatus

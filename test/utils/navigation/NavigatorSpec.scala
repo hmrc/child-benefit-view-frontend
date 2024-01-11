@@ -46,7 +46,7 @@ class NavigatorSpec extends BaseAppSpec {
       userAnswers: UserAnswers,
       addendum:    Option[String],
       mode:        Mode
-  ) {
+  ): Unit = {
     s"must go from the ${fromPage.toString} page to the $toPageName page${addendum.fold("")(a => s" $a")}" in {
       navigator.nextPage(
         fromPage,

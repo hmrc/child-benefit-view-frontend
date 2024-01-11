@@ -33,6 +33,8 @@ import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.SchoolOrCollegeView
 
 import scala.concurrent.Future
+import stubs.AuthStubs
+import utils.TestData
 
 class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -54,6 +56,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, schoolOrCollegeRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -75,6 +79,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, schoolOrCollegeRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val view = application.injector.instanceOf[SchoolOrCollegeView]
 
@@ -107,6 +113,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, schoolOrCollegeRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -134,6 +142,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, schoolOrCollegeRoute)
             .withFormUrlEncodedBody(("value", "false"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -150,6 +160,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, schoolOrCollegeRoute)
             .withFormUrlEncodedBody(("value", ""))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -171,6 +183,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, schoolOrCollegeRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -187,6 +201,8 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, schoolOrCollegeRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

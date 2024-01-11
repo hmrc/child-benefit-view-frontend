@@ -43,6 +43,8 @@ import views.html.ErrorTemplate
 import views.html.cob.AccountChangedView
 
 import scala.concurrent.{ExecutionContext, Future}
+import stubs.AuthStubs
+import utils.TestData
 
 class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
   val mockSessionRepository = mock[SessionRepository]
@@ -132,6 +134,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
                   running(application) {
                     val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                       .withSession("authToken" -> "Bearer 123")
+                    AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
                     val result = route(application, request).value
 
@@ -155,7 +158,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
               )(any[ExecutionContext], any[HeaderCarrier])
             ).thenReturn(CBEnvelope.fromError(ConnectorError(INTERNAL_SERVER_ERROR, "Unit Test Error")))
 
-            val application = applicationBuilder(
+            val application = applicationBuilderWithVerificationActions(
               config,
               userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get)
             ).overrides(
@@ -166,6 +169,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                 .withSession("authToken" -> "Bearer 123")
+              AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
               val result = route(application, request).value
 
@@ -185,7 +189,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope.fromError(ConnectorError(INTERNAL_SERVER_ERROR, "Unit Test Error")))
 
-            val application = applicationBuilder(
+            val application = applicationBuilderWithVerificationActions(
               config,
               userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get)
             ).overrides(
@@ -196,6 +200,8 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                 .withSession("authToken" -> "Bearer 123")
+
+              AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
               val result = route(application, request).value
 

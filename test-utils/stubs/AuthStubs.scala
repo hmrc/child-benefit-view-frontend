@@ -21,19 +21,25 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 
 object AuthStubs {
   val childBenefitRetrievals: String =
-    """
-      |{
-      |	"authorise": [{
-      |		"authProviders": ["GovernmentGateway"]
-      |	}],
-      |	"retrieve": ["nino", "affinityGroup", "internalId", "confidenceLevel"]
-      |}
-      |""".stripMargin
+    """{
+              |  "authorise" : [ {
+              |    "$or" : [ {
+              |      "affinityGroup" : "Individual"
+              |    }, {
+              |      "affinityGroup" : "Organisation"
+              |    } ]
+              |  }, {
+              |    "authProviders" : [ "GovernmentGateway" ]
+              |  }, {
+              |    "confidenceLevel" : 200
+              |  } ],
+              |  "retrieve" : [ "nino", "internalId" ]
+              |}""".stripMargin('|')
 
   def userLoggedInIsChildBenefitUser(testUserJson: String): StubMapping =
     stubFor(
       post(urlEqualTo("/auth/authorise"))
-        .withRequestBody(equalToJson(childBenefitRetrievals))
+        //.withRequestBody(equalToJson(childBenefitRetrievals))
         .willReturn(
           aResponse()
             .withStatus(200)

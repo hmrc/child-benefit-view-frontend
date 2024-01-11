@@ -36,6 +36,8 @@ import views.html.ftnae.LiveWithYouInUKView
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import stubs.AuthStubs
+import utils.TestData
 
 class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -59,6 +61,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -80,7 +84,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[LiveWithYouInUKView]
 
         val result = route(application, request).value
@@ -113,6 +118,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -142,6 +149,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "false"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -178,6 +187,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", ""))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -199,6 +210,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -215,6 +228,8 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

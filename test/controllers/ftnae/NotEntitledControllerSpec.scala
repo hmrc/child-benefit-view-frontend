@@ -21,6 +21,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.NotEntitledView
+import utils.TestData
+import stubs.AuthStubs
 
 class NotEntitledControllerSpec extends BaseAppSpec {
 
@@ -32,6 +34,8 @@ class NotEntitledControllerSpec extends BaseAppSpec {
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.NotEntitledController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
