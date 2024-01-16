@@ -27,7 +27,7 @@ import models.errors.{CBError, ChangeOfBankValidationError, ConnectorError}
 import models.requests.{DataRequest, OptionalDataRequest}
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar.{verify, when}
+import org.mockito.Mockito.{verify, when}
 import org.scalacheck.Arbitrary.arbitrary
 import play.api.http.Status.{NOT_FOUND, NOT_IMPLEMENTED}
 import play.api.i18n.Messages

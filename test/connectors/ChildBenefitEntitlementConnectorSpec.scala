@@ -20,7 +20,7 @@ import base.BaseAppSpec
 import config.FrontendAppConfig
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBError, ConnectorError}
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr

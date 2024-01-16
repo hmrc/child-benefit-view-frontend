@@ -17,7 +17,7 @@
 package views
 
 import base.BaseSpec
-import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.i18n.{Lang, Messages}
 
