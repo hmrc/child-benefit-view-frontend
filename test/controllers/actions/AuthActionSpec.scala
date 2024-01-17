@@ -49,9 +49,13 @@ class AuthActionSpec extends BaseAppSpec {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), appConfig, bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(
+            new FakeFailingAuthConnector(new MissingBearerToken),
+            appConfig,
+            bodyParsers
+          )
           val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+          val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value must startWith(appConfig.loginUrl)
@@ -67,9 +71,13 @@ class AuthActionSpec extends BaseAppSpec {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), appConfig, bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(
+            new FakeFailingAuthConnector(new BearerTokenExpired),
+            appConfig,
+            bodyParsers
+          )
           val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+          val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value must startWith(appConfig.loginUrl)
@@ -86,9 +94,13 @@ class AuthActionSpec extends BaseAppSpec {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), appConfig, bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(
+            new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
+            appConfig,
+            bodyParsers
+          )
           val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+          val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value must startWith(appConfig.ivUpliftUrl)
@@ -106,9 +118,13 @@ class AuthActionSpec extends BaseAppSpec {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), appConfig, bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(
+            new FakeFailingAuthConnector(new UnsupportedAuthProvider),
+            appConfig,
+            bodyParsers
+          )
           val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+          val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe INTERNAL_SERVER_ERROR
         }
@@ -125,9 +141,13 @@ class AuthActionSpec extends BaseAppSpec {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), appConfig, bodyParsers)
+          val authAction = new AuthenticatedIdentifierAction(
+            new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
+            appConfig,
+            bodyParsers
+          )
           val controller = new Harness(authAction)
-          val result = controller.onPageLoad()(FakeRequest())
+          val result     = controller.onPageLoad()(FakeRequest())
 
           status(result) mustBe INTERNAL_SERVER_ERROR
         }
@@ -142,8 +162,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = application.injector.instanceOf[AuthenticatedIdentifierAction]
           AuthStubs.userLoggedInIsChildBenefitUser(TestData.userWithNoNino)
           val controller = new Harness(authAction)
-          val req = FakeRequest().withSession("authToken" -> "Bearer 123")
-          val result = controller.onPageLoad()(req)
+          val req        = FakeRequest().withSession("authToken" -> "Bearer 123")
+          val result     = controller.onPageLoad()(req)
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value must be(controllers.routes.UnauthorisedController.onPageLoad.url)
@@ -153,9 +173,12 @@ class AuthActionSpec extends BaseAppSpec {
   }
 }
 
-class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
+class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {
   val serviceUrl: String = ""
 
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+      hc:                              HeaderCarrier,
+      ec:                              ExecutionContext
+  ): Future[A] =
     Future.failed(exceptionToReturn)
 }
