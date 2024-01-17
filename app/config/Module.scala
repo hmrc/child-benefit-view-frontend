@@ -53,6 +53,7 @@ class Module(environment: Environment, config: Configuration) extends AbstractMo
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
+    bind(classOf[FtnaeIdentifierAction]).to(classOf[AuthenticatedFtnaeIdentifierAction]).asEagerSingleton()
     bind(classOf[VerifyBarNotLockedAction]).to(classOf[VerifyBarNotLockedActionImpl]).asEagerSingleton()
     bind(classOf[VerifyHICBCAction]).to(classOf[VerifyHICBCActionImpl]).asEagerSingleton()
     if (scaWrapperEnabled) {
