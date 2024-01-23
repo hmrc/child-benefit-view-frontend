@@ -22,7 +22,7 @@ import models.CBEnvelope
 import models.common.NationalInsuranceNumber
 import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank}
 import models.requests.IdentifierRequest
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import play.api.http.Status
 import play.api.mvc.Request
 

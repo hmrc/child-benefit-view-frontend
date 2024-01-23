@@ -1,23 +1,21 @@
 import play.sbt.routes.RoutesKeys
 import sbt.Def
 import scoverage.ScoverageKeys
+import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 lazy val appName: String = "child-benefit-view-frontend"
 
-ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always // Resolves versions conflict
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "2.13.12"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings): _*)
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(itSettings): _*)
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.10",
-    name         := appName,
+    name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models.{NormalMode, Mode, CheckMode}",
       "uk.gov.hmrc.play.bootstrap.binders.RedirectUrl"
@@ -48,7 +46,8 @@ lazy val root = (project in file("."))
     ),
     libraryDependencies ++= AppDependencies(),
     scalacOptions ++= Seq(
-      "-Ypatmat-exhaust-depth", "40",
+      "-Ypatmat-exhaust-depth",
+      "40",
       "-feature",
       "-deprecation",
       "-Ywarn-dead-code",
@@ -86,14 +85,7 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )
 
-lazy val itSettings = Defaults.itSettings ++ Seq(
-  unmanagedSourceDirectories := Seq(
-    baseDirectory.value / "it",
-    baseDirectory.value / "test-utils"
-  ),
-  unmanagedResourceDirectories := Seq(
-    baseDirectory.value / "it" / "resources"
-  ),
-  parallelExecution := false,
-  fork              := true
-)
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings())

@@ -21,7 +21,7 @@ import config.FrontendAppConfig
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr

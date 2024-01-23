@@ -24,8 +24,7 @@ import models.cob.{NewAccountDetails, UpdateBankDetailsResponse, WhatTypeOfAccou
 import models.requests.BaseDataRequest
 import models.viewmodels.govuk.summarylist._
 import models.{CBEnvelope, NormalMode, UserAnswers}
-import org.mockito.Mockito.reset
-import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.{reset, when}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
