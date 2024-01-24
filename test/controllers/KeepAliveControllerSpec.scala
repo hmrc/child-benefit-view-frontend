@@ -19,7 +19,7 @@ package controllers
 import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.mockito.Mockito.{when, verify,withSettings}
+import org.mockito.Mockito.{when, verify, withSettings}
 import repositories.SessionRepository
 import play.api.inject.bind
 import scala.concurrent.Future
@@ -28,41 +28,40 @@ import stubs.AuthStubs
 import utils.TestData
 import org.mockito.ArgumentMatchers.anyString
 
-
 class KeepAliveControllerSpec extends BaseAppSpec {
-    "Should refresh the userAnswers" in {
-      AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
+  "Should refresh the userAnswers" in {
+    AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
-      val mockSessionRepo = mock[SessionRepository]
-      when(mockSessionRepo.keepAlive(anyString)).thenReturn(Future.successful(true))
-      val userAnswers = UserAnswers("TEST_ID")
+    val mockSessionRepo = mock[SessionRepository]
+    when(mockSessionRepo.keepAlive(anyString)).thenReturn(Future.successful(true))
+    val userAnswers = UserAnswers("TEST_ID")
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers))
-                            .overrides(bind[SessionRepository].toInstance(mockSessionRepo))
-                            .build()
+    val application = applicationBuilder(userAnswers = Some(userAnswers))
+      .overrides(bind[SessionRepository].toInstance(mockSessionRepo))
+      .build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
-          .withSession(("authToken", "Bearer 123"))
-        val result = route(application, request).value
+    running(application) {
+      val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
+        .withSession(("authToken", "Bearer 123"))
+      val result = route(application, request).value
 
-        status(result) mustEqual OK
+      status(result) mustEqual OK
 
-        verify(mockSessionRepo).keepAlive("TEST_ID")
-      }
+      verify(mockSessionRepo).keepAlive("TEST_ID")
     }
+  }
 
-    "Should return Ok when there are no user answers" in {
-      AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
+  "Should return Ok when there are no user answers" in {
+    AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
-      val application = applicationBuilder(userAnswers = None).build()
+    val application = applicationBuilder(userAnswers = None).build()
 
-      running(application) {
-        val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
-          .withSession(("authToken", "Bearer 123"))
-        val result = route(application, request).value
+    running(application) {
+      val request = FakeRequest(GET, routes.KeepAliveController.keepAlive.url)
+        .withSession(("authToken", "Bearer 123"))
+      val result = route(application, request).value
 
-        status(result) mustEqual OK
-      }
+      status(result) mustEqual OK
     }
+  }
 }

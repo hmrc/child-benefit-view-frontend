@@ -32,7 +32,7 @@ import views.html.components.Heading
 import play.api.test.FakeRequest
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-class WrapperSpec extends BaseAppSpec with TableDrivenPropertyChecks{
+class WrapperSpec extends BaseAppSpec with TableDrivenPropertyChecks {
 
   "When the wrapper is disabled the old fallback layout is used" in {
     userLoggedInIsChildBenefitUser(ninoUser)
