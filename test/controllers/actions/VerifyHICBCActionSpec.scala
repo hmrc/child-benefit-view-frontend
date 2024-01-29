@@ -22,7 +22,7 @@ import models.changeofbank.{ClaimantBankAccountInformation, ClaimantBankInformat
 import models.common.{AdjustmentReasonCode, FirstForename, NationalInsuranceNumber, Surname}
 import models.errors.CBError
 import models.requests.IdentifierRequest
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import play.api.mvc.Request
 
 import java.time.LocalDate

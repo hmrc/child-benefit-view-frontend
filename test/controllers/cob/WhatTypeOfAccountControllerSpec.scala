@@ -21,8 +21,7 @@ import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount.JointHeldByClaimant
 import models.cob.WhatTypeOfAccount
 import models.{NormalMode, UserAnswers}
-import org.mockito.Mockito.reset
-import org.mockito.MockitoSugar.when
+import org.mockito.Mockito.{reset, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.cob.WhatTypeOfAccountPage
 import play.api.data.Form

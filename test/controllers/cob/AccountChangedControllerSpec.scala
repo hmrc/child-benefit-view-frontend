@@ -23,7 +23,7 @@ import models.errors.ConnectorError
 import models.requests.BaseDataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.MockitoSugar._
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.cob.NewAccountDetailsPage
