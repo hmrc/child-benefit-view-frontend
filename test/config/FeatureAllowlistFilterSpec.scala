@@ -23,7 +23,7 @@ import play.api.mvc.{Headers, RequestHeader, Result}
 
 import scala.concurrent.Future
 
-private class FeatureAllowlistFilterSpec extends BaseAppSpec {
+class FeatureAllowlistFilterSpec extends BaseAppSpec {
   val rh: RequestHeader = mock[RequestHeader]
 
   val expectedResult: Result                          = Ok("Unit test block result")
