@@ -34,10 +34,12 @@ class AuthControllerSpec extends BaseAppSpec {
     "on SignOut redirect to /gg/sign-out with continue to the feedback survey" in {
       userLoggedInIsChildBenefitUser(ninoUser)
       val application = applicationBuilder()
-        .configure(Map(
-          "urls.signOut" -> "Blah blah blah",
-      "microservice.services.feedback-frontend.url" -> "The exit survey"
-        ))
+        .configure(
+          Map(
+            "urls.signOut"                                -> "Blah blah blah",
+            "microservice.services.feedback-frontend.url" -> "The exit survey"
+          )
+        )
         .build()
 
       running(application) {
@@ -56,10 +58,12 @@ class AuthControllerSpec extends BaseAppSpec {
 
     "on SignOut without survey redirect to /gg/sign-out without continue to the feedback survey" in {
       userLoggedInIsChildBenefitUser(ninoUser)
-      val application     = applicationBuilder()
-        .configure(Map(
-          "urls.signOut" -> "Blah blah blah"
-        ))
+      val application = applicationBuilder()
+        .configure(
+          Map(
+            "urls.signOut" -> "Blah blah blah"
+          )
+        )
         .build()
 
       val request = FakeRequest(GET, routes.AuthController.signOutNoSurvey().url)
