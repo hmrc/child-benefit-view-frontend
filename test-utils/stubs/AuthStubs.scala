@@ -39,7 +39,7 @@ object AuthStubs {
   def userLoggedInIsChildBenefitUser(testUserJson: String): StubMapping =
     stubFor(
       post(urlEqualTo("/auth/authorise"))
-        //.withRequestBody(equalToJson(childBenefitRetrievals))
+        .withRequestBody(equalToJson(childBenefitRetrievals))
         .willReturn(
           aResponse()
             .withStatus(200)
