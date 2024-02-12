@@ -35,6 +35,8 @@ import views.html.ftnae.WillCourseBeEmployerProvidedView
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import utils.TestData
+import stubs.AuthStubs
 
 class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
@@ -67,6 +69,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -96,6 +100,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         .build()
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val view = application.injector.instanceOf[WillCourseBeEmployerProvidedView]
 
@@ -129,6 +135,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         val request =
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -157,6 +165,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         val request =
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "false"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -205,6 +215,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         val request =
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", ""))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -226,6 +238,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -242,6 +256,8 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         val request =
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

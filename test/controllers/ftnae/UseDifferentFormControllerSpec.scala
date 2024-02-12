@@ -21,6 +21,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.UseDifferentFormView
+import utils.TestData
+import stubs.AuthStubs
 
 class UseDifferentFormControllerSpec extends BaseAppSpec {
 
@@ -32,7 +34,8 @@ class UseDifferentFormControllerSpec extends BaseAppSpec {
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.UseDifferentFormController.onPageLoad().url)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[UseDifferentFormView]

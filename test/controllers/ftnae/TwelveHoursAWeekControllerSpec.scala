@@ -36,6 +36,8 @@ import views.html.ftnae.TwelveHoursAWeekView
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import utils.TestData
+import stubs.AuthStubs
 
 class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -57,6 +59,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -78,7 +82,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[TwelveHoursAWeekView]
 
         val result = route(application, request).value
@@ -110,7 +115,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "true"))
-
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
@@ -137,6 +143,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "false"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -172,6 +180,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", ""))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -193,6 +203,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -209,6 +221,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
         val request =
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

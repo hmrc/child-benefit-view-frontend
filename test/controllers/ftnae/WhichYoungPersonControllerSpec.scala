@@ -40,6 +40,8 @@ import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
+import stubs.AuthStubs
+import utils.TestData
 
 class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -143,8 +145,10 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
 
       running(application) {
         val request =
-          FakeRequest(GET, whichYoungPersonRoute(NormalMode)).withFormUrlEncodedBody(("value", "First Name Surname"))
-
+          FakeRequest(GET, whichYoungPersonRoute(NormalMode))
+            .withFormUrlEncodedBody(("value", "First Name Surname"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[WhichYoungPersonView]
 
         val result = route(application, request).value
@@ -184,6 +188,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         val request =
           FakeRequest(POST, whichYoungPersonRoute(NormalMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -216,6 +222,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         val request =
           FakeRequest(POST, whichYoungPersonRoute(CheckMode))
             .withFormUrlEncodedBody(("value", "A Different Name"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         await(route(application, request).value)
 
@@ -247,6 +255,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         val request =
           FakeRequest(POST, whichYoungPersonRoute(CheckMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         await(route(application, request).value)
 

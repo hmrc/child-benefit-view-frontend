@@ -303,6 +303,22 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
         }
       }
 
+      "must redirect to service unavailable for a GET if no userAnswers is found at all" in {
+        userLoggedInIsChildBenefitUser(ninoUser)
+
+        val application =
+          applicationBuilderWithVerificationActions(config, userAnswers = None).build()
+
+        running(application) {
+          val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
+
+          val result = route(application, request).value
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe controllers.routes.ServiceUnavailableController.onPageLoad.url
+        }
+      }
+
       "must return BAD_REQUEST for a POST if no existing data is found" in {
         userLoggedInIsChildBenefitUser(ninoUser)
 
@@ -345,6 +361,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           ).build()
 
           running(application) {
+            userLoggedInIsChildBenefitUser(ninoUser)
             val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
 
             val result = route(application, request).value

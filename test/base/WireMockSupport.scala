@@ -23,6 +23,7 @@ import org.scalatest.{Assertion, BeforeAndAfterAll, BeforeAndAfterEach}
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.FiniteDuration
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier
 
 trait WireMockSupport extends BaseSpec with BeforeAndAfterEach with BeforeAndAfterAll {
 
@@ -38,7 +39,7 @@ trait WireMockSupport extends BaseSpec with BeforeAndAfterEach with BeforeAndAft
   private val stubHost = "localhost"
 
   protected val wiremockBaseUrl: String = s"http://localhost:$wiremockPort"
-  private val wireMockServer = new WireMockServer(wireMockConfig().port(wiremockPort))
+  private val wireMockServer = new WireMockServer(wireMockConfig().port(wiremockPort).notifier(new Slf4jNotifier(true)))
 
   def afterReset(block: => Assertion): Assertion = {
     WireMock.reset()

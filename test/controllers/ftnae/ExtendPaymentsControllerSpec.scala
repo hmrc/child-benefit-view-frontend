@@ -36,6 +36,8 @@ import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.ExtendPaymentsView
 
 import scala.concurrent.{ExecutionContext, Future}
+import utils.TestData
+import stubs.AuthStubs
 
 class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -77,6 +79,8 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -104,6 +108,8 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -126,7 +132,8 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
 
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
-
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER

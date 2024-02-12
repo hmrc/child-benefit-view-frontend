@@ -29,7 +29,6 @@ import views.ViewUtils
 import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 

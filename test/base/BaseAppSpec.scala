@@ -33,7 +33,6 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
       .configure(defaultWireMockConfig ++ config)
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
-        bind[IdentifierAction].to[FakeIdentifierAction],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[CBDataRetrievalAction].toInstance(new FakeCobDataRetrievalAction(userAnswers))
       )

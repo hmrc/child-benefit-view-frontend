@@ -19,32 +19,64 @@ package controllers.auth
 import base.BaseAppSpec
 import config.FrontendAppConfig
 import play.api.http.Status.SEE_OTHER
-import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, status}
+import play.api.test.{FakeRequest, Helpers}
+import play.api.test.Helpers._
 import stubs.AuthStubs._
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.http.StringContextOps
 import utils.TestData.ninoUser
+
+import java.net.URLEncoder
 
 class AuthControllerSpec extends BaseAppSpec {
 
-  val application     = applicationBuilder().build()
-  lazy val controller = application.injector.instanceOf[AuthController]
-  lazy val appConfig  = application.injector.instanceOf[FrontendAppConfig]
-
   "AuthController" - {
-    "redirect to /gg/sign-out with continue to the feedback survey" in {
+    "on SignOut redirect to /gg/sign-out with continue to the feedback survey" in {
       userLoggedInIsChildBenefitUser(ninoUser)
+      val application = applicationBuilder()
+        .configure(
+          Map(
+            "urls.signOut"                                -> "Blah blah blah",
+            "microservice.services.feedback-frontend.url" -> "The exit survey"
+          )
+        )
+        .build()
 
-      val request = FakeRequest(GET, routes.AuthController.signOut().url)
+      running(application) {
+
+        val request = FakeRequest(GET, routes.AuthController.signOut().url)
+          .withSession(("authToken", "Bearer 123"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          s"Blah blah blah?continue=${URLEncoder.encode("The exit survey/feedback/CHIB", "utf-8")}"
+        )
+      }
+    }
+
+    "on SignOut without survey redirect to /gg/sign-out without continue to the feedback survey" in {
+      userLoggedInIsChildBenefitUser(ninoUser)
+      val application = applicationBuilder()
+        .configure(
+          Map(
+            "urls.signOut" -> "Blah blah blah"
+          )
+        )
+        .build()
+
+      val request = FakeRequest(GET, routes.AuthController.signOutNoSurvey().url)
         .withSession(("authToken", "Bearer 123"))
 
-      val result = controller.signOut()(request)
+      running(application) {
+        val result = route(application, request).value
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(
-        appConfig.signOutUrl + s"?continue=${SafeRedirectUrl(appConfig.exitSurveyUrl).encodedUrl}"
-      )
-
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(
+          s"Blah blah blah?continue=${URLEncoder.encode(routes.SignedOutController.onPageLoad.absoluteURL()(request), "utf-8")}"
+        )
+      }
     }
   }
 }

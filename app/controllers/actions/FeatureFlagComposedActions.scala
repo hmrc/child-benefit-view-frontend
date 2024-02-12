@@ -40,6 +40,4 @@ class FeatureFlagComposedActions @Inject() (
   def changeBankAction = featureAction(featureFlags.changeOfBankEnabled)
 
   def ftnaeAction = actionStart andThen ftnaeIdentifierAction
-
-  def hicbcAction = featureAction(featureFlags.hicbcEnabled)
 }

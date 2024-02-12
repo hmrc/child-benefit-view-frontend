@@ -21,6 +21,6 @@
 @(message: String, id: Option[String] = None, size: String = "m", extraClasses: Seq[String] = Seq.empty, caption: Option[String] = None)
 
 <h2 class="govuk-heading-@size govuk-!-margin-top-6@if(extraClasses.nonEmpty) { @extraClasses.mkString(" ") }" @id.map{id => id="@id"}>
-  @caption.fold()(captionHeader(_))
+  @caption.fold(())(captionHeader(_))
   @message
 </h2>

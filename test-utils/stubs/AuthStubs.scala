@@ -21,14 +21,20 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 
 object AuthStubs {
   val childBenefitRetrievals: String =
-    """
-      |{
-      |	"authorise": [{
-      |		"authProviders": ["GovernmentGateway"]
-      |	}],
-      |	"retrieve": ["nino", "affinityGroup", "internalId", "confidenceLevel"]
-      |}
-      |""".stripMargin
+    """{
+              |  "authorise" : [ {
+              |    "$or" : [ {
+              |      "affinityGroup" : "Individual"
+              |    }, {
+              |      "affinityGroup" : "Organisation"
+              |    } ]
+              |  }, {
+              |    "authProviders" : [ "GovernmentGateway" ]
+              |  }, {
+              |    "confidenceLevel" : 200
+              |  } ],
+              |  "retrieve" : [ "nino", "internalId" ]
+              |}""".stripMargin('|')
 
   def userLoggedInIsChildBenefitUser(testUserJson: String): StubMapping =
     stubFor(
@@ -50,11 +56,11 @@ object AuthStubs {
         )
     )
 
-  def userNotLoggedIn(error: String): StubMapping =
+  def userNotLoggedIn(): StubMapping =
     stubFor(
       post(urlEqualTo("/auth/authorise"))
         .willReturn(
-          serverError.withHeader("WWW-Authenticate", s"""MDTP detail="$error"""")
+          unauthorized.withHeader("WWW-Authenticate", s"""MDTP detail="Session record not found"""")
         )
     )
 }

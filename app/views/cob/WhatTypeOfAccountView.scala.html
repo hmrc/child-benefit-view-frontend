@@ -47,19 +47,19 @@
         legend = LegendViewModel(messages("whatTypeOfAccount.heading")).asPageHeading(),
         items = Seq(
             RadioItem(
-                content = Text(WhatTypeOfAccount.Sole.message),
+                content = Text(WhatTypeOfAccount.Sole.message()),
                 value = Some(WhatTypeOfAccount.Sole.toString)
             ),
             RadioItem(
-                content = Text(WhatTypeOfAccount.JointHeldByClaimant.message),
+                content = Text(WhatTypeOfAccount.JointHeldByClaimant.message()),
                 value = Some(WhatTypeOfAccount.JointHeldByClaimant.toString)
             ),
             RadioItem(
-                content = Text(WhatTypeOfAccount.JointNotHeldByClaimant.message),
+                content = Text(WhatTypeOfAccount.JointNotHeldByClaimant.message()),
                 value = Some(WhatTypeOfAccount.JointNotHeldByClaimant.toString)
             ),
             RadioItem(
-                content = Text(WhatTypeOfAccount.CreditUnion.message),
+                content = Text(WhatTypeOfAccount.CreditUnion.message()),
                 value = Some(WhatTypeOfAccount.CreditUnion.toString)
             )
         )

@@ -36,6 +36,8 @@ import views.html.ftnae.WillYoungPersonBeStayingView
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import utils.TestData
+import stubs.AuthStubs
 
 class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -58,6 +60,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
 
       running(application) {
         val request = FakeRequest(GET, willYoungPersonBeStayingRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -79,6 +83,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
 
       running(application) {
         val request = FakeRequest(GET, willYoungPersonBeStayingRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val view = application.injector.instanceOf[WillYoungPersonBeStayingView]
 
@@ -111,6 +117,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
         val request =
           FakeRequest(POST, willYoungPersonBeStayingRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -138,6 +146,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
         val request =
           FakeRequest(POST, willYoungPersonBeStayingRoute)
             .withFormUrlEncodedBody(("value", "false"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -173,6 +183,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
         val request =
           FakeRequest(POST, willYoungPersonBeStayingRoute)
             .withFormUrlEncodedBody(("value", ""))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
 
@@ -194,6 +206,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
 
       running(application) {
         val request = FakeRequest(GET, willYoungPersonBeStayingRoute)
+          .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 
@@ -210,6 +224,8 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
         val request =
           FakeRequest(POST, willYoungPersonBeStayingRoute)
             .withFormUrlEncodedBody(("value", "true"))
+            .withSession("authToken" -> "Bearer 123")
+        AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
 

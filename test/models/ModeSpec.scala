@@ -1,5 +1,5 @@
-@*
- * Copyright 2023 HM Revenue & Customs
+/*
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,24 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import components._
+package models;
+import org.scalatest.freespec.AnyFreeSpec;
+import org.scalatest.matchers.must;
 
-@this(
-    layout: templates.LayoutProvider,
-    heading: Heading,
-    para: ParagraphBody
-)
+class ModeSpec extends AnyFreeSpec with must.Matchers {
 
-@()(implicit request: Request[_], messages: Messages)
-
-@layout(
-    pageTitle    = titleNoForm(messages("index.title")),
-    showBackLink = false
-) {
-
-    @heading(messages("index.heading"))
-
-    @para(messages("index.guidance"))
+  "Can convert to string" in {
+    Mode.jsLiteral.to(NormalMode) must be("NormalMode")
+    Mode.jsLiteral.to(CheckMode) must be("CheckMode")
+  }
 }

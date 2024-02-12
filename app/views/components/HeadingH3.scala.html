@@ -21,6 +21,5 @@
 @(message: String, id: Option[String] = None, size: String = "s", caption: Option[String] = None)
 
 <h3 class="govuk-heading-@size govuk-!-margin-top-6" @id.map{id => id="@id"}>
-   @caption.fold()(captionHeader(_))
-   @message
+   @caption.fold(())(captionHeader(_))   @message
 </h3>

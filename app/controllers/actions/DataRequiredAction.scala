@@ -37,7 +37,6 @@ import controllers.routes
 import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 
 import scala.concurrent.{ExecutionContext, Future}
 
