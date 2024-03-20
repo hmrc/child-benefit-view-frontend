@@ -37,14 +37,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val hc: HeaderCarrier = new HeaderCarrier()
+  implicit val hc: HeaderCarrier    = new HeaderCarrier()
 
-  override implicit lazy val app: Application = applicationBuilder().build()
-  val sutWithStubs: ChangeOfBankConnector     = app.injector.instanceOf[ChangeOfBankConnector]
+  override implicit lazy val app: Application           = applicationBuilder().build()
+  val sutWithStubs:               ChangeOfBankConnector = app.injector.instanceOf[ChangeOfBankConnector]
 
-  val mockHttpClient: HttpClient          = mock[HttpClient]
-  val mockAppConfig: FrontendAppConfig    = mock[FrontendAppConfig]
-  val sutWithMocks: ChangeOfBankConnector = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClient            = mock[HttpClient]
+  val mockAppConfig:  FrontendAppConfig     = mock[FrontendAppConfig]
+  val sutWithMocks:   ChangeOfBankConnector = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
 
   "ChangeOfBankConnector" - {
     "getChangeOfBankClaimantInfo" - {

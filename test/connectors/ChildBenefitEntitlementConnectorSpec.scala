@@ -35,14 +35,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier: HeaderCarrier       = new HeaderCarrier()
+  implicit val headerCarrier:    HeaderCarrier    = new HeaderCarrier()
 
-  override implicit lazy val app: Application         = applicationBuilder().build()
-  val sutWithStubs: ChildBenefitEntitlementConnector  = app.injector.instanceOf[ChildBenefitEntitlementConnector]
+  override implicit lazy val app: Application                      = applicationBuilder().build()
+  val sutWithStubs:               ChildBenefitEntitlementConnector = app.injector.instanceOf[ChildBenefitEntitlementConnector]
 
-  val mockHttpClient: HttpClient                           = mock[HttpClient]
-  val mockAppConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
-  val sutWithMocks:DefaultChildBenefitEntitlementConnector = new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClient        = mock[HttpClient]
+  val mockAppConfig:  FrontendAppConfig = mock[FrontendAppConfig]
+  val sutWithMocks: DefaultChildBenefitEntitlementConnector =
+    new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
 
   "ChildBenefitEntitlementConnector" - {
     "getChildBenefitEntitlement" - {
