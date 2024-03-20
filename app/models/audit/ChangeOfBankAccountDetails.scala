@@ -17,14 +17,14 @@
 package models.audit
 
 import models.changeofbank.{AccountHolderName, BankAccountNumber, BuildingSocietyRollNumber, SortCode}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
 final case class PersonalInformation(name: String, dateOfBirth: LocalDate, nino: String)
 
 object PersonalInformation {
-  implicit val formatPersonalInformation = Json.format[PersonalInformation]
+  implicit val formatPersonalInformation: OFormat[PersonalInformation] = Json.format[PersonalInformation]
 }
 
 final case class BankDetails(
@@ -37,7 +37,7 @@ final case class BankDetails(
 )
 
 object BankDetails {
-  implicit val formatBankDetails = Json.format[BankDetails]
+  implicit val formatBankDetails: OFormat[BankDetails] = Json.format[BankDetails]
 }
 
 final case class ViewDetails(
@@ -47,7 +47,7 @@ final case class ViewDetails(
 )
 
 object ViewDetails {
-  implicit val formatViewDetails = Json.format[ViewDetails]
+  implicit val formatViewDetails: OFormat[ViewDetails] = Json.format[ViewDetails]
 }
 
 final case class ChangeOfBankAccountDetailsModel(
@@ -61,6 +61,6 @@ final case class ChangeOfBankAccountDetailsModel(
 )
 
 object ChangeOfBankAccountDetailsModel {
-  implicit val formatChangeofBankAccountDetailsModel = Json.format[ChangeOfBankAccountDetailsModel]
+  implicit val formatChangeofBankAccountDetailsModel: OFormat[ChangeOfBankAccountDetailsModel] = Json.format[ChangeOfBankAccountDetailsModel]
   val EventType: String = "ChangeOfBankAccountDetails"
 }

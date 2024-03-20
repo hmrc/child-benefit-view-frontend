@@ -16,10 +16,10 @@
 
 package models.changeofbank
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class SortCode(value: String) extends AnyVal
 
 object SortCode {
-  implicit val format = Json.valueFormat[SortCode]
+  implicit val format: Format[SortCode] = Json.valueFormat[SortCode]
 }

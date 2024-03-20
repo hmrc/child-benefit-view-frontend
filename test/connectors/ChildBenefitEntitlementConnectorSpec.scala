@@ -25,6 +25,7 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE}
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
@@ -33,15 +34,15 @@ import utils.TestData.{genericCBError, invalidJsonResponse, validNotMatchingJson
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
-  implicit val executionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier    = new HeaderCarrier()
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val headerCarrier: HeaderCarrier       = new HeaderCarrier()
 
-  override implicit lazy val app = applicationBuilder().build()
-  val sutWithStubs               = app.injector.instanceOf[ChildBenefitEntitlementConnector]
+  override implicit lazy val app: Application         = applicationBuilder().build()
+  val sutWithStubs: ChildBenefitEntitlementConnector  = app.injector.instanceOf[ChildBenefitEntitlementConnector]
 
-  val mockHttpClient = mock[HttpClient]
-  val mockAppConfig  = mock[FrontendAppConfig]
-  val sutWithMocks   = new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClient                           = mock[HttpClient]
+  val mockAppConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
+  val sutWithMocks:DefaultChildBenefitEntitlementConnector = new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
 
   "ChildBenefitEntitlementConnector" - {
     "getChildBenefitEntitlement" - {
@@ -107,11 +108,11 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
       }
       "GIVEN the HttpClient receives a successful response that is invalid Json" - {
         "THEN an expected ConnectorError is returned" in {
-          forAll(arbitrary[ChildBenefitEntitlement]) { childBenefitEntitlement =>
+          forAll(arbitrary[ChildBenefitEntitlement]) { _ =>
             entitlementsAndPaymentHistoryFailureStub(OK, invalidJsonResponse)
 
             whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
-              result mustBe a[Left[ConnectorError, ChildBenefitEntitlement]]
+              result mustBe a[Left[_, ChildBenefitEntitlement]]
               result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
             }
           }
@@ -122,7 +123,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
           entitlementsAndPaymentHistoryFailureStub(OK, validNotMatchingJsonResponse)
 
           whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
-            result mustBe a[Left[ConnectorError, ChildBenefitEntitlement]]
+            result mustBe a[Left[_, ChildBenefitEntitlement]]
             result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
           }
         }

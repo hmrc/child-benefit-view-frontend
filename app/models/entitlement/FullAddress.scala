@@ -17,7 +17,7 @@
 package models.entitlement
 
 import models.common.{AddressLine, AddressPostcode}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import utils.helpers.StringHelper
 
 final case class FullAddress(
@@ -50,6 +50,6 @@ final case class FullAddress(
 }
 
 object FullAddress {
-  implicit val format = Json.format[FullAddress]
+  implicit val format: OFormat[FullAddress] = Json.format[FullAddress]
 
 }

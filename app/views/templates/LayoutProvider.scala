@@ -82,7 +82,7 @@ class NewLayoutProvider @Inject() (
       stylesheets:                    Option[Html],
       hideBanner:                     Boolean
   )(contentBlock:                     Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
-    wrapperService.layout(
+    wrapperService.standardScaLayout(
       disableSessionExpired = !timeout,
       content = contentBlock,
       pageTitle = Some(pageTitle),

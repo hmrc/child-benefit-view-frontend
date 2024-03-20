@@ -16,10 +16,10 @@
 
 package models.entitlement
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class FullName(value: String) extends AnyVal
 
 object FullName {
-  implicit val format = Json.valueFormat[FullName]
+  implicit val format: Format[FullName] = Json.valueFormat[FullName]
 }

@@ -26,18 +26,21 @@ import models.cob._
 import models.ftnae.HowManyYears
 import pages.cob._
 import pages.ftnae._
+import play.api.Application
 import play.api.libs.json.Json
 import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
 import utils.pages._
 
+import scala.util.Try
+
 class NavigatorSpec extends BaseAppSpec {
 
-  implicit val mockHeaderCarrier = mock[HeaderCarrier]
+  implicit val mockHeaderCarrier: HeaderCarrier = mock[HeaderCarrier]
 
-  val app       = applicationBuilder().build()
-  val navigator = app.injector.instanceOf[Navigator]
+  val app: Application = applicationBuilder().build()
+  val navigator: Navigator = app.injector.instanceOf[Navigator]
 
   def fromOnePageToNextTest(
       fromPage:    Page,
@@ -56,12 +59,12 @@ class NavigatorSpec extends BaseAppSpec {
     }
   }
 
-  val defaultUA                 = UserAnswers("id")
-  val newAccountDetailsUA       = UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
-  val confirmedAccountDetailsUA = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, Yes).get
-  val rejectedAccountDetailsUA  = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, No).get
+  val defaultUA: UserAnswers                 = UserAnswers("id")
+  val newAccountDetailsUA: UserAnswers       = UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+  val confirmedAccountDetailsUA: UserAnswers = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, Yes).get
+  val rejectedAccountDetailsUA: UserAnswers  = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, No).get
 
-  val happyPathFTNAECreator = for {
+  val happyPathFTNAECreator: Try[UserAnswers] = for {
     a <- defaultUA.set(WhichYoungPersonPage, "John Doe")
     b <- a.set(WillYoungPersonBeStayingPage, true)
     c <- b.set(SchoolOrCollegePage, true)
@@ -70,9 +73,9 @@ class NavigatorSpec extends BaseAppSpec {
     f <- e.set(WillCourseBeEmployerProvidedPage, false)
     g <- f.set(LiveWithYouInUKPage, true)
   } yield g
-  val happyPathFTNAEUA = happyPathFTNAECreator.success.value
+  val happyPathFTNAEUA: UserAnswers = happyPathFTNAECreator.success.value
 
-  val kickOutPathFTNAECreator = for {
+  val kickOutPathFTNAECreator: Try[UserAnswers] = for {
     a <- defaultUA.set(WhichYoungPersonPage, "0")
     b <- a.set(WillYoungPersonBeStayingPage, false)
     c <- b.set(SchoolOrCollegePage, false)
@@ -81,17 +84,17 @@ class NavigatorSpec extends BaseAppSpec {
     f <- e.set(WillCourseBeEmployerProvidedPage, true)
     g <- f.set(LiveWithYouInUKPage, false)
   } yield g
-  val kickOutPathFTNAEUA = kickOutPathFTNAECreator.success.value
+  val kickOutPathFTNAEUA: UserAnswers = kickOutPathFTNAECreator.success.value
 
-  val selected        = (select: String) => s"when $select is selected"
-  val kickOut         = (message: String) => s"$message (Kick Out)"
-  val selectedKickOut = (select: String) => kickOut(selected(select))
+  val selected: String => String        = (select: String) => s"when $select is selected"
+  val kickOut: String => String         = (message: String) => s"$message (Kick Out)"
+  val selectedKickOut: String => String = (select: String) => kickOut(selected(select))
 
-  val recovery           = Some("when no valid value is selected")
-  val yesSelected        = Some(selected("Yes"))
-  val yesSelectedKickOut = Some(selectedKickOut(yesSelected.get))
-  val noSelected         = Some(selected("No"))
-  val noSelectedKickOut  = Some(selectedKickOut(noSelected.get))
+  val recovery: Option[String]           = Some("when no valid value is selected")
+  val yesSelected: Option[String]        = Some(selected("Yes"))
+  val yesSelectedKickOut: Option[String] = Some(selectedKickOut(yesSelected.get))
+  val noSelected: Option[String]         = Some(selected("No"))
+  val noSelectedKickOut: Option[String]  = Some(selectedKickOut(noSelected.get))
 
   "Navigator" - {
 

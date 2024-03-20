@@ -26,6 +26,7 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.Writes
 import stubs.ChildBenefitServiceStubs._
@@ -35,15 +36,15 @@ import utils.TestData._
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val hc = new HeaderCarrier()
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val hc: HeaderCarrier = new HeaderCarrier()
 
-  override implicit lazy val app = applicationBuilder().build()
-  val sutWithStubs               = app.injector.instanceOf[ChangeOfBankConnector]
+  override implicit lazy val app: Application = applicationBuilder().build()
+  val sutWithStubs: ChangeOfBankConnector     = app.injector.instanceOf[ChangeOfBankConnector]
 
-  val mockHttpClient = mock[HttpClient]
-  val mockAppConfig  = mock[FrontendAppConfig]
-  val sutWithMocks   = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClient          = mock[HttpClient]
+  val mockAppConfig: FrontendAppConfig    = mock[FrontendAppConfig]
+  val sutWithMocks: ChangeOfBankConnector = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
 
   "ChangeOfBankConnector" - {
     "getChangeOfBankClaimantInfo" - {
@@ -132,7 +133,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           changeOfBankUserInfoFailureStub(OK, invalidJsonResponse)
 
           whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
-            result mustBe a[Left[ConnectorError, ClaimantBankInformation]]
+            result mustBe a[Left[_, ClaimantBankInformation]]
             result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }
@@ -142,7 +143,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           changeOfBankUserInfoFailureStub(OK, validNotMatchingJsonResponse)
 
           whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
-            result mustBe a[Left[ConnectorError, ClaimantBankInformation]]
+            result mustBe a[Left[_, ClaimantBankInformation]]
             result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
           }
         }
@@ -246,7 +247,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             verifyClaimantBankAccountFailureStub(OK, invalidJsonResponse)
 
             whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-              result mustBe a[Left[ConnectorError, Unit]]
+              result mustBe a[Left[_, Unit]]
               result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
             }
           }
@@ -259,7 +260,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "THEN the a Unit response is returned" in {
           verifyBARNotLockedStub()
 
-          whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
+          whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
             result mustBe Right(())
           }
         }
@@ -269,7 +270,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected ClaimantIsLockedOutOfChangeOfBank is returned" in {
             verifyBARNotLockedFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
               result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
             }
           }
@@ -278,7 +279,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN an expected PriorityBARSVerificationError is returned" in {
             verifyBARNotLockedFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
               result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
             }
           }
@@ -288,7 +289,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             val expectedMessage = "Unit Test other failure expected message"
             verifyBARNotLockedFailureStub(INTERNAL_SERVER_ERROR, genericCBError(INTERNAL_SERVER_ERROR, expectedMessage))
 
-            whenReady(sutWithStubs.verifyBARNotLocked.value) { result =>
+            whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
               result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
             }
           }
@@ -306,7 +307,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
                 )
               ).thenReturn(Future failed new HttpException(message, responseCode))
 
-              whenReady(sutWithMocks.verifyBARNotLocked.value) { result =>
+              whenReady(sutWithMocks.verifyBARNotLocked().value) { result =>
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
@@ -323,7 +324,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
                 )
               ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
 
-              whenReady(sutWithMocks.verifyBARNotLocked.value) { result =>
+              whenReady(sutWithMocks.verifyBARNotLocked().value) { result =>
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
@@ -335,7 +336,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           verifyBARNotLockedFailureStub(OK, invalidJsonResponse)
 
           whenReady(sutWithStubs.verifyBARNotLocked().value) { result =>
-            result mustBe a[Left[ConnectorError, Unit]]
+            result mustBe a[Left[_, Unit]]
             result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }
@@ -439,7 +440,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             updateBankAccountFailureStub(OK, invalidJsonResponse)
 
             whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
-              result mustBe a[Left[ConnectorError, UpdateBankDetailsResponse]]
+              result mustBe a[Left[_, UpdateBankDetailsResponse]]
               result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
             }
           }
@@ -451,7 +452,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             updateBankAccountFailureStub(OK, validNotMatchingJsonResponse)
 
             whenReady(sutWithStubs.updateBankAccount(updateBankAccountRequest).value) { result =>
-              result mustBe a[Left[ConnectorError, UpdateBankDetailsResponse]]
+              result mustBe a[Left[_, UpdateBankDetailsResponse]]
               result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
             }
           }
@@ -509,8 +510,8 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         "THEN an expected ConnectorError is returned" in {
           dropChangeOfBankFailureStub(OK, invalidJsonResponse)
 
-          whenReady(sutWithStubs.dropChangeOfBankCache.value) { result =>
-            result mustBe a[Left[ConnectorError, Unit]]
+          whenReady(sutWithStubs.dropChangeOfBankCache().value) { result =>
+            result mustBe a[Left[_, Unit]]
             result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
           }
         }

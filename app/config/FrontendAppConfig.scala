@@ -20,7 +20,8 @@ import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
@@ -73,7 +74,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def feedbackUrl: String = s"$contactHost/contact/beta-feedback?service=CHIB"
 
   def reportTechnicalProblemUrl(uri: String): String =
-    s"$contactHost/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${SafeRedirectUrl(contactHost + uri).encodedUrl}"
+    s"$contactHost/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${RedirectUrl(contactHost + uri).get(UnsafePermitAll).encodedUrl}"
 
   def languageMap: Map[String, Lang] =
     Map("en" -> Lang("en"), "cy" -> Lang("cy"))

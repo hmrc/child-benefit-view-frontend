@@ -17,7 +17,7 @@
 package models.changeofbank
 
 import models.common.AdjustmentReasonCode
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -29,5 +29,5 @@ final case class ClaimantFinancialDetails(
 )
 
 object ClaimantFinancialDetails {
-  implicit val format = Json.format[ClaimantFinancialDetails]
+  implicit val format: OFormat[ClaimantFinancialDetails] = Json.format[ClaimantFinancialDetails]
 }

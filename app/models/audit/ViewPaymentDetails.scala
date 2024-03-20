@@ -17,7 +17,7 @@
 package models.audit
 
 import models.entitlement.LastPaymentFinancialInfo
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class ViewPaymentDetailsModel(
     nino:                          String,
@@ -29,6 +29,6 @@ final case class ViewPaymentDetailsModel(
 )
 
 object ViewPaymentDetailsModel {
-  implicit val formatViewPaymentDetailsModel = Json.format[ViewPaymentDetailsModel]
+  implicit val formatViewPaymentDetailsModel: OFormat[ViewPaymentDetailsModel] = Json.format[ViewPaymentDetailsModel]
   val EventType: String = "ViewPaymentDetails"
 }

@@ -42,16 +42,12 @@ import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 import stubs.AuthStubs
 import utils.TestData
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.sca.config.AppConfig
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import com.github.tomakehurst.wiremock.client.WireMock
 
 class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
-  val mockFtnaeService      = mock[FtnaeService]
-  val mockFtnaeConnector    = mock[FtnaeConnector]
-  val mockSessionRepository = mock[SessionRepository]
+  val mockFtnaeService: FtnaeService           = mock[FtnaeService]
+  val mockFtnaeConnector: FtnaeConnector       = mock[FtnaeConnector]
+  val mockSessionRepository: SessionRepository = mock[SessionRepository]
 
   "PaymentsExtended Controller" - {
 

@@ -16,9 +16,9 @@
 
 package models.ftnae
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class SecondForename(value: String) extends AnyVal
 object SecondForename {
-  implicit val format = Json.valueFormat[SecondForename]
+  implicit val format: Format[SecondForename] = Json.valueFormat[SecondForename]
 }

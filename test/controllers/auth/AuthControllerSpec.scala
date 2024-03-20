@@ -17,13 +17,10 @@
 package controllers.auth
 
 import base.BaseAppSpec
-import config.FrontendAppConfig
 import play.api.http.Status.SEE_OTHER
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
-import uk.gov.hmrc.http.StringContextOps
 import utils.TestData.ninoUser
 
 import java.net.URLEncoder

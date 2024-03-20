@@ -44,17 +44,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
-  implicit val mockExecutionContext = mock[ExecutionContext]
-  implicit val mockHeaderCarrier    = mock[HeaderCarrier]
+  implicit val mockExecutionContext: ExecutionContext = mock[ExecutionContext]
+  implicit val mockHeaderCarrier: HeaderCarrier = mock[HeaderCarrier]
 
-  val mockSessionRepository = mock[SessionRepository]
+  val mockSessionRepository: SessionRepository = mock[SessionRepository]
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
   lazy val whatTypeOfAccountRoute: String =
     controllers.cob.routes.WhatTypeOfAccountController.onPageLoad(NormalMode).url
 
-  val userAnswers = UserAnswers(userAnswersId)
+  val userAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   val formProvider = new WhatTypeOfAccountFormProvider()
   val form: Form[WhatTypeOfAccount] = formProvider()

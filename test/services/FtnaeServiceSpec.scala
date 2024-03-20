@@ -29,7 +29,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.ftnae.{FtnaeResponseUserAnswer, HowManyYearsPage, WhichYoungPersonPage}
-import play.api.i18n.DefaultMessagesApi
+import play.api.i18n.{DefaultMessagesApi, Messages}
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
@@ -46,21 +46,21 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit val hc: HeaderCarrier    = HeaderCarrier()
-  val testMessages = Map(
+  val testMessages: Map[String, Map[String, String]] = Map(
     "default" -> Map("title" -> "foo bar")
   )
-  val messagesApi       = new DefaultMessagesApi(testMessages)
-  implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
+  val messagesApi = new DefaultMessagesApi(testMessages)
+  implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
-  val ftnaeConnector                             = mock[FtnaeConnector]
-  val sessionRepository                          = mock[SessionRepository]
-  val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
+  val ftnaeConnector: FtnaeConnector = mock[FtnaeConnector]
+  val sessionRepository: SessionRepository = mock[SessionRepository]
+  val ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
 
   val sut: FtnaeService =
     new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)
 
   val childName = "Lauren Sam Smith"
-  val childDetails = ChildDetails(
+  val childDetails: ChildDetails = ChildDetails(
     CourseDuration.TwoYear,
     ChildReferenceNumber("AC654321C"),
     LocalDate.of(2007, 2, 10),

@@ -21,5 +21,5 @@ import play.api.libs.json._
 case class NewAccountDetails(newAccountHoldersName: String, newSortCode: String, newAccountNumber: String)
 
 object NewAccountDetails {
-  implicit val format = Json.format[NewAccountDetails]
+  implicit val format: OFormat[NewAccountDetails] = Json.format[NewAccountDetails]
 }

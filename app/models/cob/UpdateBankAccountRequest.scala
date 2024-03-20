@@ -17,10 +17,10 @@
 package models.cob
 
 import models.changeofbank.BankDetails
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class UpdateBankAccountRequest(updatedBankInformation: BankDetails)
 
 object UpdateBankAccountRequest {
-  implicit val format = Json.format[UpdateBankAccountRequest]
+  implicit val format: OFormat[UpdateBankAccountRequest] = Json.format[UpdateBankAccountRequest]
 }

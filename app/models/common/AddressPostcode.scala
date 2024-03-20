@@ -16,10 +16,10 @@
 
 package models.common
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class AddressPostcode(value: String) extends AnyVal
 
 object AddressPostcode {
-  implicit val format = Json.valueFormat[AddressPostcode]
+  implicit val format: Format[AddressPostcode] = Json.valueFormat[AddressPostcode]
 }

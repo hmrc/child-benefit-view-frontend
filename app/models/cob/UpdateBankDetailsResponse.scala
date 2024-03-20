@@ -16,10 +16,10 @@
 
 package models.cob
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class UpdateBankDetailsResponse(status: String)
 
 object UpdateBankDetailsResponse {
-  implicit val format = Json.format[UpdateBankDetailsResponse]
+  implicit val format: OFormat[UpdateBankDetailsResponse] = Json.format[UpdateBankDetailsResponse]
 }
