@@ -21,8 +21,8 @@ import org.mockito.Mockito.when
 import play.api.i18n.Messages
 
 class WithMessageSpec extends BaseSpec {
-  val unitTestKey                     = "unit.test.key"
-  val unitTestValue                   = "value for unit test withMessage"
+  val unitTestKey   = "unit.test.key"
+  val unitTestValue = "value for unit test withMessage"
   implicit val mockMessages: Messages = mock[Messages]
   when(mockMessages(unitTestKey)).thenReturn(unitTestValue)
 

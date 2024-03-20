@@ -61,6 +61,7 @@ final case class ChangeOfBankAccountDetailsModel(
 )
 
 object ChangeOfBankAccountDetailsModel {
-  implicit val formatChangeofBankAccountDetailsModel: OFormat[ChangeOfBankAccountDetailsModel] = Json.format[ChangeOfBankAccountDetailsModel]
+  implicit val formatChangeofBankAccountDetailsModel: OFormat[ChangeOfBankAccountDetailsModel] =
+    Json.format[ChangeOfBankAccountDetailsModel]
   val EventType: String = "ChangeOfBankAccountDetails"
 }

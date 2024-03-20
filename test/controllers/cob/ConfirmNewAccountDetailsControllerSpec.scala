@@ -56,13 +56,13 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  val mockSessionRepository: SessionRepository        = mock[SessionRepository]
-  val mockCobConnector: ChangeOfBankConnector         = mock[ChangeOfBankConnector]
-  val mockErrorHandler: ErrorHandler                  = mock[ErrorHandler]
-  implicit val mockExecutionContext: ExecutionContext = mock[ExecutionContext]
-  implicit val mockHeaderCarrier: HeaderCarrier       = mock[HeaderCarrier]
-  implicit val mockAuditService: AuditService         = mock[AuditService]
-  implicit val mockMessages: Messages                 = mock[Messages]
+  val mockSessionRepository:         SessionRepository     = mock[SessionRepository]
+  val mockCobConnector:              ChangeOfBankConnector = mock[ChangeOfBankConnector]
+  val mockErrorHandler:              ErrorHandler          = mock[ErrorHandler]
+  implicit val mockExecutionContext: ExecutionContext      = mock[ExecutionContext]
+  implicit val mockHeaderCarrier:    HeaderCarrier         = mock[HeaderCarrier]
+  implicit val mockAuditService:     AuditService          = mock[AuditService]
+  implicit val mockMessages:         Messages              = mock[Messages]
   when(mockMessages("whatTypeOfAccount.options.sole")).thenReturn("Sole account")
 
   lazy val confirmNewAccountDetailsRoute: String =
@@ -83,7 +83,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
     ): CBEnvelope[UpdateBankDetailsResponse] = CBEnvelope(UpdateBankDetailsResponse("submitted"))
   }
 
-  val typeOfAccount: WhatTypeOfAccount     = WhatTypeOfAccount.Sole
+  val typeOfAccount:     WhatTypeOfAccount = WhatTypeOfAccount.Sole
   val newAccountDetails: NewAccountDetails = NewAccountDetails("John Doe", "123456", "11110000")
   def summaryList(messages: Messages): SummaryList =
     SummaryListViewModel(

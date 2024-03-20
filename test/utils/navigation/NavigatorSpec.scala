@@ -39,8 +39,8 @@ class NavigatorSpec extends BaseAppSpec {
 
   implicit val mockHeaderCarrier: HeaderCarrier = mock[HeaderCarrier]
 
-  val app: Application = applicationBuilder().build()
-  val navigator: Navigator = app.injector.instanceOf[Navigator]
+  val app:       Application = applicationBuilder().build()
+  val navigator: Navigator   = app.injector.instanceOf[Navigator]
 
   def fromOnePageToNextTest(
       fromPage:    Page,
@@ -59,10 +59,11 @@ class NavigatorSpec extends BaseAppSpec {
     }
   }
 
-  val defaultUA: UserAnswers                 = UserAnswers("id")
-  val newAccountDetailsUA: UserAnswers       = UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
+  val defaultUA: UserAnswers = UserAnswers("id")
+  val newAccountDetailsUA: UserAnswers =
+    UserAnswers("id", Json.toJsObject(NewAccountDetails("Name", "123456", "00000000001")))
   val confirmedAccountDetailsUA: UserAnswers = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, Yes).get
-  val rejectedAccountDetailsUA: UserAnswers  = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, No).get
+  val rejectedAccountDetailsUA:  UserAnswers = newAccountDetailsUA.set(ConfirmNewAccountDetailsPage, No).get
 
   val happyPathFTNAECreator: Try[UserAnswers] = for {
     a <- defaultUA.set(WhichYoungPersonPage, "John Doe")
@@ -86,15 +87,15 @@ class NavigatorSpec extends BaseAppSpec {
   } yield g
   val kickOutPathFTNAEUA: UserAnswers = kickOutPathFTNAECreator.success.value
 
-  val selected: String => String        = (select: String) => s"when $select is selected"
-  val kickOut: String => String         = (message: String) => s"$message (Kick Out)"
+  val selected:        String => String = (select: String) => s"when $select is selected"
+  val kickOut:         String => String = (message: String) => s"$message (Kick Out)"
   val selectedKickOut: String => String = (select: String) => kickOut(selected(select))
 
-  val recovery: Option[String]           = Some("when no valid value is selected")
-  val yesSelected: Option[String]        = Some(selected("Yes"))
+  val recovery:           Option[String] = Some("when no valid value is selected")
+  val yesSelected:        Option[String] = Some(selected("Yes"))
   val yesSelectedKickOut: Option[String] = Some(selectedKickOut(yesSelected.get))
-  val noSelected: Option[String]         = Some(selected("No"))
-  val noSelectedKickOut: Option[String]  = Some(selectedKickOut(noSelected.get))
+  val noSelected:         Option[String] = Some(selected("No"))
+  val noSelectedKickOut:  Option[String] = Some(selectedKickOut(noSelected.get))
 
   "Navigator" - {
 

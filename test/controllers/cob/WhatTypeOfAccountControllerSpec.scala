@@ -45,7 +45,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
 
   implicit val mockExecutionContext: ExecutionContext = mock[ExecutionContext]
-  implicit val mockHeaderCarrier: HeaderCarrier = mock[HeaderCarrier]
+  implicit val mockHeaderCarrier:    HeaderCarrier    = mock[HeaderCarrier]
 
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
 

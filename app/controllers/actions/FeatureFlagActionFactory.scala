@@ -29,9 +29,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeatureFlagActionFactory @Inject() (
-    configuration:     Configuration,
-    errorTemplate:     ErrorTemplate,
-    val allowList:     FeatureAllowlistFilter
+    configuration: Configuration,
+    errorTemplate: ErrorTemplate,
+    val allowList: FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {

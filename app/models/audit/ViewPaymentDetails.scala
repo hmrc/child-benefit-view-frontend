@@ -30,5 +30,5 @@ final case class ViewPaymentDetailsModel(
 
 object ViewPaymentDetailsModel {
   implicit val formatViewPaymentDetailsModel: OFormat[ViewPaymentDetailsModel] = Json.format[ViewPaymentDetailsModel]
-  val EventType: String = "ViewPaymentDetails"
+  val EventType:                              String                           = "ViewPaymentDetails"
 }

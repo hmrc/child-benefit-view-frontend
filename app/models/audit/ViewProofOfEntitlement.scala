@@ -27,7 +27,8 @@ final case class ViewProofOfEntitlementModel(
 )
 
 object ViewProofOfEntitlementModel {
-  implicit val formatViewProofOfEntitlementModel: OFormat[ViewProofOfEntitlementModel] = Json.format[ViewProofOfEntitlementModel]
+  implicit val formatViewProofOfEntitlementModel: OFormat[ViewProofOfEntitlementModel] =
+    Json.format[ViewProofOfEntitlementModel]
   val EventType: String = "ViewProofOfEntitlement"
 
 }

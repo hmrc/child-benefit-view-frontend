@@ -31,5 +31,5 @@ final case class FtnaeKickOutModel(
 
 object FtnaeKickOutModel {
   implicit val formatFTNAEKickOutModel: OFormat[FtnaeKickOutModel] = Json.format[FtnaeKickOutModel]
-  val EventType: String = "FullTimeNonAdvancedEducationKickOutPage"
+  val EventType:                        String                     = "FullTimeNonAdvancedEducationKickOutPage"
 }

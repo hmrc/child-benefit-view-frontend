@@ -45,8 +45,8 @@ import utils.TestData
 
 class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
-  val mockFtnaeService: FtnaeService           = mock[FtnaeService]
-  val mockFtnaeConnector: FtnaeConnector       = mock[FtnaeConnector]
+  val mockFtnaeService:      FtnaeService      = mock[FtnaeService]
+  val mockFtnaeConnector:    FtnaeConnector    = mock[FtnaeConnector]
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
 
   "PaymentsExtended Controller" - {

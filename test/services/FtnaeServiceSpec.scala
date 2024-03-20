@@ -52,9 +52,10 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
   val messagesApi = new DefaultMessagesApi(testMessages)
   implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
 
-  val ftnaeConnector: FtnaeConnector = mock[FtnaeConnector]
+  val ftnaeConnector:    FtnaeConnector    = mock[FtnaeConnector]
   val sessionRepository: SessionRepository = mock[SessionRepository]
-  val ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
+  val ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository =
+    mock[FtnaePaymentsExtendedPageSessionRepository]
 
   val sut: FtnaeService =
     new FtnaeService(ftnaeConnector, sessionRepository, ftnaePaymentsExtendedPageSessionRepository)

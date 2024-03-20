@@ -35,9 +35,9 @@ import scala.concurrent.ExecutionContext
 
 class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
   "Error handler" - {
-    implicit val auditServiceMock: AuditService = mock[AuditService]
-    implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
-    implicit val executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val auditServiceMock: AuditService                        = mock[AuditService]
+    implicit val fakeRequest:      FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
+    implicit val executionContext: ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
 
     implicit val messages: Messages = mock[Messages]
     val messagesApiMock   = mock[MessagesApi]
