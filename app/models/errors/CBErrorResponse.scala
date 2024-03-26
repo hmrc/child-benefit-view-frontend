@@ -16,10 +16,10 @@
 
 package models.errors
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class CBErrorResponse(status: Int, description: String)
 
 object CBErrorResponse {
-  implicit val format = Json.format[CBErrorResponse]
+  implicit val format: OFormat[CBErrorResponse] = Json.format[CBErrorResponse]
 }

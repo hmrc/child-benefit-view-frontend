@@ -16,10 +16,10 @@
 
 package models.common
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class AdjustmentReasonCode(value: String) extends AnyVal
 
 object AdjustmentReasonCode {
-  implicit val format = Json.valueFormat[AdjustmentReasonCode]
+  implicit val format: Format[AdjustmentReasonCode] = Json.valueFormat[AdjustmentReasonCode]
 }

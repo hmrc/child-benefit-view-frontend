@@ -17,7 +17,7 @@
 package models.audit
 
 import models.ftnae.FtnaeQuestionAndAnswer
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class FtnaeKickOutModel(
     nino:           String,
@@ -30,6 +30,6 @@ final case class FtnaeKickOutModel(
 )
 
 object FtnaeKickOutModel {
-  implicit val formatFTNAEKickOutModel = Json.format[FtnaeKickOutModel]
-  val EventType: String = "FullTimeNonAdvancedEducationKickOutPage"
+  implicit val formatFTNAEKickOutModel: OFormat[FtnaeKickOutModel] = Json.format[FtnaeKickOutModel]
+  val EventType:                        String                     = "FullTimeNonAdvancedEducationKickOutPage"
 }

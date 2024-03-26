@@ -16,10 +16,10 @@
 
 package models.changeofbank
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class BuildingSocietyRollNumber(value: String) extends AnyVal
 
 object BuildingSocietyRollNumber {
-  implicit val format = Json.valueFormat[BuildingSocietyRollNumber]
+  implicit val format: Format[BuildingSocietyRollNumber] = Json.valueFormat[BuildingSocietyRollNumber]
 }

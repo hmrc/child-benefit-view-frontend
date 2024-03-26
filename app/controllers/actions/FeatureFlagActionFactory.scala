@@ -23,17 +23,15 @@ import play.api.mvc.Results.NotFound
 import play.api.mvc.{ActionFunction, MessagesRequest, Result}
 import play.twirl.api.HtmlFormat
 import views.html.ErrorTemplate
-import views.html.ftnae.FtnaeDisabledView
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class FeatureFlagActionFactory @Inject() (
-    configuration:     Configuration,
-    errorTemplate:     ErrorTemplate,
-    ftnaeDisabledView: FtnaeDisabledView,
-    val allowList:     FeatureAllowlistFilter
+    configuration: Configuration,
+    errorTemplate: ErrorTemplate,
+    val allowList: FeatureAllowlistFilter
 )(implicit
     ec: ExecutionContext
 ) {

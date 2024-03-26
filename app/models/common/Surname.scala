@@ -16,10 +16,10 @@
 
 package models.common
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class Surname(value: String) extends AnyVal
 
 object Surname {
-  implicit val format = Json.valueFormat[Surname]
+  implicit val format: Format[Surname] = Json.valueFormat[Surname]
 }

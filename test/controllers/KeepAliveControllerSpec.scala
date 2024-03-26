@@ -19,7 +19,7 @@ package controllers
 import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.mockito.Mockito.{when, verify, withSettings}
+import org.mockito.Mockito.{when, verify}
 import repositories.SessionRepository
 import play.api.inject.bind
 import scala.concurrent.Future

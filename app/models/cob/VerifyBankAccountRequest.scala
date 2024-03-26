@@ -17,7 +17,7 @@
 package models.cob
 
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class VerifyBankAccountRequest(
     accountHolderName: AccountHolderName,
@@ -26,5 +26,5 @@ final case class VerifyBankAccountRequest(
 )
 
 object VerifyBankAccountRequest {
-  implicit val format = Json.format[VerifyBankAccountRequest]
+  implicit val format: OFormat[VerifyBankAccountRequest] = Json.format[VerifyBankAccountRequest]
 }

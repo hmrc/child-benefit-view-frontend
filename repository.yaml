@@ -3,3 +3,4 @@ digital-service: SCA Child Benefit
 test-repositories:
   - child-benefit-perf-tests
   - child-benefit-ui-tests
+description: frontend service visualising entitlement & payment history allowing users to change their bank details and request a FTNAE extension to a child benefits claim.

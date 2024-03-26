@@ -16,12 +16,12 @@
 
 package models.entitlement
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
 final case class LastPaymentFinancialInfo(creditDate: LocalDate, creditAmount: BigDecimal)
 
 object LastPaymentFinancialInfo {
-  implicit val format = Json.format[LastPaymentFinancialInfo]
+  implicit val format: OFormat[LastPaymentFinancialInfo] = Json.format[LastPaymentFinancialInfo]
 }

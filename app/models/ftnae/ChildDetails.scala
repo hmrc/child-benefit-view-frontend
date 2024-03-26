@@ -17,7 +17,7 @@
 package models.ftnae
 
 import models.common.ChildReferenceNumber
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -30,5 +30,5 @@ final case class ChildDetails(
 )
 
 object ChildDetails {
-  implicit val format = Json.format[ChildDetails]
+  implicit val format: OFormat[ChildDetails] = Json.format[ChildDetails]
 }

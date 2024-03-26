@@ -19,10 +19,14 @@
 @import views.html.templates.DataLayerTemplate
 @import viewmodels.govuk.DataLayer
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.HmrcStandardPageParams
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.Banners
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.TemplateOverrides
 
 @this(
         appConfig: FrontendAppConfig,
-        hmrcLayout: HmrcLayout,
+        hmrcStandardPage: HmrcStandardPage,
         hmrcTimeoutDialog: HmrcTimeoutDialogHelper,
         govukPhaseBanner: GovukPhaseBanner,
         standardBetaBanner: StandardBetaBanner,
@@ -77,12 +81,20 @@
 }
 
 
-@hmrcLayout(
-    pageTitle = Option(pageTitle),
-    isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
-    backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
-    signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None,
-    phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl)),
-    additionalHeadBlock = Some(customAdditionalHeadBlock),
-    additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        pageTitle = Option(pageTitle),
+        isWelshTranslationAvailable = appConfig.languageTranslationEnabled,
+        serviceURLs = ServiceURLs(
+            signOutUrl = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut().url) else None
+        ),
+        banners = Banners(
+            phaseBanner = Some(standardBetaBanner(appConfig.feedbackUrl))
+        ),
+        backLink = if(showBackLink) Some(BackLink.mimicsBrowserBackButtonViaJavaScript) else None,
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(customAdditionalHeadBlock),
+            additionalScriptsBlock = dataLayer.map(dataLayerTemplate.apply)
+        )
+    )
 )(new Html(List(infoBanner, contentBlock, customTechnicalProblemLinkSection(s"${request.uri}"))))

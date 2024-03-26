@@ -12,7 +12,7 @@ ThisBuild / scalaVersion := "2.13.12"
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
-  .settings(inConfig(Test)(testSettings): _*)
+  .settings(inConfig(Test)(testSettings) *)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
     name := appName,
@@ -80,7 +80,7 @@ lazy val root = (project in file("."))
     uglify / includeFilter := GlobFilter("application.js")
   )
 
-lazy val testSettings: Seq[Def.Setting[_]] = Seq(
+lazy val testSettings: Seq[Def.Setting[?]] = Seq(
   fork := true,
   unmanagedSourceDirectories += baseDirectory.value / "test-utils"
 )

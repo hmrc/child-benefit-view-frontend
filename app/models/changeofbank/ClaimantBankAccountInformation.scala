@@ -16,7 +16,7 @@
 
 package models.changeofbank
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class ClaimantBankAccountInformation(
     accountHolderName:         Option[AccountHolderName],
@@ -26,5 +26,5 @@ final case class ClaimantBankAccountInformation(
 )
 
 object ClaimantBankAccountInformation {
-  implicit val format = Json.format[ClaimantBankAccountInformation]
+  implicit val format: OFormat[ClaimantBankAccountInformation] = Json.format[ClaimantBankAccountInformation]
 }

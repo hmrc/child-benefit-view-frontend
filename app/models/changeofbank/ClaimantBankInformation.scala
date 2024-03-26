@@ -17,7 +17,7 @@
 package models.changeofbank
 
 import models.common.{FirstForename, Surname}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -30,5 +30,5 @@ final case class ClaimantBankInformation(
 )
 
 object ClaimantBankInformation {
-  implicit val format = Json.format[ClaimantBankInformation]
+  implicit val format: OFormat[ClaimantBankInformation] = Json.format[ClaimantBankInformation]
 }

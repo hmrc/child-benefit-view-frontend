@@ -41,7 +41,7 @@ import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.Key
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryList}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.TestData.{ninoUser, testClaimantBankInformation}
@@ -54,15 +54,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val mockSessionRepository         = mock[SessionRepository]
-  val mockCobConnector              = mock[ChangeOfBankConnector]
-  val mockErrorHandler              = mock[ErrorHandler]
-  implicit val mockExecutionContext = mock[ExecutionContext]
-  implicit val mockHeaderCarrier    = mock[HeaderCarrier]
-  implicit val mockAuditService     = mock[AuditService]
-  implicit val mockMessages         = mock[Messages]
+  val mockSessionRepository:         SessionRepository     = mock[SessionRepository]
+  val mockCobConnector:              ChangeOfBankConnector = mock[ChangeOfBankConnector]
+  val mockErrorHandler:              ErrorHandler          = mock[ErrorHandler]
+  implicit val mockExecutionContext: ExecutionContext      = mock[ExecutionContext]
+  implicit val mockHeaderCarrier:    HeaderCarrier         = mock[HeaderCarrier]
+  implicit val mockAuditService:     AuditService          = mock[AuditService]
+  implicit val mockMessages:         Messages              = mock[Messages]
   when(mockMessages("whatTypeOfAccount.options.sole")).thenReturn("Sole account")
 
   lazy val confirmNewAccountDetailsRoute: String =
@@ -83,9 +83,9 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
     ): CBEnvelope[UpdateBankDetailsResponse] = CBEnvelope(UpdateBankDetailsResponse("submitted"))
   }
 
-  val typeOfAccount     = WhatTypeOfAccount.Sole
-  val newAccountDetails = NewAccountDetails("John Doe", "123456", "11110000")
-  def summaryList(messages: Messages) =
+  val typeOfAccount:     WhatTypeOfAccount = WhatTypeOfAccount.Sole
+  val newAccountDetails: NewAccountDetails = NewAccountDetails("John Doe", "123456", "11110000")
+  def summaryList(messages: Messages): SummaryList =
     SummaryListViewModel(
       Seq(
         SummaryListRowViewModel(

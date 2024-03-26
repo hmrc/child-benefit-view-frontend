@@ -37,11 +37,11 @@ import utils.pages.QuestionPage
 import viewmodels.checkAnswers.ftnae._
 
 class FtnaeControllerHelperSpec extends AnyFreeSpec with MockitoSugar with Matchers with FtnaeControllerHelper {
-  implicit val messages = mock[Messages]
+  implicit val messages: Messages = mock[Messages]
 
   "buildSummaryRows" - {
     val fakeRequest = FakeRequest("GET", "unittest/buildSummaryRows")
-    when(messages(anyString(), any())).thenAnswer(i => i.getArgument(0))
+    when(messages(anyString(), any())).thenAnswer(_.getArgument(0))
 
     "GIVEN all user answers rows supplied" - {
       "THEN all expected SummaryRows are returned" in {

@@ -24,12 +24,11 @@ import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank}
 import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status
-import play.api.mvc.Request
+import play.api.mvc.{AnyContentAsEmpty, Request, Result}
 
 import scala.concurrent.ExecutionContext
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import play.api.test.FakeRequest
 import services.AuditService
@@ -48,15 +47,16 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
     def callFilter[A](request: IdentifierRequest[A]): Future[Option[Result]] = this.filter(request)
   }
 
-  implicit val request = IdentifierRequest(FakeRequest(GET, ""), NationalInsuranceNumber("123456"), true, "")
+  implicit val request: IdentifierRequest[AnyContentAsEmpty.type] =
+    IdentifierRequest(FakeRequest(GET, ""), NationalInsuranceNumber("123456"), true, "")
 
   "when bar not locked is verified from connector, the action" - {
 
     "must move on with the request (open the gate) and return None" in {
       userLoggedInIsChildBenefitUser(ninoUser)
-      val cobConnector          = mock[ChangeOfBankConnector]
-      val errorHandler          = mock[ErrorHandler]
-      implicit val auditService = mock[AuditService]
+      val cobConnector = mock[ChangeOfBankConnector]
+      val errorHandler = mock[ErrorHandler]
+      implicit val auditService: AuditService = mock[AuditService]
 
       when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(())
       when(
@@ -82,9 +82,9 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
     "must NOT move on with the request (close the gate) and redirect to Bar Locked Page" in {
 
       userLoggedInIsChildBenefitUser(ninoUser)
-      val cobConnector          = mock[ChangeOfBankConnector]
-      val errorHandler          = mock[ErrorHandler]
-      implicit val auditService = mock[AuditService]
+      val cobConnector = mock[ChangeOfBankConnector]
+      val errorHandler = mock[ErrorHandler]
+      implicit val auditService: AuditService = mock[AuditService]
 
       when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope
         .fromError[ClaimantIsLockedOutOfChangeOfBank, Unit](

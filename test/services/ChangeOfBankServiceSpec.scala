@@ -43,11 +43,11 @@ import views.html.cob.ChangeAccountView
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeOfBankServiceSpec extends BaseSpec {
-  val cobConnector          = mock[ChangeOfBankConnector]
-  val sessionRepository     = mock[SessionRepository]
-  implicit val auditService = mock[AuditService]
-  implicit val ec           = scala.concurrent.ExecutionContext.Implicits.global
-  implicit val hc           = HeaderCarrier()
+  val cobConnector:          ChangeOfBankConnector = mock[ChangeOfBankConnector]
+  val sessionRepository:     SessionRepository     = mock[SessionRepository]
+  implicit val auditService: AuditService          = mock[AuditService]
+  implicit val ec:           ExecutionContext      = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val hc:           HeaderCarrier         = HeaderCarrier()
 
   val sut = new ChangeOfBankService(cobConnector, sessionRepository)
 

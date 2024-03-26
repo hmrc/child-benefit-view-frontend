@@ -24,18 +24,20 @@ import models.errors._
 import org.mockito.Mockito.verify
 import org.scalatest.EitherValues
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.AuditService
 import utils.handlers.ErrorHandlerSpec.resultUrl
 import views.html.{ErrorTemplate, NotFoundView}
 
+import scala.concurrent.ExecutionContext
+
 class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
   "Error handler" - {
-    implicit val auditServiceMock = mock[AuditService]
-    implicit val fakeRequest      = FakeRequest(GET, "/")
-    implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
+    implicit val auditServiceMock: AuditService                        = mock[AuditService]
+    implicit val fakeRequest:      FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
+    implicit val executionContext: ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
 
     implicit val messages: Messages = mock[Messages]
     val messagesApiMock   = mock[MessagesApi]
@@ -166,7 +168,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
           val result = sut.handleError(FtnaeCannotFindYoungPersonError, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual ftnaeroutes.CannotFindYoungPersonController.onPageLoad.url
+          resultUrl(result) mustEqual ftnaeroutes.CannotFindYoungPersonController.onPageLoad().url
         }
       }
 

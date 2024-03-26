@@ -20,6 +20,7 @@ import base.BaseSpec
 import org.mockito.Mockito.when
 import play.api.data.Form
 import play.api.i18n.{Lang, Messages}
+import scala.language.existentials
 
 import java.time.LocalDate
 

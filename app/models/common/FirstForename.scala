@@ -16,10 +16,10 @@
 
 package models.common
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 final case class FirstForename(value: String) extends AnyVal
 
 object FirstForename {
-  implicit val format = Json.valueFormat[FirstForename]
+  implicit val format: Format[FirstForename] = Json.valueFormat[FirstForename]
 }

@@ -16,7 +16,7 @@
 
 package models.changeofbank
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class BankDetails(
     accountHolderType: AccountHolderType,
@@ -26,5 +26,5 @@ final case class BankDetails(
 )
 
 object BankDetails {
-  implicit val format = Json.format[BankDetails]
+  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
 }

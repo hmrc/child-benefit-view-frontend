@@ -22,7 +22,8 @@ import org.scalatest.Assertion
 import play.api.i18n.Lang
 import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class FrontendAppConfigSpec extends BaseSpec {
@@ -200,7 +201,7 @@ class FrontendAppConfigSpec extends BaseSpec {
         "Report Technical Problem Url",
         configSetup[String](baseContactKey),
         Some(baseContactValue),
-        s"/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${SafeRedirectUrl(baseContactValue + referrerUrl).encodedUrl}",
+        s"/contact/report-technical-problem?newTab=true&service=CHIB&referrerUrl=${RedirectUrl(baseContactValue + referrerUrl).get(UnsafePermitAll).encodedUrl}",
         getResult(_.reportTechnicalProblemUrl(referrerUrl)),
         mustInclude()
       )
