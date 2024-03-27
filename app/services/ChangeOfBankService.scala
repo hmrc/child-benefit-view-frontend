@@ -133,16 +133,13 @@ class ChangeOfBankService @Inject() (
 
       (
         awardEndDateIsInTheFuture(cbi),
-        claimantIsHICBCWithAdjustmentEndDateInFuture(cbi),
         rollNumberIsDefined(cbi)
       ) match {
-        case (_, true, _) =>
-          Right(Redirect(cob.routes.HICBCOptedOutPaymentsController.onPageLoad()))
-        case (true, false, false) =>
+        case (true, false) =>
           Right(Ok(changeAccountView(claimantName, accountInfo)))
-        case (true, false, true) =>
+        case (true, true) =>
           Right(Ok(changeAccountView(claimantName, accountInfo)))
-        case (false, _, _) =>
+        case (false, _) =>
           Right(Redirect(routes.NoAccountFoundController.onPageLoad))
         case _ =>
           Left(ChangeOfBankValidationError(Status.NOT_FOUND))
@@ -157,13 +154,6 @@ object ChangeOfBankService {
   val awardEndDateIsInTheFuture: ClaimantBankInformation => Boolean =
     (claimantBankInformation: ClaimantBankInformation) =>
       claimantBankInformation.financialDetails.awardEndDate.isAfter(today)
-
-  val claimantIsHICBCWithAdjustmentEndDateInFuture: ClaimantBankInformation => Boolean =
-    (claimantBankInformation: ClaimantBankInformation) => {
-      claimantBankInformation.financialDetails.adjustmentReasonCode.exists(
-        _.value == HICBCAdjustmentCode
-      ) && claimantBankInformation.financialDetails.adjustmentEndDate.exists(_.isAfter(today))
-    }
 
   val rollNumberIsDefined: ClaimantBankInformation => Boolean = (claimantBankInformation: ClaimantBankInformation) =>
     claimantBankInformation.financialDetails.bankAccountInformation.buildingSocietyRollNumber.isDefined

@@ -21,7 +21,7 @@ import models.changeofbank.ClaimantBankInformation
 import models.requests.IdentifierRequest
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionFilter, Result}
-import services.{AuditService, ChangeOfBankService}
+import services.{AuditService, ChangeOfBankService, IgnoreHICBCCheckService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.handlers.ErrorHandler
@@ -36,17 +36,29 @@ trait VerifyHICBCAction extends ActionFilter[IdentifierRequest]
 class VerifyHICBCActionImpl @Inject() (
     changeOfBankService:         ChangeOfBankService,
     errorHandler:                ErrorHandler,
-    auditService:                AuditService
+    auditService:                AuditService,
+    hicbcCheckService:           IgnoreHICBCCheckService
 )(implicit val executionContext: ExecutionContext)
     extends VerifyHICBCAction {
 
   private val HICBCAdjustmentCode = "28"
 
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
+    hicbcCheckService.getIgnoreHicbcCheckToggle flatMap {
+      ignoreHicbcToggleValue =>
+        if(ignoreHicbcToggleValue) {
+          Future.successful(None)
+        } else {
+          checkHicbc(request)
+        }
+    }
+  }
+
+  private def checkHicbc[A](request: IdentifierRequest[A]) = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     val r = for {
       claimantInfo <- changeOfBankService.retrieveBankClaimantInfo
-      cbi          <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
+      cbi <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
     } yield cbi
 
     r.foldF(

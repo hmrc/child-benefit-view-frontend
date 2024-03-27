@@ -62,5 +62,7 @@ class Module(environment: Environment, config: Configuration) extends AbstractMo
       bind(classOf[LayoutProvider]).to(classOf[OldLayoutProvider]).asEagerSingleton()
     }
 
+    bind(classOf[ApplicationStartUp]).asEagerSingleton()
+
   }
 }

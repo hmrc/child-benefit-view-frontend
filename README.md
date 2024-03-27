@@ -19,15 +19,21 @@ The current journeys implemented and deployed are:
 ## HOW TO RUN THE SERVICE
 To start the service locally, make use of Service Manager. The Service itself can be run using the CHILD_BENEFIT_VIEW_FRONTEND profile.
 
-```> sm2 --start CHILD_BENEFIT_VIEW_FRONTEND```
+```shell
+sm2 --start CHILD_BENEFIT_VIEW_FRONTEND
+```
 
 The CHILD_BENEFIT_SERVICE_ALL profile will run all dependencies required to support this service, including the service itself.
 
-```> sm2 --start CHILD_BENEFIT_SERVICE_ALL```
+```shell
+sm2 --start CHILD_BENEFIT_SERVICE_ALL
+```
 
 If you then wish to run child-benefit-view-frontend locally with changes, stop CHILD_BENEFIT_VIEW_FRONTEND in Service Manager and run the service in sbt
 
-```> sm2 --stop CHILD_BENEFIT_VIEW_FRONTEND```
+```shell
+sm2 --stop CHILD_BENEFIT_VIEW_FRONTEND
+```
 
 ```.../child-benefit-view-frontend> sbt run```
 

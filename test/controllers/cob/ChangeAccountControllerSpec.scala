@@ -129,7 +129,11 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
 
       "must return SEE_OTHER and render the correct view for ChB claimant who is opted out of payments due to HICBC" in {
         val application: Application =
-          applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
+          applicationBuilderWithVerificationActions(
+            config,
+            userAnswers = Some(emptyUserAnswers),
+            verifyHICBCAction = FakeVerifyHICBCAction(verify = false)
+          ).build()
 
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
