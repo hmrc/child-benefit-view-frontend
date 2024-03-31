@@ -19,7 +19,7 @@ package services
 import base.BaseSpec
 import cats.implicits.catsSyntaxEitherId
 import connectors.ChangeOfBankConnector
-import controllers.{cob, routes}
+import controllers.routes
 import models.changeofbank._
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.common.{AdjustmentReasonCode, NationalInsuranceNumber}
