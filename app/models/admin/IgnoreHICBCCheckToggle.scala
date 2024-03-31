@@ -19,6 +19,6 @@ package models.admin
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
 object IgnoreHICBCCheckToggle extends FeatureFlagName {
 
-  override val name: String = "ignore-hicbc-check-toggle"
+  override val name:        String         = "ignore-hicbc-check-toggle"
   override val description: Option[String] = Some("enable/disable ignore hicbc action check")
 }

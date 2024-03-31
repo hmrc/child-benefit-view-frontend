@@ -24,11 +24,13 @@ import javax.inject.Singleton
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class HICBCCacheTestController @Inject()(cache: AsyncCacheApi,
-                                         val controllerComponents: ControllerComponents)(implicit val ec:ExecutionContext) extends BaseController {
-  def clearCacheItem: Action[AnyContent] = Action.async {
-    cache.remove("ignore-hicbic.toggle")
-    Future.successful(Ok("ignore-hicbic.toggle cache item removed"))
-  }
+class HICBCCacheTestController @Inject() (cache: AsyncCacheApi, val controllerComponents: ControllerComponents)(implicit
+    val ec:                                      ExecutionContext
+) extends BaseController {
+  def clearCacheItem: Action[AnyContent] =
+    Action.async {
+      cache.remove("ignore-hicbic.toggle")
+      Future.successful(Ok("ignore-hicbic.toggle cache item removed"))
+    }
 
 }

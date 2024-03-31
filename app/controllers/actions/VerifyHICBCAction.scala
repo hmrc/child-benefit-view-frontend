@@ -44,13 +44,12 @@ class VerifyHICBCActionImpl @Inject() (
   private val HICBCAdjustmentCode = "28"
 
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
-    hicbcCheckService.getIgnoreHicbcCheckToggle flatMap {
-      ignoreHicbcToggleValue =>
-        if(ignoreHicbcToggleValue) {
-          Future.successful(None)
-        } else {
-          checkHicbc(request)
-        }
+    hicbcCheckService.getIgnoreHicbcCheckToggle flatMap { ignoreHicbcToggleValue =>
+      if (ignoreHicbcToggleValue) {
+        Future.successful(None)
+      } else {
+        checkHicbc(request)
+      }
     }
   }
 
@@ -58,7 +57,7 @@ class VerifyHICBCActionImpl @Inject() (
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     val r = for {
       claimantInfo <- changeOfBankService.retrieveBankClaimantInfo
-      cbi <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
+      cbi          <- CBEnvelope(formatClaimantBankInformation(claimantInfo))
     } yield cbi
 
     r.foldF(

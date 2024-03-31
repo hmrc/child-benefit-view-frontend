@@ -132,8 +132,8 @@ class ChangeOfBankServiceSpec extends BaseSpec {
                 adjustmentReasonCode = Some(AdjustmentReasonCode(ChangeOfBankService.HICBCAdjustmentCode)),
                 adjustmentEndDate = Some(ChangeOfBankService.today.plusDays(1)),
                 awardEndDate = ChangeOfBankService.today.plusDays(1),
-                bankAccountInformation = claimant.financialDetails.bankAccountInformation.copy(
-                  buildingSocietyRollNumber = None)
+                bankAccountInformation =
+                  claimant.financialDetails.bankAccountInformation.copy(buildingSocietyRollNumber = None)
               )
             )
         val awardEndsInTheFutureNoRollNumber: ClaimantBankInformation => ClaimantBankInformation =

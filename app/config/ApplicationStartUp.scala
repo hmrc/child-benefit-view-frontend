@@ -25,4 +25,3 @@ import javax.inject.Singleton
 class ApplicationStartUp {
   FeatureFlagNamesLibrary.addFlags(List(IgnoreHICBCCheckToggle))
 }
-

@@ -162,10 +162,10 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
       IdentifierRequest(FakeRequest(GET, ""), NationalInsuranceNumber("123456"), true, "")
 
     userLoggedInIsChildBenefitUser(ninoUser)
-    val cobService:            ChangeOfBankService     = mock[ChangeOfBankService]
-    val errorHandler:          ErrorHandler            = mock[ErrorHandler]
-    implicit val auditService: AuditService            = mock[AuditService]
-    val ignoreHICBCCheckService:     IgnoreHICBCCheckService = mock[IgnoreHICBCCheckService]
+    val cobService:              ChangeOfBankService     = mock[ChangeOfBankService]
+    val errorHandler:            ErrorHandler            = mock[ErrorHandler]
+    implicit val auditService:   AuditService            = mock[AuditService]
+    val ignoreHICBCCheckService: IgnoreHICBCCheckService = mock[IgnoreHICBCCheckService]
 
     when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
       generateCobClaimantInfo(adjustmentReasonCode, adjustmentEndDate)
