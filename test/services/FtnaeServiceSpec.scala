@@ -370,10 +370,10 @@ object FtnaeServiceSpec {
     LocalDate.now().plusYears(4)
   )
 
-  val testSummaryListRows = List(
+  val testSummaryListRows: List[SummaryListRow] = List(
     SummaryListRow(Key(HtmlContent("user-question-1")), Value(HtmlContent("user-answer-1")))
   )
-  val testAuditAnswers = List(FtnaeQuestionAndAnswer("user-question-1", "user-answer-1"))
+  val testAuditAnswers: List[FtnaeQuestionAndAnswer] = List(FtnaeQuestionAndAnswer("user-question-1", "user-answer-1"))
 
   def toChildDetails(
       childInfo:           FtnaeChildInfo,

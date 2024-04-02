@@ -6,3 +6,5 @@
 ->         /child-benefit             ftnae.Routes
 
 ->         /                          health.Routes
+
+->         /admin                     admin.Routes

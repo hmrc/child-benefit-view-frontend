@@ -24,10 +24,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeVerifyHICBCAction(verify: Boolean) extends VerifyHICBCAction {
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
-    if (verify)
+    if (verify) {
       Future.successful(None)
-    else
+    } else {
       Future.successful(Some(Redirect(controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad())))
+    }
   }
 
   override protected def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global

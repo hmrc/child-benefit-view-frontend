@@ -19,7 +19,7 @@ package services
 import base.BaseSpec
 import cats.implicits.catsSyntaxEitherId
 import connectors.ChangeOfBankConnector
-import controllers.{cob, routes}
+import controllers.routes
 import models.changeofbank._
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.common.{AdjustmentReasonCode, NationalInsuranceNumber}
@@ -130,7 +130,10 @@ class ChangeOfBankServiceSpec extends BaseSpec {
             claimant.copy(financialDetails =
               claimant.financialDetails.copy(
                 adjustmentReasonCode = Some(AdjustmentReasonCode(ChangeOfBankService.HICBCAdjustmentCode)),
-                adjustmentEndDate = Some(ChangeOfBankService.today.plusDays(1))
+                adjustmentEndDate = Some(ChangeOfBankService.today.plusDays(1)),
+                awardEndDate = ChangeOfBankService.today.plusDays(1),
+                bankAccountInformation =
+                  claimant.financialDetails.bankAccountInformation.copy(buildingSocietyRollNumber = None)
               )
             )
         val awardEndsInTheFutureNoRollNumber: ClaimantBankInformation => ClaimantBankInformation =
@@ -167,8 +170,8 @@ class ChangeOfBankServiceSpec extends BaseSpec {
             (
               "the claimant is HICBC with an adjustment end date in the future but no roll number",
               hicbcClaimantTransformer,
-              "a Redirect to the HICBC Opted Out Payments page",
-              (_: ClaimantBankAccountInformation) => Redirect(cob.routes.HICBCOptedOutPaymentsController.onPageLoad())
+              "an OK to the expected Change Account View",
+              (cBAI: ClaimantBankAccountInformation) => Ok(view("", cBAI))
             ),
             (
               "the claimant has an award end date in the future but no building society roll number",

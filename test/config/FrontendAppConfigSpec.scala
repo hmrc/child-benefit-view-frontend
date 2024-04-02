@@ -26,6 +26,8 @@ import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
 import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.concurrent.duration.Duration
+
 class FrontendAppConfigSpec extends BaseSpec {
   "FrontendAppConfig" - {
     val mockConfiguration  = mock[Configuration]
@@ -321,6 +323,27 @@ class FrontendAppConfigSpec extends BaseSpec {
               val result = sut.confidenceLevel
 
               result mustBe confidenceLevel
+            }
+          }
+        }
+      }
+      "ignoreHicbcCacheTTL Duration" - {
+        forAll(
+          Table(
+            ("duration", "timeunit"),
+            (20L, "second"),
+            (1L, "minute"),
+            (2L, "hour")
+          )
+        ) { (duration, timeunit) =>
+          s"GIVEN valid Long value duration: $duration AND a valid String value timeunit: $timeunit are set" - {
+            s"THEN Duration ${Duration(duration, timeunit)} is returned" in {
+              when(mockConfiguration.get[Long]("features.ignore-hicbc-check-cache.duration")).thenReturn(duration)
+              when(mockConfiguration.get[String]("features.ignore-hicbc-check-cache.timeunit")).thenReturn(timeunit)
+
+              val result = sut.ignoreHicbcCacheTTL
+
+              result mustBe Duration(duration, timeunit)
             }
           }
         }

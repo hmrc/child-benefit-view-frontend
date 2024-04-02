@@ -24,6 +24,8 @@ import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
 import uk.gov.hmrc.play.bootstrap.binders.{RedirectUrl, UnsafePermitAll}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.concurrent.duration.Duration
+
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
   def host:        String = configuration.get[String]("host")
@@ -40,6 +42,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   def scaWrapperEnabled: Boolean =
     configuration.get[Boolean]("features.sca-wrapper-enabled")
+
+  def ignoreHicbcCacheTTL: Duration =
+    Duration(
+      configuration.get[Long]("features.ignore-hicbc-check-cache.duration"),
+      configuration.get[String]("features.ignore-hicbc-check-cache.timeunit")
+    )
 
   private def contactHost = configuration.get[String]("contact-frontend.host")
   private def childBenefitServiceBaseUrl: String = servicesConfig.baseUrl("child-benefit-entitlement")
@@ -83,4 +91,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
+
 }
