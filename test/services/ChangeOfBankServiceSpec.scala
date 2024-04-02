@@ -170,8 +170,6 @@ class ChangeOfBankServiceSpec extends BaseSpec {
             (
               "the claimant is HICBC with an adjustment end date in the future but no roll number",
               hicbcClaimantTransformer,
-//              "a Redirect to the HICBC Opted Out Payments page", //no longer the case as check is done in Action and not replicated in the service
-//              (_: ClaimantBankAccountInformation) => Redirect(cob.routes.HICBCOptedOutPaymentsController.onPageLoad())
               "an OK to the expected Change Account View",
               (cBAI: ClaimantBankAccountInformation) => Ok(view("", cBAI))
             ),
