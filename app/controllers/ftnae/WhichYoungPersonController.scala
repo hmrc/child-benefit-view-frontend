@@ -53,7 +53,7 @@ class WhichYoungPersonController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData) { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData) { implicit request =>
       val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
       val preparedForm = userAnswers.get(WhichYoungPersonPage) match {
@@ -79,7 +79,7 @@ class WhichYoungPersonController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData).async { implicit request =>
       {
         val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 

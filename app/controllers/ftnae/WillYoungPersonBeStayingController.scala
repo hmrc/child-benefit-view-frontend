@@ -54,7 +54,7 @@ class WillYoungPersonBeStayingController @Inject() (
   }
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(WillYoungPersonBeStayingPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -64,7 +64,7 @@ class WillYoungPersonBeStayingController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

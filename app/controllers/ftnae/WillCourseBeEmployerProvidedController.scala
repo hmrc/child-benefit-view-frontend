@@ -53,7 +53,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(WillCourseBeEmployerProvidedPage) match {
         case None =>
           form
@@ -67,7 +67,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (identify andThen featureActions.ftnaeAction andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
