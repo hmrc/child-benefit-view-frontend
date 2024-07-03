@@ -86,7 +86,8 @@ class PaymentHistoryService @Inject() (
         case (true, false, true) if adjustmentIsInTheFuture(cbe) =>
           auditViewPaymentDetails(request, HICBCWithoutPaymentsInLastTwoYears, cbe)
           Right(noPaymentHistory(cbe, HICBCWithoutPaymentsInLastTwoYears))
-        case _ => Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
+        case _ =>
+          Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
       }
     }
 
@@ -97,10 +98,12 @@ class PaymentHistoryService @Inject() (
       (entitlementEndDateIsTodayOrInThePast(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
         case (true, true, _) =>
           Right(paymentHistory(cbe, EntitlementEndedButReceivedPaymentsInLastTwoYears))
-        case (true, false, true) => Right(noPaymentHistory(cbe, HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast))
+        case (true, false, true) =>
+          Right(noPaymentHistory(cbe, HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast))
         case (true, false, _) =>
           Right(noPaymentHistory(cbe, EntitlementEndedButNoPaymentsInLastTwoYears))
-        case _ => Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
+        case _ =>
+          Left(PaymentHistoryValidationError(Status.NOT_FOUND, "entitlement validation failed"))
       }
     }
 

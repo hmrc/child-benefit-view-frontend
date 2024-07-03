@@ -41,10 +41,10 @@ class PaymentHistoryController @Inject() (
   val view: Action[AnyContent] =
     Action andThen identify async { implicit request =>
       paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
-        err => errorHandler.handleError(err, Some("paymentDetails")),
-        result => {
+        err =>
+          errorHandler.handleError(err, Some("paymentDetails")),
+        result =>
           Ok(result)
-        }
       )
     }
 
