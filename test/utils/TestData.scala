@@ -30,7 +30,17 @@ object TestData {
       |	"nino": "QQ123456D",
       |	"affinityGroup": "Individual",
       |	"internalId": "Int-8612ba91-5581-411d-9d32-fb2de937a565",
-      | "confidenceLevel": "200"
+      | "confidenceLevel": "200",
+      | "allEnrolments": [
+      |   {
+      |     "key": "HMRC-PT",
+      |     "identifiers": [{
+      |       "key": "NINO",
+      |       "value": "QQ123456D"
+      |      }],
+      |      "state": "activated"
+      |   }
+      | ]
       |}
       |""".stripMargin
 
@@ -39,7 +49,8 @@ object TestData {
       |{
       |	"affinityGroup": "Individual",
       |	"internalId": "Int-8612ba91-5581-411d-9d32-fb2de937a565",
-      | "confidenceLevel": "200"
+      | "confidenceLevel": "200",
+      | "allEnrolments": []
       |}
       |""".stripMargin
 

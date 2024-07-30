@@ -28,6 +28,8 @@ import scala.concurrent.duration.Duration
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
+  private def getExternalUrl(service: String): String = servicesConfig.getString(s"external-urls.$service.url")
+
   def host:        String = configuration.get[String]("host")
   def appName:     String = configuration.get[String]("appName")
   def loginUrl:    String = configuration.get[String]("urls.login")
@@ -91,5 +93,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     ConfidenceLevel
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
+
+  val protectTaxInfoUrl: String = getExternalUrl("tax-enrolment-assignment")
+
 
 }
