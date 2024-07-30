@@ -22,7 +22,7 @@ import uk.gov.hmrc.auth.core._
 class HmrcPTChecksSpec extends BaseSpec {
 
   val enrolmentChecks = new HmrcPTChecks
-  val nino = "AA000000A"
+  val nino            = "AA000000A"
 
   "isHmrcPTEnrolmentPresentAndValid" - {
     "must return false when No HMRC-PT enrolment is present" in {
@@ -36,9 +36,12 @@ class HmrcPTChecksSpec extends BaseSpec {
     }
 
     "must return true when enrolment is present and valid" in {
-      val result = enrolmentChecks.isHmrcPTEnrolmentPresentAndValid(nino, Enrolments(
-        Set(Enrolment("HMRC-PT", Seq(EnrolmentIdentifier("NINO", nino)), "activated"))
-      ))
+      val result = enrolmentChecks.isHmrcPTEnrolmentPresentAndValid(
+        nino,
+        Enrolments(
+          Set(Enrolment("HMRC-PT", Seq(EnrolmentIdentifier("NINO", nino)), "activated"))
+        )
+      )
       result mustBe true
     }
   }

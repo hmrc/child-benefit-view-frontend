@@ -22,10 +22,9 @@ import uk.gov.hmrc.auth.core.Enrolments
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class HmrcPTChecks @Inject()() extends Logging {
+class HmrcPTChecks @Inject() () extends Logging {
 
-  def isHmrcPTEnrolmentPresentAndValid(nino: String, enrolments: Enrolments
-  ): Boolean = {
+  def isHmrcPTEnrolmentPresentAndValid(nino: String, enrolments: Enrolments): Boolean = {
     enrolments.enrolments
       .filter(_.key == "HMRC-PT")
       .flatMap { enrolment =>
@@ -35,7 +34,7 @@ class HmrcPTChecks @Inject()() extends Logging {
       case enrolmentIdentifiers if enrolmentIdentifiers.isEmpty =>
         false
       case enrolmentIdentifiers
-        if enrolmentIdentifiers.exists(enrolmentIdentifier => enrolmentIdentifier.value == nino) =>
+          if enrolmentIdentifiers.exists(enrolmentIdentifier => enrolmentIdentifier.value == nino) =>
         true
       case _ =>
         logger.error("The nino in HMRC-PT enrolment does not match the one from the user session")

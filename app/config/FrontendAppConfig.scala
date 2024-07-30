@@ -96,5 +96,4 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val protectTaxInfoUrl: String = getExternalUrl("tax-enrolment-assignment")
 
-
 }

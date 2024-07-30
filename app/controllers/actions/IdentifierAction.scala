@@ -44,7 +44,7 @@ class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
     implicit val config:         FrontendAppConfig,
     val parser:                  BodyParsers.Default,
-    hmrcPTChecks: HmrcPTChecks
+    hmrcPTChecks:                HmrcPTChecks
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions
@@ -65,7 +65,11 @@ class AuthenticatedIdentifierAction @Inject() (
           if (hmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(nino, allEnrolments)) {
             block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
           } else {
-            Future.successful(Redirect(s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"))
+            Future.successful(
+              Redirect(
+                s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"
+              )
+            )
           }
         case _ =>
           logger.debug("user could not be authorised: redirecting")
