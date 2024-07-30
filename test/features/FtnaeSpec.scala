@@ -51,7 +51,7 @@ class FtnaeSpec extends BaseAppSpec {
           status(result) mustEqual NOT_FOUND
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
-            view(hideWrapperBanner = false)(request, messages(application)).toString
+            view(hideWrapperBanner = true)(request, messages(application)).toString
           )
         }
       }

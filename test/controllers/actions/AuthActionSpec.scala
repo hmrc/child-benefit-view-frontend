@@ -29,10 +29,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import base.BaseAppSpec
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import stubs.AuthStubs
 import utils.TestData
+import utils.enrolments.HmrcPTChecks
 
 class AuthActionSpec extends BaseAppSpec {
+  lazy val mockHmrcPTChecks = mock[HmrcPTChecks]
 
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction { _ => Results.Ok }
@@ -41,6 +45,7 @@ class AuthActionSpec extends BaseAppSpec {
   "Auth Action" - {
     "when the user hasn't logged in" - {
       "must redirect the user to log in " in {
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -51,7 +56,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new MissingBearerToken),
             appConfig,
-            bodyParsers
+            bodyParsers,
+            mockHmrcPTChecks
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
@@ -64,6 +70,8 @@ class AuthActionSpec extends BaseAppSpec {
 
     "the user's session has expired" - {
       "must redirect the user to log in " in {
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
+
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
@@ -73,7 +81,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new BearerTokenExpired),
             appConfig,
-            bodyParsers
+            bodyParsers,
+            mockHmrcPTChecks
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
@@ -87,6 +96,8 @@ class AuthActionSpec extends BaseAppSpec {
     "the user doesn't have sufficient confidence level" - {
 
       "must redirect the user to IV Uplift" in {
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
+
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
@@ -96,7 +107,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
             appConfig,
-            bodyParsers
+            bodyParsers,
+            mockHmrcPTChecks
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
@@ -110,6 +122,7 @@ class AuthActionSpec extends BaseAppSpec {
     "the user used an unaccepted auth provider" - {
 
       "must redirect the user to the unauthorised page" in {
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -120,7 +133,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
             appConfig,
-            bodyParsers
+            bodyParsers,
+            mockHmrcPTChecks
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
@@ -133,6 +147,7 @@ class AuthActionSpec extends BaseAppSpec {
     "the user has an unsupported affinity group" - {
 
       "must redirect the user to the unauthorised page" in {
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -143,7 +158,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
             appConfig,
-            bodyParsers
+            bodyParsers,
+            mockHmrcPTChecks
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())

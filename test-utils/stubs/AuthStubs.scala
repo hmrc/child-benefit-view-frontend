@@ -33,7 +33,7 @@ object AuthStubs {
               |  }, {
               |    "confidenceLevel" : 200
               |  } ],
-              |  "retrieve" : [ "nino", "internalId" ]
+              |  "retrieve" : [ "nino", "internalId", "allEnrolments" ]
               |}""".stripMargin('|')
 
   def userLoggedInIsChildBenefitUser(testUserJson: String): StubMapping =

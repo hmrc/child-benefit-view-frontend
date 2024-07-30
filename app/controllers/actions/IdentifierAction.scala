@@ -27,10 +27,12 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{internalId, nino}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.enrolments.HmrcPTChecks
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +43,8 @@ trait IdentifierAction
 class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
     implicit val config:         FrontendAppConfig,
-    val parser:                  BodyParsers.Default
+    val parser:                  BodyParsers.Default,
+    hmrcPTChecks:                HmrcPTChecks
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions
@@ -49,7 +52,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
   private val AuthPredicate = (config: FrontendAppConfig) =>
     Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel
-  private val ChildBenefitRetrievals = nino and internalId
+  private val ChildBenefitRetrievals = nino and internalId and allEnrolments
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -57,9 +60,17 @@ class AuthenticatedIdentifierAction @Inject() (
 
     authorised(AuthPredicate(config))
       .retrieve(ChildBenefitRetrievals) {
-        case Some(nino) ~ Some(internalId) =>
+        case Some(nino) ~ Some(internalId) ~ allEnrolments =>
           logger.debug("user is authorised: executing action block")
-          block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
+          if (hmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(nino, allEnrolments)) {
+            block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
+          } else {
+            Future.successful(
+              Redirect(
+                s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"
+              )
+            )
+          }
         case _ =>
           logger.debug("user could not be authorised: redirecting")
           Future successful Redirect(
