@@ -65,7 +65,7 @@ class AuthenticatedIdentifierAction @Inject() (
           if (hmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(nino, allEnrolments)) {
             block(IdentifierRequest(request, NationalInsuranceNumber(nino), true, internalId))
           } else {
-            Future.successful(Redirect(s"${config.protectTaxInfoUrl}?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"))
+            Future.successful(Redirect(s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"))
           }
         case _ =>
           logger.debug("user could not be authorised: redirecting")
