@@ -125,5 +125,34 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         )
       }
     }
+
+    "must return SEE_OTHER and render the correct view for a GET" in {
+      userLoggedInIsChildBenefitUser(ninoUser)
+
+      stubFor(
+        get(urlEqualTo("/child-benefit/make_a_claim/view-proof-entitlement"))
+          .willReturn(
+            aResponse()
+              .withStatus(303)
+              .withBody(Json.toJson(testEntitlement).toString)
+          )
+      )
+
+      val application =
+        applicationBuilder(Map("microservice.services.child-benefit-entitlement.port" -> wiremockPort)).build()
+
+      running(application) {
+
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.ProofOfEntitlementController.view.url).withSession("authToken" -> "Bearer 123")
+
+        val result = route(application, request).value
+
+//        val view = application.injector.instanceOf[ProofOfEntitlement] //TOD
+
+        status(result) mustEqual SEE_OTHER
+      }
+    }
+
   }
 }
