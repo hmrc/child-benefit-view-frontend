@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, StandardAuthJourney}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -30,7 +30,7 @@ import scala.concurrent.Future
 class NoAccountFoundController @Inject() (
     authConnector: AuthConnector,
     view:          NoAccountFoundView,
-    identify:      IdentifierAction
+    auth:          StandardAuthJourney
 )(implicit
     config: Configuration,
     env:    Environment,
@@ -39,7 +39,7 @@ class NoAccountFoundController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    identify async { implicit request =>
+    auth.pertaxAuthActionWithUserDetails async { implicit request =>
       Future successful Ok(view())
     }
 }

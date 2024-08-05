@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 
 class WhyYoungPersonNotListedController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
@@ -44,7 +44,7 @@ class WhyYoungPersonNotListedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
       auditService.auditFtnaeKickOut(
         request.nino.nino,
         "Success",

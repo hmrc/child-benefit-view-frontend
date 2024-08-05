@@ -36,7 +36,7 @@ class TwelveHoursAWeekController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             TwelveHoursAWeekFormProvider,
@@ -54,7 +54,7 @@ class TwelveHoursAWeekController @Inject() (
   }
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(TwelveHoursAWeekPage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -64,7 +64,7 @@ class TwelveHoursAWeekController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

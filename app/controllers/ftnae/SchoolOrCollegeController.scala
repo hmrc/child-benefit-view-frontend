@@ -34,7 +34,7 @@ class SchoolOrCollegeController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             SchoolOrCollegeFormProvider,
@@ -48,7 +48,7 @@ class SchoolOrCollegeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(SchoolOrCollegePage) match {
         case None        => form
         case Some(value) => form.fill(value)
@@ -58,7 +58,7 @@ class SchoolOrCollegeController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

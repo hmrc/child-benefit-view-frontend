@@ -32,7 +32,7 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, StandardAuthJourney}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -49,7 +49,7 @@ class JourneyRecoveryController @Inject() (
     continueView:   JourneyRecoveryContinueView,
     startAgainView: JourneyRecoveryStartAgainView,
     authConnector:  AuthConnector,
-    identify:       IdentifierAction
+    auth:           StandardAuthJourney
 )(implicit
     config: Configuration,
     env:    Environment,
@@ -60,7 +60,7 @@ class JourneyRecoveryController @Inject() (
   private val logger = new RequestLogger(this.getClass)
 
   def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] =
-    identify async { implicit request =>
+    auth.pertaxAuthActionWithUserDetails async { implicit request =>
       val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
         unsafeUrl.getEither(OnlyRelative) match {
           case Right(safeUrl) =>

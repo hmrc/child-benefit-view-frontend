@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 
 class PaymentsExtendedController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              FtnaePaymentsExtendedPageDataRequiredActionImpl,
     ftnaeService:             FtnaeService,
@@ -44,7 +44,7 @@ class PaymentsExtendedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
       val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
 
       ftnaeService

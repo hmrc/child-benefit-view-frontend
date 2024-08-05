@@ -32,7 +32,7 @@
 
 package controllers
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRetrievalAction, IdentifierAction, StandardAuthJourney}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -45,11 +45,11 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class HiddenController @Inject() (
-    getData:           DataRetrievalAction,
-    sessionRepository: SessionRepository,
-    authConnector:     AuthConnector,
-    identify:          IdentifierAction,
-    layout:            NewLayoutProvider
+                                   getData:           DataRetrievalAction,
+                                   sessionRepository: SessionRepository,
+                                   authConnector:     AuthConnector,
+                                   auth:              StandardAuthJourney,
+                                   layout:            NewLayoutProvider
 )(implicit
     config: Configuration,
     env:    Environment,
@@ -59,7 +59,7 @@ class HiddenController @Inject() (
     with I18nSupport {
 
   def hidden: Action[AnyContent] = {
-    (identify andThen getData).async { implicit request =>
+    (auth.pertaxAuthActionWithUserDetails andThen getData).async { implicit request =>
       request.userAnswers
         .map { answers =>
           sessionRepository.keepAlive(answers.id).map(_ => Ok)

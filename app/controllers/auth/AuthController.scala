@@ -18,7 +18,7 @@ package controllers.auth
 
 import config.FrontendAppConfig
 import controllers.ChildBenefitBaseController
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, PertaxAuthAction, StandardAuthJourney}
 import controllers.actions.IdentifierAction.toContinueUrl
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext
 class AuthController @Inject() (
     sessionRepository: SessionRepository,
     authConnector:     AuthConnector,
-    identify:          IdentifierAction
+    auth:          StandardAuthJourney
 )(implicit
     config:            Configuration,
     env:               Environment,
@@ -46,7 +46,7 @@ class AuthController @Inject() (
   private val logger = new RequestLogger(this.getClass)
 
   def signOut(): Action[AnyContent] =
-    identify async { implicit request =>
+    auth.pertaxAuthActionWithUserDetails async { implicit request =>
       sessionRepository
         .clear(request.internalId)
         .map { _ =>
@@ -57,7 +57,7 @@ class AuthController @Inject() (
     }
 
   def signOutNoSurvey(): Action[AnyContent] =
-    identify async { implicit request =>
+    auth.pertaxAuthActionWithUserDetails async { implicit request =>
       sessionRepository
         .clear(request.internalId)
         .map { _ =>

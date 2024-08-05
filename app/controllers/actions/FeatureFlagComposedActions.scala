@@ -28,14 +28,14 @@ Identifier action, allowing for further transformation and composition as requir
 class FeatureFlagComposedActions @Inject() (
     controllerComponents:  MessagesControllerComponents,
     featureFlags:          FeatureFlagActionFactory,
-    identify:              IdentifierAction,
+    auth:                  StandardAuthJourney,
     ftnaeIdentifierAction: FtnaeIdentifierAction
 ) {
   private def actionStart: ActionBuilder[MessagesRequest, AnyContent] =
     controllerComponents.messagesActionBuilder.compose(controllerComponents.actionBuilder)
 
   private def featureAction(featureFlagAction: FeatureFlagAction): ActionBuilder[IdentifierRequest, AnyContent] =
-    actionStart andThen featureFlagAction andThen identify
+    actionStart andThen featureFlagAction andThen auth.pertaxAuthActionWithUserDetails
 
   def changeBankAction = featureAction(featureFlags.changeOfBankEnabled)
 

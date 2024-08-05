@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.ChildBenefitEntitlementConnector
-import controllers.actions.IdentifierAction
+import controllers.actions.{IdentifierAction, StandardAuthJourney}
 import utils.handlers.ErrorHandler
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -38,7 +38,7 @@ class ProofOfEntitlementController @Inject() (
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement,
-    identify:                         IdentifierAction
+    auth:                             StandardAuthJourney
 )(implicit
     config:  Configuration,
     env:     Environment,
@@ -47,7 +47,7 @@ class ProofOfEntitlementController @Inject() (
     auditor: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action andThen identify async { implicit request =>
+    Action andThen auth.pertaxAuthActionWithUserDetails async { implicit request =>
       childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
         err => errorHandler.handleError(err, Some("proofOfEntitlement")),
         entitlement => {

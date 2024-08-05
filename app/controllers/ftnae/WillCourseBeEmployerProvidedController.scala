@@ -36,7 +36,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             WillCourseBeEmployerProvidedFormProvider,
@@ -53,7 +53,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(WillCourseBeEmployerProvidedPage) match {
         case None =>
           form
@@ -67,7 +67,7 @@ class WillCourseBeEmployerProvidedController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
