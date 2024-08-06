@@ -30,7 +30,8 @@ import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import config.FrontendAppConfig
 
 @Singleton
 class ProofOfEntitlementController @Inject() (
@@ -38,7 +39,8 @@ class ProofOfEntitlementController @Inject() (
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement,
-    identify:                         IdentifierAction
+    identify:                         IdentifierAction,
+    frontendAppConfig:                FrontendAppConfig
 )(implicit
     config:  Configuration,
     env:     Environment,
@@ -46,21 +48,25 @@ class ProofOfEntitlementController @Inject() (
     cc:      MessagesControllerComponents,
     auditor: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
-  val view: Action[AnyContent] =
-    Action andThen identify async { implicit request =>
-      childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-        err => errorHandler.handleError(err, Some("proofOfEntitlement")),
-        entitlement => {
-          auditor.auditProofOfEntitlement(
-            request.nino.nino,
-            "Successful",
-            request,
-            Some(entitlement)
+    val view: Action[AnyContent] =
+      Action andThen identify async { implicit request =>
+        if (frontendAppConfig.redirectToPEGA) {
+          Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
+        } else {
+          childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+            err => errorHandler.handleError(err, Some("proofOfEntitlement")),
+            entitlement => {
+              auditor.auditProofOfEntitlement(
+                request.nino.nino,
+                "Successful",
+                request,
+                Some(entitlement)
+              )
+              Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
+            }
           )
-          Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
         }
-      )
-    }
+      }
 }
 
 object ProofOfEntitlementController {
