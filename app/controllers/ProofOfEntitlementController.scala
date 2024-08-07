@@ -48,25 +48,25 @@ class ProofOfEntitlementController @Inject() (
     cc:      MessagesControllerComponents,
     auditor: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
-    val view: Action[AnyContent] =
-      Action andThen identify async { implicit request =>
-        if (frontendAppConfig.redirectToPEGA) {
-          Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
-        } else {
-          childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-            err => errorHandler.handleError(err, Some("proofOfEntitlement")),
-            entitlement => {
-              auditor.auditProofOfEntitlement(
-                request.nino.nino,
-                "Successful",
-                request,
-                Some(entitlement)
-              )
-              Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
-            }
-          )
-        }
+  val view: Action[AnyContent] =
+    Action andThen identify async { implicit request =>
+      if (frontendAppConfig.redirectToPEGA) {
+        Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
+      } else {
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+          err => errorHandler.handleError(err, Some("proofOfEntitlement")),
+          entitlement => {
+            auditor.auditProofOfEntitlement(
+              request.nino.nino,
+              "Successful",
+              request,
+              Some(entitlement)
+            )
+            Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
+          }
+        )
       }
+    }
 }
 
 object ProofOfEntitlementController {

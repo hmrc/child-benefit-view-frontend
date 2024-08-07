@@ -133,8 +133,8 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         applicationBuilder(
           Map(
             "microservice.services.child-benefit-entitlement.port" -> wiremockPort,
-            "features.redirect-to-pega" -> true,
-            "urls.pegaPoe" -> "/pega"
+            "features.redirect-to-pega"                            -> true,
+            "urls.pegaPoe"                                         -> "/pega"
           )
         ).build()
 
