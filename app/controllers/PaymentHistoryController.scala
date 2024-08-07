@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.{IdentifierAction, StandardAuthJourney}
+import controllers.actions.StandardAuthJourney
 import utils.handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}

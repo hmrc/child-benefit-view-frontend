@@ -32,7 +32,7 @@
 
 package controllers
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction, StandardAuthJourney}
+import controllers.actions.{DataRetrievalAction, StandardAuthJourney}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}

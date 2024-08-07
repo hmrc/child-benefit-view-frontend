@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.ChildBenefitEntitlementConnector
-import controllers.actions.{IdentifierAction, StandardAuthJourney}
+import controllers.actions.StandardAuthJourney
 import utils.handlers.ErrorHandler
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

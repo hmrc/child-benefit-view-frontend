@@ -20,7 +20,6 @@ import play.api.Logging
 import uk.gov.hmrc.auth.core.Enrolments
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
 
 class HmrcPTChecks @Inject() () extends Logging {
 
