@@ -17,6 +17,7 @@
 package controllers
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
@@ -32,6 +33,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when a relative continue Url is supplied" - {
 
       "must return OK and the continue view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()
@@ -59,6 +61,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when an absolute continue Url is supplied" - {
 
       "must return OK and the start again view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()
@@ -83,6 +86,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
     "when no continue Url is supplied" - {
 
       "must return OK and the start again view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder().build()

@@ -27,12 +27,10 @@ import com.github.tomakehurst.wiremock.common.Slf4jNotifier
 
 trait WireMockSupport extends BaseSpec with BeforeAndAfterEach with BeforeAndAfterAll {
 
-  private val defaultSeconds = 100;
-  implicit val defaultTimeout: FiniteDuration = FiniteDuration(defaultSeconds, TimeUnit.SECONDS)
-
   val wiremockPort = 11111
   val defaultWireMockConfig = Map(
     "microservice.services.auth.port"                      -> wiremockPort,
+    "microservice.services.pertax-auth.port"               -> wiremockPort,
     "microservice.services.child-benefit-entitlement.port" -> wiremockPort
   )
 

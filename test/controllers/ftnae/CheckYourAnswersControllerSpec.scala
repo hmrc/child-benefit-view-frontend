@@ -18,6 +18,7 @@ package controllers.ftnae
 
 import base.BaseAppSpec
 import models.ftnae.HowManyYears
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
 import org.scalatest.prop.TableDrivenPropertyChecks
@@ -47,6 +48,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
     val config = TestConfig()
 
     "must return OK and the correct view for a GET" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
@@ -94,6 +96,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
     }
 
     "must redirect to Service Unavailable for a GET if no existing data is found" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(config, userAnswers = None).configure().build()
@@ -133,7 +136,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
           controllers.ftnae.routes.WillYoungPersonBeStayingController.onPageLoad(NormalMode).url
         )
       )
-
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>
@@ -165,7 +168,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
           controllers.ftnae.routes.UseDifferentFormController.onPageLoad().url
         )
       )
-
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       forAll(scenarios) { (userAnswers: UserAnswers, url: String) =>

@@ -18,6 +18,7 @@ package controllers.cob
 
 import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
+import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
 import play.api.test.FakeRequest
@@ -38,6 +39,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =
@@ -85,6 +87,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
           running(application) {
             val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
               .withSession("authToken" -> "Bearer 123")
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
             val result = route(application, request).value
 
@@ -100,6 +103,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()

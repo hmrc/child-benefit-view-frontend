@@ -17,13 +17,13 @@
 package features
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.Helpers._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import stubs.AuthStubs._
 import utils.TestData.ninoUser
-
 import views.html.templates.OldLayoutProvider
 import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 import views.html.components.ParagraphBody
@@ -35,6 +35,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks
 class WrapperSpec extends BaseAppSpec with TableDrivenPropertyChecks {
 
   "When the wrapper is disabled the old fallback layout is used" in {
+    mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
     userLoggedInIsChildBenefitUser(ninoUser)
     val config =
       TestConfig().withFeatureFlags(featureFlags(changeOfBank = true)) + ("features.sca-wrapper-enabled" -> false)

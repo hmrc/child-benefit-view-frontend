@@ -16,23 +16,17 @@
 
 package stubs
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, equalToJson, post, stubFor, unauthorized, urlEqualTo}
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import models.pertaxAuth.PertaxAuthResponseModel
+import play.api.http.Status.OK
+import play.api.libs.json.Json
+import play.utils.UriEncoding
 
 object AuthStubs {
   val childBenefitRetrievals: String =
     """{
-              |  "authorise" : [ {
-              |    "$or" : [ {
-              |      "affinityGroup" : "Individual"
-              |    }, {
-              |      "affinityGroup" : "Organisation"
-              |    } ]
-              |  }, {
-              |    "authProviders" : [ "GovernmentGateway" ]
-              |  }, {
-              |    "confidenceLevel" : 200
-              |  } ],
+              |  "authorise" : [],
               |  "retrieve" : [ "nino", "internalId", "allEnrolments" ]
               |}""".stripMargin('|')
 
@@ -63,4 +57,27 @@ object AuthStubs {
           unauthorized.withHeader("WWW-Authenticate", s"""MDTP detail="Session record not found"""")
         )
     )
+
+  def mockPostPertaxAuth(returnedValue: PertaxAuthResponseModel): StubMapping = {
+    stubFor(
+      post(urlEqualTo("/pertax/authorise"))
+        .willReturn(aResponse().withStatus(200)
+          .withBody(Json.stringify(Json.toJson(returnedValue))))
+    )
+  }
+
+  def mockPertaxPartial(body: String, title: Option[String], status: Int = OK, partialUrl: String = "/partial"): StubMapping = {
+    val response = aResponse()
+      .withStatus(status)
+      .withBody(body)
+
+    stubFor(
+      get(urlEqualTo(partialUrl))
+        .willReturn(
+          title.fold(response) { unwrappedTitle =>
+            response.withHeader("X-Title", UriEncoding.encodePathSegment(unwrappedTitle, "UTF-8"))
+          }
+        )
+    )
+  }
 }

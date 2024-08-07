@@ -21,6 +21,7 @@ import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.errors.{CBError, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -38,6 +39,7 @@ import views.html.ftnae.ExtendPaymentsView
 import scala.concurrent.{ExecutionContext, Future}
 import utils.TestData
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -80,6 +82,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -109,6 +112,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -133,6 +137,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
       running(application) {
         val request = FakeRequest(GET, extendPaymentsRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 

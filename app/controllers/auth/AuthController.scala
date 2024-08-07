@@ -18,7 +18,7 @@ package controllers.auth
 
 import config.FrontendAppConfig
 import controllers.ChildBenefitBaseController
-import controllers.actions.{IdentifierAction, PertaxAuthAction, StandardAuthJourney}
+import controllers.actions.StandardAuthJourney
 import controllers.actions.IdentifierAction.toContinueUrl
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}

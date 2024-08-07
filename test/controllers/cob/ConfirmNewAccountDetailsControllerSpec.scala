@@ -21,6 +21,7 @@ import connectors.ChangeOfBankConnector
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{NewAccountDetails, UpdateBankDetailsResponse, WhatTypeOfAccount}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.requests.BaseDataRequest
 import models.viewmodels.govuk.summarylist._
 import models.{CBEnvelope, NormalMode, UserAnswers}
@@ -144,6 +145,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN valid User Answers are retrieved" - {
           "THEN should return OK Result and the expected view" in {
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
 
             val userAnswers = UserAnswers(userAnswersId)
@@ -184,6 +186,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()

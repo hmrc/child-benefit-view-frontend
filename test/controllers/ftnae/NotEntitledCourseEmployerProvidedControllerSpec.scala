@@ -17,12 +17,14 @@
 package controllers.ftnae
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.NotEntitledCourseEmployerProvidedView
 import utils.TestData
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class NotEntitledCourseEmployerProvidedControllerSpec extends BaseAppSpec {
 
@@ -36,6 +38,7 @@ class NotEntitledCourseEmployerProvidedControllerSpec extends BaseAppSpec {
         val request =
           FakeRequest(GET, controllers.ftnae.routes.NotEntitledCourseEmployerProvidedController.onPageLoad().url)
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
