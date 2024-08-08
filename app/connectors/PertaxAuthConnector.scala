@@ -30,15 +30,19 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: FrontendAppConfig, httpClientResponse: HttpClientResponse)(
-  implicit ec: ExecutionContext
-) extends PertaxAuthConnector with Logging {
-
+class PertaxAuthConnectorImpl @Inject() (
+    http:               HttpClient,
+    appConfig:          FrontendAppConfig,
+    httpClientResponse: HttpClientResponse
+)(implicit
+    ec: ExecutionContext
+) extends PertaxAuthConnector
+    with Logging {
 
   override def pertaxPostAuthorise(implicit
-                          hc: HeaderCarrier,
-                          ec: ExecutionContext
-                         ): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+  ): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel] = {
     val pertaxUrl = appConfig.pertaxAuthBaseUrl
 
     httpClientResponse
@@ -54,25 +58,34 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: FrontendApp
 
   override def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial] = {
     val partialUrl =
-      appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl else s"/$partialContextUrl"}"
+      appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl
+      else s"/$partialContextUrl"}"
 
-    http.GET[HtmlPartial](partialUrl).map {
-      case partialSuccess: HtmlPartial.Success => partialSuccess
-      case partialFailure: HtmlPartial.Failure =>
-        logger.error(s"[PertaxAuthConnector][loadPartial] Failed to load Partial from partial url '$partialUrl'. " +
-          s"Partial info: $partialFailure, body: ${partialFailure.body}")
-        partialFailure
-    }.recover {
-      case exception: HttpException => HtmlPartial.Failure(Some(exception.responseCode))
-      case _ => HtmlPartial.Failure(None)
-    }
+    http
+      .GET[HtmlPartial](partialUrl)
+      .map {
+        case partialSuccess: HtmlPartial.Success => partialSuccess
+        case partialFailure: HtmlPartial.Failure =>
+          logger.error(
+            s"[PertaxAuthConnector][loadPartial] Failed to load Partial from partial url '$partialUrl'. " +
+              s"Partial info: $partialFailure, body: ${partialFailure.body}"
+          )
+          partialFailure
+      }
+      .recover {
+        case exception: HttpException => HtmlPartial.Failure(Some(exception.responseCode))
+        case _ => HtmlPartial.Failure(None)
+      }
   }
 
 }
 
 @ImplementedBy(classOf[PertaxAuthConnectorImpl])
 trait PertaxAuthConnector {
-  def pertaxPostAuthorise(implicit hc: HeaderCarrier, ec: ExecutionContext): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]
+  def pertaxPostAuthorise(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+  ): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]
 
   def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial]
 }

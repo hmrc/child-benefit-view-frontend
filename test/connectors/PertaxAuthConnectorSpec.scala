@@ -32,11 +32,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite with Injecting {
 
-  override implicit lazy val app: Application           = applicationBuilder().build()
+  override implicit lazy val app: Application = applicationBuilder().build()
 
-  lazy val connector: PertaxAuthConnector = inject[PertaxAuthConnector]
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-  implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  lazy val connector:         PertaxAuthConnector = inject[PertaxAuthConnector]
+  implicit val headerCarrier: HeaderCarrier       = HeaderCarrier()
+  implicit lazy val ec:       ExecutionContext    = app.injector.instanceOf[ExecutionContext]
 
   val nino = "AA000000A"
 

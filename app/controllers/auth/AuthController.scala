@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext
 class AuthController @Inject() (
     sessionRepository: SessionRepository,
     authConnector:     AuthConnector,
-    auth:          StandardAuthJourney
+    auth:              StandardAuthJourney
 )(implicit
     config:            Configuration,
     env:               Environment,

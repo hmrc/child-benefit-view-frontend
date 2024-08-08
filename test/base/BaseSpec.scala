@@ -64,7 +64,6 @@ trait BaseSpec
 
   def status(of: Accumulator[ByteString, Result])(implicit mat: Materializer): Int = status(of.run())
 
-
   def bodyOf(result: Result)(implicit mat: Materializer): String = {
     val bodyBytes: ByteString = await(result.body.consumeData)
     // We use the default charset to preserve the behaviour of a previous

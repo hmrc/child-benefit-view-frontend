@@ -54,11 +54,11 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
   lazy val authAction = new PertaxAuthActionImpl(
     pertaxAuthConnector = connector,
-    errorTemplate       = app.injector.instanceOf[ErrorTemplate],
-    appConfig           = app.injector.instanceOf[FrontendAppConfig]
+    errorTemplate = app.injector.instanceOf[ErrorTemplate],
+    appConfig = app.injector.instanceOf[FrontendAppConfig]
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
-  lazy val date = LocalDate.now()
+  lazy val date    = LocalDate.now()
   lazy val instant = Instant.now()
 
   override def beforeEach(): Unit = {
@@ -74,12 +74,19 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
       ""
     )
 
-  def mockAuth(pertaxAuthResponseModel: PertaxAuthResponseModel): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any())).thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Right(pertaxAuthResponseModel))))
+  def mockAuth(
+      pertaxAuthResponseModel: PertaxAuthResponseModel
+  ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
+    when(connector.pertaxPostAuthorise(any(), any())).thenReturn(
+      EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Right(pertaxAuthResponseModel)))
+    )
   }
 
-  def mockFailedAuth(error: UpstreamErrorResponse): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any())).thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Left(error))))
+  def mockFailedAuth(
+      error: UpstreamErrorResponse
+  ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
+    when(connector.pertaxPostAuthorise(any(), any()))
+      .thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Left(error))))
   }
 
   def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
@@ -92,11 +99,14 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
         "the response from pertax auth connector indicates ACCESS_GRANTED" in {
           val result = {
-            mockAuth(PertaxAuthResponseModel(
-              "ACCESS_GRANTED",
-              "This message doesn't matter.",
-              None, None
-            ))
+            mockAuth(
+              PertaxAuthResponseModel(
+                "ACCESS_GRANTED",
+                "This message doesn't matter.",
+                None,
+                None
+              )
+            )
 
             authAction.invokeBlock(authenticatedRequest(), block)
           }
@@ -118,12 +128,14 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
         "the response from pertax auth connector indicates NO_HMRC_PT_ENROLMENT and has a redirect URL" - {
           lazy val request = {
-            mockAuth(PertaxAuthResponseModel(
-              "NO_HMRC_PT_ENROLMENT",
-              "Still doesn't matter.",
-              Some("/some-redirect"),
-              None
-            ))
+            mockAuth(
+              PertaxAuthResponseModel(
+                "NO_HMRC_PT_ENROLMENT",
+                "Still doesn't matter.",
+                Some("/some-redirect"),
+                None
+              )
+            )
 
             authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
           }
@@ -141,12 +153,14 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
           "the response from pertax auth connector indicates CREDENTIAL_STRENGTH_UPLIFT_REQUIRED" - {
             lazy val request = {
-              mockAuth(PertaxAuthResponseModel(
-                "CREDENTIAL_STRENGTH_UPLIFT_REQUIRED",
-                "Still doesn't matter.",
-                Some("/some-redirect"),
-                None
-              ))
+              mockAuth(
+                PertaxAuthResponseModel(
+                  "CREDENTIAL_STRENGTH_UPLIFT_REQUIRED",
+                  "Still doesn't matter.",
+                  Some("/some-redirect"),
+                  None
+                )
+              )
 
               authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
             }
@@ -159,12 +173,14 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
           "the response from pertax auth connector indicates CONFIDENCE_LEVEL_UPLIFT_REQUIRED and has a redirect URL" - {
             lazy val request = {
-              mockAuth(PertaxAuthResponseModel(
-                "CONFIDENCE_LEVEL_UPLIFT_REQUIRED",
-                "Still doesn't matter.",
-                Some("/some-redirect"),
-                None
-              ))
+              mockAuth(
+                PertaxAuthResponseModel(
+                  "CONFIDENCE_LEVEL_UPLIFT_REQUIRED",
+                  "Still doesn't matter.",
+                  Some("/some-redirect"),
+                  None
+                )
+              )
 
               authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
             }
@@ -182,16 +198,20 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
         "the pertax auth service returns a partial" - {
 
           lazy val result = await({
-            mockAuth(PertaxAuthResponseModel(
-              "NOT_A_VALID_CODE",
-              "Doesn't matter, even now.",
-              None,
-              Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
-            ))
+            mockAuth(
+              PertaxAuthResponseModel(
+                "NOT_A_VALID_CODE",
+                "Doesn't matter, even now.",
+                None,
+                Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+              )
+            )
 
-            when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
-              HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
-            ))
+            when(connector.loadPartial(any())(any())).thenReturn(
+              Future.successful(
+                HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
+              )
+            )
 
             authAction.invokeBlock(authenticatedRequest(), block)
           })
@@ -222,16 +242,20 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
 
           "has a status of INTERNAL_SERVER_ERROR(500)" in {
             lazy val result = await({
-              mockAuth(PertaxAuthResponseModel(
-                "NOT_A_VALID_CODE",
-                "Doesn't matter, even now.",
-                None,
-                Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
-              ))
+              mockAuth(
+                PertaxAuthResponseModel(
+                  "NOT_A_VALID_CODE",
+                  "Doesn't matter, even now.",
+                  None,
+                  Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+                )
+              )
 
-              when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
-                HtmlPartial.Failure(None, "ERROR")
-              ))
+              when(connector.loadPartial(any())(any())).thenReturn(
+                Future.successful(
+                  HtmlPartial.Failure(None, "ERROR")
+                )
+              )
 
               authAction.invokeBlock(authenticatedRequest(), block)
             })

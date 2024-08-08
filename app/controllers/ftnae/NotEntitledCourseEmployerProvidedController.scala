@@ -44,14 +44,15 @@ class NotEntitledCourseEmployerProvidedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
-      auditService.auditFtnaeKickOut(
-        request.nino.nino,
-        "Success",
-        ftnaeService.getSelectedChildInfo(request),
-        ftnaeService.getSelectedCourseDuration(request),
-        ftnaeService.buildAuditData(buildSummaryRows(request))
-      )
-      Ok(view())
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) {
+      implicit request =>
+        auditService.auditFtnaeKickOut(
+          request.nino.nino,
+          "Success",
+          ftnaeService.getSelectedChildInfo(request),
+          ftnaeService.getSelectedCourseDuration(request),
+          ftnaeService.buildAuditData(buildSummaryRows(request))
+        )
+        Ok(view())
     }
 }

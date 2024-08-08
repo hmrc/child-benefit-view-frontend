@@ -45,11 +45,11 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class HiddenController @Inject() (
-                                   getData:           DataRetrievalAction,
-                                   sessionRepository: SessionRepository,
-                                   authConnector:     AuthConnector,
-                                   auth:              StandardAuthJourney,
-                                   layout:            NewLayoutProvider
+    getData:           DataRetrievalAction,
+    sessionRepository: SessionRepository,
+    authConnector:     AuthConnector,
+    auth:              StandardAuthJourney,
+    layout:            NewLayoutProvider
 )(implicit
     config: Configuration,
     env:    Environment,

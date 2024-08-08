@@ -16,7 +16,6 @@
 
 package connectors
 
-
 import cats.data.EitherT
 import com.google.inject.Inject
 import play.api.Logging
@@ -25,18 +24,19 @@ import uk.gov.hmrc.http.{HttpException, HttpResponse, UpstreamErrorResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class HttpClientResponse @Inject()()(implicit ec: ExecutionContext) extends Logging {
+class HttpClientResponse @Inject() ()(implicit ec: ExecutionContext) extends Logging {
 
   def read(
-            response: Future[Either[UpstreamErrorResponse, HttpResponse]]
-          ): EitherT[Future, UpstreamErrorResponse, HttpResponse] =
+      response: Future[Either[UpstreamErrorResponse, HttpResponse]]
+  ): EitherT[Future, UpstreamErrorResponse, HttpResponse] =
     EitherT(response.map {
       case Right(response) =>
         Right(response)
       case Left(error) if error.statusCode >= 499 || error.statusCode == TOO_MANY_REQUESTS =>
         logger.error(error.message)
         Left(error)
-      case Left(error) if error.statusCode == NOT_FOUND || error.statusCode == LOCKED || error.statusCode == UNAUTHORIZED =>
+      case Left(error)
+          if error.statusCode == NOT_FOUND || error.statusCode == LOCKED || error.statusCode == UNAUTHORIZED =>
         logger.info(error.message)
         Left(error)
       case Left(error) =>
@@ -51,4 +51,3 @@ class HttpClientResponse @Inject()()(implicit ec: ExecutionContext) extends Logg
     })
 
 }
-

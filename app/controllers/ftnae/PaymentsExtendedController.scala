@@ -44,15 +44,16 @@ class PaymentsExtendedController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
-      val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData)
+      .async { implicit request =>
+        val summaryListRows = buildSummaryRows(request)(messagesWithFixedLangSupport(messagesApi))
 
-      ftnaeService
-        .submitFtnaeInformation(summaryListRows)
-        .fold(
-          error => errorHandler.handleError(error),
-          details => Ok(view(details._1, details._2.courseDuration))
-        )
-    }
+        ftnaeService
+          .submitFtnaeInformation(summaryListRows)
+          .fold(
+            error => errorHandler.handleError(error),
+            details => Ok(view(details._1, details._2.courseDuration))
+          )
+      }
 
 }

@@ -53,30 +53,32 @@ class WillCourseBeEmployerProvidedController @Inject() (
     formProvider(displayName)
   }
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(WillCourseBeEmployerProvidedPage) match {
-        case None =>
-          form
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(WillCourseBeEmployerProvidedPage) match {
+          case None =>
+            form
 
-        case Some(value) =>
-          form.fill(value)
+          case Some(value) =>
+            form.fill(value)
 
-      }
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(WillCourseBeEmployerProvidedPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(WillCourseBeEmployerProvidedPage, mode, updatedAnswers))
-        )
-    }
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(WillCourseBeEmployerProvidedPage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(WillCourseBeEmployerProvidedPage, mode, updatedAnswers))
+          )
+      }
 }

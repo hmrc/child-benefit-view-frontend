@@ -48,20 +48,21 @@ class ExtendPaymentsController @Inject() (
     with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData).async { implicit request =>
-      val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
-        ftnaeResponse <- ftnaeService.getFtnaeInformation()
-        updatedAnswers <- CBEnvelope.fromF(
-          Future.fromTry(
-            request.userAnswers
-              .getOrElse(UserAnswers(request.userId))
-              .set(FtnaeResponseUserAnswer, ftnaeResponse)
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData).async {
+      implicit request =>
+        val result: EitherT[Future, CBError, FtnaeClaimantInfo] = for {
+          ftnaeResponse <- ftnaeService.getFtnaeInformation()
+          updatedAnswers <- CBEnvelope.fromF(
+            Future.fromTry(
+              request.userAnswers
+                .getOrElse(UserAnswers(request.userId))
+                .set(FtnaeResponseUserAnswer, ftnaeResponse)
+            )
           )
-        )
-        _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
-      } yield ftnaeResponse.claimant
+          _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
+        } yield ftnaeResponse.claimant
 
-      result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant)))
+        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant)))
 
     }
 

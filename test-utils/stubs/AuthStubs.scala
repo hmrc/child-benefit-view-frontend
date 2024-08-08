@@ -61,12 +61,20 @@ object AuthStubs {
   def mockPostPertaxAuth(returnedValue: PertaxAuthResponseModel): StubMapping = {
     stubFor(
       post(urlEqualTo("/pertax/authorise"))
-        .willReturn(aResponse().withStatus(200)
-          .withBody(Json.stringify(Json.toJson(returnedValue))))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(Json.stringify(Json.toJson(returnedValue)))
+        )
     )
   }
 
-  def mockPertaxPartial(body: String, title: Option[String], status: Int = OK, partialUrl: String = "/partial"): StubMapping = {
+  def mockPertaxPartial(
+      body:       String,
+      title:      Option[String],
+      status:     Int = OK,
+      partialUrl: String = "/partial"
+  ): StubMapping = {
     val response = aResponse()
       .withStatus(status)
       .withBody(body)

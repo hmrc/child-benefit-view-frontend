@@ -31,8 +31,8 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
 
 class HttpClientResponseSpec extends AnyWordSpec with Matchers {
-  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
-  val mockHttpResponse: HttpResponse = mock[HttpResponse]
+  implicit val ec:      ExecutionContextExecutor = ExecutionContext.global
+  val mockHttpResponse: HttpResponse             = mock[HttpResponse]
   val httpClientResponse = new HttpClientResponse
   val mockLogger: Logger = mock[Logger]
 
@@ -60,8 +60,8 @@ class HttpClientResponseSpec extends AnyWordSpec with Matchers {
       SERVICE_UNAVAILABLE,
       LOCKED,
       UNAUTHORIZED
-      ).foreach { error =>
-        s"hand $error and log info" in {
+    ).foreach { error =>
+      s"hand $error and log info" in {
         val returnedError = UpstreamErrorResponse("Error Message", error)
 
         val response: Future[Either[UpstreamErrorResponse, HttpResponse]] =
@@ -96,7 +96,7 @@ class HttpClientResponseSpec extends AnyWordSpec with Matchers {
         httpClientResponse.read(response).value
       }.map { ex =>
         ex.getMessage shouldBe "Some Error"
-       }
+      }
     }
   }
 }
