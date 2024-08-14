@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import forms.ftnae.WhichYoungPersonFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.mockito.ArgumentCaptor
@@ -107,6 +108,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .build()
 
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       running(application) {
@@ -148,6 +150,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
           FakeRequest(GET, whichYoungPersonRoute(NormalMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[WhichYoungPersonView]
 
@@ -189,6 +192,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
           FakeRequest(POST, whichYoungPersonRoute(NormalMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -223,6 +227,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
           FakeRequest(POST, whichYoungPersonRoute(CheckMode))
             .withFormUrlEncodedBody(("value", "A Different Name"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         await(route(application, request).value)
@@ -256,6 +261,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
           FakeRequest(POST, whichYoungPersonRoute(CheckMode))
             .withFormUrlEncodedBody(("value", "First Name Surname"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         await(route(application, request).value)

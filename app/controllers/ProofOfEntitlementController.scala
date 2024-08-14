@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.ChildBenefitEntitlementConnector
-import controllers.actions.IdentifierAction
+import controllers.actions.StandardAuthJourney
 import utils.handlers.ErrorHandler
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -39,8 +39,8 @@ class ProofOfEntitlementController @Inject() (
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement,
-    identify:                         IdentifierAction,
-    frontendAppConfig:                FrontendAppConfig
+    frontendAppConfig:                FrontendAppConfig,
+    auth:                             StandardAuthJourney
 )(implicit
     config:  Configuration,
     env:     Environment,
@@ -49,7 +49,7 @@ class ProofOfEntitlementController @Inject() (
     auditor: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action andThen identify async { implicit request =>
+    Action andThen auth.pertaxAuthActionWithUserDetails async { implicit request =>
       if (frontendAppConfig.redirectToPEGA) {
         Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
       } else {

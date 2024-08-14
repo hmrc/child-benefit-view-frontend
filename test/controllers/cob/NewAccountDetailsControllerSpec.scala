@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import forms.cob.NewAccountDetailsFormProvider
 import models.cob.{NewAccountDetails, WhatTypeOfAccount}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -77,6 +78,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(userAnswers)).build()
@@ -98,6 +100,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
@@ -139,6 +142,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must redirect to the next page when valid data is submitted" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]
@@ -173,6 +177,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must return a Bad Request and errors when valid data is submitted but Bacs fail" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountFailureStub(
           NOT_FOUND,
@@ -224,6 +229,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must Redirect to Can not verify account Page when backend returns '[BARS locked] - The maximum number of retries reached when calling BAR' message" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountFailureStub(
           INTERNAL_SERVER_ERROR,
@@ -262,6 +268,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =
@@ -289,6 +296,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must return OK for a GET if no existing data is found" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =
@@ -304,6 +312,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must redirect to service unavailable for a GET if no userAnswers is found at all" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =
@@ -320,6 +329,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       }
 
       "must return BAD_REQUEST for a POST if no existing data is found" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =
@@ -361,6 +371,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           ).build()
 
           running(application) {
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
             val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
 
@@ -377,6 +388,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()

@@ -17,6 +17,7 @@
 package controllers.cob
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
@@ -35,6 +36,7 @@ class CannotVerifyAccountControllerSpec extends BaseAppSpec {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must return OK and the correct view for a GET" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application =

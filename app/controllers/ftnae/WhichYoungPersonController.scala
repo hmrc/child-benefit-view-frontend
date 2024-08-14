@@ -40,7 +40,7 @@ class WhichYoungPersonController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     formProvider:             WhichYoungPersonFormProvider,
     val controllerComponents: MessagesControllerComponents,
@@ -53,7 +53,7 @@ class WhichYoungPersonController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData) { implicit request =>
       val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
       val preparedForm = userAnswers.get(WhichYoungPersonPage) match {
@@ -79,33 +79,34 @@ class WhichYoungPersonController @Inject() (
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData).async { implicit request =>
-      {
-        val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData).async {
+      implicit request =>
+        {
+          val userAnswers: UserAnswers = request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-        val ftnaeResponseUserAnswer: Option[FtnaeResponse] =
-          userAnswers.get(FtnaeResponseUserAnswer)
+          val ftnaeResponseUserAnswer: Option[FtnaeResponse] =
+            userAnswers.get(FtnaeResponseUserAnswer)
 
-        ftnaeResponseUserAnswer.fold(
-          Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
-        )(answer => {
-          form
-            .bindFromRequest()
-            .fold(
-              formWithErrors =>
-                Future.successful(
-                  BadRequest(
-                    view(formWithErrors, mode, arrangeRadioButtons(answer), answer)
-                  )
-                ),
-              value =>
-                for {
-                  updatedAnswers <- Future.fromTry(updateName(request, mode, value))
-                  _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(WhichYoungPersonPage, mode, updatedAnswers))
-            )
-        })
-      }
+          ftnaeResponseUserAnswer.fold(
+            Future.successful(Redirect(controllers.routes.ServiceUnavailableController.onPageLoad))
+          )(answer => {
+            form
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  Future.successful(
+                    BadRequest(
+                      view(formWithErrors, mode, arrangeRadioButtons(answer), answer)
+                    )
+                  ),
+                value =>
+                  for {
+                    updatedAnswers <- Future.fromTry(updateName(request, mode, value))
+                    _              <- sessionRepository.set(updatedAnswers)
+                  } yield Redirect(navigator.nextPage(WhichYoungPersonPage, mode, updatedAnswers))
+              )
+          })
+        }
     }
 
   private def updateName(request: OptionalDataRequest[AnyContent], mode: Mode, value: String): Try[UserAnswers] = {

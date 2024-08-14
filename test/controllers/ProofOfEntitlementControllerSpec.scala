@@ -23,6 +23,7 @@ import connectors.ChildBenefitEntitlementConnector
 import models.CBEnvelope.CBEnvelope
 import models.entitlement._
 import models.errors.{CBError, ConnectorError}
+import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatest.EitherValues
 import play.api.inject.bind
 import play.api.libs.json.Json
@@ -50,6 +51,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
   "Proof of entitlement controller" - {
     "must return SEE_OTHER and redirect to the service down view for a GET when getting entitlement fails" in {
       userLoggedInIsChildBenefitUser(ninoUser)
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
 
       val failingChildBenefitEntitlementConnector = new ChildBenefitEntitlementConnector {
         override def getChildBenefitEntitlement(implicit
@@ -96,6 +98,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
     "must return OK and render the correct view for a GET" in {
       userLoggedInIsChildBenefitUser(ninoUser)
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
 
       stubFor(
         get(urlEqualTo("/child-benefit-service/view-entitlements-and-payments"))

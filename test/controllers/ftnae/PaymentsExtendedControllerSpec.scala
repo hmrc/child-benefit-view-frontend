@@ -22,6 +22,7 @@ import models.CBEnvelope
 import models.common.ChildReferenceNumber
 import models.errors.{CBError, ConnectorError}
 import models.ftnae.{ChildDetails, CourseDuration, FtnaeQuestionAndAnswer}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.requests.DataRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -41,6 +42,7 @@ import views.html.ftnae.PaymentsExtendedView
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 import utils.TestData
 
 class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
@@ -87,7 +89,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
           .withSession("authToken" -> "Bearer 123")
-
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -129,6 +131,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 

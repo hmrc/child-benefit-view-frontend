@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
 import models.errors.ConnectorError
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.requests.BaseDataRequest
 import models.{CBEnvelope, UserAnswers}
 import org.mockito.ArgumentMatchers.any
@@ -72,6 +73,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             when(mockCoBService.dropChangeOfBankCache()(any[ExecutionContext], any[HeaderCarrier]))
               .thenReturn(CBEnvelope(()))
 
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilderWithVerificationActions(
@@ -134,6 +136,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
                   running(application) {
                     val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                       .withSession("authToken" -> "Bearer 123")
+                    mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
                     AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
                     val result = route(application, request).value
@@ -169,6 +172,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                 .withSession("authToken" -> "Bearer 123")
+              mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
               AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
               val result = route(application, request).value
@@ -201,6 +205,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
               val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
                 .withSession("authToken" -> "Bearer 123")
 
+              mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
               AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
               val result = route(application, request).value
@@ -216,6 +221,7 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
 
         "WHEN a call is made" - {
           "THEN should return Not Found result and the Error View" in {
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
 
             val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()

@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import forms.cob.WhatTypeOfAccountFormProvider
 import models.cob.WhatTypeOfAccount.JointHeldByClaimant
 import models.cob.WhatTypeOfAccount
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.{reset, when}
 import org.scalatestplus.mockito.MockitoSugar
@@ -74,6 +75,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
 
       "must respond OK and the correct view for GET" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers))
@@ -97,6 +99,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val userAnswers: UserAnswers = UserAnswers(userAnswersId)
@@ -133,6 +136,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
       }
 
       "must return BAD_REQUEST for a POST if no existing data is found" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilderWithVerificationActions(config, userAnswers = None).build()
@@ -150,6 +154,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
       "must redirect to the next page when a valid what type of account is submitted" - {
         WhatTypeOfAccount.values.foreach { wTOA =>
           s"What Type of Account: ${wTOA.toString}" in {
+            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
             userLoggedInIsChildBenefitUser(ninoUser)
             verifyClaimantBankAccountStub()
             val mockSessionRepository = mock[SessionRepository]
@@ -192,6 +197,7 @@ class WhatTypeOfAccountControllerSpec extends BaseAppSpec with MockitoSugar {
       }
 
       "must fail to validate when no what type of account is selected" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         verifyClaimantBankAccountStub()
         val mockSessionRepository = mock[SessionRepository]

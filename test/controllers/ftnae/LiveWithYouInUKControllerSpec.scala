@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import forms.ftnae.LiveWithYouInUKFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,6 +38,7 @@ import views.html.ftnae.LiveWithYouInUKView
 import java.time.LocalDate
 import scala.concurrent.Future
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 import utils.TestData
 
 class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
@@ -62,6 +64,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -85,6 +88,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[LiveWithYouInUKView]
 
@@ -119,6 +123,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -150,6 +155,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "false"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -188,6 +194,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", ""))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -211,6 +218,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, liveWithYouInUKRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -229,6 +237,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, liveWithYouInUKRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value

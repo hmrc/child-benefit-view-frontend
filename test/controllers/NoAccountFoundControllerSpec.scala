@@ -33,6 +33,7 @@ package controllers
  */
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeNonce
@@ -43,6 +44,7 @@ import views.html.NoAccountFoundView
 class NoAccountFoundControllerSpec extends BaseAppSpec {
   "NoAccountFoundController" - {
     "must return OK and the correct view for a GET" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()

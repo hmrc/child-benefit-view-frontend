@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import forms.ftnae.WillCourseBeEmployerProvidedFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse, HowManyYears}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import pages.ftnae._
@@ -37,6 +38,7 @@ import java.time.LocalDate
 import scala.concurrent.Future
 import utils.TestData
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
@@ -70,6 +72,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -101,6 +104,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val view = application.injector.instanceOf[WillCourseBeEmployerProvidedView]
@@ -136,6 +140,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -166,6 +171,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "false"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -216,6 +222,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", ""))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -239,6 +246,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
       running(application) {
         val request = FakeRequest(GET, willCourseBeEmployerProvidedRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -257,6 +265,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
           FakeRequest(POST, willCourseBeEmployerProvidedRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value

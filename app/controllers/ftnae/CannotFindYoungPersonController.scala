@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class CannotFindYoungPersonController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     featureActions:           FeatureFlagComposedActions,
     val controllerComponents: MessagesControllerComponents,
@@ -35,7 +35,7 @@ class CannotFindYoungPersonController @Inject() (
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData) { implicit request =>
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData) { implicit request =>
       Ok(view())
     }
 }
