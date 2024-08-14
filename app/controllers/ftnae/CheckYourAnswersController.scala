@@ -19,7 +19,7 @@ package controllers.ftnae
 import cats.syntax.either._
 import com.google.inject.Inject
 import controllers.ChildBenefitBaseController
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, IdentifierAction}
+import controllers.actions.{DataRequiredAction, DataRetrievalAction, FeatureFlagComposedActions, StandardAuthJourney}
 import models.ftnae.HowManyYears
 import models.viewmodels.govuk.summarylist._
 import models.{NormalMode, UserAnswers}
@@ -56,7 +56,7 @@ class CheckYourAnswersController @Inject() (
     getData:                  DataRetrievalAction,
     requireData:              DataRequiredAction,
     view:                     CheckYourAnswersView,
-    identify:                 IdentifierAction
+    auth:                     StandardAuthJourney
 )(implicit
     config: Configuration,
     env:    Environment,
@@ -68,22 +68,23 @@ class CheckYourAnswersController @Inject() (
   private val YOUNG_PERSON_NOT_DISPLAYED_INDEX = "0"
 
   def onPageLoad(): Action[AnyContent] = {
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
-      {
-        val summaryRows = buildSummaryRows(request)
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) {
+      implicit request =>
+        {
+          val summaryRows = buildSummaryRows(request)
 
-        firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
-          case Right(()) =>
-            summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())) { sr =>
-              val qypChanged = request.userAnswers.nameChangedDuringCheck
-              Ok(view(SummaryListViewModel(sr), qypChanged))
-            }
-          case Left(Left(unansweredUrl)) =>
-            Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
-          case Left(Right(kickedOutUrl)) =>
-            Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
+          firstKickedOutOrUnansweredOtherwiseSuccess(request.userAnswers) match {
+            case Right(()) =>
+              summaryRows.fold(Redirect(controllers.routes.JourneyRecoveryController.onPageLoad())) { sr =>
+                val qypChanged = request.userAnswers.nameChangedDuringCheck
+                Ok(view(SummaryListViewModel(sr), qypChanged))
+              }
+            case Left(Left(unansweredUrl)) =>
+              Redirect(pageDirections(unansweredUrl.pageName).pageUrlCall)
+            case Left(Right(kickedOutUrl)) =>
+              Redirect(pageDirections(kickedOutUrl.pageName).kickoutCall)
+          }
         }
-      }
     }
   }
 

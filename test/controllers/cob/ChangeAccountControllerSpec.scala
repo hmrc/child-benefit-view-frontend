@@ -22,6 +22,7 @@ import controllers.cob
 import controllers.cob.ChangeAccountControllerSpec._
 import models.changeofbank._
 import models.common.AdjustmentReasonCode
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.Application
 import play.api.mvc.{AnyContentAsEmpty, Request}
 import play.api.test.Helpers._
@@ -55,6 +56,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(testClaimantBankInformation)
         verifyClaimantBankInfoStub()
@@ -81,6 +83,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithBuildingSocietyRollNumber)
         verifyClaimantBankInfoStub()
@@ -110,6 +113,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoFailureStub(500, lockedOutErrorResponse)
 
@@ -135,6 +139,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
             verifyHICBCAction = FakeVerifyHICBCAction(verify = false)
           ).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithHICBC)
         verifyClaimantBankInfoStub()
@@ -156,6 +161,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateInPast)
         verifyClaimantBankInfoStub()
@@ -178,6 +184,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoStub(claimantBankInformationWithEndDateToday)
         verifyClaimantBankInfoStub()
@@ -199,6 +206,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         val application: Application =
           applicationBuilderWithVerificationActions(config, userAnswers = Some(emptyUserAnswers)).build()
 
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
         changeOfBankUserInfoFailureStub(NOT_FOUND, notFoundAccountError)
         verifyClaimantBankInfoStub()
@@ -239,6 +247,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
             verifyBarNotLockedAction = verificationBarAction
           ).build()
 
+          mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
           userLoggedInIsChildBenefitUser(ninoUser)
           changeOfBankUserInfoStub(testClaimantBankInformation)
           verifyClaimantBankInfoStub()
@@ -263,6 +272,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
       val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = false))
 
       "must return Not Found and the Error view" in {
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val application = applicationBuilder(config, userAnswers = Some(emptyUserAnswers)).build()

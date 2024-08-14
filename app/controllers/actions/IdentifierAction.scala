@@ -18,14 +18,11 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.actions.IdentifierAction._
 import models.common.NationalInsuranceNumber
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
@@ -50,15 +47,13 @@ class AuthenticatedIdentifierAction @Inject() (
     with AuthorisedFunctions
     with Logging {
 
-  private val AuthPredicate = (config: FrontendAppConfig) =>
-    Individual or Organisation and AuthProviders(GovernmentGateway) and config.confidenceLevel
   private val ChildBenefitRetrievals = nino and internalId and allEnrolments
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(AuthPredicate(config))
+    authorised()
       .retrieve(ChildBenefitRetrievals) {
         case Some(nino) ~ Some(internalId) ~ allEnrolments =>
           logger.debug("user is authorised: executing action block")
@@ -78,34 +73,12 @@ class AuthenticatedIdentifierAction @Inject() (
           )
       }
       .recover {
-        handleFailure()(config, request)
+        handleFailure()
       }
   }
 
   private def handleFailure(
-  )(implicit config: FrontendAppConfig, request: Request[_]): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession =>
-      logger.debug("no active session whilst attempting to authorise user: redirecting to login")
-      Redirect(
-        config.loginUrl,
-        Map(
-          "origin"   -> Seq(config.appName),
-          "continue" -> Seq(resolveCorrectUrl(request))
-        )
-      )
-
-    case _: InsufficientConfidenceLevel =>
-      logger.warn("insufficient confidence level whilst attempting to authorise user: redirect to uplift")
-      Redirect(
-        config.ivUpliftUrl,
-        Map(
-          "origin"          -> Seq(config.appName),
-          "confidenceLevel" -> Seq(config.confidenceLevel.toString),
-          "completionURL"   -> Seq(resolveCorrectUrl(request)),
-          "failureURL"      -> Seq(toContinueUrl(controllers.routes.UnauthorisedController.onPageLoad)(request))
-        )
-      )
-
+  ): PartialFunction[Throwable, Result] = {
     case IncorrectNino =>
       logger.warn("incorrect none encountered whilst attempting to authorise user")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad)

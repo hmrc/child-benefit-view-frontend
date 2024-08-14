@@ -20,6 +20,7 @@ import base.BaseAppSpec
 import forms.ftnae.TwelveHoursAWeekFormProvider
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
+import models.pertaxAuth.PertaxAuthResponseModel
 import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
@@ -38,6 +39,7 @@ import java.time.LocalDate
 import scala.concurrent.Future
 import utils.TestData
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
@@ -60,6 +62,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -83,6 +86,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val view = application.injector.instanceOf[TwelveHoursAWeekView]
 
@@ -116,6 +120,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
         val result = route(application, request).value
 
@@ -144,6 +149,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "false"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -181,6 +187,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", ""))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val boundForm = form.bind(Map("value" -> ""))
@@ -204,6 +211,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       running(application) {
         val request = FakeRequest(GET, twelveHoursAWeekRoute)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value
@@ -222,6 +230,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
           FakeRequest(POST, twelveHoursAWeekRoute)
             .withFormUrlEncodedBody(("value", "true"))
             .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value

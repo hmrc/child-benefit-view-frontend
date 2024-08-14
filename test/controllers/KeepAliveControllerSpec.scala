@@ -19,17 +19,21 @@ package controllers
 import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.mockito.Mockito.{when, verify}
+import org.mockito.Mockito.{verify, when}
 import repositories.SessionRepository
 import play.api.inject.bind
+
 import scala.concurrent.Future
 import models.UserAnswers
+import models.pertaxAuth.PertaxAuthResponseModel
 import stubs.AuthStubs
 import utils.TestData
 import org.mockito.ArgumentMatchers.anyString
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class KeepAliveControllerSpec extends BaseAppSpec {
   "Should refresh the userAnswers" in {
+    mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
     AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
     val mockSessionRepo = mock[SessionRepository]
@@ -52,6 +56,7 @@ class KeepAliveControllerSpec extends BaseAppSpec {
   }
 
   "Should return Ok when there are no user answers" in {
+    mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
     AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
     val application = applicationBuilder(userAnswers = None).build()

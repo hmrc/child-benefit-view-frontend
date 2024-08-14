@@ -17,12 +17,14 @@
 package controllers.ftnae
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import views.html.ftnae.CannotFindYoungPersonView
 import utils.TestData
 import stubs.AuthStubs
+import stubs.AuthStubs.mockPostPertaxAuth
 
 class CannotFindYoungPersonControllerSpec extends BaseAppSpec {
 
@@ -34,6 +36,7 @@ class CannotFindYoungPersonControllerSpec extends BaseAppSpec {
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad().url)
           .withSession("authToken" -> "Bearer 123")
+        mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val result = route(application, request).value

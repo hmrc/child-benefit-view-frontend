@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 
 class UseDifferentFormController @Inject() (
     override val messagesApi: MessagesApi,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     val controllerComponents: MessagesControllerComponents,
@@ -44,14 +44,15 @@ class UseDifferentFormController @Inject() (
     with FtnaeControllerHelper {
 
   def onPageLoad: Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
-      auditService.auditFtnaeKickOut(
-        request.nino.nino,
-        "Success",
-        ftnaeService.getSelectedChildInfo(request),
-        ftnaeService.getSelectedCourseDuration(request),
-        ftnaeService.buildAuditData(buildSummaryRows(request))
-      )
-      Ok(view())
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) {
+      implicit request =>
+        auditService.auditFtnaeKickOut(
+          request.nino.nino,
+          "Success",
+          ftnaeService.getSelectedChildInfo(request),
+          ftnaeService.getSelectedCourseDuration(request),
+          ftnaeService.buildAuditData(buildSummaryRows(request))
+        )
+        Ok(view())
     }
 }

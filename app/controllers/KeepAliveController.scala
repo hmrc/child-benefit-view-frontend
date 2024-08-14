@@ -32,7 +32,7 @@
 
 package controllers
 
-import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import controllers.actions.{DataRetrievalAction, StandardAuthJourney}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -46,7 +46,7 @@ class KeepAliveController @Inject() (
     getData:           DataRetrievalAction,
     sessionRepository: SessionRepository,
     authConnector:     AuthConnector,
-    identify:          IdentifierAction
+    auth:              StandardAuthJourney
 )(implicit
     config: Configuration,
     env:    Environment,
@@ -56,7 +56,7 @@ class KeepAliveController @Inject() (
     with I18nSupport {
 
   def keepAlive: Action[AnyContent] = {
-    (identify andThen getData).async { implicit request =>
+    (auth.pertaxAuthActionWithUserDetails andThen getData).async { implicit request =>
       request.userAnswers
         .map { answers =>
           sessionRepository.keepAlive(answers.id).map(_ => Ok)

@@ -17,6 +17,7 @@
 package controllers.auth
 
 import base.BaseAppSpec
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -29,6 +30,7 @@ class AuthControllerSpec extends BaseAppSpec {
 
   "AuthController" - {
     "on SignOut redirect to /gg/sign-out with continue to the feedback survey" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       val application = applicationBuilder()
         .configure(
@@ -54,6 +56,7 @@ class AuthControllerSpec extends BaseAppSpec {
     }
 
     "on SignOut without survey redirect to /gg/sign-out without continue to the feedback survey" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       val application = applicationBuilder()
         .configure(

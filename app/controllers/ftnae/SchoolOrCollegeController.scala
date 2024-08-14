@@ -34,7 +34,7 @@ class SchoolOrCollegeController @Inject() (
     override val messagesApi: MessagesApi,
     sessionRepository:        SessionRepository,
     navigator:                Navigator,
-    identify:                 IdentifierAction,
+    auth:                     StandardAuthJourney,
     getData:                  CBDataRetrievalAction,
     requireData:              DataRequiredAction,
     formProvider:             SchoolOrCollegeFormProvider,
@@ -48,26 +48,28 @@ class SchoolOrCollegeController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData) { implicit request =>
-      val preparedForm = request.userAnswers.get(SchoolOrCollegePage) match {
-        case None        => form
-        case Some(value) => form.fill(value)
-      }
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData) {
+      implicit request =>
+        val preparedForm = request.userAnswers.get(SchoolOrCollegePage) match {
+          case None        => form
+          case Some(value) => form.fill(value)
+        }
 
-      Ok(view(preparedForm, mode))
+        Ok(view(preparedForm, mode))
     }
 
   def onSubmit(mode: Mode): Action[AnyContent] =
-    (featureActions.ftnaeAction andThen identify andThen getData andThen requireData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SchoolOrCollegePage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SchoolOrCollegePage, mode, updatedAnswers))
-        )
-    }
+    (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData andThen requireData)
+      .async { implicit request =>
+        form
+          .bindFromRequest()
+          .fold(
+            formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+            value =>
+              for {
+                updatedAnswers <- Future.fromTry(request.userAnswers.set(SchoolOrCollegePage, value))
+                _              <- sessionRepository.set(updatedAnswers)
+              } yield Redirect(navigator.nextPage(SchoolOrCollegePage, mode, updatedAnswers))
+          )
+      }
 }

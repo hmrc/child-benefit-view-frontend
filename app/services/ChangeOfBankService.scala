@@ -17,7 +17,7 @@
 package services
 
 import connectors.ChangeOfBankConnector
-import controllers.{cob, routes}
+import controllers.routes
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank._

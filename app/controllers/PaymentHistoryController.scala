@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.IdentifierAction
+import controllers.actions.StandardAuthJourney
 import utils.handlers.ErrorHandler
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
@@ -30,7 +30,7 @@ class PaymentHistoryController @Inject() (
     authConnector:         AuthConnector,
     paymentHistoryService: PaymentHistoryService,
     errorHandler:          ErrorHandler,
-    identify:              IdentifierAction
+    auth:                  StandardAuthJourney
 )(implicit
     config:       Configuration,
     env:          Environment,
@@ -39,7 +39,7 @@ class PaymentHistoryController @Inject() (
     auditService: AuditService
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
-    Action andThen identify async { implicit request =>
+    Action andThen auth.pertaxAuthActionWithUserDetails async { implicit request =>
       paymentHistoryService.retrieveAndValidatePaymentHistory.fold(
         err => errorHandler.handleError(err, Some("paymentDetails")),
         result => {

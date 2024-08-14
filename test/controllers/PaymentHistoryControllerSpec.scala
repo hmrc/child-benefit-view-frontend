@@ -20,10 +20,11 @@ import base.BaseAppSpec
 import controllers.PaymentHistoryControllerSpec._
 import models.common.AdjustmentReasonCode
 import models.entitlement.{AdjustmentInformation, ChildBenefitEntitlement, LastPaymentFinancialInfo}
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.http.Status.{NOT_FOUND, OK, SEE_OTHER}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
 import utils.HtmlMatcherUtils.removeNonce
 import stubs.AuthStubs._
@@ -37,6 +38,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
   "Payment history controller" - {
     "must return OK and render the correct view when entitlement contains payment with payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(testEntitlement)
 
@@ -59,6 +61,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement contains payment without payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultWithoutPaymentsInLastTwoYears)
 
@@ -85,6 +88,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC with payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithPaymentsInLastTwoYears)
 
@@ -111,6 +115,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement is HICBC without payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYears)
 
@@ -137,6 +142,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended but received payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButReceivedPaymentsInLastTwoYears)
 
@@ -163,6 +169,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended and no payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementEndedButNoPaymentsInLastTwoYears)
 
@@ -189,6 +196,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return OK and render the correct view when entitlement ended, claimant is HICBIC and no payments in last 2 years" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryStub(entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast)
 
@@ -218,6 +226,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
     }
 
     "must return 404 and render the no account found view when services return no found account" in {
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
       userLoggedInIsChildBenefitUser(ninoUser)
       entitlementsAndPaymentHistoryFailureStub(NOT_FOUND, notFoundAccountError)
 
