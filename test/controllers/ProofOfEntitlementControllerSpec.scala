@@ -131,6 +131,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
     "must return SEE_OTHER when redirectToPEGA equals true" in {
       userLoggedInIsChildBenefitUser(ninoUser)
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
 
       val application =
         applicationBuilder(
