@@ -35,3 +35,4 @@ bin
 *.iws
 /.vscode/settings.json
 .bsp
+node_modules/

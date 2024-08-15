@@ -128,5 +128,31 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         )
       }
     }
+
+    "must return SEE_OTHER when redirectToPEGA equals true" in {
+      userLoggedInIsChildBenefitUser(ninoUser)
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
+
+      val application =
+        applicationBuilder(
+          Map(
+            "microservice.services.child-benefit-entitlement.port" -> wiremockPort,
+            "features.redirect-to-pega"                            -> true,
+            "urls.pegaPoe"                                         -> "/pega"
+          )
+        ).build()
+
+      running(application) {
+
+        implicit val request: FakeRequest[AnyContentAsEmpty.type] =
+          FakeRequest(GET, routes.ProofOfEntitlementController.view.url).withSession("authToken" -> "Bearer 123")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some("/pega")
+      }
+    }
+
   }
 }

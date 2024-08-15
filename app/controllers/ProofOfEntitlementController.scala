@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ import views.html.ProofOfEntitlement
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import config.FrontendAppConfig
 
 @Singleton
 class ProofOfEntitlementController @Inject() (
@@ -38,6 +39,7 @@ class ProofOfEntitlementController @Inject() (
     childBenefitEntitlementConnector: ChildBenefitEntitlementConnector,
     errorHandler:                     ErrorHandler,
     proofOfEntitlement:               ProofOfEntitlement,
+    frontendAppConfig:                FrontendAppConfig,
     auth:                             StandardAuthJourney
 )(implicit
     config:  Configuration,
@@ -48,18 +50,22 @@ class ProofOfEntitlementController @Inject() (
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action andThen auth.pertaxAuthActionWithUserDetails async { implicit request =>
-      childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
-        err => errorHandler.handleError(err, Some("proofOfEntitlement")),
-        entitlement => {
-          auditor.auditProofOfEntitlement(
-            request.nino.nino,
-            "Successful",
-            request,
-            Some(entitlement)
-          )
-          Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
-        }
-      )
+      if (frontendAppConfig.redirectToPEGA) {
+        Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
+      } else {
+        childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
+          err => errorHandler.handleError(err, Some("proofOfEntitlement")),
+          entitlement => {
+            auditor.auditProofOfEntitlement(
+              request.nino.nino,
+              "Successful",
+              request,
+              Some(entitlement)
+            )
+            Ok(proofOfEntitlement(formatChildBenefitEntitlement(entitlement)))
+          }
+        )
+      }
     }
 }
 
