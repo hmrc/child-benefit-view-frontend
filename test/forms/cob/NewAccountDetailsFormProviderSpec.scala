@@ -17,9 +17,18 @@
 package forms.cob
 
 import forms.behaviours.StringFieldBehaviours
+import models.cob.NewAccountDetails
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.test.{FakeRequest, Injecting}
 
-class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
+class NewAccountDetailsFormProviderSpec
+    extends AnyFreeSpec
+    with StringFieldBehaviours
+    with GuiceOneAppPerSuite
+    with Injecting {
 
   val form = new NewAccountDetailsFormProvider()()
 
@@ -33,7 +42,7 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      nonNumerics suchThat (_.size <= maxLength)
+      nonNumerics suchThat (_.length <= maxLength)
     )
 
     behave like fieldWithMaxLength(
@@ -41,7 +50,7 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength)),
-      maxLength => nonNumerics suchThat (_.size > maxLength)
+      maxLength => nonNumerics suchThat (_.length > maxLength)
     )
 
     behave like mandatoryField(
@@ -114,5 +123,46 @@ class NewAccountDetailsFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  ".bacsError" - {
+
+    lazy val messagesApi: MessagesApi = inject[MessagesApi]
+
+    implicit def messages: Messages = messagesApi.preferred(FakeRequest())
+
+    val newAccountDetails: NewAccountDetails = NewAccountDetails("name", "123456", "11110000")
+
+    Seq(
+      ("priority1", "Sort code not found — check the sort code"),
+      ("priority2", "Account not found — check the sort code and account number"),
+      (
+        "priority3",
+        "You cannot use this service for this type of account — enter details of a personal " +
+          "bank account or a building society without a roll number"
+      ),
+      ("priority4", "Account does not accept direct credit transfer — enter different account details"),
+      ("priority5", "Account cannot be verified — check the account name, sort code and account number"),
+      ("priority6", "Account name does not match account details — check account name")
+    ) foreach {
+      case (priority, errorText) =>
+        s"should not bind $priority values and return $errorText" in {
+          val formErrorMessage =
+            form
+              .bind(
+                Map(
+                  "bacsError"             -> priority,
+                  "newSortCode"           -> newAccountDetails.newSortCode,
+                  "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
+                  "newAccountNumber"      -> newAccountDetails.newAccountNumber
+                )
+              )
+              .errors
+              .head
+              .message
+
+          messages(formErrorMessage) mustBe errorText
+        }
+    }
   }
 }

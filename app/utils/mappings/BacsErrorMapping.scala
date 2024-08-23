@@ -46,7 +46,10 @@ object BacsErrorMapping {
       }
       private def highlightErrorPerPriority(priority: String): List[FormError] = {
         priority match {
-          case "priority1" => List(FormError("newSortCode", s"newAccountDetails.error.bacs.$priority"))
+          case "priority1" =>
+            List(
+              FormError("newSortCode", s"newAccountDetails.error.bacs.$priority")
+            )
           case "priority2" =>
             List(
               FormError("bacsErrorMiddle", s"newAccountDetails.error.bacs.$priority"),
@@ -74,8 +77,14 @@ object BacsErrorMapping {
               FormError("newSortCode", ""),
               FormError("newAccountNumber", "")
             )
-          case "priority6"   => List(FormError("newAccountHoldersName", s"newAccountDetails.error.bacs.$priority"))
-          case anyOtherError => List(FormError("bacsErrorTop", anyOtherError))
+          case "priority6" =>
+            List(
+              FormError("newAccountHoldersName", s"newAccountDetails.error.bacs.$priority")
+            )
+          case anyOtherError =>
+            List(
+              FormError("bacsErrorTop", anyOtherError)
+            )
         }
       }
       override def unbind(key: String, value: String): Map[String, String] = Map(key -> value)

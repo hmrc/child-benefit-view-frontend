@@ -32,6 +32,4 @@
 
 package utils.pages
 
-import scala.language.implicitConversions
-
 trait Page

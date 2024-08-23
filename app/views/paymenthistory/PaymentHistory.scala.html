@@ -15,7 +15,6 @@
  *@
 
 @import models.entitlement.ChildBenefitEntitlement
-@import viewmodels.govuk.DataLayer
 @import services.PaymentHistoryPageVariant
 @import views.ViewUtils._
 @import components._
@@ -24,7 +23,7 @@
 @import services.PaymentHistoryPageVariant.EntitlementEndedButReceivedPaymentsInLastTwoYears
 
 @this(
-    layout: templates.LayoutProvider,
+    layout: views.templates.LayoutProvider,
     table: GovukTable,
     heading: Heading,
     h2: HeadingH2,
@@ -46,8 +45,8 @@
                         newTab = false
                         )}
 
-@layout(pageTitle = messages("paymentHistory.pageTitle"),
-    dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
+@layout(
+    pageTitle = messages("paymentHistory.pageTitle"),
     showBackLink = false
 ) {
 

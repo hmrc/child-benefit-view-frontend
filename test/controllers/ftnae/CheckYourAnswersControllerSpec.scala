@@ -53,7 +53,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
 
       val application = applicationBuilder(config, userAnswers = Some(allAnsweredForFtnae.success.value))
         .configure(
-          "microservice.services.auth.port" -> wiremockPort
+          "microservice.services.auth.port" -> wireMockPort
         )
         .build()
 

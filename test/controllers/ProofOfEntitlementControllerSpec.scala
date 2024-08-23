@@ -39,7 +39,7 @@ import utils.handlers.ErrorHandler
 import views.html.ProofOfEntitlement
 
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, ExecutionContext, ExecutionContextExecutor, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
 
@@ -72,8 +72,6 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         .build()
 
       running(application) {
-        implicit val ec: ExecutionContextExecutor = application.actorSystem.getDispatcher
-
         implicit val request: FakeRequest[AnyContentAsEmpty.type] =
           FakeRequest(GET, routes.ProofOfEntitlementController.view.url).withSession("authToken" -> "Bearer 123")
 
@@ -110,7 +108,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
       )
 
       val application =
-        applicationBuilder(Map("microservice.services.child-benefit-entitlement.port" -> wiremockPort)).build()
+        applicationBuilder(Map("microservice.services.child-benefit-entitlement.port" -> wireMockPort)).build()
 
       running(application) {
 
@@ -136,7 +134,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
       val application =
         applicationBuilder(
           Map(
-            "microservice.services.child-benefit-entitlement.port" -> wiremockPort,
+            "microservice.services.child-benefit-entitlement.port" -> wireMockPort,
             "features.redirect-to-pega"                            -> true,
             "urls.pegaPoe"                                         -> "/pega"
           )

@@ -45,9 +45,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[Boolean]("features.welsh-translation")
   def showOutageBanner: Boolean = configuration.get[Boolean]("features.showOutageBanner")
 
-  def scaWrapperEnabled: Boolean =
-    configuration.get[Boolean]("features.sca-wrapper-enabled")
-
   def ignoreHicbcCacheTTL: Duration =
     Duration(
       configuration.get[Long]("features.ignore-hicbc-check-cache.duration"),
@@ -99,6 +96,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val protectTaxInfoUrl: String = getExternalUrl("tax-enrolment-assignment")
 
-  val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
+  val pertaxAuthBaseUrl: String = servicesConfig.baseUrl("pertax-auth")
 
 }

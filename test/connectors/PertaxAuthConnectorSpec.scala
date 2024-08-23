@@ -21,14 +21,13 @@ import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status.BAD_REQUEST
-import play.api.test.Helpers.running
 import play.api.test.Injecting
 import play.twirl.api.Html
 import stubs.AuthStubs.{mockPertaxPartial, mockPostPertaxAuth}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.HtmlPartial
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class PertaxAuthConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite with Injecting {
 

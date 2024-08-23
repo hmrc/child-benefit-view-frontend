@@ -14,11 +14,10 @@
  * limitations under the License.
  *@
 
-@import viewmodels.govuk.DataLayer
 @import components._
 
 @this(
-    layout: templates.LayoutProvider,
+    layout: views.templates.LayoutProvider,
     insetText: GovukInsetText,
     heading: Heading,
     para: ParagraphBody,
@@ -28,8 +27,7 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = titleNoForm(messages("service-unavailable-error-template.heading")),
-    dataLayer = Some(DataLayer(event = "journey_step", navigate = "service unavailable"))
+    pageTitle = titleNoForm(messages("service-unavailable-error-template.heading"))
 ) {
     @heading(messages("service-unavailable-error-template.heading"))
 

@@ -23,6 +23,7 @@ import org.scalactic.source.Position
 import org.scalatest.Assertion
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import uk.gov.hmrc.http.test.WireMockSupport
 
 trait BaseAppSpec extends BaseSpec with WireMockSupport {
   protected def applicationBuilder(
@@ -30,7 +31,13 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
       userAnswers: Option[UserAnswers] = None
   ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .configure(defaultWireMockConfig ++ config)
+      .configure(
+        Map(
+          "microservice.services.auth.port"                      -> wireMockPort,
+          "microservice.services.pertax-auth.port"               -> wireMockPort,
+          "microservice.services.child-benefit-entitlement.port" -> wireMockPort
+        ) ++ config
+      )
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),

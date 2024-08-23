@@ -15,10 +15,9 @@
  *@
 
 @import components._
-@import viewmodels.govuk.DataLayer
 
 @this(
-        layout: templates.LayoutProvider,
+        layout: views.templates.LayoutProvider,
         list: BulletList,
         heading: Heading,
         para: ParagraphBody,
@@ -29,8 +28,7 @@
 
 @layout(
     pageTitle    = titleNoForm(messages("noAccountFound.header")),
-    showBackLink = false,
-    dataLayer = Some(DataLayer(event = "journey_step", navigate = "no match"))
+    showBackLink = false
 ) {
 
     @heading(messages("noAccountFound.header"))

@@ -17,47 +17,53 @@
 @import components._
 
 @import models.entitlement.ChildBenefitEntitlement
-@import viewmodels.govuk.DataLayer
 @import services.PaymentHistoryPageVariant
-@import services.PaymentHistoryPageVariant.InPaymentWithoutPaymentsInLastTwoYears
-@import services.PaymentHistoryPageVariant.EntitlementEndedButNoPaymentsInLastTwoYears
-@import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYears
-@import services.PaymentHistoryPageVariant.HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast
+@import services.PaymentHistoryPageVariant._
 
 @this(
-    layout: templates.LayoutProvider,
-    summaryList: GovukSummaryList,
-    heading: Heading,
-    h2: HeadingH2,
-    link: Link,
-    para: ParagraphBody
+        layout: views.templates.LayoutProvider,
+        summaryList: GovukSummaryList,
+        heading: Heading,
+        h2: HeadingH2,
+        link: Link,
+        para: ParagraphBody
 )
 
-@(entitlement: ChildBenefitEntitlement, pageVariant: PaymentHistoryPageVariant)(implicit request: Request[_], messages: Messages)
+@(
+        entitlement: ChildBenefitEntitlement,
+        pageVariant: PaymentHistoryPageVariant
+)(
+        implicit
+        request: Request[_],
+        messages: Messages
+)
 
-@viewEntitlementLink = @{link( id = "view-entitlement-link",
-                        text = messages("paymentHistory.viewEntitlementProof.p1.link.text"),
-                        call = Call("GET", routes.ProofOfEntitlementController.view.url),
-                        newTab = false
-                        )}
+@viewEntitlementLink = @{
+    link(
+        id = "view-entitlement-link",
+        text = messages("paymentHistory.viewEntitlementProof.p1.link.text"),
+        call = Call("GET", routes.ProofOfEntitlementController.view.url),
+        newTab = false
+    )
+}
 
-@layout(pageTitle = messages("paymentHistory.pageTitle"),
-    dataLayer = Some(DataLayer(event = "journey_step", navigate = navigatePaymentHistory(pageVariant))),
+@layout(
+    pageTitle = messages("paymentHistory.pageTitle"),
     showBackLink = false
 ) {
 
     @heading(messages("paymentHistory.title"), caption = Some(entitlement.claimant.name.value))
 
     @if(pageVariant == InPaymentWithoutPaymentsInLastTwoYears || pageVariant == HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast) {
-            @para(messages("paymentHistory.v2.noReceivedPayments"))
-      } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
-            @para(messages("paymentHistory.v4.p1"))
-            @para(messages("paymentHistory.v4.p2"))
+        @para(messages("paymentHistory.v2.noReceivedPayments"))
+    } else if(pageVariant == HICBCWithoutPaymentsInLastTwoYears) {
+        @para(messages("paymentHistory.v4.p1"))
+        @para(messages("paymentHistory.v4.p2"))
 
-      } else if(pageVariant == EntitlementEndedButNoPaymentsInLastTwoYears) {
-            @para(messages("paymentHistory.v6.p1"))
-            @para(messages("paymentHistory.v6.p2"))
-      }
+    } else if(pageVariant == EntitlementEndedButNoPaymentsInLastTwoYears) {
+        @para(messages("paymentHistory.v6.p1"))
+        @para(messages("paymentHistory.v6.p2"))
+    }
 
     @h2(messages("paymentHistory.viewEntitlementProof"))
     @para(messages("paymentHistory.viewEntitlementProof.p1", viewEntitlementLink))
