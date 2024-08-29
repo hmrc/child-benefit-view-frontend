@@ -252,14 +252,6 @@ class FrontendAppConfigSpec extends BaseSpec {
         false,
         getResult(_.showOutageBanner),
         mustEqual
-      ),
-      generateConfigTestCase(
-        "SCA Wrapper Enabled",
-        configSetup[Boolean]("features.sca-wrapper-enabled"),
-        None,
-        true,
-        getResult(_.scaWrapperEnabled),
-        mustEqual
       )
     )
     val mapTestCases = Table(

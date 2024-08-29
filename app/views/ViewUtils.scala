@@ -34,8 +34,6 @@ package views
 
 import play.api.data.Form
 import play.api.i18n.Messages
-import services.PaymentHistoryPageVariant
-import services.PaymentHistoryPageVariant._
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -49,30 +47,12 @@ object ViewUtils {
   def titleNoForm(title: String, section: Option[String] = None)(implicit messages: Messages): String =
     s"${messages(title)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
+  def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) s"${messages("error.browser.title.prefix")} " else ""
-  }
 
-  def formatDate(
-      date:            LocalDate
-  )(implicit messages: Messages): String = {
-    date.format(
-      DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale)
-    )
-  }
+  def formatDate(date: LocalDate)(implicit messages: Messages): String =
+    date.format(DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.locale))
 
   def formatMoney(amount: BigDecimal, currency: String = "£"): String =
     f"$currency${amount.setScale(2, RoundingMode.HALF_EVEN)}"
-
-  def navigatePaymentHistory(pageVariant: PaymentHistoryPageVariant): String =
-    pageVariant match {
-      case InPaymentWithPaymentsInLastTwoYears                => "payment details - active - payments"
-      case InPaymentWithoutPaymentsInLastTwoYears             => "payment details - active - no payments"
-      case HICBCWithPaymentsInLastTwoYears                    => "payment details - hicbc - payments"
-      case HICBCWithoutPaymentsInLastTwoYears                 => "payment details - hicbc - no payments"
-      case HICBCWithoutPaymentsInLastTwoYearsAndEndDateInPast => "payment details - active - no payments"
-      case EntitlementEndedButReceivedPaymentsInLastTwoYears  => "payment details - inactive - payments"
-      case EntitlementEndedButNoPaymentsInLastTwoYears        => "payment details - inactive - no payments"
-    }
-
 }

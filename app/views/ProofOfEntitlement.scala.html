@@ -17,9 +17,9 @@
 @import components._
 @import controllers.ProofOfEntitlementController._
 @import models.entitlement.ChildBenefitEntitlement
-@import viewmodels.govuk.DataLayer
 
-@this(  layout: templates.LayoutProvider,
+@this(
+        layout: views.templates.LayoutProvider,
         summaryList: GovukSummaryList,
         heading: Heading,
         h2: HeadingH2,
@@ -42,7 +42,6 @@
                         )}
 
 @layout(pageTitle = titleNoForm(messages("proofOfEntitlement.title")),
-        dataLayer = Some(DataLayer(event = "journey_step", navigate = "proof of entitlement")),
         showBackLink = false
 ) {
 

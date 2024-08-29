@@ -30,15 +30,15 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.{CSRFTokenHelper, FakeRequest}
 import play.api.test.Helpers._
+import play.api.test.{CSRFTokenHelper, FakeRequest}
 import repositories.SessionRepository
+import stubs.AuthStubs._
+import stubs.ChildBenefitServiceStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
-import stubs.AuthStubs._
-import stubs.ChildBenefitServiceStubs._
 import utils.TestData.{lockedOutErrorResponse, ninoUser}
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ErrorTemplate

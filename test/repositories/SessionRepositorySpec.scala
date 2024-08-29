@@ -24,7 +24,6 @@ import org.mongodb.scala.bson.BsonString
 import org.mongodb.scala.model.Filters
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.Json
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
 import java.time.temporal.ChronoUnit

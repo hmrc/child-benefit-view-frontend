@@ -19,7 +19,7 @@
 @import components._
 
 @this(
-    layout: templates.LayoutProvider,
+    layout: views.templates.LayoutProvider,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
     govukSummaryList: GovukSummaryList,
@@ -32,7 +32,7 @@
 @(mode: Mode, list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 
-@layout(pageTitle = titleNoForm(messages("confirmNewAccountDetails.title")), removePhoneNumbersAsHyperlinks = true) {
+@layout(pageTitle = titleNoForm(messages("confirmNewAccountDetails.title"))) {
     @heading(messages("confirmNewAccountDetails.heading"))
 
     @para(messages("confirmNewAccountDetails.p1"))
