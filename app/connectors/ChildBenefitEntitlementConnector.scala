@@ -24,7 +24,8 @@ import connectors.DefaultChildBenefitEntitlementConnector.logMessage
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
 import models.errors.{CBErrorResponse, ConnectorError}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import utils.logging.RequestLogger
 
 import javax.inject.{Inject, Singleton}
@@ -39,7 +40,7 @@ trait ChildBenefitEntitlementConnector {
 }
 
 @Singleton
-class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendAppConfig)
     extends ChildBenefitEntitlementConnector
     with HttpReadsWrapper[CBErrorResponse] {
 
@@ -52,7 +53,8 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClient,
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.childBenefitEntitlementUrl)(httpReads, hc, ec)
+          .get(url"${appConfig.childBenefitEntitlementUrl}")
+          .execute
           .recover {
             case e: HttpException =>
               logger.error(logMessage(e.responseCode, e.getMessage))
