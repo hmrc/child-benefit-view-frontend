@@ -23,7 +23,7 @@ import config.FrontendAppConfig
 import connectors.DefaultChildBenefitEntitlementConnector.logMessage
 import models.CBEnvelope.CBEnvelope
 import models.entitlement.ChildBenefitEntitlement
-import models.errors.{CBErrorResponse, ConnectorError}
+import models.errors.{CBError, CBErrorResponse, ConnectorError}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import utils.logging.RequestLogger
@@ -54,7 +54,7 @@ class DefaultChildBenefitEntitlementConnector @Inject() (httpClient: HttpClientV
       EitherT(
         httpClient
           .get(url"${appConfig.childBenefitEntitlementUrl}")
-          .execute
+          .execute[Either[CBError, ChildBenefitEntitlement]]
           .recover {
             case e: HttpException =>
               logger.error(logMessage(e.responseCode, e.getMessage))

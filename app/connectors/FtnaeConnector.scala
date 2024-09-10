@@ -49,7 +49,7 @@ class FtnaeConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendApp
       EitherT(
         httpClient
           .get(url"${appConfig.getFtnaeAccountInfoUrl}")
-          .execute
+          .execute[Either[CBError, FtnaeResponse]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -70,7 +70,7 @@ class FtnaeConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendApp
         httpClient
           .put(url"${appConfig.updateFtnaeInfoUrl}")
           .withBody(Json.toJson(childDetails))
-          .execute
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))

@@ -63,7 +63,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .get(url"${appConfig.changeOfBankUserInfoUrl}").execute
+          .get(url"${appConfig.changeOfBankUserInfoUrl}")
+          .execute[Either[CBError, ClaimantBankInformation]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -84,7 +85,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
         httpClient
           .put(url"${appConfig.verifyBankAccountUrl}")
           .withBody(Json.toJson(verifyBankAccountRequest))
-          .execute
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantVerificationLogMessage(e.responseCode, e.getMessage))
@@ -104,7 +105,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .get(url"${appConfig.verifyBARNotLockedUrl}").execute
+          .get(url"${appConfig.verifyBARNotLockedUrl}")
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(barNotLockedVerificationLogMessage(e.responseCode, e.getMessage))
@@ -126,7 +128,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
         httpClient
           .put(url"${appConfig.updateBankAccountUrl}")
           .withBody(Json.toJson(updateBankAccountRequest))
-          .execute
+          .execute[Either[CBError,UpdateBankDetailsResponse]]
           .recover {
             case e: HttpException =>
               logger.error(claimantUpdateBankLogMessage(e.responseCode, e.getMessage))
@@ -145,7 +147,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .delete(url"${appConfig.dropChangeOfBankCacheUrl}").execute
+          .delete(url"${appConfig.dropChangeOfBankCacheUrl}")
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantDropBankCacheLogMessage(e.responseCode, e.getMessage))
