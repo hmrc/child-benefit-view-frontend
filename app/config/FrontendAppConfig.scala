@@ -94,6 +94,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
       .fromInt(configuration.get[Int]("confidenceLevel"))
       .getOrElse(ConfidenceLevel.L200)
 
+  def accessibilityStatementUrl: String =
+    configuration.get[String]("accessibility-statement.service-path")
+
   val protectTaxInfoUrl: String = getExternalUrl("tax-enrolment-assignment")
 
   val pertaxAuthBaseUrl: String = servicesConfig.baseUrl("pertax-auth")
