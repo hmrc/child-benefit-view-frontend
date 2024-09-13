@@ -21,7 +21,7 @@ import models.errors._
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{Request, RequestHeader, Result}
 import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,25 +31,33 @@ import utils.logging.RequestLogger
 import views.html.{ErrorTemplate, NotFoundView}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
     notFoundView:    NotFoundView,
     error:           ErrorTemplate
-) extends FrontendErrorHandler
+)(implicit val ec:   ExecutionContext)
+    extends FrontendErrorHandler
     with I18nSupport {
 
   private val logger = new RequestLogger(this.getClass)
+  //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
+  private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
 
-  override def notFoundTemplate(implicit request: Request[_]): Html =
-    notFoundView()
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] = rhToRequest(request)
+    Future.successful(notFoundView())
+  }
+
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
-      rh:                                       Request[_]
-  ): Html =
-    error(pageTitle, heading, message)
+      rh:                                       RequestHeader
+  ): Future[Html] = {
+    implicit val req: Request[_] = rhToRequest(rh)
+    Future.successful(error(pageTitle, heading, message))
+  }
 
   def handleError(
       error:               CBError,

@@ -128,7 +128,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
         httpClient
           .put(url"${appConfig.updateBankAccountUrl}")
           .withBody(Json.toJson(updateBankAccountRequest))
-          .execute[Either[CBError,UpdateBankDetailsResponse]]
+          .execute[Either[CBError, UpdateBankDetailsResponse]]
           .recover {
             case e: HttpException =>
               logger.error(claimantUpdateBankLogMessage(e.responseCode, e.getMessage))

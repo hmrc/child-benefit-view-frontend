@@ -51,7 +51,9 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
         "THEN this is view return as the notFoundTemplate" in {
           val result = sut.notFoundTemplate
 
-          result mustBe notFoundViewMock()
+          whenReady(result) { res =>
+            res mustBe notFoundViewMock()
+          }
         }
       }
     }

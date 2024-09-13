@@ -20,7 +20,7 @@ import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
 
@@ -49,7 +49,7 @@ class LayoutProvider @Inject() (
       styleSheets = stylesheets.toSeq :+ headBlock(),
       fullWidth = false,
       bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
-      showSignOutInHeader = false,
-      hideMenuBar = hideBanner
-    )(messages, HeaderCarrierConverter.fromRequest(request), request)
+      hideMenuBar = hideBanner,
+      serviceURLs = ServiceURLs()
+    )(messages, request)
 }

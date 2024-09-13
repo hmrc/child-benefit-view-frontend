@@ -109,19 +109,11 @@ trait RadiosFluency {
     def withHint(hint: Hint): Radios =
       radios copy (hint = Some(hint))
 
-    def withFormGroupClasses(classes: String): Radios =
-      radios copy (formGroupClasses = classes)
-
-    def withIdPrefix(prefix: String): Radios =
-      radios copy (idPrefix = Some(prefix))
-
     def withCssClass(newClass: String): Radios =
       radios copy (classes = s"${radios.classes} $newClass")
 
     def withAttribute(attribute: (String, String)): Radios =
       radios copy (attributes = radios.attributes + attribute)
 
-    def inline(): Radios =
-      radios.withCssClass("govuk-radios--inline")
   }
 }
