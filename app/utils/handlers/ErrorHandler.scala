@@ -43,8 +43,6 @@ class ErrorHandler @Inject() (
     with I18nSupport {
 
   private val logger = new RequestLogger(this.getClass)
-  //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
-//  private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
 
   override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
     Future.successful(notFoundView())

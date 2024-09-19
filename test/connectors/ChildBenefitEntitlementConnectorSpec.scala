@@ -31,7 +31,7 @@ import play.api.inject.Injector
 import play.api.inject.guice.GuiceApplicationBuilder
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, UpstreamErrorResponse}
 import utils.TestData.{genericCBError, invalidJsonResponse, validNotMatchingJsonResponse}
 
 import java.net.URL
@@ -93,7 +93,12 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
+                  any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
               whenReady(connector.getChildBenefitEntitlement.value) { result =>
@@ -107,7 +112,12 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
+                  any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
               whenReady(connector.getChildBenefitEntitlement.value) { result =>

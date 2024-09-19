@@ -18,6 +18,7 @@ package connectors
 
 import base.BaseAppSpec
 import config.FrontendAppConfig
+import izumi.reflect.Tag
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
@@ -34,7 +35,7 @@ import play.api.libs.ws.BodyWritable
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.test.HttpClientV2Support
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, UpstreamErrorResponse}
 import utils.TestData._
 
 import java.net.URL
@@ -47,8 +48,8 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
   override implicit lazy val app: Application           = applicationBuilder().build()
   val sutWithStubs:               ChangeOfBankConnector = app.injector.instanceOf[ChangeOfBankConnector]
 
-  val mockHttpClient: HttpClientV2            = mock[HttpClientV2]
-  val requestBuilder: RequestBuilder    = mock[RequestBuilder]
+  val mockHttpClient: HttpClientV2          = mock[HttpClientV2]
+  val requestBuilder: RequestBuilder        = mock[RequestBuilder]
   val mockAppConfig:  FrontendAppConfig     = mock[FrontendAppConfig]
   val sutWithMocks:   ChangeOfBankConnector = new ChangeOfBankConnector(mockHttpClient, mockAppConfig)
 
@@ -57,11 +58,11 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
       .overrides(
         inject.bind[RequestBuilder].toInstance(requestBuilder),
         inject.bind[HttpClientV2].toInstance(mockHttpClient)
-      ).injector()
+      )
+      .injector()
 
     injector.instanceOf[ChangeOfBankConnector]
   }
-
 
   "ChangeOfBankConnector" - {
     "getChangeOfBankClaimantInfo" - {
@@ -113,10 +114,14 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, ClaimantBankInformation]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, ClaimantBankInformation]](
+                  any[HttpReads[Either[CBError, ClaimantBankInformation]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
               whenReady(connector.getChangeOfBankClaimantInfo.value) { result =>
@@ -128,10 +133,14 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, ClaimantBankInformation]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, ClaimantBankInformation]](
+                  any[HttpReads[Either[CBError, ClaimantBankInformation]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
               whenReady(connector.getChangeOfBankClaimantInfo.value) { result =>
@@ -219,14 +228,22 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr, arbitrary[VerifyBankAccountRequest]) {
               (responseCode, message, verifyBankAccountRequest) =>
-
                 when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.withBody(any[VerifyBankAccountRequest])(any[BodyWritable[VerifyBankAccountRequest]], any, any))
+                when(
+                  requestBuilder.withBody(any[VerifyBankAccountRequest])(
+                    any[BodyWritable[VerifyBankAccountRequest]],
+                    any[Tag[VerifyBankAccountRequest]],
+                    any[ExecutionContext]
+                  )
+                )
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+                when(
+                  requestBuilder
+                    .execute[Either[CBError, Unit]](any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext])
+                )
                   .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
                 whenReady(connector.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
@@ -239,14 +256,24 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr, arbitrary[VerifyBankAccountRequest]) {
               (responseCode, message, verifyBankAccountRequest) =>
-
                 when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.withBody(any[VerifyBankAccountRequest])(any[BodyWritable[VerifyBankAccountRequest]], any, any))
+                when(
+                  requestBuilder.withBody(any[VerifyBankAccountRequest])(
+                    any[BodyWritable[VerifyBankAccountRequest]],
+                    any[Tag[VerifyBankAccountRequest]],
+                    any[ExecutionContext]
+                  )
+                )
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+                when(
+                  requestBuilder.execute[Either[CBError, Unit]](
+                    any[HttpReads[Either[CBError, Unit]]],
+                    any[ExecutionContext]
+                  )
+                )
                   .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
                 whenReady(connector.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
@@ -316,7 +343,10 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+              when(
+                requestBuilder
+                  .execute[Either[CBError, Unit]](any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext])
+              )
                 .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
               whenReady(connector.verifyBARNotLocked().value) { result =>
@@ -330,7 +360,12 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
               when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, Unit]](
+                  any[HttpReads[Either[CBError, Unit]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
               whenReady(connector.verifyBARNotLocked().value) { result =>
@@ -408,14 +443,25 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr, arbitrary[UpdateBankAccountRequest]) {
               (responseCode, message, updateBankAccountRequest) =>
-
                 when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.withBody(any[UpdateBankAccountRequest])(any[BodyWritable[UpdateBankAccountRequest]], any, any))
+                when(
+                  requestBuilder
+                    .withBody(any[UpdateBankAccountRequest])(
+                      any[BodyWritable[UpdateBankAccountRequest]],
+                      any[Tag[UpdateBankAccountRequest]],
+                      any[ExecutionContext]
+                    )
+                )
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](any, any))
+                when(
+                  requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](
+                    any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]],
+                    any[ExecutionContext]
+                  )
+                )
                   .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
                 whenReady(connector.updateBankAccount(updateBankAccountRequest).value) { result =>
@@ -431,10 +477,22 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
                 when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.withBody(any[UpdateBankAccountRequest])(any[BodyWritable[UpdateBankAccountRequest]], any, any))
+                when(
+                  requestBuilder
+                    .withBody(any[UpdateBankAccountRequest])(
+                      any[BodyWritable[UpdateBankAccountRequest]],
+                      any[Tag[UpdateBankAccountRequest]],
+                      any[ExecutionContext]
+                    )
+                )
                   .thenReturn(requestBuilder)
 
-                when(requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](any, any))
+                when(
+                  requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](
+                    any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]],
+                    any[ExecutionContext]
+                  )
+                )
                   .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
                 whenReady(connector.updateBankAccount(updateBankAccountRequest).value) { result =>
@@ -484,10 +542,14 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-
               when(mockHttpClient.delete(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, Unit]](
+                  any[HttpReads[Either[CBError, Unit]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
               whenReady(connector.dropChangeOfBankCache().value) { result =>
@@ -499,10 +561,14 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite wit
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
-
               when(mockHttpClient.delete(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-              when(requestBuilder.execute[Either[CBError, Unit]](any, any))
+              when(
+                requestBuilder.execute[Either[CBError, Unit]](
+                  any[HttpReads[Either[CBError, Unit]]],
+                  any[ExecutionContext]
+                )
+              )
                 .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
               whenReady(connector.dropChangeOfBankCache().value) { result =>

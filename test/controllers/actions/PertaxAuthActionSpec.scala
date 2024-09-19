@@ -24,7 +24,7 @@ import models.common.NationalInsuranceNumber
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import models.requests.IdentifierRequest
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
@@ -77,7 +77,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
   def mockAuth(
       pertaxAuthResponseModel: PertaxAuthResponseModel
   ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any())).thenReturn(
+    when(connector.pertaxPostAuthorise(any[HeaderCarrier], any[ExecutionContext])).thenReturn(
       EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Right(pertaxAuthResponseModel)))
     )
   }
@@ -85,7 +85,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
   def mockFailedAuth(
       error: UpstreamErrorResponse
   ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any()))
+    when(connector.pertaxPostAuthorise(any[HeaderCarrier], any[ExecutionContext]))
       .thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Left(error))))
   }
 
@@ -207,7 +207,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
               )
             )
 
-            when(connector.loadPartial(any())(any())).thenReturn(
+            when(connector.loadPartial(anyString())(any[HeaderCarrier])).thenReturn(
               Future.successful(
                 HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
               )
@@ -251,7 +251,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
                 )
               )
 
-              when(connector.loadPartial(any())(any())).thenReturn(
+              when(connector.loadPartial(anyString())(any[HeaderCarrier])).thenReturn(
                 Future.successful(
                   HtmlPartial.Failure(None, "ERROR")
                 )

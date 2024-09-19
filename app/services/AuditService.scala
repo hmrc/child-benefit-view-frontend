@@ -35,10 +35,10 @@ import scala.concurrent.ExecutionContext
 class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def auditProofOfEntitlement(
-                               nino:        String,
-                               status:      String,
-                               request:     RequestHeader,
-                               entitlement: Option[ChildBenefitEntitlement] = None
+      nino:        String,
+      status:      String,
+      request:     RequestHeader,
+      entitlement: Option[ChildBenefitEntitlement] = None
   )(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext

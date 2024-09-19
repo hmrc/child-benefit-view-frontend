@@ -44,7 +44,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
     implicit val fakeRequest:      FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
     implicit val executionContext: ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
 
-    val sut              = inject[ErrorHandler]
+    val sut = inject[ErrorHandler]
 
     "notFoundTemplate" - {
       "GIVEN a notFoundView is provided to the ErrorHandler" - {

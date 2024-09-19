@@ -32,9 +32,9 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthConnectorImpl @Inject() (
-                                          http:               HttpClientV2,
-                                          appConfig:          FrontendAppConfig,
-                                          httpClientResponse: HttpClientResponse
+    http:               HttpClientV2,
+    appConfig:          FrontendAppConfig,
+    httpClientResponse: HttpClientResponse
 )(implicit
     ec: ExecutionContext
 ) extends PertaxAuthConnector
@@ -49,7 +49,7 @@ class PertaxAuthConnectorImpl @Inject() (
     httpClientResponse
       .read(
         http
-          .post(url= url"$pertaxUrl/pertax/authorise")
+          .post(url = url"$pertaxUrl/pertax/authorise")
           .setHeader(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
           .execute[Either[UpstreamErrorResponse, HttpResponse]]
       )

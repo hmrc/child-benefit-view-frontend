@@ -32,6 +32,7 @@ import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.FtnaeControllerHelperSpec._
 import utils.pages.QuestionPage
 import viewmodels.checkAnswers.ftnae._
@@ -41,7 +42,7 @@ class FtnaeControllerHelperSpec extends AnyFreeSpec with MockitoSugar with Match
 
   "buildSummaryRows" - {
     val fakeRequest = FakeRequest("GET", "unittest/buildSummaryRows")
-    when(messages(anyString(), any())).thenAnswer(_.getArgument(0))
+    when(messages(anyString(), any[HeaderCarrier])).thenAnswer(_.getArgument(0))
 
     "GIVEN all user answers rows supplied" - {
       "THEN all expected SummaryRows are returned" in {
