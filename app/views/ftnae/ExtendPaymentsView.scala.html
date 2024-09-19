@@ -28,7 +28,7 @@
         list: BulletList,
         caption: CaptionHeader
 )
-@(claimant: FtnaeClaimantInfo)(implicit request: Request[_], messages: Messages)
+@(claimant: FtnaeClaimantInfo)(implicit request: RequestHeader, messages: Messages)
 
     @para2Link = @{link( id = "continuing-2",
         text = messages("extendPayments.p2.linkText"),

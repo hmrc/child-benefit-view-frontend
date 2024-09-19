@@ -18,7 +18,7 @@
 
 @this()
 
-@(text: String)(implicit messages: Messages, request: Request[_])
+@(text: String)(implicit messages: Messages, request: RequestHeader)
 
 <script src='@controllers.routes.Assets.versioned("javascripts/print.js")' @CSPNonce.attr></script>
 

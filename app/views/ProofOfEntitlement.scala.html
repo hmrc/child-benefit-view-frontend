@@ -29,7 +29,7 @@
         printLink: PrintLink
 )
 
-@(entitlement: ChildBenefitEntitlement)(implicit request: Request[_], messages: Messages)
+@(entitlement: ChildBenefitEntitlement)(implicit request: RequestHeader, messages: Messages)
 
 @claimantChocLink = @{link( id = "claimant-change-of-circumstances-link",
                         text = messages("proofOfEntitlement.entitlementdetail.p1.link.1"),

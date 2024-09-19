@@ -33,14 +33,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.BodyWritable
 import stubs.ChildBenefitServiceStubs._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.test.{HttpClientV2Support, WireMockSupport}
+import uk.gov.hmrc.http.test.HttpClientV2Support
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.TestData._
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
-class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite with HttpClientV2Support with WireMockSupport {
+class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite with HttpClientV2Support {
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val hc: HeaderCarrier    = new HeaderCarrier()
 

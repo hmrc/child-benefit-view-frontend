@@ -22,7 +22,7 @@ import models.entitlement.ChildBenefitEntitlement
 import models.ftnae.{CourseDuration, FtnaeChildInfo, FtnaeQuestionAndAnswer}
 import models.requests.OptionalDataRequest
 import play.api.i18n.Messages
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.frontend.filters.deviceid.DeviceFingerprint
@@ -35,10 +35,10 @@ import scala.concurrent.ExecutionContext
 class AuditService @Inject() (auditConnector: AuditConnector) {
 
   def auditProofOfEntitlement(
-      nino:        String,
-      status:      String,
-      request:     Request[_],
-      entitlement: Option[ChildBenefitEntitlement] = None
+                               nino:        String,
+                               status:      String,
+                               request:     RequestHeader,
+                               entitlement: Option[ChildBenefitEntitlement] = None
   )(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext
@@ -136,7 +136,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   def auditPaymentDetails(
       nino:        String,
       status:      String,
-      request:     Request[_],
+      request:     RequestHeader,
       entitlement: Option[ChildBenefitEntitlement]
   )(implicit hc:   HeaderCarrier, ec: ExecutionContext): Unit = {
 

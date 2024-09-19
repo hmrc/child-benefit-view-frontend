@@ -24,7 +24,7 @@
         para: ParagraphBody
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
 @fullTimeEducationLink = @{link( id = "full-time-education-link",
     text = messages("notEntitled.bulletPoint1.linkText"),

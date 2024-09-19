@@ -19,7 +19,7 @@ package views.templates
 import config.FrontendAppConfig
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.sca.services.WrapperService
@@ -48,7 +48,7 @@ class LayoutProvider @Inject() (
       scripts:      Option[Html] = None,
       stylesheets:  Option[Html] = None,
       hideBanner:   Boolean = false
-  )(contentBlock:   Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable =
+  )(contentBlock:   Html)(implicit request: RequestHeader, messages: Messages): HtmlFormat.Appendable =
     wrapperService.standardScaLayout(
       disableSessionExpired = !timeout,
       content = contentBlock,

@@ -27,7 +27,7 @@
         heading: Heading
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: RequestHeader, messages: Messages)
     @bulletPoints = @{list(elements = Seq(
         Html(messages("willYoungPersonBeStaying.bulletPoint1")),
         Html(messages("willYoungPersonBeStaying.bulletPoint2")),

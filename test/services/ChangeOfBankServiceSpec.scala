@@ -32,7 +32,7 @@ import org.scalacheck.Arbitrary.arbitrary
 import play.api.http.Status.{NOT_FOUND, NOT_IMPLEMENTED}
 import play.api.i18n.Messages
 import play.api.mvc.Results.{Ok, Redirect}
-import play.api.mvc.{AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 import repositories.SessionRepository
@@ -119,7 +119,7 @@ class ChangeOfBankServiceSpec extends BaseSpec {
 
     "processClaimantInformation" - {
       val view = mock[ChangeAccountView]
-      when(view(any[String], any[ClaimantBankAccountInformation])(any[Request[_]], any[Messages]))
+      when(view(any[String], any[ClaimantBankAccountInformation])(any[RequestHeader], any[Messages]))
         .thenReturn(Html("Unit Test content"))
       implicit val mockRequest  = mock[OptionalDataRequest[_]]
       implicit val mockMessages = mock[Messages]

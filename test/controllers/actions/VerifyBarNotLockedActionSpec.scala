@@ -24,7 +24,7 @@ import models.errors.{CBError, ClaimantIsLockedOutOfChangeOfBank}
 import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
 import play.api.http.Status
-import play.api.mvc.{AnyContentAsEmpty, Request, Result}
+import play.api.mvc.{AnyContentAsEmpty, RequestHeader, Result}
 
 import scala.concurrent.ExecutionContext
 import org.mockito.Mockito.when
@@ -62,7 +62,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
       when(
         errorHandler.handleError(any[CBError], any[Option[String]])(
           any[AuditService],
-          any[Request[_]],
+          any[RequestHeader],
           any[HeaderCarrier],
           any[ExecutionContext]
         )
@@ -93,7 +93,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
       when(
         errorHandler.handleError(any[CBError], any[Option[String]])(
           any[AuditService],
-          any[Request[_]],
+          any[RequestHeader],
           any[HeaderCarrier],
           any[ExecutionContext]
         )

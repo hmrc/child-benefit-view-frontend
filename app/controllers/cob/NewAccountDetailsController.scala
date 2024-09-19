@@ -23,7 +23,7 @@ import scala.concurrent.Future
 import models.changeofbank.{AccountHolderName, BankAccountNumber, SortCode}
 import models.cob.{NewAccountDetails, WhatTypeOfAccount}
 import models.errors._
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHeader, Result}
 import repositories.SessionRepository
 import services.{AuditService, ChangeOfBankService}
 import models.requests.OptionalDataRequest
@@ -31,7 +31,6 @@ import models.{Mode, UserAnswers}
 import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.filters.csrf.CSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
@@ -152,7 +151,7 @@ class NewAccountDetailsController @Inject() (
   private def lockedOutRedirect(): Future[Result] =
     Future.successful(Redirect(routes.CannotVerifyAccountController.onPageLoad()))
 
-  private def noBacsRelatedError(e: CBError)(implicit request: Request[_]) =
+  private def noBacsRelatedError(e: CBError)(implicit request: RequestHeader) =
     Future.successful(errorHandler.handleError(e))
 
   private def bacsErrorBlock(value: NewAccountDetails, mode: Mode, error: CBError)(implicit

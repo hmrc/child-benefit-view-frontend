@@ -27,7 +27,7 @@ import models.requests.{BaseDataRequest, OptionalDataRequest}
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Results.{Ok, Redirect}
-import play.api.mvc.{AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, RequestHeader, Result}
 import repositories.SessionRepository
 import services.ChangeOfBankService._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -125,7 +125,7 @@ class ChangeOfBankService @Inject() (
   private def validateToChangeOfBankPage(
       cbi:               ClaimantBankInformation,
       changeAccountView: ChangeAccountView
-  )(implicit request:    Request[_], messages: Messages): CBEnvelope[Result] =
+  )(implicit request:    RequestHeader, messages: Messages): CBEnvelope[Result] =
     CBEnvelope {
 
       val accountInfo:  ClaimantBankAccountInformation = cbi.financialDetails.bankAccountInformation

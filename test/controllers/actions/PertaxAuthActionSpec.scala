@@ -33,7 +33,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER, UNAUTHORIZED}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -89,7 +89,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
       .thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Left(error))))
   }
 
-  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: RequestHeader => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "PertaxAuthAction.filter" - {
 
