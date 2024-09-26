@@ -25,7 +25,7 @@
         para: ParagraphBody
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
     @bullet4Link = @{link( id = "continuing-4",
         text = messages("cannotFindYoungPerson.bulletPoint4.linkText"),

@@ -25,12 +25,16 @@ import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalacheck.Gen.alphaStr
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
+import play.api.{Application, inject}
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE}
+import play.api.inject.Injector
+import play.api.inject.guice.GuiceApplicationBuilder
 import stubs.ChildBenefitServiceStubs._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpReads, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, UpstreamErrorResponse}
 import utils.TestData.{genericCBError, invalidJsonResponse, validNotMatchingJsonResponse}
 
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
@@ -40,10 +44,22 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
   override implicit lazy val app: Application                      = applicationBuilder().build()
   val sutWithStubs:               ChildBenefitEntitlementConnector = app.injector.instanceOf[ChildBenefitEntitlementConnector]
 
-  val mockHttpClient: HttpClient        = mock[HttpClient]
+  val mockHttpClient: HttpClientV2      = mock[HttpClientV2]
   val mockAppConfig:  FrontendAppConfig = mock[FrontendAppConfig]
+  val requestBuilder: RequestBuilder    = mock[RequestBuilder]
   val sutWithMocks: DefaultChildBenefitEntitlementConnector =
     new DefaultChildBenefitEntitlementConnector(mockHttpClient, mockAppConfig)
+
+  def connector: ChildBenefitEntitlementConnector = {
+    val injector: Injector = GuiceApplicationBuilder()
+      .overrides(
+        inject.bind[RequestBuilder].toInstance(requestBuilder),
+        inject.bind[HttpClientV2].toInstance(mockHttpClient)
+      )
+      .injector()
+
+    injector.instanceOf[ChildBenefitEntitlementConnector]
+  }
 
   "ChildBenefitEntitlementConnector" - {
     "getChildBenefitEntitlement" - {
@@ -75,15 +91,17 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         "AND the exception is of type HttpException" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
+
               when(
-                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
-                  any[HttpReads[Either[CBError, _]]],
-                  any[HeaderCarrier],
+                requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
+                  any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
                   any[ExecutionContext]
                 )
-              ).thenReturn(Future failed new HttpException(message, responseCode))
+              )
+                .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
-              whenReady(sutWithMocks.getChildBenefitEntitlement.value) { result =>
+              whenReady(connector.getChildBenefitEntitlement.value) { result =>
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }
@@ -92,15 +110,17 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         "AND the exception is of type UpstreamErrorResponse" - {
           "THEN a ConnectorError is returned with the matching details" in {
             forAll(randomFailureStatusCode, alphaStr) { (responseCode, message) =>
+              when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
+
               when(
-                mockHttpClient.GET(any[String], any[Seq[(String, String)]], any[Seq[(String, String)]])(
-                  any[HttpReads[Either[CBError, _]]],
-                  any[HeaderCarrier],
+                requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
+                  any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
                   any[ExecutionContext]
                 )
-              ).thenReturn(Future failed UpstreamErrorResponse(message, responseCode))
+              )
+                .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
-              whenReady(sutWithMocks.getChildBenefitEntitlement.value) { result =>
+              whenReady(connector.getChildBenefitEntitlement.value) { result =>
                 result mustBe Left(ConnectorError(responseCode, message))
               }
             }

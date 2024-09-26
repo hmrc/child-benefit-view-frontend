@@ -16,11 +16,12 @@
 
 package views.templates
 
+import config.FrontendAppConfig
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
 
@@ -29,9 +30,17 @@ import javax.inject.Inject
 class LayoutProvider @Inject() (
     wrapperService:   WrapperService,
     additionalScript: AdditionalScript,
-    headBlock:        HeadBlock
+    headBlock:        HeadBlock,
+    appConfig:        FrontendAppConfig
 ) extends Logging {
   //noinspection ScalaStyle
+
+  lazy val serviceURLs: ServiceURLs = ServiceURLs(
+    serviceUrl = Some("/child-benefit"),
+    signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
+    accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl)
+  )
+
   def apply(
       pageTitle:    String,
       showBackLink: Boolean = true,
@@ -39,7 +48,7 @@ class LayoutProvider @Inject() (
       scripts:      Option[Html] = None,
       stylesheets:  Option[Html] = None,
       hideBanner:   Boolean = false
-  )(contentBlock:   Html)(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable =
+  )(contentBlock:   Html)(implicit request: RequestHeader, messages: Messages): HtmlFormat.Appendable =
     wrapperService.standardScaLayout(
       disableSessionExpired = !timeout,
       content = contentBlock,
@@ -49,7 +58,7 @@ class LayoutProvider @Inject() (
       styleSheets = stylesheets.toSeq :+ headBlock(),
       fullWidth = false,
       bannerConfig = wrapperService.defaultBannerConfig.copy(showBetaBanner = true),
-      showSignOutInHeader = false,
-      hideMenuBar = hideBanner
-    )(messages, HeaderCarrierConverter.fromRequest(request), request)
+      hideMenuBar = hideBanner,
+      serviceURLs = serviceURLs
+    )(messages, request)
 }

@@ -22,7 +22,7 @@
 
 @(message: String, classes: String = "govuk-heading-xl", caption: Option[String] = None)(implicit messages: Messages)
 
-<h1 class="@classes">
+<h1 class="@classes" id="heading">
  @caption.fold(Html(""))(captionHeader(_))
  @message
 </h1>

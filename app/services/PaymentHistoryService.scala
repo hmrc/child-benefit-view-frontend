@@ -25,7 +25,7 @@ import models.errors.{CBError, PaymentHistoryValidationError}
 import models.requests.IdentifierRequest
 import play.api.http.Status
 import play.api.i18n.Messages
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.HtmlFormat
 import services.PaymentHistoryPageVariant._
 import services.PaymentHistoryService._
@@ -63,7 +63,7 @@ class PaymentHistoryService @Inject() (
       identifier:                           IdentifierRequest[_],
       hc:                                   HeaderCarrier,
       ec:                                   ExecutionContext,
-      request:                              Request[_],
+      request:                              RequestHeader,
       messages:                             Messages
   ): CBEnvelope[HtmlFormat.Appendable] =
     CBEnvelope {
@@ -92,7 +92,7 @@ class PaymentHistoryService @Inject() (
 
   private def validateEntitlementToPage(
       cbe:            ChildBenefitEntitlement
-  )(implicit request: Request[_], messages: Messages): CBEnvelope[HtmlFormat.Appendable] =
+  )(implicit request: RequestHeader, messages: Messages): CBEnvelope[HtmlFormat.Appendable] =
     CBEnvelope {
       (entitlementEndDateIsTodayOrInThePast(cbe), paymentIssuedInLastTwoYears(cbe), claimantIsHICBC(cbe)) match {
         case (true, true, _) =>
@@ -105,7 +105,7 @@ class PaymentHistoryService @Inject() (
     }
 
   private def auditViewPaymentDetails(
-      request:     Request[_],
+      request:     RequestHeader,
       pageVariant: PaymentHistoryPageVariant,
       cbe:         ChildBenefitEntitlement
   )(implicit

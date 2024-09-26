@@ -60,43 +60,17 @@ trait InputFluency {
 
   implicit class FluentInput(input: Input) {
 
-    def asEmail(): Input =
-      input
-        .withInputType("email")
-        .withAutocomplete("email")
-        .withSpellcheck(on = false)
-
-    def asNumeric(): Input =
-      input
-        .withInputType("numeric")
-        .withPattern("[0-9]*")
-
-    def withId(id: String): Input =
-      input copy (id = id)
-
-    def withInputType(inputType: String): Input =
-      input copy (inputType = inputType)
-
-    def withInputMode(inputMode: String): Input =
-      input copy (inputmode = Some(inputMode))
-
     def describedBy(value: String): Input =
       input copy (describedBy = Some(value))
 
     def withHint(hint: Hint): Input =
       input copy (hint = Some(hint))
 
-    def withFormGroupClasses(classes: String): Input =
-      input copy (formGroupClasses = classes)
-
     def withCssClass(newClass: String): Input =
       input copy (classes = s"${input.classes} $newClass")
 
     def withAutocomplete(value: String): Input =
       input copy (autocomplete = Some(value))
-
-    def withPattern(pattern: String): Input =
-      input copy (pattern = Some(pattern))
 
     def withAttribute(attribute: (String, String)): Input =
       input copy (attributes = input.attributes + attribute)
@@ -106,9 +80,6 @@ trait InputFluency {
 
     def withPrefix(prefix: PrefixOrSuffix): Input =
       input copy (prefix = Some(prefix))
-
-    def withSuffix(suffix: PrefixOrSuffix): Input =
-      input copy (suffix = Some(suffix))
 
     def withWidth(inputWidth: InputWidth): Input =
       input.withCssClass(inputWidth.toString)

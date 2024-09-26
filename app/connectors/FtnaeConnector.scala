@@ -24,8 +24,10 @@ import models.CBEnvelope.CBEnvelope
 import models.errors._
 import models.ftnae.{ChildDetails, FtnaeResponse}
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import utils.helpers.Implicits._
 import utils.logging.RequestLogger
 
@@ -34,7 +36,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+class FtnaeConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse] {
 
   private val logger = new RequestLogger(this.getClass)
@@ -46,7 +48,8 @@ class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.getFtnaeAccountInfoUrl)(httpReads, hc, ec)
+          .get(url"${appConfig.getFtnaeAccountInfoUrl}")
+          .execute[Either[CBError, FtnaeResponse]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -65,7 +68,9 @@ class FtnaeConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppCo
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .PUT(appConfig.updateFtnaeInfoUrl, childDetails)(ChildDetails.format, httpReads, hc, ec)
+          .put(url"${appConfig.updateFtnaeInfoUrl}")
+          .withBody(Json.toJson(childDetails))
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))

@@ -31,7 +31,7 @@
         warningText: Warning
 )
 
-@(claimantName: String, accountDetails: ClaimantBankAccountInformation)(implicit request: Request[_], messages: Messages)
+@(claimantName: String, accountDetails: ClaimantBankAccountInformation)(implicit request: RequestHeader, messages: Messages)
 
 @isStandardAccount = @{accountDetails.buildingSocietyRollNumber.isEmpty}
 

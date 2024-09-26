@@ -23,7 +23,7 @@
     para: ParagraphBody
 )
 
-@(hideWrapperBanner: Boolean)(implicit request: Request[_], messages: Messages)
+@(hideWrapperBanner: Boolean)(implicit request: RequestHeader, messages: Messages)
 
 @para2Link = @{link( id = "continuing",
     text = messages("ftnaeDisabled.p2.linkText"),

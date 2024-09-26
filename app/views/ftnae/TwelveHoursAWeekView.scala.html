@@ -29,7 +29,7 @@
         para: ParagraphBody
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode)(implicit request: RequestHeader, messages: Messages)
     @para1 = @{para(messages("twelveHoursAWeek.p1"))}
 
     @bulletPoints = @{list(elements = Seq(

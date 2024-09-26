@@ -21,7 +21,7 @@ import models.errors._
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{RequestHeader, Result}
 import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,30 +31,33 @@ import utils.logging.RequestLogger
 import views.html.{ErrorTemplate, NotFoundView}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
     notFoundView:    NotFoundView,
     error:           ErrorTemplate
-) extends FrontendErrorHandler
+)(implicit val ec:   ExecutionContext)
+    extends FrontendErrorHandler
     with I18nSupport {
 
   private val logger = new RequestLogger(this.getClass)
 
-  override def notFoundTemplate(implicit request: Request[_]): Html =
-    notFoundView()
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
+    Future.successful(notFoundView())
+  }
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
-      rh:                                       Request[_]
-  ): Html =
-    error(pageTitle, heading, message)
+      rh:                                       RequestHeader
+  ): Future[Html] = {
+    Future.successful(error(pageTitle, heading, message))
+  }
 
   def handleError(
       error:               CBError,
       auditOrigin:         Option[String] = None
-  )(implicit auditService: AuditService, request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Result = {
+  )(implicit auditService: AuditService, request: RequestHeader, hc: HeaderCarrier, ec: ExecutionContext): Result = {
 
     error match {
       case ce: ConnectorError =>
@@ -105,7 +108,7 @@ object ErrorHandler {
 
   private def handleConnectorError(error: ConnectorError, auditOrigin: Option[String], logger: RequestLogger)(implicit
       auditService:                       AuditService,
-      request:                            Request[_],
+      request:                            RequestHeader,
       hc:                                 HeaderCarrier,
       ec:                                 ExecutionContext
   ): Result = {
@@ -123,7 +126,7 @@ object ErrorHandler {
     }
   }
 
-  private def fireAuditEvent(auditOrigin: Option[String], request: Request[_])(implicit
+  private def fireAuditEvent(auditOrigin: Option[String], request: RequestHeader)(implicit
       auditService:                       AuditService,
       hc:                                 HeaderCarrier,
       ec:                                 ExecutionContext

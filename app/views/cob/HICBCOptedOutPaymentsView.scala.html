@@ -24,7 +24,7 @@
         link: Link
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
 @guidanceLink = @{link( id = "guide-link",
                         text = messages("hICBCOptedOutPayments.guide.link.text"),

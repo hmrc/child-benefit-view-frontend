@@ -24,7 +24,7 @@ import models.common.NationalInsuranceNumber
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import models.requests.IdentifierRequest
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
@@ -33,7 +33,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER, UNAUTHORIZED}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
@@ -77,7 +77,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
   def mockAuth(
       pertaxAuthResponseModel: PertaxAuthResponseModel
   ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any())).thenReturn(
+    when(connector.pertaxPostAuthorise(any[HeaderCarrier], any[ExecutionContext])).thenReturn(
       EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Right(pertaxAuthResponseModel)))
     )
   }
@@ -85,11 +85,11 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
   def mockFailedAuth(
       error: UpstreamErrorResponse
   ): OngoingStubbing[EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    when(connector.pertaxPostAuthorise(any(), any()))
+    when(connector.pertaxPostAuthorise(any[HeaderCarrier], any[ExecutionContext]))
       .thenReturn(EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](Future.successful(Left(error))))
   }
 
-  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: RequestHeader => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "PertaxAuthAction.filter" - {
 
@@ -207,7 +207,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
               )
             )
 
-            when(connector.loadPartial(any())(any())).thenReturn(
+            when(connector.loadPartial(anyString())(any[HeaderCarrier])).thenReturn(
               Future.successful(
                 HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
               )
@@ -251,7 +251,7 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
                 )
               )
 
-              when(connector.loadPartial(any())(any())).thenReturn(
+              when(connector.loadPartial(anyString())(any[HeaderCarrier])).thenReturn(
                 Future.successful(
                   HtmlPartial.Failure(None, "ERROR")
                 )

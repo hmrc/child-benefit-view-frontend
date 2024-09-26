@@ -29,7 +29,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import base.BaseAppSpec
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.when
 import stubs.AuthStubs
 import utils.TestData
@@ -46,7 +46,7 @@ class AuthActionSpec extends BaseAppSpec {
     "the user used an unaccepted auth provider" - {
 
       "must redirect the user to the unauthorised page" in {
-        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(anyString(), any[Enrolments])).thenReturn(true)
 
         val application = applicationBuilder(userAnswers = None).build()
 
@@ -71,7 +71,7 @@ class AuthActionSpec extends BaseAppSpec {
     "the user has an unsupported affinity group" - {
 
       "must redirect the user to the unauthorised page" in {
-        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(any(), any())).thenReturn(true)
+        when(mockHmrcPTChecks.isHmrcPTEnrolmentPresentAndValid(anyString(), any[Enrolments])).thenReturn(true)
 
         val application = applicationBuilder(userAnswers = None).build()
 

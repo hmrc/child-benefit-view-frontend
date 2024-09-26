@@ -23,15 +23,16 @@ import config.FrontendAppConfig
 import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.Logging
 import play.api.http.HeaderNames
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.play.partials.HtmlPartial
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthConnectorImpl @Inject() (
-    http:               HttpClient,
+    http:               HttpClientV2,
     appConfig:          FrontendAppConfig,
     httpClientResponse: HttpClientResponse
 )(implicit
@@ -48,10 +49,9 @@ class PertaxAuthConnectorImpl @Inject() (
     httpClientResponse
       .read(
         http
-          .POSTEmpty[Either[UpstreamErrorResponse, HttpResponse]](
-            s"$pertaxUrl/pertax/authorise",
-            Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
-          )
+          .post(url = url"$pertaxUrl/pertax/authorise")
+          .setHeader(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
+          .execute[Either[UpstreamErrorResponse, HttpResponse]]
       )
       .map(_.json.as[PertaxAuthResponseModel])
   }
@@ -62,7 +62,8 @@ class PertaxAuthConnectorImpl @Inject() (
       else s"/$partialContextUrl"}"
 
     http
-      .GET[HtmlPartial](partialUrl)
+      .get(url"$partialUrl")
+      .execute[HtmlPartial]
       .map {
         case partialSuccess: HtmlPartial.Success => partialSuccess
         case partialFailure: HtmlPartial.Failure =>

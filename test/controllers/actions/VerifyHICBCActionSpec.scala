@@ -23,7 +23,7 @@ import models.common.{AdjustmentReasonCode, FirstForename, NationalInsuranceNumb
 import models.errors.CBError
 import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
-import play.api.mvc.{AnyContentAsEmpty, Request, Result}
+import play.api.mvc.{AnyContentAsEmpty, RequestHeader, Result}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext
@@ -174,7 +174,7 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
     when(
       errorHandler.handleError(any[CBError], any[Option[String]])(
         any[AuditService],
-        any[Request[_]],
+        any[RequestHeader],
         any[HeaderCarrier],
         any[ExecutionContext]
       )

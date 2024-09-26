@@ -21,37 +21,46 @@ import controllers.cob.{routes => cobRoutes}
 import controllers.ftnae.{routes => ftnaeroutes}
 import controllers.routes
 import models.errors._
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.Mockito.verify
 import org.scalatest.EitherValues
-import play.api.i18n.{Messages, MessagesApi}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import services.AuditService
 import utils.handlers.ErrorHandlerSpec.resultUrl
-import views.html.{ErrorTemplate, NotFoundView}
+import views.html.ErrorTemplate
 
 import scala.concurrent.ExecutionContext
 
-class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
+class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPerSuite with Injecting {
   "Error handler" - {
     implicit val auditServiceMock: AuditService                        = mock[AuditService]
     implicit val fakeRequest:      FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "/")
     implicit val executionContext: ExecutionContext                    = scala.concurrent.ExecutionContext.Implicits.global
 
-    implicit val messages: Messages = mock[Messages]
-    val messagesApiMock   = mock[MessagesApi]
-    val notFoundViewMock  = mock[NotFoundView]
-    val errorTemplateMock = mock[ErrorTemplate]
-
-    val sut = new ErrorHandler(messagesApiMock, notFoundViewMock, errorTemplateMock)
+    val sut = inject[ErrorHandler]
 
     "notFoundTemplate" - {
       "GIVEN a notFoundView is provided to the ErrorHandler" - {
         "THEN this is view return as the notFoundTemplate" in {
-          val result = sut.notFoundTemplate
+          val notFoundTemplate: Html     = sut.notFoundTemplate
+          val doc:              Document = Jsoup.parse(notFoundTemplate.toString)
 
-          result mustBe notFoundViewMock()
+          val docTitle     = doc.select("title").text()
+          val docHeading   = doc.getElementById("heading").text()
+          val docParagraph = doc.select("p").text()
+
+          docTitle should include("Page not found - Child Benefit - GOV.UK GOV.UK")
+          docHeading should include("Page not found")
+          docParagraph should include("If you typed the web address, check it’s correct")
+          docParagraph should include("If you pasted the web address, check you copied the entire address.")
+          docParagraph should include("Beta This is a new service – your feedback will help us to improve it.")
         }
       }
     }
@@ -59,9 +68,16 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues {
     "standardErrorTemplate" - {
       "GIVEN a ErrorTemplate is provided to the ErrorHandler" - {
         "THEN this is view return as the standardErrorTemplate" in {
-          val result = sut.standardErrorTemplate("Unit Test Title", "Unit Test Heading", "Unit Test Message")
 
-          result mustBe errorTemplateMock("Unit Test Title", "Unit Test Heading", "Unit Test Message")
+          implicit val messages: MessagesImpl = MessagesImpl(Lang("en"), inject[MessagesApi])
+
+          val title   = "Unit Test Title"
+          val heading = "Unit Test Heading"
+          val message = "Unit Test Message"
+
+          val errorTemplate = inject[ErrorTemplate]
+          val standardErrorTemplate: Html = sut.standardErrorTemplate(title, heading, message)
+          standardErrorTemplate shouldBe errorTemplate(title, heading, message)
         }
       }
     }

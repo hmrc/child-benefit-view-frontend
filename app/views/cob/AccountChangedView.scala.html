@@ -28,7 +28,7 @@
         config: FrontendAppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
 @feedbackLink = @{link( id = "feedback-link",
                         text = messages("accountChanged.feedback.link.text"),

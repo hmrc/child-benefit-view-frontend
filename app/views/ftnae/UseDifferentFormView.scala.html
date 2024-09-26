@@ -25,7 +25,7 @@
         para: ParagraphBody
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@()(implicit request: RequestHeader, messages: Messages)
 
     @para1Link = @{link( id = "continuing",
         text = messages("useDifferentForm.p1.linkText"),

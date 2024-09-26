@@ -24,9 +24,10 @@ import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
 import play.api.http.Status
-import play.api.libs.json.{JsSuccess, Reads}
+import play.api.libs.json.{JsSuccess, Json, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import utils.logging.RequestLogger
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +35,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: FrontendAppConfig)
+class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendAppConfig)
     extends HttpReadsWrapper[CBErrorResponse] {
 
   private val logger = new RequestLogger(this.getClass)
@@ -62,7 +63,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.changeOfBankUserInfoUrl)(httpReads, hc, ec)
+          .get(url"${appConfig.changeOfBankUserInfoUrl}")
+          .execute[Either[CBError, ClaimantBankInformation]]
           .recover {
             case e: HttpException =>
               logger.error(claimantInfoLogMessage(e.responseCode, e.getMessage))
@@ -81,12 +83,9 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .PUT(appConfig.verifyBankAccountUrl, verifyBankAccountRequest)(
-            VerifyBankAccountRequest.format,
-            httpReads,
-            hc,
-            ec
-          )
+          .put(url"${appConfig.verifyBankAccountUrl}")
+          .withBody(Json.toJson(verifyBankAccountRequest))
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantVerificationLogMessage(e.responseCode, e.getMessage))
@@ -106,11 +105,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .GET(appConfig.verifyBARNotLockedUrl)(
-            httpReads,
-            hc,
-            ec
-          )
+          .get(url"${appConfig.verifyBARNotLockedUrl}")
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(barNotLockedVerificationLogMessage(e.responseCode, e.getMessage))
@@ -130,12 +126,9 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .PUT(appConfig.updateBankAccountUrl, updateBankAccountRequest)(
-            UpdateBankAccountRequest.format,
-            httpReads,
-            hc,
-            ec
-          )
+          .put(url"${appConfig.updateBankAccountUrl}")
+          .withBody(Json.toJson(updateBankAccountRequest))
+          .execute[Either[CBError, UpdateBankDetailsResponse]]
           .recover {
             case e: HttpException =>
               logger.error(claimantUpdateBankLogMessage(e.responseCode, e.getMessage))
@@ -154,7 +147,8 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClient, appConfig: Fronte
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
-          .DELETE(appConfig.dropChangeOfBankCacheUrl)
+          .delete(url"${appConfig.dropChangeOfBankCacheUrl}")
+          .execute[Either[CBError, Unit]]
           .recover {
             case e: HttpException =>
               logger.error(claimantDropBankCacheLogMessage(e.responseCode, e.getMessage))
