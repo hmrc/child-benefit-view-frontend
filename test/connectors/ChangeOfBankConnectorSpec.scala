@@ -45,9 +45,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val hc: HeaderCarrier    = new HeaderCarrier()
 
-  stopWireMock()
-  startWireMock()
-
   override implicit lazy val app: Application           = applicationBuilder().build()
   val sutWithStubs:               ChangeOfBankConnector = app.injector.instanceOf[ChangeOfBankConnector]
 
@@ -110,7 +107,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
     .thenReturn(requestBuilder)
 
-//  restartWiremock()
   "getChangeOfBankClaimantInfo" - {
     "GIVEN the HttpClient receives a successful response" - {
       "THEN the ClaimantBankInformation in the response is returned" in {
@@ -155,7 +151,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       }
     }
 
-//    restartWiremock()
     errors.foreach { responseCode =>
       "GIVEN the HttpClient experiences an exception" - {
         when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
@@ -261,8 +256,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       }
     }
 
-//    restartWiremock()
-
     "GIVEN the HttpClient experiences an exception" - {
       errors.foreach { responseCode =>
         s"AND the exception is of type HttpException: $responseCode" - {
@@ -324,7 +317,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
     }
   }
 
-//  restartWiremock()
   "verifyBARNotLocked" - {
     "GIVEN the HttpClient receives a successful response" - {
       "THEN the a Unit response is returned" in {
@@ -366,7 +358,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       }
     }
 
-//    restartWiremock()
     "GIVEN the HttpClient experiences an exception" - {
       errors.foreach { responseCode =>
         s"AND the exception is of type HttpException: $responseCode" - {
@@ -405,7 +396,6 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       }
     }
 
-//    restartWiremock()
     "GIVEN the HttpClient receives a successful response that is invalid Json" - {
       "THEN an expected ConnectorError is returned" in {
         verifyBARNotLockedFailureStub(OK, invalidJsonResponse)
@@ -418,9 +408,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
     }
   }
 
-//  restartWiremock()
   "updateBankAccount" - {
-//    restartWiremock()
     "GIVEN the HttpClient experiences an exception" - {
      errors.foreach { responseCode =>
         s"AND the exception is of type HttpException: $responseCode" - {
