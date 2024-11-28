@@ -17,7 +17,7 @@
 package controllers.cob
 
 import base.BaseAppSpec
-import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
+import controllers.actions.{FakeRedirectToPegaAction, FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.Application
@@ -61,38 +61,45 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
         }
       }
 
-      "must properly be redirected to Hicbc and Barlock validation in case " in {
+      "must properly be redirected to Pega or Hicbc and Barlock validation in case " - {
         val scenarios = Table(
-          ("VerifyHICBC-VerifyBARNotLocked", "StatusAndRedirectUrl"),
+          ("RedirectToPega-VerifyHICBC-VerifyBARNotLocked", "StatusAndRedirectUrl"),
           (
-            (FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(false)),
+            (true, true, false),
+            (SEE_OTHER, Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"))
+          ),(
+            (false, true, false),
             (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
           ),
           (
-            (FakeVerifyHICBCAction(false), FakeVerifyBarNotLockedAction(true)),
+            (false, false, true),
             (SEE_OTHER, Some(controllers.cob.routes.HICBCOptedOutPaymentsController.onPageLoad().url))
           ),
-          ((FakeVerifyHICBCAction(true), FakeVerifyBarNotLockedAction(true)), (OK, None))
+          ((false, true, true), (OK, None))
         )
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
-          val (hicbcAction, verificationBarAction) = actions
+          val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
           val (resultStatus, redirectUrl)          = statusAndRedirectUrl
           val application: Application = applicationBuilderWithVerificationActions(
             config,
             userAnswers = Some(emptyUserAnswers),
-            verifyHICBCAction = hicbcAction,
-            verifyBarNotLockedAction = verificationBarAction
+            verifyHICBCAction = FakeVerifyHICBCAction(hicbcAction),
+            verifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verificationBarAction),
+            redirectToPegaAction = FakeRedirectToPegaAction(redirectToPegaAction)
           ).build()
 
-          running(application) {
-            val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
-              .withSession("authToken" -> "Bearer 123")
-            mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
-            userLoggedInIsChildBenefitUser(ninoUser)
-            val result = route(application, request).value
+          s"RedirectToPega: $redirectToPegaAction - Verify Bar Not Locked: $verificationBarAction - Verify Not HICBC: $hicbcAction \n" +
+          s"\t\tshould return $resultStatus and redirect URL $redirectUrl" in {
+            running(application) {
+              val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
+                .withSession("authToken" -> "Bearer 123")
+              mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
+              userLoggedInIsChildBenefitUser(ninoUser)
+              val result = route(application, request).value
 
-            status(result) mustEqual resultStatus
-            redirectLocation(result) mustEqual redirectUrl
+              status(result) mustEqual resultStatus
+              redirectLocation(result).fold(succeed)(_ must include(redirectUrl.get))
+            }
           }
 
         }

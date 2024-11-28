@@ -48,12 +48,14 @@ trait BaseAppSpec extends BaseSpec with WireMockSupport {
       config:                   Map[String, Any] = Map(),
       userAnswers:              Option[UserAnswers] = None,
       verifyBarNotLockedAction: VerifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verify = true),
-      verifyHICBCAction:        VerifyHICBCAction = FakeVerifyHICBCAction(verify = true)
+      verifyHICBCAction:        VerifyHICBCAction = FakeVerifyHICBCAction(verify = true),
+      redirectToPegaAction:     RedirectToPegaAction = FakeRedirectToPegaAction(verify = false)
   ): GuiceApplicationBuilder = {
     applicationBuilder(config, userAnswers)
       .overrides(
         bind[VerifyBarNotLockedAction].toInstance(verifyBarNotLockedAction),
-        bind[VerifyHICBCAction].toInstance(verifyHICBCAction)
+        bind[VerifyHICBCAction].toInstance(verifyHICBCAction),
+        bind[RedirectToPegaAction].toInstance(redirectToPegaAction)
       )
   }
 
