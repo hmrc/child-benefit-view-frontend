@@ -9,7 +9,6 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     play.sbt.PlayImport.caffeine,
-//    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-$playVersion"                   % hmrcMongoVersion,
     "org.typelevel"     %% "cats-core"                                  % "2.12.0",
     "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % "2.1.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion" % "1.8.0"
