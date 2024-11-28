@@ -230,7 +230,8 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
           (
             (true, true, false),
             (SEE_OTHER, Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"))
-          ),(
+          ),
+          (
             (false, true, false),
             (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
           ),
@@ -242,7 +243,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
         )
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
           val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
-          val (resultStatus, redirectUrl)          = statusAndRedirectUrl
+          val (resultStatus, redirectUrl)                                = statusAndRedirectUrl
           val application: Application = applicationBuilderWithVerificationActions(
             config,
             userAnswers = Some(emptyUserAnswers),

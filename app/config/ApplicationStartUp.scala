@@ -23,8 +23,10 @@ import javax.inject.Singleton
 
 @Singleton
 class ApplicationStartUp {
-  FeatureFlagNamesLibrary.addFlags(List(
-    IgnoreHICBCCheckToggle,
-    ChangeBankAccountRedirectToPegaToggle
-  ))
+  FeatureFlagNamesLibrary.addFlags(
+    List(
+      IgnoreHICBCCheckToggle,
+      ChangeBankAccountRedirectToPegaToggle
+    )
+  )
 }

@@ -90,19 +90,19 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   )
 
   private val verifyBankAccountRequest: VerifyBankAccountRequest = VerifyBankAccountRequest(
-            accountHolderName = AccountHolderName("A Name"),
-            sortCode = SortCode("00-11-22"),
-            bankAccount = BankAccountNumber("12345678")
-          )
+    accountHolderName = AccountHolderName("A Name"),
+    sortCode = SortCode("00-11-22"),
+    bankAccount = BankAccountNumber("12345678")
+  )
 
   private val updateBankAccountRequest: UpdateBankAccountRequest = UpdateBankAccountRequest(
-            updatedBankInformation = BankDetails(
-              accountHolderType = Claimant,
-              accountHolderName = AccountHolderName("A Name"),
-              accountNumber = BankAccountNumber("12345678"),
-              sortCode = SortCode("00-11-22")
-            )
-          )
+    updatedBankInformation = BankDetails(
+      accountHolderType = Claimant,
+      accountHolderName = AccountHolderName("A Name"),
+      accountNumber = BankAccountNumber("12345678"),
+      sortCode = SortCode("00-11-22")
+    )
+  )
 
   when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
     .thenReturn(requestBuilder)
@@ -110,11 +110,11 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   "getChangeOfBankClaimantInfo" - {
     "GIVEN the HttpClient receives a successful response" - {
       "THEN the ClaimantBankInformation in the response is returned" in {
-          changeOfBankUserInfoStub(claimantBankInformation)
+        changeOfBankUserInfoStub(claimantBankInformation)
 
-          whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
-            result mustBe Right(claimantBankInformation)
-          }
+        whenReady(sutWithStubs.getChangeOfBankClaimantInfo.value) { result =>
+          result mustBe Right(claimantBankInformation)
+        }
       }
     }
     "GIVEN the HttpClient receives a CBErrorResponse" - {
@@ -215,44 +215,44 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   "verifyClaimantBankAccount" - {
     "GIVEN the HttpClient receives a successful response" - {
       "THEN the a Unit response is returned" in {
-          verifyClaimantBankInfoStub()
+        verifyClaimantBankInfoStub()
 
-          whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-            result mustBe Right(())
-          }
+        whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+          result mustBe Right(())
+        }
       }
     }
     "GIVEN the HttpClient receives a CBErrorResponse" - {
       "AND the response matches a lockedOutError response" - {
         "THEN an expected ClaimantIsLockedOutOfChangeOfBank is returned" in {
-            verifyClaimantBankInfoFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
+          verifyClaimantBankInfoFailureStub(INTERNAL_SERVER_ERROR, lockedOutErrorResponse)
 
-            whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-              result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
-            }
+          whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+            result mustBe Left(ClaimantIsLockedOutOfChangeOfBank(FORBIDDEN, lockedOutErrorDescription))
+          }
         }
       }
       "AND the response matches a barsFailureError response" - {
         "THEN an expected PriorityBARSVerificationError is returned" in {
-            verifyClaimantBankInfoFailureStub(NOT_FOUND, barsFailureErrorResponse)
+          verifyClaimantBankInfoFailureStub(NOT_FOUND, barsFailureErrorResponse)
 
-            whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-              result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
-            }
+          whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+            result mustBe Left(PriorityBARSVerificationError(NOT_FOUND, barsFailureErrorDescription))
+          }
         }
       }
       "AND the response does not match any predetermined CBErrorResponse" - {
         "THEN a ConnectorError with the matched status and description is returned" in {
-            val expectedMessage = "Unit Test other failure expected message"
-            verifyClaimantBankInfoFailureStub(
-              INTERNAL_SERVER_ERROR,
-              genericCBError(INTERNAL_SERVER_ERROR, expectedMessage)
-            )
+          val expectedMessage = "Unit Test other failure expected message"
+          verifyClaimantBankInfoFailureStub(
+            INTERNAL_SERVER_ERROR,
+            genericCBError(INTERNAL_SERVER_ERROR, expectedMessage)
+          )
 
-            whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-              result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
-            }
-       }
+          whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+            result mustBe Left(ConnectorError(INTERNAL_SERVER_ERROR, expectedMessage))
+          }
+        }
       }
     }
 
@@ -270,7 +270,8 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
             ).thenReturn(requestBuilder)
 
             when(
-              requestBuilder.execute[Either[CBError, Unit]](any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext])
+              requestBuilder
+                .execute[Either[CBError, Unit]](any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext])
             ).thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
             whenReady(connector.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
@@ -307,12 +308,12 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
     "GIVEN the HttpClient receives a successful response that is invalid Json" - {
       "THEN an expected ConnectorError is returned" in {
-          verifyClaimantBankAccountFailureStub(OK, invalidJsonResponse)
+        verifyClaimantBankAccountFailureStub(OK, invalidJsonResponse)
 
-          whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
-            result mustBe a[Left[_, Unit]]
-            result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
-          }
+        whenReady(sutWithStubs.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
+          result mustBe a[Left[_, Unit]]
+          result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
+        }
       }
     }
   }
@@ -410,7 +411,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
   "updateBankAccount" - {
     "GIVEN the HttpClient experiences an exception" - {
-     errors.foreach { responseCode =>
+      errors.foreach { responseCode =>
         s"AND the exception is of type HttpException: $responseCode" - {
           "THEN a ConnectorError is returned with the matching details" in {
             when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))

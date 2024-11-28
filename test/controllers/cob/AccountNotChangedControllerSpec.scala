@@ -67,7 +67,8 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
           (
             (true, true, false),
             (SEE_OTHER, Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"))
-          ),(
+          ),
+          (
             (false, true, false),
             (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
           ),
@@ -79,7 +80,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
         )
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
           val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
-          val (resultStatus, redirectUrl)          = statusAndRedirectUrl
+          val (resultStatus, redirectUrl)                                = statusAndRedirectUrl
           val application: Application = applicationBuilderWithVerificationActions(
             config,
             userAnswers = Some(emptyUserAnswers),
@@ -89,7 +90,7 @@ class AccountNotChangedControllerSpec extends BaseAppSpec with ScalaCheckPropert
           ).build()
 
           s"RedirectToPega: $redirectToPegaAction - Verify Bar Not Locked: $verificationBarAction - Verify Not HICBC: $hicbcAction \n" +
-          s"\t\tshould return $resultStatus and redirect URL $redirectUrl" in {
+            s"\t\tshould return $resultStatus and redirect URL $redirectUrl" in {
             running(application) {
               val request = FakeRequest(GET, controllers.cob.routes.AccountNotChangedController.onPageLoad().url)
                 .withSession("authToken" -> "Bearer 123")

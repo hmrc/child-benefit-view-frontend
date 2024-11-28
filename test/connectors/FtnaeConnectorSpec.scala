@@ -75,7 +75,8 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
     ChildReferenceNumber("ref1"),
     LocalDate.now().minusYears(10),
     "Child A",
-    List.empty[FtnaeQuestionAndAnswer])
+    List.empty[FtnaeQuestionAndAnswer]
+  )
 
   val ftnaeResponse: FtnaeResponse = FtnaeResponse(
     claimant = FtnaeClaimantInfo(
@@ -151,21 +152,21 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         s"AND the exception is of type UpstreamErrorResponse: $responseCode" - {
           "THEN a ConnectorError is returned with the matching details" in {
-              when(
-                requestBuilder.execute[Either[CBError, FtnaeResponse]](
-                  any[HttpReads[Either[CBError, FtnaeResponse]]],
-                  any[ExecutionContext]
-                )
+            when(
+              requestBuilder.execute[Either[CBError, FtnaeResponse]](
+                any[HttpReads[Either[CBError, FtnaeResponse]]],
+                any[ExecutionContext]
               )
-                .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
+            )
+              .thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
 
-              whenReady(connector.getFtnaeAccountDetails().value) { result =>
-                result mustBe Left(ConnectorError(responseCode, message))
-              }
+            whenReady(connector.getFtnaeAccountDetails().value) { result =>
+              result mustBe Left(ConnectorError(responseCode, message))
             }
           }
         }
       }
+    }
 
     "GIVEN the HttpClient receives a successful response that is invalid Json" - {
       "THEN an expected ConnectorError is returned" in {
@@ -212,9 +213,9 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
               )
             ).thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
-          whenReady(connector.uploadFtnaeDetails(childDetails).value) { result =>
-            result mustBe Left(ConnectorError(responseCode, message))
-          }
+            whenReady(connector.uploadFtnaeDetails(childDetails).value) { result =>
+              result mustBe Left(ConnectorError(responseCode, message))
+            }
           }
         }
 
@@ -237,31 +238,31 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
     "GIVEN the HttpClient receives a successful response" - {
       "THEN the a Unit response is returned" in {
-          uploadFtnaeDetailsStub(childDetails)
+        uploadFtnaeDetailsStub(childDetails)
 
-          when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
-            .thenReturn(requestBuilder)
+        when(mockHttpClient.put(any[URL])(any[HeaderCarrier]))
+          .thenReturn(requestBuilder)
 
-          when(
-            requestBuilder.withBody(any[ChildDetails])(
-              any[BodyWritable[ChildDetails]],
-              any[Tag[ChildDetails]],
-              any[ExecutionContext]
-            )
+        when(
+          requestBuilder.withBody(any[ChildDetails])(
+            any[BodyWritable[ChildDetails]],
+            any[Tag[ChildDetails]],
+            any[ExecutionContext]
           )
-            .thenReturn(requestBuilder)
+        )
+          .thenReturn(requestBuilder)
 
-          when(
-            requestBuilder.execute[Either[CBError, Unit]](
-              any[HttpReads[Either[CBError, Unit]]],
-              any[ExecutionContext]
-            )
+        when(
+          requestBuilder.execute[Either[CBError, Unit]](
+            any[HttpReads[Either[CBError, Unit]]],
+            any[ExecutionContext]
           )
-            .thenReturn(Future.successful(Right(())))
+        )
+          .thenReturn(Future.successful(Right(())))
 
-          whenReady(connector.uploadFtnaeDetails(childDetails).value) { result =>
-            result mustBe Right(())
-          }
+        whenReady(connector.uploadFtnaeDetails(childDetails).value) { result =>
+          result mustBe Right(())
+        }
       }
     }
 
@@ -300,7 +301,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
     }
   }
 
- "GIVEN the HttpClient receives a successful response that is invalid Json" - {
+  "GIVEN the HttpClient receives a successful response that is invalid Json" - {
     "THEN an expected ConnectorError is returned" in {
       uploadFtnaeDetailsFailureStub(OK, invalidJsonResponse)
 

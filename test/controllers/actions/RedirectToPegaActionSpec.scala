@@ -48,18 +48,20 @@ class RedirectToPegaActionSpec extends BaseAppSpec with MockitoSugar {
 
   class Setup(redirectToPega: Boolean) {
     class Harness(
-                   changeBankAccountRedirectService: ChangeBankAccountRedirectService,
-                   appConfig:                        FrontendAppConfig
-                 ) extends RedirectToPegaActionImpl(changeBankAccountRedirectService, appConfig){
+        changeBankAccountRedirectService: ChangeBankAccountRedirectService,
+        appConfig:                        FrontendAppConfig
+    ) extends RedirectToPegaActionImpl(changeBankAccountRedirectService, appConfig) {
       def callFilter[A](request: MessagesRequest[A]): Future[Option[Result]] = this.filter(request)
     }
 
-    val messagesApi: MessagesApi = new DefaultMessagesApi(Map.empty[String, Map[String, String]])
-    val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, "")
+    val messagesApi:     MessagesApi                             = new DefaultMessagesApi(Map.empty[String, Map[String, String]])
+    val fakeRequest:     FakeRequest[AnyContentAsEmpty.type]     = FakeRequest(GET, "")
     val messagesRequest: MessagesRequest[AnyContentAsEmpty.type] = new MessagesRequest(fakeRequest, messagesApi)
 
     val mockChangeBankAccountRedirectService: ChangeBankAccountRedirectService = mock[ChangeBankAccountRedirectService]
-    when(mockChangeBankAccountRedirectService.getChangeBankAccountRedirectToggle) thenReturn Future.successful(redirectToPega)
+    when(mockChangeBankAccountRedirectService.getChangeBankAccountRedirectToggle) thenReturn Future.successful(
+      redirectToPega
+    )
 
     val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     when(mockAppConfig.pegaCobUrl) thenReturn "https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"

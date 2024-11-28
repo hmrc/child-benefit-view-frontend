@@ -166,7 +166,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
           result mustBe a[Left[_, ChildBenefitEntitlement]]
           result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
         }
-    }
+      }
     }
     "GIVEN the HttpClient received a successful response that is valid Json but does not validate as the return type" - {
       "THEN an expected ConnectorError is returned" in {

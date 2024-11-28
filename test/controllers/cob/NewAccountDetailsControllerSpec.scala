@@ -93,7 +93,9 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           val result = route(application, request).value
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result).get mustEqual ("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank")
+          redirectLocation(
+            result
+          ).get mustEqual ("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank")
         }
       }
 
@@ -371,7 +373,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           (
             (true, true, false),
             (SEE_OTHER, Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"))
-          ),(
+          ),
+          (
             (false, true, false),
             (SEE_OTHER, Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url))
           ),
@@ -384,7 +387,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
           val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
-          val (resultStatus, redirectUrl)          = statusAndRedirectUrl
+          val (resultStatus, redirectUrl)                                = statusAndRedirectUrl
 
           val application: Application = applicationBuilderWithVerificationActions(
             config,

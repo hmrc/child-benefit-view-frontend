@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ChangeBankAccountRedirectService @Inject()(
+class ChangeBankAccountRedirectService @Inject() (
     featureFlagService: FeatureFlagService,
     cache:              AsyncCacheApi,
     appConfig:          FrontendAppConfig
