@@ -118,9 +118,21 @@ class AuditServiceSpec extends BaseSpec {
                     ("fieldName", "fieldValue", "expectedResult"),
                     ("Name", entitlementDetails.name, testEntitlement.claimant.name.value),
                     ("Address", entitlementDetails.address, testEntitlement.claimant.fullAddress.toSingleLineString),
-                    ("Start date", LocalDate.parse(entitlementDetails.start), testEntitlement.claimant.awardStartDate),
-                    ("End date", LocalDate.parse(entitlementDetails.end), testEntitlement.claimant.awardEndDate),
-                    ("number of children", entitlementDetails.children.length, testEntitlement.children.length)
+                    (
+                      "Start date",
+                      LocalDate.parse(entitlementDetails.start).toString,
+                      testEntitlement.claimant.awardStartDate.toString
+                    ),
+                    (
+                      "End date",
+                      LocalDate.parse(entitlementDetails.end).toString,
+                      testEntitlement.claimant.awardEndDate.toString
+                    ),
+                    (
+                      "number of children",
+                      entitlementDetails.children.length.toString,
+                      testEntitlement.children.length.toString
+                    )
                   )
                 ) { (fieldName, fieldValue, expectedResult) =>
                   testForCapturedValue("entitlement details", fieldName, fieldValue, expectedResult)
@@ -305,8 +317,8 @@ class AuditServiceSpec extends BaseSpec {
               ("Device Fingerprint", capturedEvent.deviceFingerprint, testFingerprintValue),
               (
                 "Number of Payments Visible to User",
-                capturedEvent.numberOfPaymentsVisibleToUser,
-                testEntitlement.claimant.lastPaymentsInfo.length
+                capturedEvent.numberOfPaymentsVisibleToUser.toString,
+                testEntitlement.claimant.lastPaymentsInfo.length.toString
               )
             )
           ) { (fieldName, fieldValue, expectedResult) =>

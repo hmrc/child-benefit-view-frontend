@@ -29,15 +29,16 @@ class FeatureFlagComposedActions @Inject() (
     controllerComponents:  MessagesControllerComponents,
     featureFlags:          FeatureFlagActionFactory,
     auth:                  StandardAuthJourney,
-    ftnaeIdentifierAction: FtnaeIdentifierAction
+    ftnaeIdentifierAction: FtnaeIdentifierAction,
+    redirectToPegaAction:  RedirectToPegaAction
 ) {
   private def actionStart: ActionBuilder[MessagesRequest, AnyContent] =
     controllerComponents.messagesActionBuilder.compose(controllerComponents.actionBuilder)
 
   private def featureAction(featureFlagAction: FeatureFlagAction): ActionBuilder[IdentifierRequest, AnyContent] =
-    actionStart andThen featureFlagAction andThen auth.pertaxAuthActionWithUserDetails
+    actionStart andThen redirectToPegaAction andThen featureFlagAction andThen auth.pertaxAuthActionWithUserDetails
 
-  def changeBankAction = featureAction(featureFlags.changeOfBankEnabled)
+  def changeBankAction: ActionBuilder[IdentifierRequest, AnyContent] = featureAction(featureFlags.changeOfBankEnabled)
 
-  def ftnaeAction = actionStart andThen ftnaeIdentifierAction
+  def ftnaeAction: ActionBuilder[MessagesRequest, AnyContent] = actionStart andThen ftnaeIdentifierAction
 }

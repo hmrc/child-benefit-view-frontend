@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package models.admin
 
-import models.admin.{ChangeBankAccountRedirectToPegaToggle, IgnoreHICBCCheckToggle}
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagNamesLibrary
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
 
-import javax.inject.Singleton
+object ChangeBankAccountRedirectToPegaToggle extends FeatureFlagName {
 
-@Singleton
-class ApplicationStartUp {
-  FeatureFlagNamesLibrary.addFlags(
-    List(
-      IgnoreHICBCCheckToggle,
-      ChangeBankAccountRedirectToPegaToggle
-    )
-  )
+  override val name:        String         = "change-bank-account-redirect-to-pega-toggle"
+  override val description: Option[String] = Some("enable/disable redirecting change bank account to pega action")
 }

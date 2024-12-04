@@ -52,6 +52,7 @@ class Module extends AbstractModule {
     bind(classOf[FtnaeIdentifierAction]).to(classOf[AuthenticatedFtnaeIdentifierAction]).asEagerSingleton()
     bind(classOf[VerifyBarNotLockedAction]).to(classOf[VerifyBarNotLockedActionImpl]).asEagerSingleton()
     bind(classOf[VerifyHICBCAction]).to(classOf[VerifyHICBCActionImpl]).asEagerSingleton()
+    bind(classOf[RedirectToPegaAction]).to(classOf[RedirectToPegaActionImpl]).asEagerSingleton()
     bind(classOf[ApplicationStartUp]).asEagerSingleton()
   }
 }

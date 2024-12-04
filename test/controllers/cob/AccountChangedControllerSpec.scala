@@ -17,7 +17,7 @@
 package controllers.cob
 
 import base.BaseAppSpec
-import controllers.actions.{FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
+import controllers.actions.{FakeRedirectToPegaAction, FakeVerifyBarNotLockedAction, FakeVerifyHICBCAction}
 import models.cob.{NewAccountDetails, UpdateBankDetailsResponse}
 import models.errors.ConnectorError
 import models.pertaxAuth.PertaxAuthResponseModel
@@ -102,8 +102,17 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
 
           "AND the following Verify Action return the respective result" - {
             val actionScenarios = Table(
-              ("VerifyBarNotLocked", "VerifyNotHICBC", "ResultName", "ExpectedResult", "ExpectedUrl"),
+              ("RedirectToPega", "VerifyBarNotLocked", "VerifyNotHICBC", "ResultName", "ExpectedResult", "ExpectedUrl"),
               (
+                true,
+                true,
+                false,
+                "SEE_OTHER",
+                SEE_OTHER,
+                Some("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank")
+              ),
+              (
+                false,
                 true,
                 false,
                 "SEE_OTHER",
@@ -112,42 +121,45 @@ class AccountChangedControllerSpec extends BaseAppSpec with MockitoSugar with Sc
               ),
               (
                 false,
+                false,
                 true,
                 "SEE_OTHER",
                 SEE_OTHER,
                 Some(controllers.cob.routes.BARSLockOutController.onPageLoad().url)
               ),
-              (true, true, "OK", OK, None)
+              (false, true, true, "OK", OK, None)
             )
 
-            forAll(actionScenarios) { (verifyBarNotLocked, verifyNotHICBC, resultName, expectedResult, expectedUrl) =>
-              s"Verify Bar Not Locked: $verifyBarNotLocked - Verify Not HICBC: $verifyNotHICBC" - {
-                s"THEN should return $resultName and redirect URL $expectedUrl" in {
-                  val application = applicationBuilderWithVerificationActions(
-                    config,
-                    userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get),
-                    verifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verifyBarNotLocked),
-                    verifyHICBCAction = FakeVerifyHICBCAction(verifyNotHICBC)
-                  ).overrides(
-                    bind[ChangeOfBankService].toInstance(mockCoBService),
-                    bind[SessionRepository].toInstance(mockSessionRepository)
-                  ).build()
+            forAll(actionScenarios) {
+              (redirectToPega, verifyBarNotLocked, verifyNotHICBC, resultName, expectedResult, expectedUrl) =>
+                s"RedirectToPega: $redirectToPega - Verify Bar Not Locked: $verifyBarNotLocked - Verify Not HICBC: $verifyNotHICBC" - {
+                  s"THEN should return $resultName and redirect URL $expectedUrl" in {
+                    val application = applicationBuilderWithVerificationActions(
+                      config,
+                      userAnswers = Some(UserAnswers(userAnswersId).set(NewAccountDetailsPage, newAccountDetails).get),
+                      verifyBarNotLockedAction = FakeVerifyBarNotLockedAction(verifyBarNotLocked),
+                      verifyHICBCAction = FakeVerifyHICBCAction(verifyNotHICBC),
+                      redirectToPegaAction = FakeRedirectToPegaAction(redirectToPega)
+                    ).overrides(
+                      bind[ChangeOfBankService].toInstance(mockCoBService),
+                      bind[SessionRepository].toInstance(mockSessionRepository)
+                    ).build()
 
-                  running(application) {
-                    val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
-                      .withSession("authToken" -> "Bearer 123")
-                    mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
-                    AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
+                    running(application) {
+                      val request = FakeRequest(GET, controllers.cob.routes.AccountChangedController.onPageLoad().url)
+                        .withSession("authToken" -> "Bearer 123")
+                      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
+                      AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
-                    val result = route(application, request).value
+                      val result = route(application, request).value
 
-                    status(result) mustEqual expectedResult
-                    redirectLocation(result).fold(
-                      redirectLocation(result) mustEqual None
-                    )(location => location must include(expectedUrl.get))
+                      status(result) mustEqual expectedResult
+                      redirectLocation(result).fold(
+                        redirectLocation(result) mustEqual None
+                      )(location => location must include(expectedUrl.get))
+                    }
                   }
                 }
-              }
             }
           }
         }

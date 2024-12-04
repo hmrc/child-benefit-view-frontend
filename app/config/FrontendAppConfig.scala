@@ -36,6 +36,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def signOutUrl:  String = configuration.get[String]("urls.signOut")
   def ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
   def pegaPoeUrl:  String = configuration.get[String]("urls.pegaPoe")
+  def pegaCobUrl:  String = configuration.get[String]("urls.pegaCob")
   def timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
   def countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
   def cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
@@ -49,6 +50,12 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     Duration(
       configuration.get[Long]("features.ignore-hicbc-check-cache.duration"),
       configuration.get[String]("features.ignore-hicbc-check-cache.timeunit")
+    )
+
+  def changeBankAccountRedirectCacheTTL: Duration =
+    Duration(
+      configuration.get[Long]("features.change-bank-redirect-check-cache.duration"),
+      configuration.get[String]("features.change-bank-redirect-check-cache.timeunit")
     )
 
   private def contactHost = configuration.get[String]("contact-frontend.host")
