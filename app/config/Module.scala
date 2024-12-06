@@ -49,7 +49,7 @@ class Module extends AbstractModule {
 
     // For session based storage instead of cred based, change to SessionIdentifierAction
     bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
-    bind(classOf[FtnaeIdentifierAction]).to(classOf[AuthenticatedFtnaeIdentifierAction]).asEagerSingleton()
+    bind(classOf[FtnaeIdentifierAction]).to(classOf[FtnaeIdentifierActionImpl]).asEagerSingleton()
     bind(classOf[VerifyBarNotLockedAction]).to(classOf[VerifyBarNotLockedActionImpl]).asEagerSingleton()
     bind(classOf[VerifyHICBCAction]).to(classOf[VerifyHICBCActionImpl]).asEagerSingleton()
     bind(classOf[RedirectToPegaAction]).to(classOf[RedirectToPegaActionImpl]).asEagerSingleton()

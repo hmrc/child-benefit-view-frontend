@@ -21,64 +21,38 @@ import config.{FeatureAllowlistFilter, FrontendAppConfig}
 import play.api.mvc.Results.NotFound
 import play.api.{Configuration, Logging}
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.AffinityGroup.{Individual, Organisation}
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{internalId, nino}
-import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.ftnae.FtnaeDisabledView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait FtnaeIdentifierAction extends ActionFunction[MessagesRequest, MessagesRequest]
 
-class AuthenticatedFtnaeIdentifierAction @Inject() (
-    override val authConnector:  AuthConnector,
-    implicit val config:         FrontendAppConfig,
+class FtnaeIdentifierActionImpl @Inject() (
     configuration:               Configuration,
     val allowList:               FeatureAllowlistFilter,
     ftnaeDisabledView:           FtnaeDisabledView
-)(implicit val executionContext: ExecutionContext)
+)(implicit val executionContext: ExecutionContext, val config: FrontendAppConfig)
     extends FtnaeIdentifierAction
-    with AuthorisedFunctions
     with Logging {
-
-  private val AuthPredicate =
-    Individual or Organisation and AuthProviders(GovernmentGateway) and ConfidenceLevel.L200
-  private val ChildBenefitRetrievals = nino and internalId
 
   override def invokeBlock[A](
       request: MessagesRequest[A],
       block:   MessagesRequest[A] => Future[Result]
   ): Future[Result] = {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     val isFeatureEnabled =
       configuration.getOptional[Boolean](s"feature-flags.ftnae.enabled").getOrElse(false)
 
-    authorised(AuthPredicate)
-      .retrieve(ChildBenefitRetrievals) {
-        case Some(_) ~ Some(_) =>
-          logger.debug("user is authorised: executing action block")
-          enableFtnaeFeature(request, block, isFeatureEnabled)
-        case _ =>
-          logger.debug("user could not be authorised for ftnae")
-          enableFtnaeFeature(request, block, isFeatureEnabled, hideWrapperMenuBar = true)
-      }
-      .recoverWith {
-        case _ =>
-          logger.debug("user could not be authorised for ftnae")
-          enableFtnaeFeature(request, block, isFeatureEnabled, hideWrapperMenuBar = true)
-      }
+    val hideMenuBar = request.session.get("authToken").isEmpty
+
+    enableFtnaeFeature(request, block, isFeatureEnabled, hideWrapperMenuBar = hideMenuBar)
   }
 
   private def enableFtnaeFeature[A](
       request:            MessagesRequest[A],
       block:              MessagesRequest[A] => Future[Result],
       isFeatureEnabled:   Boolean,
-      hideWrapperMenuBar: Boolean = false
+      hideWrapperMenuBar: Boolean
   ) = {
     if (isFeatureEnabled) {
       allowList(_ => block(request))("ftnae", request)
