@@ -27,11 +27,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait FtnaeIdentifierAction extends ActionFunction[MessagesRequest, MessagesRequest]
 
-class FtnaeIdentifierActionImpl @Inject()(
+class FtnaeIdentifierActionImpl @Inject() (
     configuration:               Configuration,
     val allowList:               FeatureAllowlistFilter,
     ftnaeDisabledView:           FtnaeDisabledView
-)(implicit val executionContext: ExecutionContext,val config: FrontendAppConfig)
+)(implicit val executionContext: ExecutionContext, val config: FrontendAppConfig)
     extends FtnaeIdentifierAction
     with Logging {
 
