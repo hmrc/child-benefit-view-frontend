@@ -16,8 +16,9 @@
 
 package utils.handlers
 
+import com.google.inject.Inject
 import controllers.cob
-import models.errors._
+import models.errors.*
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.Redirect
@@ -26,14 +27,12 @@ import play.twirl.api.Html
 import services.AuditService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import utils.handlers.ErrorHandler._
+import utils.handlers.ErrorHandler.*
 import utils.logging.RequestLogger
 import views.html.{ErrorTemplate, NotFoundView}
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
 class ErrorHandler @Inject() (
     val messagesApi: MessagesApi,
     notFoundView:    NotFoundView,

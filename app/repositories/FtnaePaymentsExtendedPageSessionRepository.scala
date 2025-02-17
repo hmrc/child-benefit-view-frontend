@@ -24,6 +24,7 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import org.mongodb.scala.SingleObservableFuture
 
 import java.time.{Clock, Instant}
 import java.util.concurrent.TimeUnit
@@ -45,7 +46,7 @@ class FtnaePaymentsExtendedPageSessionRepository @Inject() (
           Indexes.ascending("lastUpdated"),
           IndexOptions()
             .name("lastUpdatedIdx")
-            .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
+            .expireAfter(appConfig.cacheTtl.toLong, TimeUnit.SECONDS)
         )
       )
     ) {

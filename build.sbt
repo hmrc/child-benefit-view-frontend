@@ -7,7 +7,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 lazy val appName: String = "child-benefit-view-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.15"
+ThisBuild / scalaVersion := "3.6.2"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -47,18 +47,12 @@ lazy val root = (project in file("."))
     ),
     libraryDependencies ++= AppDependencies(),
     scalacOptions ++= Seq(
+      "-Wconf:msg=unused.import&src=html/.*:s",
+      "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
       "-Ypatmat-exhaust-depth",
       "40",
       "-feature",
-      "-deprecation",
-      "-Ywarn-dead-code",
-      //"-Xfatal-warnings",      // Commented until somebody will resolve `models.Enumerable.Implicits.writes` warning
-      "-Ywarn-unused:implicits", // Warn if an implicit parameter is unused.
-      "-Ywarn-unused:imports",   // Warn if an import selector is not referenced.
-      "-Ywarn-unused:locals",    // Warn if a local definition is unused.
-      "-Ywarn-unused:params",    // Warn if a value parameter is unused.
-      "-Ywarn-unused:patvars",   // Warn if a variable bound in a pattern is unused.
-      "-Ywarn-unused:privates"   // Warn if a private member is unused.
+      "-deprecation"
     ),
     retrieveManaged := true,
     resolvers ++= Seq(Resolver.jcenterRepo),

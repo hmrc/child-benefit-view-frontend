@@ -46,6 +46,6 @@ object WhatTypeOfAccount extends Enumerable.Implicits {
   val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant, CreditUnion)
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v)*)
 
 }

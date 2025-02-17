@@ -17,6 +17,7 @@
 package services
 
 import cats.data.EitherT
+import com.google.inject.Inject
 import connectors.ChildBenefitEntitlementConnector
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
@@ -27,17 +28,15 @@ import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.RequestHeader
 import play.twirl.api.HtmlFormat
-import services.PaymentHistoryPageVariant._
-import services.PaymentHistoryService._
+import services.PaymentHistoryPageVariant.*
+import services.PaymentHistoryService.*
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.ChildBenefitEntitlementHelper.formatChildBenefitEntitlement
 import views.html.paymenthistory.{NoPaymentHistory, PaymentHistory}
 
 import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
 class PaymentHistoryService @Inject() (
     entitlementConnector: ChildBenefitEntitlementConnector,
     paymentHistory:       PaymentHistory,
@@ -46,7 +45,7 @@ class PaymentHistoryService @Inject() (
 
   def retrieveAndValidatePaymentHistory(implicit
       auditService: AuditService,
-      identifier:   IdentifierRequest[_],
+      identifier:   IdentifierRequest[?],
       ec:           ExecutionContext,
       hc:           HeaderCarrier,
       messages:     Messages
@@ -60,7 +59,7 @@ class PaymentHistoryService @Inject() (
 
   private def validateAdjustmentToPage(cbe: ChildBenefitEntitlement)(implicit
       auditService:                         AuditService,
-      identifier:                           IdentifierRequest[_],
+      identifier:                           IdentifierRequest[?],
       hc:                                   HeaderCarrier,
       ec:                                   ExecutionContext,
       request:                              RequestHeader,
@@ -110,7 +109,7 @@ class PaymentHistoryService @Inject() (
       cbe:         ChildBenefitEntitlement
   )(implicit
       auditService:     AuditService,
-      identifier:       IdentifierRequest[_],
+      identifier:       IdentifierRequest[?],
       headerCarrier:    HeaderCarrier,
       executionContext: ExecutionContext
   ): Unit = {
@@ -131,28 +130,28 @@ class PaymentHistoryService @Inject() (
 object PaymentHistoryService {
   private val today: LocalDate = LocalDate.now()
 
-  val entitlementEndDateIsInTheFuture: ChildBenefitEntitlement => Boolean =
+  private val entitlementEndDateIsInTheFuture: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) => childBenefitEntitlement.claimant.awardEndDate.isAfter(today)
 
-  val entitlementEndDateIsTodayOrInThePast: ChildBenefitEntitlement => Boolean =
+  private val entitlementEndDateIsTodayOrInThePast: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) =>
       childBenefitEntitlement.claimant.awardEndDate.isBefore(today.plusDays(1))
 
-  val paymentIssuedInLastTwoYears: ChildBenefitEntitlement => Boolean =
+  private val paymentIssuedInLastTwoYears: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) =>
       childBenefitEntitlement.claimant.lastPaymentsInfo.exists(_.creditDate.isAfter(today.minusYears(2)))
 
-  val claimantIsHICBC: ChildBenefitEntitlement => Boolean =
+  private val claimantIsHICBC: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) =>
       childBenefitEntitlement.claimant.adjustmentInformation.exists(_.adjustmentReasonCode.value == "28")
 
-  val adjustmentIsTodayOrInThePast: ChildBenefitEntitlement => Boolean =
+  private val adjustmentIsTodayOrInThePast: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) =>
       childBenefitEntitlement.claimant.adjustmentInformation.exists(adj =>
         adj.adjustmentEndDate.isEqual(today) || adj.adjustmentEndDate.isBefore(today)
       )
 
-  val adjustmentIsInTheFuture: ChildBenefitEntitlement => Boolean =
+  private val adjustmentIsInTheFuture: ChildBenefitEntitlement => Boolean =
     (childBenefitEntitlement: ChildBenefitEntitlement) =>
       childBenefitEntitlement.claimant.adjustmentInformation.exists(_.adjustmentEndDate.isAfter(today))
 }

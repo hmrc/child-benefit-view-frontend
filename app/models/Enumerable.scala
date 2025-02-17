@@ -46,8 +46,6 @@ object Enumerable {
       }
     }
 
-    // Note: sbt provides an incorrect warning that this code is not used.
-    @annotation.nowarn
     implicit def writes[A: Enumerable]: Writes[A] = {
       Writes(value => JsString(value.toString))
     }
