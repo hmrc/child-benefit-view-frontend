@@ -40,19 +40,16 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum    := false,
     ScoverageKeys.coverageHighlighting     := true,
-    scalacOptions ++= Seq(
-      "-rootdir",
-      baseDirectory.value.getCanonicalPath,
-      "-Wconf:cat=deprecation:ws,cat=feature:ws,cat=optimizer:ws,src=target/.*:s"
-    ),
     libraryDependencies ++= AppDependencies(),
-    scalacOptions ++= Seq(
-      "-Wconf:msg=unused.import&src=html/.*:s",
-      "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
-      "-Ypatmat-exhaust-depth",
-      "40",
-      "-feature",
-      "-deprecation"
+      scalacOptions ++= Seq(
+        "-Wconf:src=routes/.*:s",
+        "-Wconf:msg=unused.import&src=html/.*:s",
+        "-Wconf:msg=unused.explicit.parameter&src=html/.*:s",
+        "-Wconf:msg=unused.import&src=xml/.*:s",
+        "-Wconf:msg=Flag.*repeatedly:s",
+        "-Xfatal-warnings",
+        "-feature",
+        "-deprecation"
     ),
     retrieveManaged := true,
     resolvers ++= Seq(Resolver.jcenterRepo),
