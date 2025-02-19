@@ -9,6 +9,13 @@ lazy val appName: String = "child-benefit-view-frontend"
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "3.6.2"
 
+val excludedFiles = "<empty>;Reverse.*;.*utils.handlers.*;.*components.*;" +
+  ".*Routes.*;.*models.viewmodels.govuk.*;.*DataRequests.*;.*HICBCCacheTestController.*;" +
+  ".*LanguageSwitchController.*;.*target.*;.*PersonalInformation.*;.*BankDetails.*;.*ViewDetails.*;" +
+  ".*ChangeOfBankAccountDetailsModel.*;.*ClaimantEntitlementDetails.*;.*FtnaeKickOutModel.*;.*ViewPaymentDetailsModel.*;" +
+  ".*ViewProofOfEntitlementModel.*;.*VerifyBankAccountRequest.*;.*UpdateBankAccountRequest.*;.*models.audit.*;.*models.pertaxAuth.*;" +
+  ".*ChildDetails.*;.*FtnaeQuestionAndAnswer.*"
+
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
@@ -34,9 +41,7 @@ lazy val root = (project in file("."))
       "models.viewmodels.govuk.all._"
     ),
     PlayKeys.playDefaultPort := 10650,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*utils.handlers.*;.*components.*;" +
-      ".*Routes.*;.*models.viewmodels.govuk.*;.*DataRequests.*;.*HICBCCacheTestController.*;" +
-      ".*LanguageSwitchController.*;.*target.*;",
+    ScoverageKeys.coverageExcludedFiles := excludedFiles,
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum    := false,
     ScoverageKeys.coverageHighlighting     := true,

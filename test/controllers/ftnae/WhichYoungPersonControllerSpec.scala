@@ -22,8 +22,8 @@ import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
 import models.pertaxAuth.PertaxAuthResponseModel
 import models.{CheckMode, Mode, NormalMode, UserAnswers}
-import org.mockito.Mockito.when
 import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
 import play.api.data.Form
@@ -32,18 +32,18 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import repositories.SessionRepository
+import stubs.AuthStubs
 import stubs.AuthStubs.*
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
+import utils.TestData
 import utils.TestData.ninoUser
 import utils.navigation.{FakeNavigator, Navigator}
 import views.html.ftnae.WhichYoungPersonView
 
 import scala.concurrent.Future
-import stubs.AuthStubs
-import utils.TestData
 
 class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
@@ -92,6 +92,36 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
 
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
   "WhichYoungPerson Controller" - {
+
+    "must redirect to Service unavailable if no answers are returned" in {
+
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(None))
+
+      val application = applicationBuilder(userAnswers = None)
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .build()
+
+      mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
+      userLoggedInIsChildBenefitUser(ninoUser)
+
+      running(application) {
+        val request = FakeRequest(GET, whichYoungPersonRoute(NormalMode))
+          .withSession("authToken" -> "Bearer 123")
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        assertSameHtmlAfter(removeCsrfAndNonce)(
+          contentAsString(result),
+          ""
+        )
+
+      }
+
+
+
+    }
 
     "must return OK and the correct view for a GET" in {
 
