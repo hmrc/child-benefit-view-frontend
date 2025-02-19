@@ -70,7 +70,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
         .build()
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(emptyUserAnswers)))
 
       when(
         mockFtnaeService
@@ -80,11 +80,11 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
             any[DataRequest[AnyContent]](),
             any[Messages]
           )
-      ) thenReturn CBEnvelope(Right((childName, childDetails)))
+      ).thenReturn(CBEnvelope(Right((childName, childDetails))))
 
       when(
         mockFtnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
@@ -112,7 +112,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[FtnaeConnector].toInstance(mockFtnaeConnector))
         .build()
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(emptyUserAnswers))
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(emptyUserAnswers)))
 
       when(
         mockFtnaeService
@@ -122,11 +122,11 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
             any[DataRequest[AnyContent]](),
             any[Messages]
           )
-      ) thenReturn CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error"))
+      ).thenReturn(CBEnvelope.fromError[CBError, (String, ChildDetails)](ConnectorError(400, "some error")))
 
       when(
         mockFtnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error"))
+      ).thenReturn(CBEnvelope.fromError[CBError, Unit](ConnectorError(400, "some error")))
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)

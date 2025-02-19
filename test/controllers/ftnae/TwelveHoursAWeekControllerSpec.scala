@@ -25,10 +25,11 @@ import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{FtnaeResponseUserAnswer, SchoolOrCollegePage, TwelveHoursAWeekPage, WhichYoungPersonPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -43,15 +44,16 @@ import stubs.AuthStubs.mockPostPertaxAuth
 
 class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
 
-  def onwardYesRoute = Call("GET", "/foo")
-  def onwardNoRoute  = Call("GET", "/moo")
+  def onwardYesRoute: Call = Call("GET", "/foo")
+
+  def onwardNoRoute: Call = Call("GET", "/moo")
 
   val formProvider = new TwelveHoursAWeekFormProvider()
-  val form         = formProvider("First Name")
+  val form: Form[Boolean] = formProvider("First Name")
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val twelveHoursAWeekRoute = controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(CheckMode).url
+  lazy val twelveHoursAWeekRoute: String = controllers.ftnae.routes.TwelveHoursAWeekController.onPageLoad(CheckMode).url
 
   "TwelveHoursAWeek Controller" - {
 
@@ -104,8 +106,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       val userAnswers = emptyUserAnswers.set(SchoolOrCollegePage, false).success.value
 
       val mockSessionRepository = mock[SessionRepository]
-      val updatedAnswers        = userAnswers.set(TwelveHoursAWeekPage, true).success.value
-      when(mockSessionRepository.set(updatedAnswers)) thenReturn Future.successful(true)
+      val updatedAnswers = userAnswers.set(TwelveHoursAWeekPage, true).success.value
+      when(mockSessionRepository.set(updatedAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(updatedAnswers))
@@ -133,8 +135,8 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       val userAnswers = emptyUserAnswers.set(SchoolOrCollegePage, false).success.value
 
       val mockSessionRepository = mock[SessionRepository]
-      val updatedAnswers        = userAnswers.set(TwelveHoursAWeekPage, false).success.value
-      when(mockSessionRepository.set(updatedAnswers)) thenReturn Future.successful(false)
+      val updatedAnswers = userAnswers.set(TwelveHoursAWeekPage, false).success.value
+      when(mockSessionRepository.set(updatedAnswers)).thenReturn(Future.successful(false))
 
       val application =
         applicationBuilder(userAnswers = Some(updatedAnswers))

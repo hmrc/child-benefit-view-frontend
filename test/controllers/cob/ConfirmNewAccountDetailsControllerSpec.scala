@@ -141,7 +141,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
   "ConfirmNewAccountDetails Controller" - {
     "onPageLoad" - {
       "GIVEN the change of bank feature is enabled" - {
-        val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
+        val config = TestConfig().withFeatureFlags(featureFlags())
 
         "WHEN valid User Answers are retrieved" - {
           "THEN should return OK Result and the expected view" in {
@@ -163,7 +163,7 @@ class ConfirmNewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSug
 
             running(application) {
               val request = FakeRequest(GET, confirmNewAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
-              when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+              when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 
               val view = application.injector.instanceOf[ConfirmNewAccountDetailsView]
 

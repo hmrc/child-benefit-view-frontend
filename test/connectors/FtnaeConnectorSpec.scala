@@ -138,7 +138,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, FtnaeResponse]](
-                any[HttpReads[Either[CBError, FtnaeResponse]]],
+                using any[HttpReads[Either[CBError, FtnaeResponse]]],
                 any[ExecutionContext]
               )
             )
@@ -154,7 +154,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, FtnaeResponse]](
-                any[HttpReads[Either[CBError, FtnaeResponse]]],
+                using any[HttpReads[Either[CBError, FtnaeResponse]]],
                 any[ExecutionContext]
               )
             )
@@ -173,7 +173,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         getFtnaeAccountDetailsFailureStub(OK, invalidJsonResponse)
 
         whenReady(sutWithStubs.getFtnaeAccountDetails().value) { result =>
-          result mustBe a[Left[_, FtnaeResponse]]
+          result mustBe a[Left[?, FtnaeResponse]]
           result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
         }
       }
@@ -183,7 +183,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
         getFtnaeAccountDetailsFailureStub(OK, validNotMatchingJsonResponse)
 
         whenReady(sutWithStubs.getFtnaeAccountDetails().value) { result =>
-          result mustBe a[Left[_, FtnaeResponse]]
+          result mustBe a[Left[?, FtnaeResponse]]
           result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
         }
       }
@@ -198,7 +198,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.withBody(any[ChildDetails])(
-            any[BodyWritable[ChildDetails]],
+            using any[BodyWritable[ChildDetails]],
             any[Tag[ChildDetails]],
             any[ExecutionContext]
           )
@@ -208,7 +208,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-                any[HttpReads[Either[CBError, Unit]]],
+                using any[HttpReads[Either[CBError, Unit]]],
                 any[ExecutionContext]
               )
             ).thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
@@ -223,7 +223,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           s"THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-                any[HttpReads[Either[CBError, Unit]]],
+                using any[HttpReads[Either[CBError, Unit]]],
                 any[ExecutionContext]
               )
             ).thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
@@ -245,7 +245,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.withBody(any[ChildDetails])(
-            any[BodyWritable[ChildDetails]],
+            using any[BodyWritable[ChildDetails]],
             any[Tag[ChildDetails]],
             any[ExecutionContext]
           )
@@ -254,7 +254,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.execute[Either[CBError, Unit]](
-            any[HttpReads[Either[CBError, Unit]]],
+            using any[HttpReads[Either[CBError, Unit]]],
             any[ExecutionContext]
           )
         )
@@ -306,7 +306,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
       uploadFtnaeDetailsFailureStub(OK, invalidJsonResponse)
 
       whenReady(sutWithStubs.uploadFtnaeDetails(childDetails).value) { result =>
-        result mustBe a[Left[_, FtnaeResponse]]
+        result mustBe a[Left[?, FtnaeResponse]]
         result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
       }
     }

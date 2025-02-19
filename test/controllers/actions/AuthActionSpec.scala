@@ -36,7 +36,7 @@ import utils.TestData
 import utils.enrolments.HmrcPTChecks
 
 class AuthActionSpec extends BaseAppSpec {
-  lazy val mockHmrcPTChecks = mock[HmrcPTChecks]
+  lazy val mockHmrcPTChecks: HmrcPTChecks = mock[HmrcPTChecks]
 
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction { _ => Results.Ok }
@@ -63,7 +63,7 @@ class AuthActionSpec extends BaseAppSpec {
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
       }
     }
@@ -88,7 +88,7 @@ class AuthActionSpec extends BaseAppSpec {
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
       }
     }
@@ -104,8 +104,8 @@ class AuthActionSpec extends BaseAppSpec {
           val req        = FakeRequest().withSession("authToken" -> "Bearer 123")
           val result     = controller.onPageLoad()(req)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must be(controllers.routes.UnauthorisedController.onPageLoad.url)
+          status(result).mustBe(SEE_OTHER)
+          redirectLocation(result).value.must(be(controllers.routes.UnauthorisedController.onPageLoad.url))
         }
       }
     }

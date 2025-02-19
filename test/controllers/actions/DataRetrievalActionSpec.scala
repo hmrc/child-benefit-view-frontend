@@ -44,7 +44,7 @@ class DataRetrievalActionSpec extends BaseAppSpec with MockitoSugar {
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(None)
+        when(sessionRepository.get("id")).thenReturn(Future(None))
         val action = new Harness(sessionRepository)
 
         val result = action
@@ -61,7 +61,7 @@ class DataRetrievalActionSpec extends BaseAppSpec with MockitoSugar {
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
+        when(sessionRepository.get("id")).thenReturn(Future(Some(UserAnswers("id"))))
         val action = new Harness(sessionRepository)
 
         val result = action

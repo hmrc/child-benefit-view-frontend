@@ -78,7 +78,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
       reset(ftnaeConnector)
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       val fakeRequest = FakeRequest("GET", "/nothing")
       val userAnswers = buildUserAnswers(
@@ -121,7 +121,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
     "return an error if course duration is not set as One year or Two Year" in {
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       val userAnswers = buildUserAnswers(
         ftnaeResponseField(createFtnaeResponseWithChildren()),
@@ -144,7 +144,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
     "return an error if there are multiple children with the same crn" in {
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       val userAnswers = buildUserAnswers(
         ftnaeResponseField(createFtnaeResponseWithChildren(List(childInfoA, childInfoB.copy(crn = childInfoA.crn)))),
@@ -167,7 +167,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
     "return error if there are multiple children with the same name" in {
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       val userAnswers = buildUserAnswers(
         ftnaeResponseField(
@@ -197,7 +197,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
 
       when(
         ftnaeConnector.uploadFtnaeDetails(any[ChildDetails]())(any[ExecutionContext](), any[HeaderCarrier]())
-      ) thenReturn CBEnvelope(())
+      ).thenReturn(CBEnvelope(()))
 
       when(sessionRepository.clear(anyString())).thenReturn(Future.successful(true))
 
@@ -315,7 +315,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
 
     forAll(testCases) { (name, howManyYears, expectedCourseDuration) =>
       {
-        s"Test Case: ${name}" should {
+        s"Test Case: $name" should {
           s"GIVEN the HowManyYears case ${howManyYears.toString}" should {
             s"THEN should return the Option[CourseDuration] case ${expectedCourseDuration
               .fold("None")(c => s"Some(${c.toString})")}" in {
@@ -338,7 +338,7 @@ class FtnaeServiceSpec extends PlaySpec with MockitoSugar with ScalaFutures with
 }
 
 object FtnaeServiceSpec {
-  val testNino = NationalInsuranceNumber("nino")
+  val testNino: NationalInsuranceNumber = NationalInsuranceNumber("nino")
   val testId   = "unitTestId"
   val testCRN  = "AA111111A"
   val testName = "A Child"
@@ -402,7 +402,7 @@ object FtnaeServiceSpec {
     (FtnaeResponseUserAnswer.toString, Json.toJson(response))
   def whichYoungPersonField(crn: String): (String, JsValue) =
     (WhichYoungPersonPage.toString, JsString(crn))
-  def howManyYearsField(howManyYears: HowManyYears = HowManyYears.Oneyear) =
+  def howManyYearsField(howManyYears: HowManyYears = HowManyYears.Oneyear): (String, JsString) =
     (HowManyYearsPage.toString, JsString(howManyYears.toString))
 
   def courseDurationToHowManyYears(courseDuration: CourseDuration): String =

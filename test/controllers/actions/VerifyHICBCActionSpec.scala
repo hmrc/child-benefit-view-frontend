@@ -167,9 +167,9 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
     implicit val auditService:   AuditService            = mock[AuditService]
     val ignoreHICBCCheckService: IgnoreHICBCCheckService = mock[IgnoreHICBCCheckService]
 
-    when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(
+    when(cobService.retrieveBankClaimantInfo(any[ExecutionContext], any[HeaderCarrier])).thenReturn(CBEnvelope(
       generateCobClaimantInfo(adjustmentReasonCode, adjustmentEndDate)
-    )
+    ))
 
     when(
       errorHandler.handleError(any[CBError], any[Option[String]])(
@@ -178,11 +178,11 @@ class VerifyHICBCActionSpec extends BaseAppSpec with MockitoSugar {
         any[HeaderCarrier],
         any[ExecutionContext]
       )
-    ) thenReturn Redirect(
+    ).thenReturn(Redirect(
       controllers.routes.ServiceUnavailableController.onPageLoad
-    )
+    ))
 
-    when(ignoreHICBCCheckService.getIgnoreHicbcCheckToggle) thenReturn Future.successful(hicbcIsIgnored)
+    when(ignoreHICBCCheckService.getIgnoreHicbcCheckToggle).thenReturn(Future.successful(hicbcIsIgnored))
 
     val action:      Harness                                   = new Harness(cobService, errorHandler, auditService, ignoreHICBCCheckService)
     val fakeRequest: IdentifierRequest[AnyContentAsEmpty.type] = request

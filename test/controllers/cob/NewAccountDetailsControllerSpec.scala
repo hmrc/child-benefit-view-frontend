@@ -27,16 +27,17 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.cob.{NewAccountDetailsPage, WhatTypeOfAccountPage}
 import play.api.Application
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.libs.json.Json
 import play.api.mvc.Call
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{CSRFTokenHelper, FakeRequest}
 import repositories.SessionRepository
-import stubs.AuthStubs._
-import stubs.ChildBenefitServiceStubs._
+import stubs.AuthStubs.*
+import stubs.ChildBenefitServiceStubs.*
 import testconfig.TestConfig
-import testconfig.TestConfig._
+import testconfig.TestConfig.*
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
 import utils.TestData.{lockedOutErrorResponse, ninoUser}
@@ -48,24 +49,24 @@ import scala.concurrent.Future
 
 class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with ScalaCheckPropertyChecks {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider = new NewAccountDetailsFormProvider()
-  val form         = formProvider()
+  val form: Form[NewAccountDetails] = formProvider()
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val newAccountDetailsRoute = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
-  val newAccountDetails           = NewAccountDetails("name", "123456", "11110000")
+  lazy val newAccountDetailsRoute: String = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
+  val newAccountDetails: NewAccountDetails = NewAccountDetails("name", "123456", "11110000")
   val accountType: WhatTypeOfAccount = WhatTypeOfAccount.Sole
-  val userAnswers = UserAnswers(
+  val userAnswers: UserAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       NewAccountDetailsPage.toString -> Json.toJsObject(newAccountDetails),
       WhatTypeOfAccountPage.toString -> Json.toJson(accountType)
     )
   )
-  val userAnswersNoAccountDetails = UserAnswers(
+  val userAnswersNoAccountDetails: UserAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
       WhatTypeOfAccountPage.toString -> Json.toJson(accountType)
@@ -75,7 +76,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
   "NewAccountDetails Controller" - {
 
     "when the change of bank feature is enabled" - {
-      val config = TestConfig().withFeatureFlags(featureFlags(changeOfBank = true))
+      val config = TestConfig().withFeatureFlags(featureFlags())
 
       "must redirect to Pega if RedirectToPegaAction is enabled" in {
         mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
@@ -95,7 +96,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           status(result) mustEqual SEE_OTHER
           redirectLocation(
             result
-          ).get mustEqual ("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank")
+          ).get mustEqual "https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank"
         }
       }
 
@@ -136,7 +137,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           val request = FakeRequest(GET, newAccountDetailsRoute).withSession("authToken" -> "Bearer 123")
 
           val view = application.injector.instanceOf[NewAccountDetailsView]
-          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+          when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
           val result = route(application, request).value
 
           status(result) mustEqual OK
@@ -147,10 +148,10 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
               form
                 .bind(
                   Map(
-                    "bacsError"             -> "",
-                    "newSortCode"           -> newAccountDetails.newSortCode,
+                    "bacsError" -> "",
+                    "newSortCode" -> newAccountDetails.newSortCode,
                     "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
-                    "newAccountNumber"      -> newAccountDetails.newAccountNumber
+                    "newAccountNumber" -> newAccountDetails.newAccountNumber
                   )
                 ),
               NormalMode,
@@ -188,8 +189,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
                 )
                 .withSession("authToken" -> "Bearer 123")
             )
-          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-          when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+          when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+          when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
           val result = route(application, request).value
 
@@ -230,18 +231,18 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
           val expectedBoundForm = form.bind(
             Map(
-              "bacsError"             -> "[priority2] - Sort Code Not Found",
-              "newSortCode"           -> newAccountDetails.newSortCode,
+              "bacsError" -> "[priority2] - Sort Code Not Found",
+              "newSortCode" -> newAccountDetails.newSortCode,
               "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
-              "newAccountNumber"      -> newAccountDetails.newAccountNumber
+              "newAccountNumber" -> newAccountDetails.newAccountNumber
             )
           )
 
-          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-          when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+          when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+          when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
           val result = route(application, request).value
-          val view   = application.injector.instanceOf[NewAccountDetailsView]
+          val view = application.injector.instanceOf[NewAccountDetailsView]
           status(result) mustEqual BAD_REQUEST
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
@@ -280,8 +281,8 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
                 .withSession("authToken" -> "Bearer 123")
             )
 
-          when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-          when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+          when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+          when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
           val result = route(application, request).value
           status(result) mustEqual SEE_OTHER
@@ -387,7 +388,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
           val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
-          val (resultStatus, redirectUrl)                                = statusAndRedirectUrl
+          val (resultStatus, redirectUrl) = statusAndRedirectUrl
 
           val application: Application = applicationBuilderWithVerificationActions(
             config,

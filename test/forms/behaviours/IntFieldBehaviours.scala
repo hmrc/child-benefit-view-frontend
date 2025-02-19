@@ -20,7 +20,7 @@ import play.api.data.{Form, FormError}
 
 trait IntFieldBehaviours extends FieldBehaviours {
 
-  def intField(form: Form[_], fieldName: String, nonNumericError: FormError, wholeNumberError: FormError): Unit = {
+  def intField(form: Form[?], fieldName: String, nonNumericError: FormError, wholeNumberError: FormError): Unit = {
 
     "not bind non-numeric numbers" in {
 
@@ -40,7 +40,7 @@ trait IntFieldBehaviours extends FieldBehaviours {
 
     "not bind integers larger than Int.MaxValue" in {
 
-      forAll(intsLargerThanMaxValue -> "massiveInt") { num: BigInt =>
+      forAll(intsLargerThanMaxValue -> "massiveInt") { num =>
         val result = form.bind(Map(fieldName -> num.toString)).apply(fieldName)
         result.errors must contain only nonNumericError
       }
@@ -48,29 +48,29 @@ trait IntFieldBehaviours extends FieldBehaviours {
 
     "not bind integers smaller than Int.MinValue" in {
 
-      forAll(intsSmallerThanMinValue -> "massivelySmallInt") { num: BigInt =>
+      forAll(intsSmallerThanMinValue -> "massivelySmallInt") { num =>
         val result = form.bind(Map(fieldName -> num.toString)).apply(fieldName)
         result.errors must contain only nonNumericError
       }
     }
   }
 
-  def intFieldWithMinimum(form: Form[_], fieldName: String, minimum: Int, expectedError: FormError): Unit = {
+  def intFieldWithMinimum(form: Form[?], fieldName: String, minimum: Int, expectedError: FormError): Unit = {
 
     s"not bind integers below $minimum" in {
 
-      forAll(intsBelowValue(minimum) -> "intBelowMin") { number: Int =>
+      forAll(intsBelowValue(minimum) -> "intBelowMin") { number =>
         val result = form.bind(Map(fieldName -> number.toString)).apply(fieldName)
         result.errors must contain only expectedError
       }
     }
   }
 
-  def intFieldWithMaximum(form: Form[_], fieldName: String, maximum: Int, expectedError: FormError): Unit = {
+  def intFieldWithMaximum(form: Form[?], fieldName: String, maximum: Int, expectedError: FormError): Unit = {
 
     s"not bind integers above $maximum" in {
 
-      forAll(intsAboveValue(maximum) -> "intAboveMax") { number: Int =>
+      forAll(intsAboveValue(maximum) -> "intAboveMax") { number =>
         val result = form.bind(Map(fieldName -> number.toString)).apply(fieldName)
         result.errors must contain only expectedError
       }
@@ -78,7 +78,7 @@ trait IntFieldBehaviours extends FieldBehaviours {
   }
 
   def intFieldWithRange(
-      form:          Form[_],
+      form:          Form[?],
       fieldName:     String,
       minimum:       Int,
       maximum:       Int,

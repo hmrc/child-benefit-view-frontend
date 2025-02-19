@@ -26,12 +26,13 @@ import org.mockito.Mockito.when
 import org.mockito.ArgumentCaptor
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{FtnaeResponseUserAnswer, WhichYoungPersonPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
-import stubs.AuthStubs._
+import stubs.AuthStubs.*
 import uk.gov.hmrc.govukfrontend.views.Aliases.RadioItem
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.http.HeaderCarrier
@@ -46,29 +47,27 @@ import utils.TestData
 
 class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with FtnaeFixture {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  def whichYoungPersonRoute(mode: Mode) = controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(mode).url
+  def whichYoungPersonRoute(mode: Mode): String = controllers.ftnae.routes.WhichYoungPersonController.onPageLoad(mode).url
 
-  val formProvider             = new WhichYoungPersonFormProvider()
-  val form                     = formProvider()
-  lazy val extendPaymentsRoute = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
+  val formProvider = new WhichYoungPersonFormProvider()
+  val form: Form[String] = formProvider()
+  lazy val extendPaymentsRoute: String = controllers.ftnae.routes.ExtendPaymentsController.onPageLoad().url
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def arrangeRadioButtons(
-      ftnaeResponseUserAnswer:   FtnaeResponse
-  )(youngPersonNotListedMessage: String): List[RadioItem] = {
-    val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: (
-      ftnaeResponseUserAnswer.children
-        .map(c => {
-          val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
-          s"${c.name.value} $midName${c.lastName.value}"
-        })
-      )).zipWithIndex.toList
+                                   ftnaeResponseUserAnswer: FtnaeResponse
+                                 )(youngPersonNotListedMessage: String): List[RadioItem] = {
+    val initialOrder: List[(String, Int)] = (youngPersonNotListedMessage :: ftnaeResponseUserAnswer.children
+      .map(c => {
+        val midName = c.midName.map(mn => s"${mn.value} ").getOrElse("")
+        s"${c.name.value} $midName${c.lastName.value}"
+      })).zipWithIndex
 
     val childNotListedMessage = initialOrder.head
-    val restOfTheList         = initialOrder.tail
+    val restOfTheList = initialOrder.tail
 
     val orderedWithIndex0InTheEnd = restOfTheList ::: List(childNotListedMessage)
     orderedWithIndex0InTheEnd.map { x =>
@@ -77,7 +76,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
     }
   }
 
-  val ftnaeResponse = FtnaeResponse(
+  val ftnaeResponse: FtnaeResponse = FtnaeResponse(
     FtnaeClaimantInfo(FirstForename("s"), Surname("sa")),
     List(
       FtnaeChildInfo(
@@ -86,12 +85,12 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         None,
         Surname("Surname"),
         sixteenBy1stOfSeptemberThisYear,
-        getFirstMondayOfSeptemberThisYear()
+        getFirstMondayOfSeptemberThisYear
       )
     )
   )
 
-  val mockSessionRepository = mock[SessionRepository]
+  val mockSessionRepository: SessionRepository = mock[SessionRepository]
   "WhichYoungPerson Controller" - {
 
     "must return OK and the correct view for a GET" in {
@@ -101,8 +100,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .success
         .value
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -142,8 +141,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
         .build()
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       running(application) {
         val request =
@@ -176,8 +175,8 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
         .success
         .value
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -204,15 +203,15 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
 
     "must set name changed in user answers if in check mode" in {
       val mockSessionRepository = mock[SessionRepository]
-      val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
+      val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-      when(mockSessionRepository.set(captor.capture())) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -232,21 +231,21 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
 
         await(route(application, request).value)
 
-        captor.getValue().nameChangedDuringCheck mustEqual true
+        captor.getValue.nameChangedDuringCheck mustEqual true
       }
     }
 
     "must not set name changed in user answers if in check mode but name not changed" in {
       val mockSessionRepository = mock[SessionRepository]
-      val captor                = ArgumentCaptor.forClass(classOf[UserAnswers])
+      val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
       val userAnswers = UserAnswers(userAnswersId)
         .set(WhichYoungPersonPage, "First Name Surname")
         .flatMap(x => x.set(FtnaeResponseUserAnswer, ftnaeResponse))
         .success
         .value
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
-      when(mockSessionRepository.set(captor.capture())) thenReturn Future.successful(true)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
+      when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -266,7 +265,7 @@ class WhichYoungPersonControllerSpec extends BaseAppSpec with MockitoSugar with 
 
         await(route(application, request).value)
 
-        captor.getValue().nameChangedDuringCheck mustEqual false
+        captor.getValue.nameChangedDuringCheck mustEqual false
       }
     }
 

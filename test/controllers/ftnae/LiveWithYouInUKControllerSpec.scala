@@ -25,10 +25,11 @@ import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{FtnaeResponseUserAnswer, LiveWithYouInUKPage, WhichYoungPersonPage, WillCourseBeEmployerProvidedPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -43,15 +44,16 @@ import utils.TestData
 
 class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
-  def onwardYesRoute = Call("GET", "/foo")
-  def onwardNoRoute  = Call("GET", "/moo")
+  def onwardYesRoute: Call = Call("GET", "/foo")
+
+  def onwardNoRoute: Call = Call("GET", "/moo")
 
   val formProvider = new LiveWithYouInUKFormProvider()
-  val form         = formProvider("First Name")
+  val form: Form[Boolean] = formProvider("First Name")
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val liveWithYouInUKRoute = controllers.ftnae.routes.LiveWithYouInUKController.onPageLoad(CheckMode).url
+  lazy val liveWithYouInUKRoute: String = controllers.ftnae.routes.LiveWithYouInUKController.onPageLoad(CheckMode).url
 
   "LiveWithYouInUK Controller" - {
 
@@ -108,7 +110,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
       val userAnswers = UserAnswers(userAnswersId).set(LiveWithYouInUKPage, true).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -140,7 +142,7 @@ class LiveWithYouInUKControllerSpec extends BaseAppSpec with MockitoSugar {
 
       val userAnswers = UserAnswers(userAnswersId).set(LiveWithYouInUKPage, false).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(false)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(false))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

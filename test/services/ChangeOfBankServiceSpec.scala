@@ -121,8 +121,8 @@ class ChangeOfBankServiceSpec extends BaseSpec {
       val view = mock[ChangeAccountView]
       when(view(any[String], any[ClaimantBankAccountInformation])(any[RequestHeader], any[Messages]))
         .thenReturn(Html("Unit Test content"))
-      implicit val mockRequest  = mock[OptionalDataRequest[_]]
-      implicit val mockMessages = mock[Messages]
+      implicit val mockRequest: OptionalDataRequest[?] = mock[OptionalDataRequest[?]]
+      implicit val mockMessages: Messages = mock[Messages]
 
       "GIVEN that BankClaimantDetails are successfully retrieved" - {
         val hicbcClaimantTransformer: ClaimantBankInformation => ClaimantBankInformation =

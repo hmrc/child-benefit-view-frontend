@@ -26,6 +26,8 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.Json
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
 
+import org.mongodb.scala.ObservableFuture
+
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 import scala.concurrent.ExecutionContext
@@ -45,7 +47,7 @@ class SessionRepositorySpec
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  override lazy val repository = new SessionRepository(mongoComponent, mockConfig, stubClock)
+  lazy val repository: SessionRepository = new SessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
     await(deleteAll())

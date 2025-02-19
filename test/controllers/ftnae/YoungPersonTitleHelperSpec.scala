@@ -40,7 +40,7 @@ class YoungPersonTitleHelperSpec extends BaseAppSpec with MockitoSugar with Ftna
         None,
         Surname("YYY"),
         sixteenBy1stOfSeptemberThisYear,
-        getFirstMondayOfSeptemberThisYear()
+        getFirstMondayOfSeptemberThisYear
       )
     )
   )

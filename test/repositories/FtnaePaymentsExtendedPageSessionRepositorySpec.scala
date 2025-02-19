@@ -25,6 +25,7 @@ import org.mongodb.scala.model.Filters
 import org.scalatest.BeforeAndAfterEach
 import play.api.libs.json.Json
 import uk.gov.hmrc.mongo.test.DefaultPlayMongoRepositorySupport
+import org.mongodb.scala.ObservableFuture
 
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
@@ -45,7 +46,7 @@ class FtnaePaymentsExtendedPageSessionRepositorySpec
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  override lazy val repository = new FtnaePaymentsExtendedPageSessionRepository(mongoComponent, mockConfig, stubClock)
+  override lazy val repository: FtnaePaymentsExtendedPageSessionRepository = new FtnaePaymentsExtendedPageSessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
     await(deleteAll())

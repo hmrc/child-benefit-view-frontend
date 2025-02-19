@@ -20,7 +20,7 @@ object HtmlMatcherUtils {
 
   val pattern: String = """nonce="[^"]+""""
 
-  val removeCsrfAndNonce = (removeNonce _) andThen (removeCsrfToken _)
+  val removeCsrfAndNonce: String => String = removeNonce andThen removeCsrfToken
   def removeNonce(html: String): String = {
     html.replaceAll(pattern, "")
   }
