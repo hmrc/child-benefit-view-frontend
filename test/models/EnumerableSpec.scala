@@ -24,7 +24,9 @@ import play.api.libs.json._
 object EnumerableSpec {
 
   sealed trait Foo
+
   case object Bar extends Foo
+
   case object Baz extends Foo
 
   object Foo {
@@ -32,7 +34,7 @@ object EnumerableSpec {
     val values: Set[Foo] = Set(Bar, Baz)
 
     implicit val fooEnumerable: Enumerable[Foo] =
-      Enumerable(values.toSeq.map(v => v.toString -> v)*)
+      Enumerable(values.toSeq.map(v => v.toString -> v) *)
   }
 }
 

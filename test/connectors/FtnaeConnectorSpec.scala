@@ -42,15 +42,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier:    HeaderCarrier    = new HeaderCarrier()
+  implicit val headerCarrier: HeaderCarrier = new HeaderCarrier()
 
-  override implicit lazy val app: Application    = applicationBuilder().build()
-  val sutWithStubs:               FtnaeConnector = app.injector.instanceOf[FtnaeConnector]
+  override implicit lazy val app: Application = applicationBuilder().build()
+  val sutWithStubs: FtnaeConnector = app.injector.instanceOf[FtnaeConnector]
 
-  val mockHttpClient: HttpClientV2      = mock[HttpClientV2]
-  val requestBuilder: RequestBuilder    = mock[RequestBuilder]
-  val mockAppConfig:  FrontendAppConfig = mock[FrontendAppConfig]
-  val sutWithMocks:   FtnaeConnector    = new FtnaeConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
+  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  val sutWithMocks: FtnaeConnector = new FtnaeConnector(mockHttpClient, mockAppConfig)
 
   val errors: Seq[Int] = Seq(
     UNAUTHORIZED,

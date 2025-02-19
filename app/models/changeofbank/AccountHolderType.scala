@@ -22,26 +22,28 @@ import play.api.libs.json.{JsonValidationError, Reads, Writes}
 sealed trait AccountHolderType
 
 object AccountHolderType extends Enumerable.Implicits {
-  case object Claimant    extends AccountHolderType
-  case object Joint       extends AccountHolderType
+  case object Claimant extends AccountHolderType
+
+  case object Joint extends AccountHolderType
+
   case object SomeoneElse extends AccountHolderType
 
   val values: List[AccountHolderType] = List(Claimant, Joint, SomeoneElse)
 
   implicit val enumerable: Enumerable[AccountHolderType] =
-    Enumerable(values.map(v => v.toString -> v)*)
+    Enumerable(values.map(v => v.toString -> v) *)
 
   implicit val reads: Reads[AccountHolderType] =
     implicitly[Reads[String]]
       .collect[AccountHolderType](JsonValidationError("Invalid DataFormat")) {
-        case "CLAIMANT"     => Claimant
-        case "JOINT"        => Joint
+        case "CLAIMANT" => Claimant
+        case "JOINT" => Joint
         case "SOMEONE_ELSE" => SomeoneElse
       }
 
   implicit val writes: Writes[AccountHolderType] = implicitly[Writes[String]].contramap[AccountHolderType] {
-    case Claimant    => "CLAIMANT"
-    case Joint       => "JOINT"
+    case Claimant => "CLAIMANT"
+    case Joint => "JOINT"
     case SomeoneElse => "SOMEONE_ELSE"
   }
 }

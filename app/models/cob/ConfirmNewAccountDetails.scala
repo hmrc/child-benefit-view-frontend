@@ -23,7 +23,8 @@ sealed trait ConfirmNewAccountDetails
 object ConfirmNewAccountDetails extends Enumerable.Implicits {
 
   case object Yes extends WithName("yes") with ConfirmNewAccountDetails
-  case object No  extends WithName("no") with ConfirmNewAccountDetails
+
+  case object No extends WithName("no") with ConfirmNewAccountDetails
 
   val values: Seq[ConfirmNewAccountDetails] = Seq(
     Yes,
@@ -31,5 +32,5 @@ object ConfirmNewAccountDetails extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ConfirmNewAccountDetails] =
-    Enumerable(values.map(v => v.toString -> v)*)
+    Enumerable(values.map(v => v.toString -> v) *)
 }
