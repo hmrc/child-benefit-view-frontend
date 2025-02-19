@@ -28,21 +28,21 @@ object WhatTypeOfAccount extends Enumerable.Implicits {
   case object Sole extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with WhatTypeOfAccount
 
   case object JointHeldByClaimant
-    extends WithMessage(
-      "joint_held_by_claimant",
-      m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}"
-    )
+      extends WithMessage(
+        "joint_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}"
+      )
       with WhatTypeOfAccount
 
   case object JointNotHeldByClaimant
-    extends WithMessage(
-      "joint_not_held_by_claimant",
-      m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointNotHeldByClaimant")}"
-    )
+      extends WithMessage(
+        "joint_not_held_by_claimant",
+        m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointNotHeldByClaimant")}"
+      )
       with WhatTypeOfAccount
 
   case object CreditUnion
-    extends WithMessage("credit_union", m => m("whatTypeOfAccount.options.creditUnion"))
+      extends WithMessage("credit_union", m => m("whatTypeOfAccount.options.creditUnion"))
       with WhatTypeOfAccount
 
   val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant, CreditUnion)

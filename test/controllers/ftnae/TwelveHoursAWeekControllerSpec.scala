@@ -106,7 +106,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       val userAnswers = emptyUserAnswers.set(SchoolOrCollegePage, false).success.value
 
       val mockSessionRepository = mock[SessionRepository]
-      val updatedAnswers = userAnswers.set(TwelveHoursAWeekPage, true).success.value
+      val updatedAnswers        = userAnswers.set(TwelveHoursAWeekPage, true).success.value
       when(mockSessionRepository.set(updatedAnswers)).thenReturn(Future.successful(true))
 
       val application =
@@ -135,7 +135,7 @@ class TwelveHoursAWeekControllerSpec extends BaseAppSpec with MockitoSugar {
       val userAnswers = emptyUserAnswers.set(SchoolOrCollegePage, false).success.value
 
       val mockSessionRepository = mock[SessionRepository]
-      val updatedAnswers = userAnswers.set(TwelveHoursAWeekPage, false).success.value
+      val updatedAnswers        = userAnswers.set(TwelveHoursAWeekPage, false).success.value
       when(mockSessionRepository.set(updatedAnswers)).thenReturn(Future.successful(false))
 
       val application =

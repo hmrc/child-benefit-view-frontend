@@ -17,8 +17,8 @@
 package utils.handlers
 
 import base.BaseAppSpec
-import controllers.cob.routes as cobRoutes
-import controllers.ftnae.routes as ftnaeroutes
+import controllers.cob.routes
+import controllers.ftnae.routes
 import controllers.routes
 import models.errors.*
 import org.jsoup.Jsoup
@@ -93,7 +93,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
             val result = sut.handleError(error, None)
 
             result.header.status mustEqual SEE_OTHER
-            resultUrl(result) mustEqual routes.NoAccountFoundController.onPageLoad.url
+            resultUrl(result) mustEqual controllers.routes.NoAccountFoundController.onPageLoad.url
           }
 
           val pOEAuditOrigin = "proofOfEntitlement"
@@ -132,7 +132,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
             val result = sut.handleError(error, None)
 
             result.header.status mustEqual SEE_OTHER
-            resultUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+            resultUrl(result) mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
           }
         }
 
@@ -143,7 +143,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
             val result = sut.handleError(error, None)
 
             result.header.status mustEqual SEE_OTHER
-            resultUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+            resultUrl(result) mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
           }
         }
       }
@@ -155,7 +155,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(error, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual cobRoutes.BARSLockOutController.onPageLoad().url
+          resultUrl(result) mustEqual controllers.cob.routes.BARSLockOutController.onPageLoad().url
         }
       }
 
@@ -166,7 +166,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(error, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+          resultUrl(result) mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
         }
       }
 
@@ -175,7 +175,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(FtnaeNoCHBAccountError, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual routes.NoAccountFoundController.onPageLoad.url
+          resultUrl(result) mustEqual controllers.routes.NoAccountFoundController.onPageLoad.url
         }
       }
 
@@ -184,7 +184,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(FtnaeCannotFindYoungPersonError, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual ftnaeroutes.CannotFindYoungPersonController.onPageLoad().url
+          resultUrl(result) mustEqual controllers.ftnae.routes.CannotFindYoungPersonController.onPageLoad().url
         }
       }
 
@@ -193,7 +193,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(FtnaeChildUserAnswersNotRetrieved, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+          resultUrl(result) mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
         }
       }
 
@@ -202,7 +202,7 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           val result = sut.handleError(UnitTestError, None)
 
           result.header.status mustEqual SEE_OTHER
-          resultUrl(result) mustEqual routes.ServiceUnavailableController.onPageLoad.url
+          resultUrl(result) mustEqual controllers.routes.ServiceUnavailableController.onPageLoad.url
         }
       }
     }
@@ -268,8 +268,8 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
 }
 
 case object UnitTestError extends CBError {
-  override val statusCode = NOT_IMPLEMENTED
-  override val message    = "Unit Test error"
+  override val statusCode: Int = NOT_IMPLEMENTED
+  override val message = "Unit Test error"
 }
 
 object ErrorHandlerSpec {

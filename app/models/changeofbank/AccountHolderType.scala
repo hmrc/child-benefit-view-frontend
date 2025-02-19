@@ -36,14 +36,14 @@ object AccountHolderType extends Enumerable.Implicits {
   implicit val reads: Reads[AccountHolderType] =
     implicitly[Reads[String]]
       .collect[AccountHolderType](JsonValidationError("Invalid DataFormat")) {
-        case "CLAIMANT" => Claimant
-        case "JOINT" => Joint
+        case "CLAIMANT"     => Claimant
+        case "JOINT"        => Joint
         case "SOMEONE_ELSE" => SomeoneElse
       }
 
   implicit val writes: Writes[AccountHolderType] = implicitly[Writes[String]].contramap[AccountHolderType] {
-    case Claimant => "CLAIMANT"
-    case Joint => "JOINT"
+    case Claimant    => "CLAIMANT"
+    case Joint       => "JOINT"
     case SomeoneElse => "SOMEONE_ELSE"
   }
 }

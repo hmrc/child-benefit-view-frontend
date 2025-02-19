@@ -26,8 +26,8 @@ import utils.TestData.ninoUser
 import java.net.URLEncoder
 
 class AuthControllerSpec extends BaseAppSpec {
-  
-  private val SEE_OTHER: Int = 303 
+
+  private val SEE_OTHER: Int = 303
 
   "AuthController" - {
     "on SignOut redirect to /gg/sign-out with continue to the feedback survey" in {

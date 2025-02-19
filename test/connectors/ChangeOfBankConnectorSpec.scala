@@ -159,7 +159,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.execute[Either[CBError, ClaimantBankInformation]](
-                using any[HttpReads[Either[CBError, ClaimantBankInformation]]],
+                using(any[HttpReads[Either[CBError, ClaimantBankInformation]]]),
                 any[ExecutionContext]
               )
             )
@@ -175,7 +175,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.execute[Either[CBError, ClaimantBankInformation]](
-                using any[HttpReads[Either[CBError, ClaimantBankInformation]]],
+                using(any[HttpReads[Either[CBError, ClaimantBankInformation]]]),
                 any[ExecutionContext]
               )
             )
@@ -263,14 +263,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.withBody(any[VerifyBankAccountRequest])(
-                using any[BodyWritable[VerifyBankAccountRequest]],
+                using(any[BodyWritable[VerifyBankAccountRequest]]),
                 any[Tag[VerifyBankAccountRequest]],
                 any[ExecutionContext]
               )
             ).thenReturn(requestBuilder)
 
-            when(requestBuilder.execute[Either[CBError, Unit]]
-              (using any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext]))
+            when(
+              requestBuilder
+                .execute[Either[CBError, Unit]](using(any[HttpReads[Either[CBError, Unit]]]), any[ExecutionContext])
+            )
               .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
             whenReady(connector.verifyClaimantBankAccount(verifyBankAccountRequest).value) { result =>
@@ -284,7 +286,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.withBody(any[VerifyBankAccountRequest])(
-                using any[BodyWritable[VerifyBankAccountRequest]],
+                using(any[BodyWritable[VerifyBankAccountRequest]]),
                 any[Tag[VerifyBankAccountRequest]],
                 any[ExecutionContext]
               )
@@ -292,7 +294,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-               using any[HttpReads[Either[CBError, Unit]]],
+                using(any[HttpReads[Either[CBError, Unit]]]),
                 any[ExecutionContext]
               )
             ).thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
@@ -364,8 +366,10 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(mockHttpClient.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
-            when(requestBuilder.execute[Either[CBError, Unit]]
-              (using any[HttpReads[Either[CBError, Unit]]], any[ExecutionContext]))
+            when(
+              requestBuilder
+                .execute[Either[CBError, Unit]](using(any[HttpReads[Either[CBError, Unit]]]), any[ExecutionContext])
+            )
               .thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
 
             whenReady(connector.verifyBARNotLocked().value) { result =>
@@ -380,7 +384,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-                using any[HttpReads[Either[CBError, Unit]]],
+                using(any[HttpReads[Either[CBError, Unit]]]),
                 any[ExecutionContext]
               )
             )
@@ -416,16 +420,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.withBody(any[UpdateBankAccountRequest])(
-                  using any[BodyWritable[UpdateBankAccountRequest]],
-                  any[Tag[UpdateBankAccountRequest]],
-                  any[ExecutionContext]
-                )
+                using(any[BodyWritable[UpdateBankAccountRequest]]),
+                any[Tag[UpdateBankAccountRequest]],
+                any[ExecutionContext]
+              )
             )
               .thenReturn(requestBuilder)
 
             when(
               requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](
-                using any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]],
+                using(any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]]),
                 any[ExecutionContext]
               )
             )
@@ -443,16 +447,16 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
             when(
               requestBuilder.withBody(any[UpdateBankAccountRequest])(
-                  using any[BodyWritable[UpdateBankAccountRequest]],
-                  any[Tag[UpdateBankAccountRequest]],
-                  any[ExecutionContext]
-                )
+                using(any[BodyWritable[UpdateBankAccountRequest]]),
+                any[Tag[UpdateBankAccountRequest]],
+                any[ExecutionContext]
+              )
             )
               .thenReturn(requestBuilder)
 
             when(
               requestBuilder.execute[Either[CBError, UpdateBankDetailsResponse]](
-                using any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]],
+                using(any[HttpReads[Either[CBError, UpdateBankDetailsResponse]]]),
                 any[ExecutionContext]
               )
             )
@@ -549,7 +553,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
           when(
             requestBuilder.execute[Either[CBError, Unit]](
-              using any[HttpReads[Either[CBError, Unit]]],
+              using(any[HttpReads[Either[CBError, Unit]]]),
               any[ExecutionContext]
             )
           ).thenReturn(Future.successful(Left(ConnectorError(INTERNAL_SERVER_ERROR, message))))
@@ -565,7 +569,7 @@ class ChangeOfBankConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
           when(
             requestBuilder.execute[Either[CBError, Unit]](
-              using any[HttpReads[Either[CBError, Unit]]],
+              using(any[HttpReads[Either[CBError, Unit]]]),
               any[ExecutionContext]
             )
           ).thenReturn(Future.failed(UpstreamErrorResponse(message, INTERNAL_SERVER_ERROR)))

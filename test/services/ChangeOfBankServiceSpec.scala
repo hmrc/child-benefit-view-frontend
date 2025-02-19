@@ -43,11 +43,11 @@ import views.html.cob.ChangeAccountView
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChangeOfBankServiceSpec extends BaseSpec {
-  val cobConnector: ChangeOfBankConnector = mock[ChangeOfBankConnector]
-  val sessionRepository: SessionRepository = mock[SessionRepository]
-  implicit val auditService: AuditService = mock[AuditService]
-  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  val cobConnector:          ChangeOfBankConnector = mock[ChangeOfBankConnector]
+  val sessionRepository:     SessionRepository     = mock[SessionRepository]
+  implicit val auditService: AuditService          = mock[AuditService]
+  implicit val ec:           ExecutionContext      = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val hc:           HeaderCarrier         = HeaderCarrier()
 
   val sut = new ChangeOfBankService(cobConnector, sessionRepository)
 
@@ -121,8 +121,8 @@ class ChangeOfBankServiceSpec extends BaseSpec {
       val view = mock[ChangeAccountView]
       when(view(any[String], any[ClaimantBankAccountInformation])(any[RequestHeader], any[Messages]))
         .thenReturn(Html("Unit Test content"))
-      implicit val mockRequest: OptionalDataRequest[?] = mock[OptionalDataRequest[?]]
-      implicit val mockMessages: Messages = mock[Messages]
+      implicit val mockRequest:  OptionalDataRequest[?] = mock[OptionalDataRequest[?]]
+      implicit val mockMessages: Messages               = mock[Messages]
 
       "GIVEN that BankClaimantDetails are successfully retrieved" - {
         val hicbcClaimantTransformer: ClaimantBankInformation => ClaimantBankInformation =
@@ -194,10 +194,10 @@ class ChangeOfBankServiceSpec extends BaseSpec {
           )
         ) {
           (
-            claimantState: String,
-            claimantTransformer: ClaimantBankInformation => ClaimantBankInformation,
-            expectedResultName: String,
-            expectedResult: ClaimantBankAccountInformation => Result
+              claimantState:       String,
+              claimantTransformer: ClaimantBankInformation => ClaimantBankInformation,
+              expectedResultName:  String,
+              expectedResult:      ClaimantBankAccountInformation => Result
           ) =>
             s"AND $claimantState" - {
               s"THEN the returned result is $expectedResultName" in {

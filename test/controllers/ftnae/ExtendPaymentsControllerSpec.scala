@@ -60,7 +60,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
     )
   )
   val mockSessionRepository: SessionRepository = mock[SessionRepository]
-  val mockFtnaeConnector: FtnaeConnector = mock[FtnaeConnector]
+  val mockFtnaeConnector:    FtnaeConnector    = mock[FtnaeConnector]
 
   "ExtendPayments Controller" - {
     "must return OK and the correct view for a GET, call the backend service, and store the result in session" in {

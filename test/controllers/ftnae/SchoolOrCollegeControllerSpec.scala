@@ -102,7 +102,7 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
     "must redirect to the correct page when user submits yes" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers = UserAnswers(userAnswersId).set(SchoolOrCollegePage, true).success.value
+      val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, true).success.value
 
       when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
@@ -132,7 +132,7 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
     "must redirect to the correct page when user submits no" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers = UserAnswers(userAnswersId).set(SchoolOrCollegePage, false).success.value
+      val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, false).success.value
 
       when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(false))
 

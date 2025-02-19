@@ -37,14 +37,14 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class FtnaeConnector @Inject()(httpClient: HttpClientV2, appConfig: FrontendAppConfig)
-  extends HttpReadsWrapper[CBErrorResponse] {
+class FtnaeConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendAppConfig)
+    extends HttpReadsWrapper[CBErrorResponse] {
 
   private val logger = new RequestLogger(this.getClass)
 
   def getFtnaeAccountDetails()(implicit
-                               ec: ExecutionContext,
-                               hc: HeaderCarrier
+      ec: ExecutionContext,
+      hc: HeaderCarrier
   ): CBEnvelope[FtnaeResponse] =
     withHttpReads { implicit httpReads =>
       EitherT(
@@ -63,8 +63,8 @@ class FtnaeConnector @Inject()(httpClient: HttpClientV2, appConfig: FrontendAppC
     }
 
   def uploadFtnaeDetails(childDetails: ChildDetails)(implicit
-                                                     ec: ExecutionContext,
-                                                     hc: HeaderCarrier
+      ec:                              ExecutionContext,
+      hc:                              HeaderCarrier
   ): CBEnvelope[Unit] =
     withHttpReads { implicit httpReads =>
       EitherT(

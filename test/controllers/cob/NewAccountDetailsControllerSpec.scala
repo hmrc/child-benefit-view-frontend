@@ -56,9 +56,10 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val newAccountDetailsRoute: String = controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
+  lazy val newAccountDetailsRoute: String =
+    controllers.cob.routes.NewAccountDetailsController.onPageLoad(NormalMode).url
   val newAccountDetails: NewAccountDetails = NewAccountDetails("name", "123456", "11110000")
-  val accountType: WhatTypeOfAccount = WhatTypeOfAccount.Sole
+  val accountType:       WhatTypeOfAccount = WhatTypeOfAccount.Sole
   val userAnswers: UserAnswers = UserAnswers(
     userAnswersId,
     Json.obj(
@@ -148,10 +149,10 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
               form
                 .bind(
                   Map(
-                    "bacsError" -> "",
-                    "newSortCode" -> newAccountDetails.newSortCode,
+                    "bacsError"             -> "",
+                    "newSortCode"           -> newAccountDetails.newSortCode,
                     "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
-                    "newAccountNumber" -> newAccountDetails.newAccountNumber
+                    "newAccountNumber"      -> newAccountDetails.newAccountNumber
                   )
                 ),
               NormalMode,
@@ -231,10 +232,10 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
           val expectedBoundForm = form.bind(
             Map(
-              "bacsError" -> "[priority2] - Sort Code Not Found",
-              "newSortCode" -> newAccountDetails.newSortCode,
+              "bacsError"             -> "[priority2] - Sort Code Not Found",
+              "newSortCode"           -> newAccountDetails.newSortCode,
               "newAccountHoldersName" -> newAccountDetails.newAccountHoldersName,
-              "newAccountNumber" -> newAccountDetails.newAccountNumber
+              "newAccountNumber"      -> newAccountDetails.newAccountNumber
             )
           )
 
@@ -242,7 +243,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
           when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
           val result = route(application, request).value
-          val view = application.injector.instanceOf[NewAccountDetailsView]
+          val view   = application.injector.instanceOf[NewAccountDetailsView]
           status(result) mustEqual BAD_REQUEST
           assertSameHtmlAfter(removeCsrfAndNonce)(
             contentAsString(result),
@@ -388,7 +389,7 @@ class NewAccountDetailsControllerSpec extends BaseAppSpec with MockitoSugar with
 
         forAll(scenarios) { (actions, statusAndRedirectUrl) =>
           val (redirectToPegaAction, hicbcAction, verificationBarAction) = actions
-          val (resultStatus, redirectUrl) = statusAndRedirectUrl
+          val (resultStatus, redirectUrl)                                = statusAndRedirectUrl
 
           val application: Application = applicationBuilderWithVerificationActions(
             config,

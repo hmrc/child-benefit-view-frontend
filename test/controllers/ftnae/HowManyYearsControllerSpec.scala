@@ -54,7 +54,7 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
   "HowManyYears Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val userAnswers = emptyUserAnswers.set(TwelveHoursAWeekPage, true).toOption
+      val userAnswers           = emptyUserAnswers.set(TwelveHoursAWeekPage, true).toOption
       val mockSessionRepository = mock[SessionRepository]
       when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 
@@ -84,7 +84,7 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(HowManyYearsPage, HowManyYears.values.head).toOption
+      val userAnswers           = UserAnswers(userAnswersId).set(HowManyYearsPage, HowManyYears.values.head).toOption
       val mockSessionRepository = mock[SessionRepository]
       when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 

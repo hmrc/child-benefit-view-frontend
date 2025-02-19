@@ -107,7 +107,7 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
     "must redirect to correct page when user enters yes and is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers = UserAnswers(userAnswersId).set(WillYoungPersonBeStayingPage, true).success.value
+      val userAnswers           = UserAnswers(userAnswersId).set(WillYoungPersonBeStayingPage, true).success.value
 
       when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
@@ -137,7 +137,7 @@ class WillYoungPersonBeStayingControllerSpec extends BaseAppSpec with MockitoSug
     "must redirect to correct page when user enters no and is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers = UserAnswers(userAnswersId).set(WillYoungPersonBeStayingPage, false).success.value
+      val userAnswers           = UserAnswers(userAnswersId).set(WillYoungPersonBeStayingPage, false).success.value
 
       when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 

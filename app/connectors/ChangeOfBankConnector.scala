@@ -36,8 +36,8 @@ import scala.concurrent.ExecutionContext
 import scala.util.matching.Regex
 
 @Singleton
-class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: FrontendAppConfig)
-  extends HttpReadsWrapper[CBErrorResponse] {
+class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: FrontendAppConfig)
+    extends HttpReadsWrapper[CBErrorResponse] {
 
   private val logger = new RequestLogger(this.getClass)
 
@@ -59,9 +59,9 @@ class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: Front
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r
 
   def getChangeOfBankClaimantInfo(implicit
-                                  ec: ExecutionContext,
-                                  hc: HeaderCarrier
-                                 ): CBEnvelope[ClaimantBankInformation] =
+      ec: ExecutionContext,
+      hc: HeaderCarrier
+  ): CBEnvelope[ClaimantBankInformation] =
     withHttpReads { implicit httpReads =>
       EitherT(
         httpClient
@@ -79,8 +79,8 @@ class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: Front
     }
 
   def verifyClaimantBankAccount(verifyBankAccountRequest: VerifyBankAccountRequest)(implicit
-                                                                                    ec: ExecutionContext,
-                                                                                    hc: HeaderCarrier
+      ec:                                                 ExecutionContext,
+      hc:                                                 HeaderCarrier
   ): CBEnvelope[Unit] = {
     withHttpReads { implicit httpReads =>
       EitherT(
@@ -101,8 +101,8 @@ class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: Front
   }
 
   def verifyBARNotLocked()(implicit
-                           ec: ExecutionContext,
-                           hc: HeaderCarrier
+      ec: ExecutionContext,
+      hc: HeaderCarrier
   ): CBEnvelope[Unit] = {
     withHttpReads { implicit httpReads =>
       EitherT(
@@ -122,8 +122,8 @@ class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: Front
   }
 
   def updateBankAccount(updateBankAccountRequest: UpdateBankAccountRequest)(implicit
-                                                                            ec: ExecutionContext,
-                                                                            hc: HeaderCarrier
+      ec:                                         ExecutionContext,
+      hc:                                         HeaderCarrier
   ): CBEnvelope[UpdateBankDetailsResponse] =
     withHttpReads { implicit httpReads =>
       EitherT(
@@ -143,8 +143,8 @@ class ChangeOfBankConnector @Inject()(httpClient: HttpClientV2, appConfig: Front
     }
 
   def dropChangeOfBankCache()(implicit
-                              ec: ExecutionContext,
-                              hc: HeaderCarrier
+      ec: ExecutionContext,
+      hc: HeaderCarrier
   ): CBEnvelope[Unit] = {
     withHttpReads { implicit httpReads =>
       EitherT(

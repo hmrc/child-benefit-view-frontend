@@ -36,19 +36,19 @@ import scala.concurrent.Future
 class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with MockitoSugar {
 
   class Harness(ftnaePaymentsExtendedPageSessionRepository: FtnaePaymentsExtendedPageSessionRepository)
-    extends FtnaePaymentsExtendedPageDataRequiredActionImpl(ftnaePaymentsExtendedPageSessionRepository) {
+      extends FtnaePaymentsExtendedPageDataRequiredActionImpl(ftnaePaymentsExtendedPageSessionRepository) {
     def callTransform[A](request: OptionalDataRequest[A]): Future[Either[Result, BaseDataRequest[A]]] = refine(request)
   }
 
   private val nino = NationalInsuranceNumber("QQ123456C")
 
   private val allAnsweredForFtnae = for {
-    fa <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
-    sa <- fa.set(WillYoungPersonBeStayingPage, true)
-    ta <- sa.set(SchoolOrCollegePage, true)
-    fa <- ta.set(TwelveHoursAWeekPage, true)
+    fa  <- emptyUserAnswers.set(WhichYoungPersonPage, "John Doe")
+    sa  <- fa.set(WillYoungPersonBeStayingPage, true)
+    ta  <- sa.set(SchoolOrCollegePage, true)
+    fa  <- ta.set(TwelveHoursAWeekPage, true)
     fia <- fa.set(HowManyYearsPage, HowManyYears.Twoyears)
-    sa <- fia.set(WillCourseBeEmployerProvidedPage, false)
+    sa  <- fia.set(WillCourseBeEmployerProvidedPage, false)
     sea <- sa.set(LiveWithYouInUKPage, true)
   } yield sea
 

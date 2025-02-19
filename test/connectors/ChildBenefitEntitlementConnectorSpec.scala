@@ -128,7 +128,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
 
           when(
             requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
-              using any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+              using(any[HttpReads[Either[CBError, ChildBenefitEntitlement]]]),
               any[ExecutionContext]
             )
           )
@@ -145,7 +145,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
 
           when(
             requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
-              using any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+              using(any[HttpReads[Either[CBError, ChildBenefitEntitlement]]]),
               any[ExecutionContext]
             )
           )

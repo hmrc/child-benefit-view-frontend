@@ -42,15 +42,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val headerCarrier: HeaderCarrier = new HeaderCarrier()
+  implicit val headerCarrier:    HeaderCarrier    = new HeaderCarrier()
 
-  override implicit lazy val app: Application = applicationBuilder().build()
-  val sutWithStubs: FtnaeConnector = app.injector.instanceOf[FtnaeConnector]
+  override implicit lazy val app: Application    = applicationBuilder().build()
+  val sutWithStubs:               FtnaeConnector = app.injector.instanceOf[FtnaeConnector]
 
-  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-  val requestBuilder: RequestBuilder = mock[RequestBuilder]
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  val sutWithMocks: FtnaeConnector = new FtnaeConnector(mockHttpClient, mockAppConfig)
+  val mockHttpClient: HttpClientV2      = mock[HttpClientV2]
+  val requestBuilder: RequestBuilder    = mock[RequestBuilder]
+  val mockAppConfig:  FrontendAppConfig = mock[FrontendAppConfig]
+  val sutWithMocks:   FtnaeConnector    = new FtnaeConnector(mockHttpClient, mockAppConfig)
 
   val errors: Seq[Int] = Seq(
     UNAUTHORIZED,
@@ -138,7 +138,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, FtnaeResponse]](
-                using any[HttpReads[Either[CBError, FtnaeResponse]]],
+                using(any[HttpReads[Either[CBError, FtnaeResponse]]]),
                 any[ExecutionContext]
               )
             )
@@ -154,7 +154,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, FtnaeResponse]](
-                using any[HttpReads[Either[CBError, FtnaeResponse]]],
+                using(any[HttpReads[Either[CBError, FtnaeResponse]]]),
                 any[ExecutionContext]
               )
             )
@@ -198,7 +198,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.withBody(any[ChildDetails])(
-            using any[BodyWritable[ChildDetails]],
+            using(any[BodyWritable[ChildDetails]]),
             any[Tag[ChildDetails]],
             any[ExecutionContext]
           )
@@ -208,7 +208,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           "THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-                using any[HttpReads[Either[CBError, Unit]]],
+                using(any[HttpReads[Either[CBError, Unit]]]),
                 any[ExecutionContext]
               )
             ).thenReturn(Future.successful(Left(ConnectorError(responseCode, message))))
@@ -223,7 +223,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
           s"THEN a ConnectorError is returned with the matching details" in {
             when(
               requestBuilder.execute[Either[CBError, Unit]](
-                using any[HttpReads[Either[CBError, Unit]]],
+                using(any[HttpReads[Either[CBError, Unit]]]),
                 any[ExecutionContext]
               )
             ).thenReturn(Future.failed(UpstreamErrorResponse(message, responseCode)))
@@ -245,7 +245,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.withBody(any[ChildDetails])(
-            using any[BodyWritable[ChildDetails]],
+            using(any[BodyWritable[ChildDetails]]),
             any[Tag[ChildDetails]],
             any[ExecutionContext]
           )
@@ -254,7 +254,7 @@ class FtnaeConnectorSpec extends BaseAppSpec with GuiceOneAppPerSuite {
 
         when(
           requestBuilder.execute[Either[CBError, Unit]](
-            using any[HttpReads[Either[CBError, Unit]]],
+            using(any[HttpReads[Either[CBError, Unit]]]),
             any[ExecutionContext]
           )
         )

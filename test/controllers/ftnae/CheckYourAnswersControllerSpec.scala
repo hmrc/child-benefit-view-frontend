@@ -64,8 +64,8 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
 
         val result = route(application, request).value
 
-        val view          = application.injector.instanceOf[CheckYourAnswersView]
-        val userAnswers   = allAnsweredForFtnae.success.value
+        val view        = application.injector.instanceOf[CheckYourAnswersView]
+        val userAnswers = allAnsweredForFtnae.success.value
         implicit val msgs: Messages = messages(application)
         val summaryRows = for {
           whichYoungPersonRow             <- WhichYoungPersonSummary.row(userAnswers)

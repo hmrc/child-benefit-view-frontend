@@ -59,9 +59,11 @@ class RedirectToPegaActionSpec extends BaseAppSpec with MockitoSugar {
     val messagesRequest: MessagesRequest[AnyContentAsEmpty.type] = new MessagesRequest(fakeRequest, messagesApi)
 
     val mockChangeBankAccountRedirectService: ChangeBankAccountRedirectService = mock[ChangeBankAccountRedirectService]
-    when(mockChangeBankAccountRedirectService.getChangeBankAccountRedirectToggle).thenReturn(Future.successful(
-      redirectToPega
-    ))
+    when(mockChangeBankAccountRedirectService.getChangeBankAccountRedirectToggle).thenReturn(
+      Future.successful(
+        redirectToPega
+      )
+    )
 
     val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     when(mockAppConfig.pegaCobUrl).thenReturn("https://account.hmrc.gov.uk/child-benefit/make_a_claim/change-of-bank")
