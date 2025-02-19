@@ -35,18 +35,18 @@ class FtnaePaymentsExtendedPageSessionRepositorySpec
     extends BaseSpec
     with DefaultPlayMongoRepositorySupport[UserAnswers]
     with BeforeAndAfterEach {
-  val mockConfig = mock[FrontendAppConfig]
+  val mockConfig: FrontendAppConfig = mock[FrontendAppConfig]
   val ttlSeconds = 123
   when(mockConfig.cacheTtl).thenReturn(ttlSeconds)
 
-  val instant   = Instant.now.truncatedTo(ChronoUnit.MILLIS)
-  val stubClock = Clock.fixed(instant, ZoneId.systemDefault)
+  val instant: Instant = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  val stubClock: Clock = Clock.fixed(instant, ZoneId.systemDefault)
 
   private val userAnswers = UserAnswers("id", Json.obj("foo" -> "bar"), Instant.ofEpochSecond(1))
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  override lazy val repository: FtnaePaymentsExtendedPageSessionRepository = new FtnaePaymentsExtendedPageSessionRepository(mongoComponent, mockConfig, stubClock)
+  val repository: FtnaePaymentsExtendedPageSessionRepository = new FtnaePaymentsExtendedPageSessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
     await(deleteAll())

@@ -47,7 +47,7 @@ class SessionRepositorySpec
 
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
-  lazy val repository: SessionRepository = new SessionRepository(mongoComponent, mockConfig, stubClock)
+  val repository: SessionRepository = new SessionRepository(mongoComponent, mockConfig, stubClock)
 
   override protected def beforeEach() = {
     await(deleteAll())
