@@ -24,10 +24,11 @@ import models.{CheckMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.{HowManyYearsPage, TwelveHoursAWeekPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -41,12 +42,12 @@ import stubs.AuthStubs.mockPostPertaxAuth
 
 class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  lazy val howManyYearsRoute = controllers.ftnae.routes.HowManyYearsController.onPageLoad(CheckMode).url
+  lazy val howManyYearsRoute: String = controllers.ftnae.routes.HowManyYearsController.onPageLoad(CheckMode).url
 
   val formProvider = new HowManyYearsFormProvider()
-  val form         = formProvider()
+  val form: Form[HowManyYears] = formProvider()
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -55,7 +56,7 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
     "must return OK and the correct view for a GET" in {
       val userAnswers           = emptyUserAnswers.set(TwelveHoursAWeekPage, true).toOption
       val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 
       val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
@@ -85,7 +86,7 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
       val userAnswers           = UserAnswers(userAnswersId).set(HowManyYearsPage, HowManyYears.values.head).toOption
       val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 
       val application = applicationBuilder(userAnswers = userAnswers)
         .overrides(
@@ -116,7 +117,7 @@ class HowManyYearsControllerSpec extends BaseAppSpec with MockitoSugar {
 
       val userAnswers = emptyUserAnswers.set(HowManyYearsPage, HowManyYears.values.head).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

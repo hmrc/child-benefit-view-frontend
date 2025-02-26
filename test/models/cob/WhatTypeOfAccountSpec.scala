@@ -49,7 +49,7 @@ class WhatTypeOfAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPro
     "must serialise" in {
       val gen = Gen.oneOf(WhatTypeOfAccount.values.toSeq)
 
-      forAll(gen) { whatTypeOfAccount: WhatTypeOfAccount =>
+      forAll(gen) { whatTypeOfAccount =>
         Json.toJson(whatTypeOfAccount) mustEqual JsString(whatTypeOfAccount.toString)
       }
     }

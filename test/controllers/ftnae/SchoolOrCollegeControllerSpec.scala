@@ -23,10 +23,11 @@ import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ftnae.SchoolOrCollegePage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -40,15 +41,16 @@ import utils.TestData
 
 class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
 
-  def onwardYesRoute = Call("GET", "/foo")
-  def onwardNoRoute  = Call("GET", "/moo")
+  def onwardYesRoute: Call = Call("GET", "/foo")
+
+  def onwardNoRoute: Call = Call("GET", "/moo")
 
   val formProvider = new SchoolOrCollegeFormProvider()
-  val form         = formProvider()
+  val form: Form[Boolean] = formProvider()
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val schoolOrCollegeRoute = controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode).url
+  lazy val schoolOrCollegeRoute: String = controllers.ftnae.routes.SchoolOrCollegeController.onPageLoad(NormalMode).url
 
   "SchoolOrCollege Controller" - {
 
@@ -102,7 +104,7 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, true).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -132,7 +134,7 @@ class SchoolOrCollegeControllerSpec extends BaseAppSpec with MockitoSugar {
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers           = UserAnswers(userAnswersId).set(SchoolOrCollegePage, false).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(false)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(false))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))

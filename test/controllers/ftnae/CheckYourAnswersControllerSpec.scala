@@ -22,14 +22,15 @@ import models.pertaxAuth.PertaxAuthResponseModel
 import models.viewmodels.govuk.SummaryListFluency
 import models.{NormalMode, UserAnswers}
 import org.scalatest.prop.TableDrivenPropertyChecks
-import pages.ftnae._
+import pages.ftnae.*
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import stubs.AuthStubs._
+import play.api.test.Helpers.*
+import stubs.AuthStubs.*
 import testconfig.TestConfig
 import utils.HtmlMatcherUtils.removeNonce
 import utils.TestData.ninoUser
-import viewmodels.checkAnswers.ftnae._
+import viewmodels.checkAnswers.ftnae.*
 import views.html.ftnae.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency with TableDrivenPropertyChecks {
@@ -63,9 +64,9 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
 
         val result = route(application, request).value
 
-        val view          = application.injector.instanceOf[CheckYourAnswersView]
-        val userAnswers   = allAnsweredForFtnae.success.value
-        implicit val msgs = messages(application)
+        val view        = application.injector.instanceOf[CheckYourAnswersView]
+        val userAnswers = allAnsweredForFtnae.success.value
+        implicit val msgs: Messages = messages(application)
         val summaryRows = for {
           whichYoungPersonRow             <- WhichYoungPersonSummary.row(userAnswers)
           willYoungPersonBeStayingRow     <- WillYoungPersonBeStayingSummary.row(userAnswers)

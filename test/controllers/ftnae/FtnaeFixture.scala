@@ -23,12 +23,12 @@ trait FtnaeFixture {
   val sixteenBy1stOfSeptemberThisYear   = thisYear1stOfSeptember.minusYears(16)
   val seventeenBy1stOfSeptemberThisYear = thisYear1stOfSeptember.minusYears(17)
 
-  protected def getFirstMondayOfSeptemberThisYear(): LocalDate = {
+  protected def getFirstMondayOfSeptemberThisYear: LocalDate = {
     val firstDayOfSeptemberThisYear = LocalDate.of(LocalDate.now().getYear, Month.SEPTEMBER, 1)
     val daysOfMonth                 = (0 to 7).to(LazyList)
-    val nthDayForFirstMonday: Int = daysOfMonth.dropWhile(daysToAdd =>
-      firstDayOfSeptemberThisYear.plusDays(daysToAdd).getDayOfWeek != DayOfWeek.MONDAY
-    )(0)
+    val nthDayForFirstMonday: Int = daysOfMonth
+      .dropWhile(daysToAdd => firstDayOfSeptemberThisYear.plusDays(daysToAdd).getDayOfWeek != DayOfWeek.MONDAY)
+      .head
     firstDayOfSeptemberThisYear.plusDays(nthDayForFirstMonday)
   }
 }

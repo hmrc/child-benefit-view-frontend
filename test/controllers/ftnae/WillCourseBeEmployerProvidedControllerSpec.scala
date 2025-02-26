@@ -23,11 +23,12 @@ import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse, HowManyYe
 import models.pertaxAuth.PertaxAuthResponseModel
 import models.{NormalMode, UserAnswers}
 import org.mockito.Mockito.when
-import pages.ftnae._
+import pages.ftnae.*
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -42,15 +43,16 @@ import stubs.AuthStubs.mockPostPertaxAuth
 
 class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
-  def onwardYesRoute = Call("GET", "/foo")
-  def onwardNoRoute  = Call("GET", "/moo")
+  def onwardYesRoute: Call = Call("GET", "/foo")
+
+  def onwardNoRoute: Call = Call("GET", "/moo")
 
   val formProvider = new WillCourseBeEmployerProvidedFormProvider()
-  val form         = formProvider("First Name")
+  val form: Form[Boolean] = formProvider("First Name")
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val willCourseBeEmployerProvidedRoute =
+  lazy val willCourseBeEmployerProvidedRoute: String =
     controllers.ftnae.routes.WillCourseBeEmployerProvidedController.onPageLoad(NormalMode).url
 
   "WillCourseBeEmployerProvided Controller" - {
@@ -60,7 +62,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
       val userAnswers = emptyUserAnswers.set(HowManyYearsPage, HowManyYears.Oneyear).toOption
 
       val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(userAnswers)
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(userAnswers))
 
       val application =
         applicationBuilder(userAnswers = userAnswers)
@@ -93,7 +95,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -125,7 +127,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
       val userAnswers = UserAnswers(userAnswersId).set(WillCourseBeEmployerProvidedPage, true).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -156,7 +158,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
 
       val userAnswers = UserAnswers(userAnswersId).set(WillCourseBeEmployerProvidedPage, false).success.value
 
-      when(mockSessionRepository.set(userAnswers)) thenReturn Future.successful(false)
+      when(mockSessionRepository.set(userAnswers)).thenReturn(Future.successful(false))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -209,7 +211,7 @@ class WillCourseBeEmployerProvidedControllerSpec extends BaseAppSpec {
         .success
         .value
 
-      when(mockSessionRepository.get(userAnswersId)) thenReturn Future.successful(Some(userAnswers))
+      when(mockSessionRepository.get(userAnswersId)).thenReturn(Future.successful(Some(userAnswers)))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(

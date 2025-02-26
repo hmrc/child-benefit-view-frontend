@@ -16,11 +16,12 @@
 
 package services
 
+import com.google.inject.Inject
 import connectors.ChangeOfBankConnector
 import controllers.routes
 import models.CBEnvelope
 import models.CBEnvelope.CBEnvelope
-import models.changeofbank._
+import models.changeofbank.*
 import models.cob.{NewAccountDetails, UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
 import models.errors.ChangeOfBankValidationError
 import models.requests.{BaseDataRequest, OptionalDataRequest}
@@ -29,16 +30,14 @@ import play.api.i18n.Messages
 import play.api.mvc.Results.{Ok, Redirect}
 import play.api.mvc.{AnyContent, RequestHeader, Result}
 import repositories.SessionRepository
-import services.ChangeOfBankService._
+import services.ChangeOfBankService.*
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.helpers.ClaimantBankInformationHelper.{formatBankAccountInformation, formatClaimantBankInformation}
 import views.html.cob.ChangeAccountView
 
 import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
-@Singleton
 class ChangeOfBankService @Inject() (
     changeOfBankConnector: ChangeOfBankConnector,
     sessionRepository:     SessionRepository
@@ -71,7 +70,7 @@ class ChangeOfBankService @Inject() (
   def processClaimantInformation(view: ChangeAccountView)(implicit
       ec:                              ExecutionContext,
       hc:                              HeaderCarrier,
-      request:                         OptionalDataRequest[_],
+      request:                         OptionalDataRequest[?],
       messages:                        Messages
   ): CBEnvelope[Result] = {
     for {

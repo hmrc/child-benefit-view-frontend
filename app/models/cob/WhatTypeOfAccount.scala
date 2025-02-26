@@ -26,12 +26,14 @@ sealed trait WhatTypeOfAccount {
 object WhatTypeOfAccount extends Enumerable.Implicits {
 
   case object Sole extends WithMessage("sole", m => m("whatTypeOfAccount.options.sole")) with WhatTypeOfAccount
+
   case object JointHeldByClaimant
       extends WithMessage(
         "joint_held_by_claimant",
         m => s"${m("whatTypeOfAccount.options.joint")} ${m("whatTypeOfAccount.options.jointHeldByClaimant")}"
       )
       with WhatTypeOfAccount
+
   case object JointNotHeldByClaimant
       extends WithMessage(
         "joint_not_held_by_claimant",
@@ -46,6 +48,6 @@ object WhatTypeOfAccount extends Enumerable.Implicits {
   val values: List[WhatTypeOfAccount] = List(Sole, JointHeldByClaimant, JointNotHeldByClaimant, CreditUnion)
 
   implicit val enumerable: Enumerable[WhatTypeOfAccount] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v) *)
 
 }

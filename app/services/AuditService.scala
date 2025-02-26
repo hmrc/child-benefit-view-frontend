@@ -86,7 +86,7 @@ class AuditService @Inject() (auditConnector: AuditConnector) {
   def auditChangeOfBankAccountDetails(
       nino:         String,
       status:       String,
-      request:      OptionalDataRequest[_],
+      request:      OptionalDataRequest[?],
       claimantInfo: ClaimantBankInformation
   )(implicit hc:    HeaderCarrier, ec: ExecutionContext, messages: Messages): Unit = {
 

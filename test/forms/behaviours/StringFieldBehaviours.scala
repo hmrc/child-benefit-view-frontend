@@ -22,7 +22,7 @@ import play.api.data.{Form, FormError}
 trait StringFieldBehaviours extends FieldBehaviours {
 
   def fieldWithMaxLength(
-      form:                     Form[_],
+      form:                     Form[?],
       fieldName:                String,
       maxLength:                Int,
       lengthError:              FormError,
@@ -39,7 +39,7 @@ trait StringFieldBehaviours extends FieldBehaviours {
   }
 
   def fieldWithMinLength(
-      form:                     Form[_],
+      form:                     Form[?],
       fieldName:                String,
       minLength:                Int,
       lengthError:              FormError,

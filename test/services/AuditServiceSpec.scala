@@ -49,11 +49,11 @@ class AuditServiceSpec extends BaseSpec {
   val testReferrerValue:    String = "/foo"
   val testFingerprintValue: String = "testDeviceFingerprint"
 
-  protected val request: Request[_] =
+  protected val request: Request[?] =
     FakeRequest()
       .withHeaders(Headers(("referer", testReferrerValue)))
       .withCookies(Cookie("mdtpdf", BaseEncoding.base64().encode(testFingerprintValue.toCharArray.map(c => c.toByte))))
-  protected val optionalDataRequest: OptionalDataRequest[_] =
+  protected val optionalDataRequest: OptionalDataRequest[?] =
     OptionalDataRequest(request, "123", NationalInsuranceNumber(testNino), None)
 
   protected implicit val ec:       ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global

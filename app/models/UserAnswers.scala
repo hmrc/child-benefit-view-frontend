@@ -91,7 +91,7 @@ object UserAnswers {
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat) and
         (__ \ "nameChangedDuringCheck").read[Boolean]
-    )(UserAnswers.apply _)
+    )(UserAnswers.apply)
   }
 
   val writes: OWrites[UserAnswers] = {
@@ -103,7 +103,7 @@ object UserAnswers {
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat) and
         (__ \ "nameChangedDuringCheck").write[Boolean]
-    )(unlift(UserAnswers.unapply))
+    )(o => Tuple.fromProductTyped(o))
   }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)

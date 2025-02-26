@@ -58,7 +58,7 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
       val errorHandler = mock[ErrorHandler]
       implicit val auditService: AuditService = mock[AuditService]
 
-      when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope(())
+      when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])).thenReturn(CBEnvelope(()))
       when(
         errorHandler.handleError(any[CBError], any[Option[String]])(
           any[AuditService],
@@ -66,8 +66,10 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
           any[HeaderCarrier],
           any[ExecutionContext]
         )
-      ) thenReturn Redirect(
-        controllers.routes.ServiceUnavailableController.onPageLoad
+      ).thenReturn(
+        Redirect(
+          controllers.routes.ServiceUnavailableController.onPageLoad
+        )
       )
 
       val action      = new Harness(cobConnector, errorHandler, auditService)
@@ -86,10 +88,12 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
       val errorHandler = mock[ErrorHandler]
       implicit val auditService: AuditService = mock[AuditService]
 
-      when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])) thenReturn CBEnvelope
-        .fromError[ClaimantIsLockedOutOfChangeOfBank, Unit](
-          ClaimantIsLockedOutOfChangeOfBank(Status.FORBIDDEN, "BAR LOCKED")
-        )
+      when(cobConnector.verifyBARNotLocked()(any[ExecutionContext], any[HeaderCarrier])).thenReturn(
+        CBEnvelope
+          .fromError[ClaimantIsLockedOutOfChangeOfBank, Unit](
+            ClaimantIsLockedOutOfChangeOfBank(Status.FORBIDDEN, "BAR LOCKED")
+          )
+      )
       when(
         errorHandler.handleError(any[CBError], any[Option[String]])(
           any[AuditService],
@@ -97,8 +101,10 @@ class VerifyBarNotLockedActionSpec extends BaseAppSpec with MockitoSugar {
           any[HeaderCarrier],
           any[ExecutionContext]
         )
-      ) thenReturn Redirect(
-        controllers.cob.routes.BARSLockOutController.onPageLoad()
+      ).thenReturn(
+        Redirect(
+          controllers.cob.routes.BARSLockOutController.onPageLoad()
+        )
       )
 
       val action      = new Harness(cobConnector, errorHandler, auditService)

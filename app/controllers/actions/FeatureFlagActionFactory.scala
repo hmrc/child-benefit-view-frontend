@@ -38,7 +38,7 @@ class FeatureFlagActionFactory @Inject() (
 
   private def whenEnabled(
       featureFlag:   String,
-      specifiedView: Option[(MessagesRequest[_], Messages) => HtmlFormat.Appendable] = None
+      specifiedView: Option[(MessagesRequest[?], Messages) => HtmlFormat.Appendable] = None
   ): FeatureFlagAction =
     new FeatureFlagAction {
       override def invokeBlock[A](

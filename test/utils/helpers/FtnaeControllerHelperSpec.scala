@@ -157,17 +157,18 @@ object FtnaeControllerHelperSpec {
   def buildUserAnswers(fields: (String, JsValue)*): JsObject =
     JsObject.apply(fields)
 
-  def answerField(page: QuestionPage[_], value: String): (String, JsValue) =
+  def answerField(page: QuestionPage[?], value: String): (String, JsValue) =
     (page.toString, JsString(value))
   def answerField(page: QuestionPage[Boolean], value: Boolean): (String, JsValue) =
     (page.toString, JsBoolean(value))
 
-  def checkForRowSummaries(rows: List[SummaryListRow], expectedKeys: String*) =
+  private def checkForRowSummaries(rows: List[SummaryListRow], expectedKeys: String*) =
     expectedKeys.foreach(key => {
       val keyCount = rows.count(r => r.key.content.asInstanceOf[Text].value == key)
       assert(keyCount == 1, s"There should be exactly 1 SummaryListRow with the key $key: found $keyCount")
     })
-  def checkForRowSummariesAbsence(rows: List[SummaryListRow], expectedKeys: String*) =
+
+  private def checkForRowSummariesAbsence(rows: List[SummaryListRow], expectedKeys: String*) =
     expectedKeys.foreach(key => {
       val keyCount = rows.count(r => r.key.content.asInstanceOf[Text].value == key)
       assert(keyCount == 0, s"There should be no SummaryListRow with the key $key: found $keyCount")

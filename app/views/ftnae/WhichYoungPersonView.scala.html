@@ -32,7 +32,7 @@
         govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, getRadioItems: String => List[RadioItem], ftnaeResponse: FtnaeResponse)(implicit request: RequestHeader, messages: Messages)
+@(form: Form[?], mode: Mode, getRadioItems: String => List[RadioItem], ftnaeResponse: FtnaeResponse)(implicit request: RequestHeader, messages: Messages)
 
 @layout(pageTitle = title(form, messages("whichYoungPerson.title"))) {
     @if(form.errors.nonEmpty) {

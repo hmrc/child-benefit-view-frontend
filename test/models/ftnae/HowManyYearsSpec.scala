@@ -34,12 +34,12 @@ class HowManyYearsSpec extends BaseSpec {
     }
     "options" - {
       "Returns a RadioItem for each HowManyYears value is the expected sequence" in {
-        implicit val mockMessages = mock[Messages]
+        implicit val mockMessages: Messages = mock[Messages]
         def messageForValue(value: HowManyYears) = s"expected message for ${value.toString}"
         def setupMessages(value: HowManyYears) = {
           when(mockMessages(s"howManyYears.${value.toString}")).thenReturn(messageForValue(value))
         }
-        HowManyYears.values.foreach(setupMessages(_))
+        HowManyYears.values.foreach(setupMessages)
         val expectedOrderedSeq = Seq(HowManyYears.Oneyear, HowManyYears.Twoyears, HowManyYears.Other)
 
         val results = HowManyYears.options

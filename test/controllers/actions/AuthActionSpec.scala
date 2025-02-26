@@ -18,10 +18,10 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import play.api.mvc.{BodyParsers, Results}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core._
+import play.api.test.Helpers.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,10 +36,10 @@ import utils.TestData
 import utils.enrolments.HmrcPTChecks
 
 class AuthActionSpec extends BaseAppSpec {
-  lazy val mockHmrcPTChecks = mock[HmrcPTChecks]
+  lazy val mockHmrcPTChecks: HmrcPTChecks = mock[HmrcPTChecks]
 
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction { _ => Results.Ok }
+    def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
   }
 
   "Auth Action" - {
@@ -63,7 +63,7 @@ class AuthActionSpec extends BaseAppSpec {
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
       }
     }
@@ -88,7 +88,7 @@ class AuthActionSpec extends BaseAppSpec {
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
 
-          status(result) mustBe INTERNAL_SERVER_ERROR
+          status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
       }
     }
@@ -104,8 +104,8 @@ class AuthActionSpec extends BaseAppSpec {
           val req        = FakeRequest().withSession("authToken" -> "Bearer 123")
           val result     = controller.onPageLoad()(req)
 
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value must be(controllers.routes.UnauthorisedController.onPageLoad.url)
+          status(result).mustBe(SEE_OTHER)
+          redirectLocation(result).value.must(be(controllers.routes.UnauthorisedController.onPageLoad.url))
         }
       }
     }

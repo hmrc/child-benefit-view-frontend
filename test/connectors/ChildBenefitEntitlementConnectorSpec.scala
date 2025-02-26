@@ -128,7 +128,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
 
           when(
             requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
-              any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+              using(any[HttpReads[Either[CBError, ChildBenefitEntitlement]]]),
               any[ExecutionContext]
             )
           )
@@ -145,7 +145,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
 
           when(
             requestBuilder.execute[Either[CBError, ChildBenefitEntitlement]](
-              any[HttpReads[Either[CBError, ChildBenefitEntitlement]]],
+              using(any[HttpReads[Either[CBError, ChildBenefitEntitlement]]]),
               any[ExecutionContext]
             )
           )
@@ -163,7 +163,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         entitlementsAndPaymentHistoryFailureStub(OK, invalidJsonResponse)
 
         whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
-          result mustBe a[Left[_, ChildBenefitEntitlement]]
+          result mustBe a[Left[?, ChildBenefitEntitlement]]
           result.left.map(error => error.statusCode mustBe INTERNAL_SERVER_ERROR)
         }
       }
@@ -173,7 +173,7 @@ class ChildBenefitEntitlementConnectorSpec extends BaseAppSpec with GuiceOneAppP
         entitlementsAndPaymentHistoryFailureStub(OK, validNotMatchingJsonResponse)
 
         whenReady(sutWithStubs.getChildBenefitEntitlement.value) { result =>
-          result mustBe a[Left[_, ChildBenefitEntitlement]]
+          result mustBe a[Left[?, ChildBenefitEntitlement]]
           result.left.map(error => error.statusCode mustBe SERVICE_UNAVAILABLE)
         }
       }

@@ -17,15 +17,16 @@
 package connectors
 
 import cats.data.EitherT
-import cats.syntax.either._
+import cats.syntax.either.*
 import config.FrontendAppConfig
 import models.CBEnvelope.CBEnvelope
 import models.changeofbank.ClaimantBankInformation
 import models.cob.{UpdateBankAccountRequest, UpdateBankDetailsResponse, VerifyBankAccountRequest}
-import models.errors.{CBError, CBErrorResponse, ClaimantIsLockedOutOfChangeOfBank, ConnectorError, PriorityBARSVerificationError}
+import models.errors.*
 import play.api.http.Status
-import play.api.libs.json.{JsSuccess, Json, Reads}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import play.api.libs.json.{JsSuccess, Json, Reads}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpException, StringContextOps, UpstreamErrorResponse}
 import utils.logging.RequestLogger
@@ -56,6 +57,7 @@ class ChangeOfBankConnector @Inject() (httpClient: HttpClientV2, appConfig: Fron
     s"unable to retrieve Child Benefit Change Of Bank update bank account: code=$code message=$message"
 
   private val mainError: Regex = """(?<=\[).+?(?=\])""".r
+
   def getChangeOfBankClaimantInfo(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier

@@ -20,14 +20,14 @@ import base.BaseAppSpec
 import models.common.NationalInsuranceNumber
 import models.ftnae.HowManyYears
 import models.requests.{BaseDataRequest, DataRequest, FtnaePaymentsExtendedPageDataRequest, OptionalDataRequest}
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ftnae._
+import pages.ftnae.*
 import play.api.mvc.Results.Redirect
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContent, AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import repositories.FtnaePaymentsExtendedPageSessionRepository
-import stubs.AuthStubs._
+import stubs.AuthStubs.*
 import utils.TestData.ninoUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,6 +39,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
       extends FtnaePaymentsExtendedPageDataRequiredActionImpl(ftnaePaymentsExtendedPageSessionRepository) {
     def callTransform[A](request: OptionalDataRequest[A]): Future[Either[Result, BaseDataRequest[A]]] = refine(request)
   }
+
   private val nino = NationalInsuranceNumber("QQ123456C")
 
   private val allAnsweredForFtnae = for {
@@ -51,7 +52,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
     sea <- sa.set(LiveWithYouInUKPage, true)
   } yield sea
 
-  val fakeRequest = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "FtnaePaymentsExtendedPage Data Required Action" - {
 
@@ -61,7 +62,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
-        when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(None)
+        when(ftnaePaymentsExtendedPageSessionRepository.get("id")).thenReturn(Future(None))
         val action = new Harness(ftnaePaymentsExtendedPageSessionRepository)
 
         val result = action
@@ -98,7 +99,7 @@ class FtnaePaymentsExtendedPageDataRequiredActionSpec extends BaseAppSpec with M
         userLoggedInIsChildBenefitUser(ninoUser)
 
         val ftnaePaymentsExtendedPageSessionRepository = mock[FtnaePaymentsExtendedPageSessionRepository]
-        when(ftnaePaymentsExtendedPageSessionRepository.get("id")) thenReturn Future(Some(allAnsweredForFtnae.get))
+        when(ftnaePaymentsExtendedPageSessionRepository.get("id")).thenReturn(Future(Some(allAnsweredForFtnae.get)))
         val action = new Harness(ftnaePaymentsExtendedPageSessionRepository)
 
         val result = action

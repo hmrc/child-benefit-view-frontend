@@ -25,9 +25,11 @@ sealed trait HowManyYears
 
 object HowManyYears extends Enumerable.Implicits {
 
-  case object Oneyear  extends WithName("oneyear") with HowManyYears
+  case object Oneyear extends WithName("oneyear") with HowManyYears
+
   case object Twoyears extends WithName("twoyears") with HowManyYears
-  case object Other    extends WithName("other") with HowManyYears
+
+  case object Other extends WithName("other") with HowManyYears
 
   val values: Seq[HowManyYears] = Seq(
     Oneyear,
@@ -46,5 +48,5 @@ object HowManyYears extends Enumerable.Implicits {
     }
 
   implicit val enumerable: Enumerable[HowManyYears] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.toString -> v) *)
 }

@@ -18,7 +18,6 @@ package controllers.auth
 
 import base.BaseAppSpec
 import models.pertaxAuth.PertaxAuthResponseModel
-import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
@@ -27,6 +26,8 @@ import utils.TestData.ninoUser
 import java.net.URLEncoder
 
 class AuthControllerSpec extends BaseAppSpec {
+
+  private val SEE_OTHER: Int = 303
 
   "AuthController" - {
     "on SignOut redirect to /gg/sign-out with continue to the feedback survey" in {

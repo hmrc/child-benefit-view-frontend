@@ -45,16 +45,16 @@ class ViewUtilsSpec extends BaseSpec {
   when(messages(serviceNameKey)).thenReturn(expectedServiceName)
   when(messages(govUkKey)).thenReturn(expectedGovUk)
 
-  val formWithoutErrors: Form[_] = mock[Form[_]]
+  val formWithoutErrors: Form[?] = mock[Form[?]]
   when(formWithoutErrors.hasErrors).thenReturn(false)
   when(formWithoutErrors.hasGlobalErrors).thenReturn(false)
-  val formWithLocalErrors: Form[_] = mock[Form[_]]
+  val formWithLocalErrors: Form[?] = mock[Form[?]]
   when(formWithLocalErrors.hasErrors).thenReturn(true)
   when(formWithLocalErrors.hasGlobalErrors).thenReturn(false)
-  val formWithGlobalErrors: Form[_] = mock[Form[_]]
+  val formWithGlobalErrors: Form[?] = mock[Form[?]]
   when(formWithGlobalErrors.hasErrors).thenReturn(false)
   when(formWithGlobalErrors.hasGlobalErrors).thenReturn(true)
-  val formWithAllErrors: Form[_] = mock[Form[_]]
+  val formWithAllErrors: Form[?] = mock[Form[?]]
   when(formWithAllErrors.hasErrors).thenReturn(true)
   when(formWithAllErrors.hasGlobalErrors).thenReturn(true)
 
