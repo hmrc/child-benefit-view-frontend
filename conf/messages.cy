@@ -449,5 +449,5 @@ external.link.formlink.ch297 = https://www.gov.uk/government/publications/child-
 external.link.formlink.tax.credit.affect = https://www.gov.uk/newidiadau-effeithio-credydau-treth
 external.link.helpline.info.callChargesUrl = https://www.gov.uk/costau-galwadau
 external.link.changeOfCircumstances.link = https://www.gov.uk/rhoi-gwybod-am-newidiadau-budd-dal-plant
-external.link.child.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/child-benefit-child-change-of-circumstances/draft/guide
-external.link.claimant.changeOfCircumstances.form.link = https://www.tax.service.gov.uk/digital-forms/form/Child-Benefit-Claimant-Change-of-Circumstances/draft/guide
+external.link.child.changeOfCircumstances.form.link = https://www.gov.uk/report-changes-child-benefit
+external.link.claimant.changeOfCircumstances.form.link = https://www.gov.uk/report-changes-child-benefit/if-your-familys-circumstances-change

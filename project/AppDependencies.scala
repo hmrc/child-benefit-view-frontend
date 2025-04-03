@@ -3,14 +3,14 @@ import sbt.*
 object AppDependencies {
 
   private val bootstrapVersion = "9.11.0"
-  private val hmrcMongoVersion = "2.5.0"
+  private val hmrcMongoVersion = "2.6.0"
   private val playVersion      = "play-30"
 
   val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     play.sbt.PlayImport.caffeine,
     "org.typelevel"     %% "cats-core"                                  % "2.13.0",
-    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % "2.5.0",
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % "2.6.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion" % "1.9.0"
   )
 
