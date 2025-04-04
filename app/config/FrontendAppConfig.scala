@@ -108,4 +108,5 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val pertaxAuthBaseUrl: String = servicesConfig.baseUrl("pertax-auth")
 
+  val year: String = configuration.get[String]("ftnae.year")
 }

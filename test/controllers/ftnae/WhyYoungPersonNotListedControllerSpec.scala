@@ -17,6 +17,7 @@
 package controllers.ftnae
 
 import base.BaseAppSpec
+import config.FrontendAppConfig
 import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -40,6 +41,8 @@ class WhyYoungPersonNotListedControllerSpec extends BaseAppSpec {
         mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[WhyYoungPersonNotListedView]
@@ -47,7 +50,7 @@ class WhyYoungPersonNotListedControllerSpec extends BaseAppSpec {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view()(request, messages(application)).toString
+          view(appConfig)(request, messages(application)).toString
         )
       }
     }

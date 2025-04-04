@@ -29,6 +29,8 @@ import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.handlers.ErrorHandler
 import views.html.ftnae.ExtendPaymentsView
+import config.FrontendAppConfig
+
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +44,8 @@ class ExtendPaymentsController @Inject() (
     sessionRepository:        SessionRepository,
     view:                     ExtendPaymentsView,
     ftnaeService:             FtnaeService,
-    errorHandler:             ErrorHandler
+    errorHandler:             ErrorHandler,
+    appConfig:                FrontendAppConfig
 )(implicit ec:                ExecutionContext, auditService: AuditService)
     extends FrontendBaseController
     with I18nSupport {
@@ -62,7 +65,7 @@ class ExtendPaymentsController @Inject() (
           _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
         } yield ftnaeResponse.claimant
 
-        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant)))
+        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant, appConfig)))  
 
     }
 

@@ -17,6 +17,7 @@
 package controllers.ftnae
 
 import base.BaseAppSpec
+import config.FrontendAppConfig
 import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.errors.{CBError, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError}
@@ -30,7 +31,7 @@ import pages.ftnae.FtnaeResponseUserAnswer
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.HtmlMatcherUtils.removeCsrfAndNonce
@@ -85,6 +86,8 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
         mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ExtendPaymentsView]
@@ -92,7 +95,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(ftnaeResponse.claimant)(request, messages(application)).toString
+          view(ftnaeResponse.claimant,appConfig)(request, messages(application)).toString
         )
       }
     }
