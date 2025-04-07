@@ -50,7 +50,7 @@ class WhyYoungPersonNotListedControllerSpec extends BaseAppSpec {
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(appConfig)(request, messages(application)).toString
+          view(appConfig.ftnaeYear)(request, messages(application)).toString
         )
       }
     }

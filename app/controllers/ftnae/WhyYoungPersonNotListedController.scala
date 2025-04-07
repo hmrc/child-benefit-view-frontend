@@ -55,6 +55,6 @@ class WhyYoungPersonNotListedController @Inject() (
           ftnaeService.getSelectedCourseDuration(request),
           ftnaeService.buildAuditData(buildSummaryRows(request))
         )
-        Ok(view(appConfig))
+        Ok(view(appConfig.ftnaeYear))
     }
 }

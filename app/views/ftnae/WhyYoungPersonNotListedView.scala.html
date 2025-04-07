@@ -24,11 +24,10 @@
         link: Link,
         list: BulletList,
         heading: Heading,
-        para: ParagraphBody,
-        appConfig: FrontendAppConfig
+        para: ParagraphBody
 )
 
-@(appConfig: FrontendAppConfig)(implicit request: RequestHeader, messages: Messages)
+@(year: String)(implicit request: RequestHeader, messages: Messages)
 
     @bullet3Link = @{link( id = "continuing-3",
         text = messages("whyYoungPersonNotListed.bulletPoint3.linkText"),
@@ -56,7 +55,7 @@
             Html(messages("whyYoungPersonNotListed.bulletPoint0")),
             Html(messages("whyYoungPersonNotListed.bulletPoint1")),
             Html(messages("whyYoungPersonNotListed.bulletPoint2")),
-            Html(messages("whyYoungPersonNotListed.bulletPoint3", appConfig.year, bullet3Link)),
+            Html(messages("whyYoungPersonNotListed.bulletPoint3", year, bullet3Link)),
             Html(messages("whyYoungPersonNotListed.bulletPoint4", bullet4Link))
         ))
 

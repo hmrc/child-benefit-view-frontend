@@ -64,7 +64,7 @@ class ExtendPaymentsController @Inject() (
           _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
         } yield ftnaeResponse.claimant
 
-        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant, appConfig)))
+        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant, appConfig.ftnaeYear)))
 
     }
 

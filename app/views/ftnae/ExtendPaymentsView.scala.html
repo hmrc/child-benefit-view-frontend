@@ -27,10 +27,9 @@
         para: ParagraphBody,
         link: Link,
         list: BulletList,
-        caption: CaptionHeader,
-        appConfig: FrontendAppConfig
+        caption: CaptionHeader
 )
-@(claimant: FtnaeClaimantInfo, appConfig: FrontendAppConfig)(implicit request: RequestHeader, messages: Messages)
+@(claimant: FtnaeClaimantInfo, year: String)(implicit request: RequestHeader, messages: Messages)
 
     @para2Link = @{link( id = "continuing-2",
         text = messages("extendPayments.p2.linkText"),
@@ -60,7 +59,7 @@
         @para(messages("extendPayments.p3"))
 
         @list(elements = Seq(
-            Html(messages("extendPayments.bulletPoint7", appConfig.year)),
+            Html(messages("extendPayments.bulletPoint7", year)),
             Html(messages("extendPayments.bulletPoint8")),
             Html(messages("extendPayments.bulletPoint9")),
             Html(messages("extendPayments.bulletPoint10")),

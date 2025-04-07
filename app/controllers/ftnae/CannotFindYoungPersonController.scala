@@ -38,6 +38,6 @@ class CannotFindYoungPersonController @Inject() (
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData) { implicit request =>
-      Ok(view(appConfig))
+      Ok(view(appConfig.ftnaeYear))
     }
 }
