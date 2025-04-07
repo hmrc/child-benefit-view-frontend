@@ -31,7 +31,6 @@ import utils.handlers.ErrorHandler
 import views.html.ftnae.ExtendPaymentsView
 import config.FrontendAppConfig
 
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -65,7 +64,7 @@ class ExtendPaymentsController @Inject() (
           _ <- CBEnvelope(sessionRepository.set(updatedAnswers))
         } yield ftnaeResponse.claimant
 
-        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant, appConfig)))  
+        result.fold[Result](l => errorHandler.handleError(l), claimant => Ok(view(claimant, appConfig)))
 
     }
 

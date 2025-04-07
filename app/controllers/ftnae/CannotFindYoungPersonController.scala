@@ -33,7 +33,6 @@ class CannotFindYoungPersonController @Inject() (
     val controllerComponents: MessagesControllerComponents,
     view:                     CannotFindYoungPersonView,
     appConfig:                FrontendAppConfig
-
 ) extends FrontendBaseController
     with I18nSupport {
 

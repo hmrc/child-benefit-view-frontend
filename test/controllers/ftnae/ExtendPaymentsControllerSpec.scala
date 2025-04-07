@@ -87,7 +87,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        
+
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ExtendPaymentsView]
@@ -95,7 +95,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(ftnaeResponse.claimant,appConfig)(request, messages(application)).toString
+          view(ftnaeResponse.claimant, appConfig)(request, messages(application)).toString
         )
       }
     }
