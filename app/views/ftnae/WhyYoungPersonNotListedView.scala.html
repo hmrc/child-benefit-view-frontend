@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import config.FrontendAppConfig
 
 @this(
         layout: views.templates.LayoutProvider,
@@ -22,7 +23,8 @@
         link: Link,
         list: BulletList,
         heading: Heading,
-        para: ParagraphBody
+        para: ParagraphBody,
+        appConfig: FrontendAppConfig
 )
 
 @()(implicit request: RequestHeader, messages: Messages)
@@ -53,7 +55,7 @@
             Html(messages("whyYoungPersonNotListed.bulletPoint0")),
             Html(messages("whyYoungPersonNotListed.bulletPoint1")),
             Html(messages("whyYoungPersonNotListed.bulletPoint2")),
-            Html(messages("whyYoungPersonNotListed.bulletPoint3", bullet3Link)),
+            Html(messages("whyYoungPersonNotListed.bulletPoint3", appConfig.ftnaeYear, bullet3Link)),
             Html(messages("whyYoungPersonNotListed.bulletPoint4", bullet4Link))
         ))
 

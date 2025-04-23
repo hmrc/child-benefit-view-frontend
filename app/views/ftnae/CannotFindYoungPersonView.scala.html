@@ -15,6 +15,7 @@
  *@
 
 @import components._
+@import config.FrontendAppConfig
 
 @this(
         layout: views.templates.LayoutProvider,
@@ -22,7 +23,8 @@
         link: Link,
         list: BulletList,
         heading: Heading,
-        para: ParagraphBody
+        para: ParagraphBody,
+        appConfig: FrontendAppConfig
 )
 
 @()(implicit request: RequestHeader, messages: Messages)
@@ -54,7 +56,7 @@
         @list(elements = Seq(
             Html(messages("cannotFindYoungPerson.bulletPoint2")),
             Html(messages("cannotFindYoungPerson.bulletPoint3")),
-            Html(messages("cannotFindYoungPerson.bulletPoint4", bullet4Link))
+            Html(messages("cannotFindYoungPerson.bulletPoint4", appConfig.ftnaeYear, bullet4Link))
         ))
 
         @para(messages("cannotFindYoungPerson.p2", viewAlreadyInformedLink))
