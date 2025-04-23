@@ -36,7 +36,7 @@ class WhyYoungPersonNotListedController @Inject() (
     featureActions:           FeatureFlagComposedActions,
     view:                     WhyYoungPersonNotListedView,
     auditService:             AuditService,
-    ftnaeService:             FtnaeService,
+    ftnaeService:             FtnaeService
 )(implicit
     ec: ExecutionContext
 ) extends FrontendBaseController
