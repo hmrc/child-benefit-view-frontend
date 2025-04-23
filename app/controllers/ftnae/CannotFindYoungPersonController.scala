@@ -21,7 +21,6 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ftnae.CannotFindYoungPersonView
-import config.FrontendAppConfig
 
 import javax.inject.Inject
 
@@ -31,13 +30,12 @@ class CannotFindYoungPersonController @Inject() (
     getData:                  CBDataRetrievalAction,
     featureActions:           FeatureFlagComposedActions,
     val controllerComponents: MessagesControllerComponents,
-    view:                     CannotFindYoungPersonView,
-    appConfig:                FrontendAppConfig
+    view:                     CannotFindYoungPersonView
 ) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad: Action[AnyContent] =
     (featureActions.ftnaeAction andThen auth.pertaxAuthActionWithUserDetails andThen getData) { implicit request =>
-      Ok(view(appConfig.ftnaeYear))
+      Ok(view())
     }
 }

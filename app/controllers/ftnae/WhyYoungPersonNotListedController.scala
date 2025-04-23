@@ -23,7 +23,6 @@ import services.{AuditService, FtnaeService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.helpers.FtnaeControllerHelper
 import views.html.ftnae.WhyYoungPersonNotListedView
-import config.FrontendAppConfig
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -38,7 +37,6 @@ class WhyYoungPersonNotListedController @Inject() (
     view:                     WhyYoungPersonNotListedView,
     auditService:             AuditService,
     ftnaeService:             FtnaeService,
-    appConfig:                FrontendAppConfig
 )(implicit
     ec: ExecutionContext
 ) extends FrontendBaseController
@@ -55,6 +53,6 @@ class WhyYoungPersonNotListedController @Inject() (
           ftnaeService.getSelectedCourseDuration(request),
           ftnaeService.buildAuditData(buildSummaryRows(request))
         )
-        Ok(view(appConfig.ftnaeYear))
+        Ok(view())
     }
 }

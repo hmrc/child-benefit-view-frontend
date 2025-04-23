@@ -17,8 +17,7 @@
 package controllers.ftnae
 
 import base.BaseAppSpec
-import config.FrontendAppConfig
-import connectors.FtnaeConnector
+ import connectors.FtnaeConnector
 import models.common.{ChildReferenceNumber, FirstForename, Surname}
 import models.errors.{CBError, FtnaeCannotFindYoungPersonError, FtnaeNoCHBAccountError}
 import models.ftnae.{FtnaeChildInfo, FtnaeClaimantInfo, FtnaeResponse}
@@ -85,9 +84,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
           .withSession("authToken" -> "Bearer 123")
         mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
         AuthStubs.userLoggedInIsChildBenefitUser(TestData.ninoUser)
-
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
-
+        
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ExtendPaymentsView]
@@ -95,7 +92,7 @@ class ExtendPaymentsControllerSpec extends BaseAppSpec with MockitoSugar with Ft
         status(result) mustEqual OK
         assertSameHtmlAfter(removeCsrfAndNonce)(
           contentAsString(result),
-          view(ftnaeResponse.claimant, appConfig.ftnaeYear)(request, messages(application)).toString
+          view(ftnaeResponse.claimant)(request, messages(application)).toString
         )
       }
     }
