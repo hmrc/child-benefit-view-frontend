@@ -16,7 +16,6 @@
 
 package views.templates
 
-import config.FrontendAppConfig
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.RequestHeader
@@ -31,15 +30,14 @@ import javax.inject.Inject
 class LayoutProvider @Inject() (
     wrapperService:   WrapperService,
     additionalScript: AdditionalScript,
-    headBlock:        HeadBlock,
-    appConfig:        FrontendAppConfig
+    headBlock:        HeadBlock
 ) extends Logging {
   //noinspection ScalaStyle
 
   lazy val serviceURLs: ServiceURLs = ServiceURLs(
     serviceUrl = Some("/child-benefit"),
     signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
-    accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl)
+    accessibilityStatementUrl = None
   )
 
   def apply(
