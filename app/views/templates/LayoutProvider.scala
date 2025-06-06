@@ -29,18 +29,19 @@ import views.html.components.{AdditionalScript, HeadBlock}
 import javax.inject.Inject
 
 class LayoutProvider @Inject() (
-    wrapperService:   WrapperService,
-    additionalScript: AdditionalScript,
-    headBlock:        HeadBlock,
+    wrapperService:               WrapperService,
+    additionalScript:             AdditionalScript,
+    headBlock:                    HeadBlock,
     accessibilityStatementConfig: AccessibilityStatementConfig
 ) extends Logging {
   //noinspection ScalaStyle
 
-  private def serviceURLs(implicit request: RequestHeader): ServiceURLs = ServiceURLs(
-    serviceUrl = Some("/child-benefit"),
-    signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
-    accessibilityStatementUrl = accessibilityStatementConfig.url
-  )
+  private def serviceURLs(implicit request: RequestHeader): ServiceURLs =
+    ServiceURLs(
+      serviceUrl = Some("/child-benefit"),
+      signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
+      accessibilityStatementUrl = accessibilityStatementConfig.url
+    )
 
   def apply(
       pageTitle:    String,

@@ -52,7 +52,10 @@ class CannotVerifyAccountControllerSpec extends BaseAppSpec {
 
           status(result) mustEqual OK
 
-          assertSameHtmlAfter(removeNonceAndMenuRight)(contentAsString(result), view()(request, messages(application)).toString)
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
+            contentAsString(result),
+            view()(request, messages(application)).toString
+          )
         }
       }
     }

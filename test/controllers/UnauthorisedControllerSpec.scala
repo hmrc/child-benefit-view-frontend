@@ -41,7 +41,10 @@ class UnauthorisedControllerSpec extends BaseAppSpec {
         val view = application.injector.instanceOf[UnauthorisedView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonceAndMenuRight)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
+          contentAsString(result),
+          view()(request, messages(application)).toString
+        )
       }
     }
   }

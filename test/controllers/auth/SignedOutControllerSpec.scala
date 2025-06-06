@@ -41,7 +41,10 @@ class SignedOutControllerSpec extends BaseAppSpec {
         val view = application.injector.instanceOf[SignedOutView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonceAndMenuRight)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
+          contentAsString(result),
+          view()(request, messages(application)).toString
+        )
       }
     }
   }
