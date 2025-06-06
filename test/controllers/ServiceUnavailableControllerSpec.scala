@@ -21,7 +21,7 @@ import org.scalatest.EitherValues
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import views.html.templates.ServiceUnavailableTemplate
 
 class ServiceUnavailableControllerSpec extends BaseAppSpec with EitherValues {
@@ -38,7 +38,7 @@ class ServiceUnavailableControllerSpec extends BaseAppSpec with EitherValues {
         val view = application.injector.instanceOf[ServiceUnavailableTemplate]
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view()(request, messages(application, request)).toString
         )

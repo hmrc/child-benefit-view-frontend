@@ -20,7 +20,7 @@ import base.BaseAppSpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import utils.TestData.ninoUser
 import views.html.UnauthorisedView
 
@@ -41,7 +41,7 @@ class UnauthorisedControllerSpec extends BaseAppSpec {
         val view = application.injector.instanceOf[UnauthorisedView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(contentAsString(result), view()(request, messages(application)).toString)
+        assertSameHtmlAfter(removeNonceAndMenuRight)(contentAsString(result), view()(request, messages(application)).toString)
       }
     }
   }

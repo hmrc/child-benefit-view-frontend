@@ -36,7 +36,7 @@ import repositories.SessionRepository
 import services.FtnaeService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import views.html.ftnae.PaymentsExtendedView
 
 import java.time.LocalDate
@@ -97,7 +97,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
         val view = application.injector.instanceOf[PaymentsExtendedView]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(childName, childDetails.courseDuration)(request, messages(application)).toString
         )

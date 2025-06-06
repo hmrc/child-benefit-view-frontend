@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import stubs.AuthStubs.*
 import testconfig.TestConfig
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import utils.TestData.ninoUser
 import viewmodels.checkAnswers.ftnae.*
 import views.html.ftnae.CheckYourAnswersView
@@ -89,7 +89,7 @@ class CheckYourAnswersControllerSpec extends BaseAppSpec with SummaryListFluency
         )
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(list, qypChanged = false)(request, messages(application)).toString
         )

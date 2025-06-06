@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import services.AuditService
 import stubs.AuthStubs._
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import utils.TestData.{ninoUser, testEntitlement}
 import utils.handlers.ErrorHandler
 import views.html.ProofOfEntitlement
@@ -85,7 +85,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         maybeEntitlement.isLeft mustBe true
 
         status(result) mustEqual SEE_OTHER
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           contentAsString(
             Future.successful(errorHandler.handleError(ConnectorError(INTERNAL_SERVER_ERROR, "test-failure")))
@@ -120,7 +120,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         val view = application.injector.instanceOf[ProofOfEntitlement]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(testEntitlement)(request, messages(application, request)).toString
         )
