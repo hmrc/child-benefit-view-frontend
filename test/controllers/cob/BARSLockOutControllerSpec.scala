@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import stubs.AuthStubs._
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import utils.TestData.ninoUser
 import views.html.ErrorTemplate
 import views.html.cob.BARSLockOutView
@@ -50,7 +50,7 @@ class BARSLockOutControllerSpec extends BaseAppSpec {
           val view = application.injector.instanceOf[BARSLockOutView]
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             view()(request, messages(application)).toString
           )
@@ -76,7 +76,7 @@ class BARSLockOutControllerSpec extends BaseAppSpec {
           val view = application.injector.instanceOf[ErrorTemplate]
 
           status(result) mustEqual NOT_FOUND
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             view("pageNotFound.title", "pageNotFound.heading", "pageNotFound.paragraph1")(
               request,

@@ -26,7 +26,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, writeableOf_AnyContentAsEmpty}
 import services.PaymentHistoryPageVariant._
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import stubs.AuthStubs._
 import stubs.ChildBenefitServiceStubs._
 import utils.TestData.{ninoUser, notFoundAccountError, testEntitlement}
@@ -53,7 +53,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
         val view = application.injector.instanceOf[PaymentHistory]
 
         status(result) mustEqual OK
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(testEntitlement, InPaymentWithPaymentsInLastTwoYears)(request, messages(application, request)).toString
         )
@@ -77,7 +77,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(entitlementResultWithoutPaymentsInLastTwoYears, InPaymentWithoutPaymentsInLastTwoYears)(
             request,
@@ -104,7 +104,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(entitlementResultIsHIBICWithPaymentsInLastTwoYears, HICBCWithPaymentsInLastTwoYears)(
             request,
@@ -131,7 +131,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(entitlementResultIsHIBICWithoutPaymentsInLastTwoYears, HICBCWithoutPaymentsInLastTwoYears)(
             request,
@@ -158,7 +158,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(entitlementEndedButReceivedPaymentsInLastTwoYears, EntitlementEndedButReceivedPaymentsInLastTwoYears)(
             request,
@@ -185,7 +185,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(entitlementEndedButNoPaymentsInLastTwoYears, EntitlementEndedButNoPaymentsInLastTwoYears)(
             request,
@@ -212,7 +212,7 @@ class PaymentHistoryControllerSpec extends BaseAppSpec {
 
         status(result) mustEqual OK
 
-        assertSameHtmlAfter(removeNonce)(
+        assertSameHtmlAfter(removeNonceAndMenuRight)(
           contentAsString(result),
           view(
             entitlementResultIsHIBICWithoutPaymentsInLastTwoYearsEndDateInPast,

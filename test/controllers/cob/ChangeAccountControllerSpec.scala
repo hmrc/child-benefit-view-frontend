@@ -29,7 +29,7 @@ import play.api.test.Helpers._
 import play.api.test.{CSRFTokenHelper, FakeRequest}
 import testconfig.TestConfig
 import testconfig.TestConfig._
-import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonce}
+import utils.HtmlMatcherUtils.{removeCsrfAndNonce, removeNonceAndMenuRight}
 import stubs.AuthStubs._
 import stubs.ChildBenefitServiceStubs._
 import utils.TestData.{lockedOutErrorResponse, ninoUser, notFoundAccountError, testClaimantBankInformation}
@@ -72,7 +72,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
           val view = application.injector.instanceOf[ChangeAccountView]
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             view("John Doe", accountInfo)(request, messages(application)).toString
           )
@@ -102,7 +102,7 @@ class ChangeAccountControllerSpec extends BaseAppSpec {
             accountInfo.copy(buildingSocietyRollNumber = Some(BuildingSocietyRollNumber("1234987650")))
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             view("John Doe", accountInfoWithRollNumber)(request, messages(application)).toString
           )

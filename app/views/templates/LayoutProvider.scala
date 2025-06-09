@@ -21,6 +21,7 @@ import play.api.i18n.Messages
 import play.api.mvc.RequestHeader
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
+import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
@@ -28,17 +29,19 @@ import views.html.components.{AdditionalScript, HeadBlock}
 import javax.inject.Inject
 
 class LayoutProvider @Inject() (
-    wrapperService:   WrapperService,
-    additionalScript: AdditionalScript,
-    headBlock:        HeadBlock
+    wrapperService:               WrapperService,
+    additionalScript:             AdditionalScript,
+    headBlock:                    HeadBlock,
+    accessibilityStatementConfig: AccessibilityStatementConfig
 ) extends Logging {
   //noinspection ScalaStyle
 
-  lazy val serviceURLs: ServiceURLs = ServiceURLs(
-    serviceUrl = Some("/child-benefit"),
-    signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
-    accessibilityStatementUrl = None
-  )
+  private def serviceURLs(implicit request: RequestHeader): ServiceURLs =
+    ServiceURLs(
+      serviceUrl = Some("/child-benefit"),
+      signOutUrl = Some(controllers.auth.routes.AuthController.signOut().url),
+      accessibilityStatementUrl = accessibilityStatementConfig.url
+    )
 
   def apply(
       pageTitle:    String,

@@ -20,12 +20,18 @@ object HtmlMatcherUtils {
 
   val pattern: String = """nonce="[^"]+""""
 
-  val removeCsrfAndNonce: String => String = removeNonce andThen removeCsrfToken
-  def removeNonce(html: String): String = {
-    html.replaceAll(pattern, "")
-  }
+  val removeCsrfAndNonce: String => String = removeNonce andThen removeCsrfToken andThen replaceMenuRight
 
-  def removeCsrfToken(html: String): String = {
+  val removeNonceAndMenuRight: String => String = removeNonce andThen replaceMenuRight
+
+  def removeNonce(html: String): String =
+    html.replaceAll(pattern, "")
+
+  def removeCsrfToken(html: String): String =
     html.replaceAll(".*csrfToken.*", "")
-  }
+
+  // Adding play.filters.enabled += "uk.gov.hmrc.sca.filters.WrapperDataFilter" to application.conf
+  // has the unexpected side effect of incrementing the signout menu items index by 1
+  def replaceMenuRight(html: String): String =
+    html.replaceAll("menu.right.3", "menu.right.4")
 }

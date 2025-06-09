@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import stubs.AuthStubs._
 import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
-import utils.HtmlMatcherUtils.removeNonce
+import utils.HtmlMatcherUtils.removeNonceAndMenuRight
 import utils.TestData.ninoUser
 import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
@@ -47,7 +47,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
           val continueView = application.injector.instanceOf[JourneyRecoveryContinueView]
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             continueView(continueUrl.unsafeValue)(
               request,
@@ -75,7 +75,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             startAgainView()(request, messages(application)).toString
           )
@@ -99,7 +99,7 @@ class JourneyRecoveryControllerSpec extends BaseAppSpec {
           val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
 
           status(result) mustEqual OK
-          assertSameHtmlAfter(removeNonce)(
+          assertSameHtmlAfter(removeNonceAndMenuRight)(
             contentAsString(result),
             startAgainView()(request, messages(application)).toString
           )
