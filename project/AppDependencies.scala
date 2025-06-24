@@ -10,7 +10,7 @@ object AppDependencies {
     play.sbt.PlayImport.ws,
     play.sbt.PlayImport.caffeine,
     "org.typelevel"     %% "cats-core"                                  % "2.13.0",
-    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % "2.13.0",
+    "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % "2.15.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion" % "1.10.0"
   )
 
