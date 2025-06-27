@@ -25,16 +25,19 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import utils.logging.RequestLogger
-import scala.concurrent.Future
+import repositories.SessionRepository
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class AuthController @Inject() (
-    authConnector: AuthConnector,
-    auth:          StandardAuthJourney
+    sessionRepository: SessionRepository,
+    authConnector:     AuthConnector,
+    auth:              StandardAuthJourney
 )(implicit
     config:            Configuration,
     env:               Environment,
+    ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig
 ) extends ChildBenefitBaseController(authConnector)
@@ -44,22 +47,26 @@ class AuthController @Inject() (
 
   def signOut(): Action[AnyContent] =
     auth.pertaxAuthActionWithUserDetails async { implicit request =>
-      logger.debug("user signed out: redirecting to survey")
-      Future.successful(
-        Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(frontendAppConfig.exitSurveyUrl)))
-          .withSession("feedbackId" -> request.internalId)
-      )
+      sessionRepository
+        .clear(request.internalId)
+        .map { _ =>
+          logger.debug("user signed out: redirecting to survey")
+          Redirect(frontendAppConfig.signOutUrl, Map("continue" -> Seq(frontendAppConfig.exitSurveyUrl)))
+            .withSession(("feedbackId", request.internalId))
+        }
     }
 
   def signOutNoSurvey(): Action[AnyContent] =
     auth.pertaxAuthActionWithUserDetails async { implicit request =>
-      logger.debug("user signed out, no survey: continuing")
-      Future.successful(
-        Redirect(
-          frontendAppConfig.signOutUrl,
-          Map("continue" -> Seq(toContinueUrl(routes.SignedOutController.onPageLoad)))
-        )
-      )
+      sessionRepository
+        .clear(request.internalId)
+        .map { _ =>
+          logger.debug("user signed out, no survey: continuing")
+          Redirect(
+            frontendAppConfig.signOutUrl,
+            Map("continue" -> Seq(toContinueUrl(routes.SignedOutController.onPageLoad)))
+          )
+        }
     }
 
 }
