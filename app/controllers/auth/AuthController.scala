@@ -30,8 +30,8 @@ import scala.concurrent.Future
 import javax.inject.Inject
 
 class AuthController @Inject() (
-    authConnector:     AuthConnector,
-    auth:              StandardAuthJourney
+    authConnector: AuthConnector,
+    auth:          StandardAuthJourney
 )(implicit
     config:            Configuration,
     env:               Environment,
@@ -50,7 +50,6 @@ class AuthController @Inject() (
           .withSession("feedbackId" -> request.internalId)
       )
     }
-
 
   def signOutNoSurvey(): Action[AnyContent] =
     auth.pertaxAuthActionWithUserDetails async { implicit request =>
