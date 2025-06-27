@@ -23,25 +23,25 @@ import controllers.actions.IdentifierAction.toContinueUrl
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Configuration, Environment}
+import repositories.SessionRepository
 import uk.gov.hmrc.auth.core.AuthConnector
 import utils.logging.RequestLogger
-import repositories.SessionRepository
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class AuthController @Inject() (
-    sessionRepository: SessionRepository,
-    authConnector:     AuthConnector,
-    auth:              StandardAuthJourney
-)(implicit
-    config:            Configuration,
-    env:               Environment,
-    ec:                ExecutionContext,
-    cc:                MessagesControllerComponents,
-    frontendAppConfig: FrontendAppConfig
-) extends ChildBenefitBaseController(authConnector)
-    with I18nSupport {
+                                 sessionRepository: SessionRepository,
+                                 authConnector:     AuthConnector,
+                                 auth:              StandardAuthJourney
+                               )(implicit
+                                 config:            Configuration,
+                                 env:               Environment,
+                                 ec:                ExecutionContext,
+                                 cc:                MessagesControllerComponents,
+                                 frontendAppConfig: FrontendAppConfig
+                               ) extends ChildBenefitBaseController(authConnector)
+  with I18nSupport {
 
   private val logger = new RequestLogger(this.getClass)
 
@@ -68,5 +68,4 @@ class AuthController @Inject() (
           )
         }
     }
-
 }
