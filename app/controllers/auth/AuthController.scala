@@ -34,14 +34,14 @@ class AuthController @Inject() (
     sessionRepository: SessionRepository,
     authConnector:     AuthConnector,
     auth:              StandardAuthJourney
-  )(implicit
+)(implicit
     config:            Configuration,
     env:               Environment,
     ec:                ExecutionContext,
     cc:                MessagesControllerComponents,
     frontendAppConfig: FrontendAppConfig
-  ) extends ChildBenefitBaseController(authConnector)
-   with I18nSupport {
+) extends ChildBenefitBaseController(authConnector)
+    with I18nSupport {
 
   private val logger = new RequestLogger(this.getClass)
 
