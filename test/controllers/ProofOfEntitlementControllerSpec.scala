@@ -127,7 +127,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
       }
     }
 
-    "must return SEE_OTHER when redirectToPEGA equals true" in {
+    "must return SEE_OTHER when redirectProofOfEntitlementToPEGA equals true" in {
       userLoggedInIsChildBenefitUser(ninoUser)
       mockPostPertaxAuth(PertaxAuthResponseModel("ACCESS_GRANTED", "A field", None, None))
 
@@ -135,7 +135,7 @@ class ProofOfEntitlementControllerSpec extends BaseAppSpec with EitherValues {
         applicationBuilder(
           Map(
             "microservice.services.child-benefit-entitlement.port" -> wireMockPort,
-            "features.redirect-to-pega"                            -> true,
+            "features.redirect-poe-to-pega"                        -> true,
             "urls.pegaPoe"                                         -> "/pega"
           )
         ).build()

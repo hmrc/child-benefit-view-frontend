@@ -140,5 +140,25 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
       }
     }
 
+    "must return SEE_OTHER when redirectFtnaeToPEGA equals true" in {
+
+      val application =
+        applicationBuilder(
+          config = Map(
+            "features.redirect-ftnae-to-pega" -> true,
+            "urls.pegaFtnae"                  -> "/pega"
+          )
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)
+          .withSession("authToken" -> "Bearer 123")
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustEqual Some("/pega")
+      }
+    }
   }
 }

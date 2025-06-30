@@ -37,11 +37,14 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   def ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
   def pegaPoeUrl:  String = configuration.get[String]("urls.pegaPoe")
   def pegaCobUrl:  String = configuration.get[String]("urls.pegaCob")
+  def pegaFtnaeUrl:  String = configuration.get[String]("urls.pegaFtnae")
   def timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
   def countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
   def cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
-  def redirectToPEGA: Boolean =
-    configuration.get[Boolean]("features.redirect-to-pega")
+  def redirectProofOfEntitlementToPEGA: Boolean =
+    configuration.get[Boolean]("features.redirect-poe-to-pega")
+  def redirectFtnaeToPEGA: Boolean =
+    configuration.get[Boolean]("features.redirect-ftnae-to-pega")
   def languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("features.welsh-translation")
   def showOutageBanner: Boolean = configuration.get[Boolean]("features.showOutageBanner")
