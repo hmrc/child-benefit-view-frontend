@@ -149,7 +149,7 @@ class PaymentsExtendedControllerSpec extends BaseAppSpec with MockitoSugar with 
             "urls.pegaFtnae"                  -> "/pega"
           )
         )
-        .build()
+          .build()
 
       running(application) {
         val request = FakeRequest(GET, controllers.ftnae.routes.PaymentsExtendedController.onPageLoad().url)

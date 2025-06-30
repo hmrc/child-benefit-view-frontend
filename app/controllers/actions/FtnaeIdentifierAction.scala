@@ -62,9 +62,10 @@ class FtnaeIdentifierActionImpl @Inject() (
         allowList(_ => block(request))("ftnae", request)
       }
     } else {
-      allowList(_ =>
-        Future.successful(NotFound(ftnaeDisabledView(hideWrapperMenuBar)(request, request.messages)))
-      )("ftnae", request)
+      allowList(_ => Future.successful(NotFound(ftnaeDisabledView(hideWrapperMenuBar)(request, request.messages))))(
+        "ftnae",
+        request
+      )
     }
   }
 }

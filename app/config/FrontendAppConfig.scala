@@ -30,17 +30,17 @@ import scala.concurrent.duration.Duration
 class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
   private def getExternalUrl(service: String): String = servicesConfig.getString(s"external-urls.$service.url")
 
-  def host:        String = configuration.get[String]("host")
-  def appName:     String = configuration.get[String]("appName")
-  def loginUrl:    String = configuration.get[String]("urls.login")
-  def signOutUrl:  String = configuration.get[String]("urls.signOut")
-  def ivUpliftUrl: String = configuration.get[String]("urls.ivUplift")
-  def pegaPoeUrl:  String = configuration.get[String]("urls.pegaPoe")
-  def pegaCobUrl:  String = configuration.get[String]("urls.pegaCob")
-  def pegaFtnaeUrl:  String = configuration.get[String]("urls.pegaFtnae")
-  def timeout:     Int    = configuration.get[Int]("timeout-dialog.timeout")
-  def countdown:   Int    = configuration.get[Int]("timeout-dialog.countdown")
-  def cacheTtl:    Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  def host:         String = configuration.get[String]("host")
+  def appName:      String = configuration.get[String]("appName")
+  def loginUrl:     String = configuration.get[String]("urls.login")
+  def signOutUrl:   String = configuration.get[String]("urls.signOut")
+  def ivUpliftUrl:  String = configuration.get[String]("urls.ivUplift")
+  def pegaPoeUrl:   String = configuration.get[String]("urls.pegaPoe")
+  def pegaCobUrl:   String = configuration.get[String]("urls.pegaCob")
+  def pegaFtnaeUrl: String = configuration.get[String]("urls.pegaFtnae")
+  def timeout:      Int    = configuration.get[Int]("timeout-dialog.timeout")
+  def countdown:    Int    = configuration.get[Int]("timeout-dialog.countdown")
+  def cacheTtl:     Int    = configuration.get[Int]("mongodb.timeToLiveInSeconds")
   def redirectProofOfEntitlementToPEGA: Boolean =
     configuration.get[Boolean]("features.redirect-poe-to-pega")
   def redirectFtnaeToPEGA: Boolean =
