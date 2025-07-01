@@ -18,9 +18,10 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.{FeatureAllowlistFilter, FrontendAppConfig}
-import play.api.mvc.Results.NotFound
+import play.api.http.Status.SEE_OTHER
+import play.api.mvc.Results.{NotFound, Redirect}
 import play.api.{Configuration, Logging}
-import play.api.mvc._
+import play.api.mvc.*
 import views.html.ftnae.FtnaeDisabledView
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -55,15 +56,16 @@ class FtnaeIdentifierActionImpl @Inject() (
       hideWrapperMenuBar: Boolean
   ) = {
     if (isFeatureEnabled) {
-      allowList(_ => block(request))("ftnae", request)
+      if (config.redirectFtnaeToPEGA) {
+        allowList(_ => Future.successful(Redirect(config.pegaFtnaeUrl, SEE_OTHER)))("ftnae", request)
+      } else {
+        allowList(_ => block(request))("ftnae", request)
+      }
     } else {
-      allowList(_ =>
-        Future.successful(
-          NotFound(
-            ftnaeDisabledView(hideWrapperMenuBar)(request, request.messages)
-          )
-        )
-      )("ftnae", request)
+      allowList(_ => Future.successful(NotFound(ftnaeDisabledView(hideWrapperMenuBar)(request, request.messages))))(
+        "ftnae",
+        request
+      )
     }
   }
 }

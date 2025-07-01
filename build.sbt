@@ -49,13 +49,13 @@ lazy val root = (project in file("."))
       "controllers.cob.routes._",
       "models.viewmodels.govuk.all._"
     ),
-    PlayKeys.playDefaultPort := 10650,
-    ScoverageKeys.coverageExcludedFiles := excludedFiles,
+    PlayKeys.playDefaultPort               := 10650,
+    ScoverageKeys.coverageExcludedFiles    := excludedFiles,
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
     libraryDependencies ++= AppDependencies(),
-    retrieveManaged := true,
+    retrieveManaged := true
   )
 
 lazy val testSettings: Seq[Def.Setting[?]] = Seq(

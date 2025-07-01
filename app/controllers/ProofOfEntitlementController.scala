@@ -50,7 +50,7 @@ class ProofOfEntitlementController @Inject() (
 ) extends ChildBenefitBaseController(authConnector) {
   val view: Action[AnyContent] =
     Action andThen auth.pertaxAuthActionWithUserDetails async { implicit request =>
-      if (frontendAppConfig.redirectToPEGA) {
+      if (frontendAppConfig.redirectProofOfEntitlementToPEGA) {
         Future.successful(Redirect(frontendAppConfig.pegaPoeUrl, 303))
       } else {
         childBenefitEntitlementConnector.getChildBenefitEntitlement.fold(
