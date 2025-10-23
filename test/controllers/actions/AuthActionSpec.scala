@@ -53,8 +53,8 @@ class AuthActionSpec extends BaseAppSpec {
 
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
-          val environment  = application.injector.instanceOf[Environment]
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val environment = application.injector.instanceOf[Environment]
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
@@ -64,7 +64,7 @@ class AuthActionSpec extends BaseAppSpec {
             environment
           )
           val controller = new Harness(authAction)
-          val result     = controller.onPageLoad()(FakeRequest())
+          val result = controller.onPageLoad()(FakeRequest())
 
           status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
@@ -80,9 +80,9 @@ class AuthActionSpec extends BaseAppSpec {
 
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          val appConfig = application.injector.instanceOf[FrontendAppConfig]
           val environment = application.injector.instanceOf[Environment]
-          
+
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
             appConfig,
@@ -91,7 +91,7 @@ class AuthActionSpec extends BaseAppSpec {
             environment
           )
           val controller = new Harness(authAction)
-          val result     = controller.onPageLoad()(FakeRequest())
+          val result = controller.onPageLoad()(FakeRequest())
 
           status(result).mustBe(INTERNAL_SERVER_ERROR)
         }
@@ -106,8 +106,8 @@ class AuthActionSpec extends BaseAppSpec {
           val authAction = application.injector.instanceOf[AuthenticatedIdentifierAction]
           AuthStubs.userLoggedInIsChildBenefitUser(TestData.userWithNoNino)
           val controller = new Harness(authAction)
-          val req        = FakeRequest().withSession("authToken" -> "Bearer 123")
-          val result     = controller.onPageLoad()(req)
+          val req = FakeRequest().withSession("authToken" -> "Bearer 123")
+          val result = controller.onPageLoad()(req)
 
           status(result).mustBe(SEE_OTHER)
           redirectLocation(result).value.must(be(controllers.routes.UnauthorisedController.onPageLoad.url))
@@ -117,12 +117,12 @@ class AuthActionSpec extends BaseAppSpec {
   }
 }
 
-class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {
+class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
   val serviceUrl: String = ""
 
   override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
-      hc:                              HeaderCarrier,
-      ec:                              ExecutionContext
+                                                                           hc: HeaderCarrier,
+                                                                           ec: ExecutionContext
   ): Future[A] =
     Future.failed(exceptionToReturn)
 }
