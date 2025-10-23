@@ -36,27 +36,27 @@ import views.html.ErrorTemplate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PertaxAuthActionImpl @Inject()(
-                                      pertaxAuthConnector: PertaxAuthConnector,
-                                      errorTemplate: ErrorTemplate,
-                                      appConfig: FrontendAppConfig,
-                                      environment: Environment
-                                    )(implicit
-                                      val executionContext: ExecutionContext,
-                                      controllerComponents: ControllerComponents
-                                    ) extends ActionFilter[Request]
-  with Results
-  with PertaxAuthAction
-  with I18nSupport
-  with Logging {
+class PertaxAuthActionImpl @Inject() (
+    pertaxAuthConnector: PertaxAuthConnector,
+    errorTemplate:       ErrorTemplate,
+    appConfig:           FrontendAppConfig,
+    environment:         Environment
+)(implicit
+    val executionContext: ExecutionContext,
+    controllerComponents: ControllerComponents
+) extends ActionFilter[Request]
+    with Results
+    with PertaxAuthAction
+    with I18nSupport
+    with Logging {
 
   val redirectPolicy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
   override def filter[A](request: Request[A]): Future[Option[Result]] = {
-    implicit val implicitRequest: Request[A] = request
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    implicit val implicitRequest: Request[A]    = request
+    implicit val hc:              HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     pertaxAuthConnector.pertaxPostAuthorise.value.flatMap {
       case Left(UpstreamErrorResponse(_, status, _, _)) if status == UNAUTHORIZED =>
@@ -65,7 +65,7 @@ class PertaxAuthActionImpl @Inject()(
             Redirect(
               appConfig.loginUrl,
               Map(
-                "origin" -> Seq(appConfig.appName),
+                "origin"   -> Seq(appConfig.appName),
                 "continue" -> Seq(resolveCorrectUrl(request))
               )
             )
@@ -82,17 +82,19 @@ class PertaxAuthActionImpl @Inject()(
       case Right(PertaxAuthResponseModel("ACCESS_GRANTED", _, _, _)) =>
         Future.successful(None)
       case Right(PertaxAuthResponseModel("NO_HMRC_PT_ENROLMENT", _, Some(redirect), _)) =>
-        Future.successful(Some(Redirect(s"$redirect?redirectUrl=${RedirectUrl(request.uri).get(redirectPolicy).encodedUrl}")))
+        Future.successful(
+          Some(Redirect(s"$redirect?redirectUrl=${RedirectUrl(request.uri).get(redirectPolicy).encodedUrl}"))
+        )
       case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, _, _)) =>
         Future.successful(
           Some(
             Redirect(
               appConfig.ivUpliftUrl,
               Map(
-                "origin" -> Seq(appConfig.appName),
+                "origin"          -> Seq(appConfig.appName),
                 "confidenceLevel" -> Seq(appConfig.confidenceLevel.toString),
-                "completionURL" -> Seq(resolveCorrectUrl(request)),
-                "failureURL" -> Seq(toContinueUrl(controllers.routes.UnauthorisedController.onPageLoad)(request))
+                "completionURL"   -> Seq(resolveCorrectUrl(request)),
+                "failureURL"      -> Seq(toContinueUrl(controllers.routes.UnauthorisedController.onPageLoad)(request))
               )
             )
           )
