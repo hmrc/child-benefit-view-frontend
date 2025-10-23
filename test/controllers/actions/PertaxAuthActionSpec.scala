@@ -30,6 +30,7 @@ import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Environment
 import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER, UNAUTHORIZED}
 import play.api.mvc.Results.Ok
@@ -55,7 +56,8 @@ class PertaxAuthActionSpec extends BaseAppSpec with GuiceOneAppPerSuite with Bef
   lazy val authAction = new PertaxAuthActionImpl(
     pertaxAuthConnector = connector,
     errorTemplate = app.injector.instanceOf[ErrorTemplate],
-    appConfig = app.injector.instanceOf[FrontendAppConfig]
+    appConfig = app.injector.instanceOf[FrontendAppConfig],
+    environment = app.injector.instanceOf[Environment]
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date    = LocalDate.now()

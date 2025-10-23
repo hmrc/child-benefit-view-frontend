@@ -20,14 +20,16 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import models.common.NationalInsuranceNumber
 import models.requests.IdentifierRequest
-import play.api.Logging
-import play.api.mvc.Results._
-import play.api.mvc._
-import uk.gov.hmrc.auth.core._
+import play.api.mvc.*
+import play.api.mvc.Results.*
+import play.api.{Environment, Logging}
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.{allEnrolments, internalId, nino}
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.bootstrap.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import utils.enrolments.HmrcPTChecks
 
@@ -41,13 +43,16 @@ class AuthenticatedIdentifierAction @Inject() (
     override val authConnector:  AuthConnector,
     implicit val config:         FrontendAppConfig,
     val parser:                  BodyParsers.Default,
-    hmrcPTChecks:                HmrcPTChecks
+    hmrcPTChecks:                HmrcPTChecks,
+    environment:                 Environment
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
     with AuthorisedFunctions
     with Logging {
 
   private val ChildBenefitRetrievals = nino and internalId and allEnrolments
+
+  private val redirectPolicy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -62,7 +67,7 @@ class AuthenticatedIdentifierAction @Inject() (
           } else {
             Future.successful(
               Redirect(
-                s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}"
+                s"${config.protectTaxInfoUrl}/protect-tax-info?redirectUrl=${RedirectUrl(request.uri).get(redirectPolicy).encodedUrl}"
               )
             )
           }
