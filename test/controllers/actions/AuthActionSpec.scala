@@ -18,6 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import play.api.Environment
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
@@ -53,12 +54,14 @@ class AuthActionSpec extends BaseAppSpec {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          val environment = application.injector.instanceOf[Environment]
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
             appConfig,
             bodyParsers,
-            mockHmrcPTChecks
+            mockHmrcPTChecks,
+            environment
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())
@@ -78,12 +81,14 @@ class AuthActionSpec extends BaseAppSpec {
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+          val environment = application.injector.instanceOf[Environment]
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
             appConfig,
             bodyParsers,
-            mockHmrcPTChecks
+            mockHmrcPTChecks,
+            environment
           )
           val controller = new Harness(authAction)
           val result     = controller.onPageLoad()(FakeRequest())

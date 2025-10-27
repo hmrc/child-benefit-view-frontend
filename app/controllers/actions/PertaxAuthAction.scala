@@ -21,12 +21,14 @@ import config.FrontendAppConfig
 import connectors.PertaxAuthConnector
 import controllers.actions.IdentifierAction.{resolveCorrectUrl, toContinueUrl}
 import models.pertaxAuth.PertaxAuthResponseModel
-import play.api.Logging
 import play.api.http.Status.UNAUTHORIZED
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{ActionFilter, ControllerComponents, Request, Result, Results}
+import play.api.mvc.*
+import play.api.{Environment, Logging}
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl.idFunctor
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.bootstrap.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.partials.HtmlPartial
 import views.html.ErrorTemplate
@@ -37,7 +39,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class PertaxAuthActionImpl @Inject() (
     pertaxAuthConnector: PertaxAuthConnector,
     errorTemplate:       ErrorTemplate,
-    appConfig:           FrontendAppConfig
+    appConfig:           FrontendAppConfig,
+    environment:         Environment
 )(implicit
     val executionContext: ExecutionContext,
     controllerComponents: ControllerComponents
@@ -46,6 +49,8 @@ class PertaxAuthActionImpl @Inject() (
     with PertaxAuthAction
     with I18nSupport
     with Logging {
+
+  val redirectPolicy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
@@ -77,7 +82,9 @@ class PertaxAuthActionImpl @Inject() (
       case Right(PertaxAuthResponseModel("ACCESS_GRANTED", _, _, _)) =>
         Future.successful(None)
       case Right(PertaxAuthResponseModel("NO_HMRC_PT_ENROLMENT", _, Some(redirect), _)) =>
-        Future.successful(Some(Redirect(s"$redirect?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
+        Future.successful(
+          Some(Redirect(s"$redirect?redirectUrl=${RedirectUrl(request.uri).get(redirectPolicy).encodedUrl}"))
+        )
       case Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", _, _, _)) =>
         Future.successful(
           Some(
