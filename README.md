@@ -43,9 +43,9 @@ The service itself has a suite of unit tests as a part of the repository. These 
 In addition, there is a suite of frontend journey tests in [child-benefit-ui-tests](https://github.com/hmrc/child-benefit-ui-tests) that will test this service in conjunction with [child-benefit-service](https://github.com/hmrc/child-benefit-service) and [child-benefit-data-stubs](https://github.com/hmrc/child-benefit-data-stubs).
 
 ## TEAM CHANNEL AND WHO OWNS THE SERVICE
-Owning Team: SCA Optimization
+Owning Team: DDCN Live Services
 
-Slack Channel: #team-sca-child-benefit
+Slack Channel: #team-ddcnls-liveservice
 
 ## LINKS TO KEY CONFLUENCE PAGES
 | Description                               | Link                                                                                                         |
