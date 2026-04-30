@@ -57,7 +57,8 @@ class ErrorHandlerSpec extends BaseAppSpec with EitherValues with GuiceOneAppPer
           docHeading should include("Page not found")
           docParagraph should include("If you typed the web address, check it’s correct")
           docParagraph should include("If you pasted the web address, check you copied the entire address.")
-          docParagraph should include("Beta This is a new service – your feedback will help us to improve it.")
+          docParagraph should include("Beta This is a new service.")
+          docParagraph should include("Help us improve it and give your feedback")
         }
       }
     }
