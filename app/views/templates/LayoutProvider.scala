@@ -65,6 +65,7 @@ class LayoutProvider @Inject() (
         showHelpImproveBanner = false
       ),
       hideMenuBar = hideBanner,
-      serviceURLs = serviceURLs
+      serviceURLs = serviceURLs,
+      timeOutUrl = Some(controllers.routes.KeepAliveController.keepAlive.url)
     )(messages, request)
 }
