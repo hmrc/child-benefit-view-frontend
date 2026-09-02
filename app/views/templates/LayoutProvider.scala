@@ -25,6 +25,7 @@ import uk.gov.hmrc.hmrcfrontend.config.AccessibilityStatementConfig
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 import views.html.components.{AdditionalScript, HeadBlock}
+import uk.gov.hmrc.sca.config.BackLinkConfig
 
 import javax.inject.Inject
 
@@ -55,7 +56,7 @@ class LayoutProvider @Inject() (
       disableSessionExpired = !timeout,
       content = contentBlock,
       pageTitle = Some(pageTitle),
-      showBackLinkJS = showBackLink,
+      backLinkConfig = Option.when(showBackLink)(BackLinkConfig.JsBack),
       scripts = scripts.toSeq :+ additionalScript(),
       styleSheets = stylesheets.toSeq :+ headBlock(),
       fullWidth = false,
@@ -65,7 +66,6 @@ class LayoutProvider @Inject() (
         showHelpImproveBanner = false
       ),
       hideMenuBar = hideBanner,
-      serviceURLs = serviceURLs,
-      timeOutUrl = Some(controllers.routes.KeepAliveController.keepAlive.url)
+      serviceURLs = serviceURLs
     )(messages, request)
 }
